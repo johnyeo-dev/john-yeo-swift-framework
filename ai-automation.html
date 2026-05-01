@@ -267,18 +267,6 @@
       </div>
     </div>
 
-    <!-- VIDEO GRID -->
-    <div class="video-grid-section">
-      <div class="video-grid-header">
-        <h3>Videos in This Series</h3>
-        <a class="view-all-link" href="https://youtube.com/playlist?list=PLM28sTk-NCuxcPeArLoVTofos41ohVmXm&si=fKlsVaiHpCTjXeax" target="_blank" rel="noopener">View all on YouTube →</a>
-      </div>
-      <div class="video-grid" id="videoGrid">
-        <!-- Cards injected by JS from playlist -->
-        <!-- Fallback static cards shown below if API unavailable -->
-      </div>
-    </div>
-
   </main>
 
   <!-- USER MANAGER MODAL -->
@@ -305,43 +293,6 @@
   </div>
 
   <script>
-    /* VIDEO GRID — load thumbnails from YouTube oEmbed / noembed */
-    var PLAYLIST_URL = 'https://youtube.com/playlist?list=PLM28sTk-NCuxcPeArLoVTofos41ohVmXm&si=fKlsVaiHpCTjXeax';
-
-    /* Hardcoded video IDs from the playlist for thumbnail display.
-       Update this list as new videos are added to the playlist. */
-    var VIDEO_IDS = [
-      'BFEUiXq_kJA','ZQXDYnDL4AQ','tI4_kKEqr1c','b0QDJ_fzBLw',
-      'Q6IJMxR-YLw','Kp3ooq0DPAI','xV6PD1FXDgU','u3ZPDmGYEME',
-      'RkIFdtBm-pA','dYN5K2kRJgA','nCK2dXVkMDE','8A5hVEjKmME'
-    ];
-
-    var VIDEO_LABELS = [
-      'AI for tutors','Automate your admin','ChatGPT for lesson planning',
-      'AI content creation','Save time with automation','WhatsApp automation',
-      'AI tools walkthrough','Build smarter systems','Automate follow-ups',
-      'AI study materials','Lesson prep with AI','Scale without burnout'
-    ];
-
-    function renderVideoGrid() {
-      var grid = document.getElementById('videoGrid');
-      if (!grid) return;
-      grid.innerHTML = VIDEO_IDS.map(function(id, i) {
-        var thumb = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
-        var url = 'https://www.youtube.com/watch?v=' + id + '&list=PLM28sTk-NCuxcPeArLoVTofos41ohVmXm';
-        var label = VIDEO_LABELS[i] || 'AI & Automation';
-        return '<a class="video-card" href="' + url + '" target="_blank" rel="noopener">' +
-          '<div class="video-thumb">' +
-            '<img src="' + thumb + '" alt="' + label + '" onerror="this.closest(\'.video-thumb\').style.background=\'#1a1a2e\';this.style.display=\'none\'">' +
-            '<div class="play-btn"><svg viewBox="0 0 68 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M66.5 7.5C65.7 4.7 63.5 2.5 60.7 1.8C55.4 0.4 34 0.4 34 0.4C34 0.4 12.6 0.4 7.3 1.8C4.5 2.5 2.3 4.7 1.5 7.5C0 12.8 0 24 0 24C0 24 0 35.2 1.5 40.5C2.3 43.3 4.5 45.5 7.3 46.2C12.6 47.6 34 47.6 34 47.6C34 47.6 55.4 47.6 60.7 46.2C63.5 45.5 65.7 43.3 66.5 40.5C68 35.2 68 24 68 24C68 24 68 12.8 66.5 7.5Z" fill="#FF0000" fill-opacity="0.92"/><path d="M27 34L45 24L27 14V34Z" fill="white"/></svg></div>' +
-          '</div>' +
-          '<div class="video-info"><div class="video-title">' + label + '</div><div class="video-meta"><span>YouTube</span><span class="dot"></span><span>AI &amp; Automation</span></div></div>' +
-        '</a>';
-      }).join('');
-    }
-
-    renderVideoGrid();
-
     /* AUTH / USER PILL JS */
     function getSession() { try { return JSON.parse(localStorage.getItem('pac-swift-session')); } catch(e) { return null; } }
     function doLogout() { localStorage.removeItem('pac-swift-session'); window.location.href = 'login.html'; }
