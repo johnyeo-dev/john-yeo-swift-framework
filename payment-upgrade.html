@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monthly to Yearly Payments | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-tab-group .swift-tab { cursor: pointer; user-select: none; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 210px; white-space: nowrap; }
+    .swift-tab-group:hover .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
+    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
+    .swift-dropdown-menu.open { display: block; }
+    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-dropdown-item:last-child { border-bottom: none; }
+    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
+
+    .res-subnav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .res-subnav::-webkit-scrollbar { display: none; }
+    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    .res-subnav-tab:hover { color: var(--navy); }
+    .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+    @media (max-width: 600px) { .res-subnav { padding: 0 16px; } .res-subnav-tab { padding: 12px 14px; } }
+
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* PAGE HERO */
+    .page-hero { background: var(--navy); border-radius: 16px; padding: 36px 40px; margin-bottom: 32px; }
+    .page-hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 30px); color: var(--white); line-height: 1.2; margin-bottom: 10px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+    /* SECTION */
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; margin-top: 36px; }
+    .section-icon { font-size: 22px; }
+    .section-header h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+
+    /* MINDSET CARDS */
+    .mindset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+    .mindset-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 22px; }
+    .mindset-card h4 { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 14px; }
+    .mindset-row { margin-bottom: 10px; }
+    .mindset-row .dont { font-size: 13px; color: #dc2626; text-decoration: line-through; margin-bottom: 4px; }
+    .mindset-row .do { font-size: 13px; color: #166534; font-weight: 600; }
+
+    /* TIER TABLE */
+    .tier-table-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 14px; }
+    .tier-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .tier-table th { background: var(--navy); color: white; padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .tier-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+    .tier-table tr:last-child td { border-bottom: none; }
+    .tier-table .tier-name { font-weight: 700; color: var(--navy); }
+    .tier-table .tier-disc { display: inline-block; margin-top: 4px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+    .disc-none { background: var(--cream); color: var(--text-muted); }
+    .disc-low  { background: #fef9c3; color: #854d0e; }
+    .disc-mid  { background: #dbeafe; color: #1d4ed8; }
+    .disc-high { background: #dcfce7; color: #166534; }
+
+    /* PHASE + STEP CARDS */
+    .phase-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin: 28px 0 12px; }
+    .steps-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
+    .step-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 22px; display: flex; gap: 16px; align-items: flex-start; }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: 'DM Serif Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h4 { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 6px; }
+    .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .step-body blockquote { margin-top: 10px; padding: 10px 14px; background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 13px; color: var(--text); font-style: italic; line-height: 1.6; }
+    .step-body ul { margin-top: 8px; padding-left: 18px; }
+    .step-body ul li { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* WINDOW CARDS */
+    .window-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .window-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 22px; }
+    .window-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .window-badge { background: var(--navy); color: var(--gold); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; letter-spacing: 1px; text-transform: uppercase; }
+    .window-card h4 { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--navy); }
+    .window-card blockquote { padding: 10px 14px; background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 13px; color: var(--text); font-style: italic; line-height: 1.6; }
+    .window-card .window-tip { margin-top: 8px; font-size: 12px; color: var(--text-muted); }
+
+    /* ROADMAP TABLE */
+    .roadmap-table-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 28px; }
+    .roadmap-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .roadmap-table th { background: var(--navy); color: white; padding: 12px 20px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .roadmap-table td { padding: 12px 20px; border-bottom: 1px solid var(--border); }
+    .roadmap-table tr:last-child td { border-bottom: none; }
+    .roadmap-table .period { font-weight: 600; color: var(--navy); white-space: nowrap; }
+
+    /* VALUE LIST */
+    .value-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
+    .value-item { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text); }
+    .value-item .vi { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* RESPONSE CARDS */
+    .response-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .response-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .response-q { background: var(--cream); padding: 12px 20px; font-size: 14px; font-weight: 600; color: var(--navy); border-bottom: 1px solid var(--border); }
+    .response-a { padding: 14px 20px; font-size: 14px; color: var(--text-muted); line-height: 1.6; font-style: italic; }
+
+    /* NUMBERS TABLE */
+    .numbers-table-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 28px; }
+    .numbers-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .numbers-table th { background: var(--navy); color: white; padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .numbers-table td { padding: 11px 16px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+    .numbers-table tr:last-child td { border-bottom: none; }
+    .numbers-table .tier { font-weight: 700; color: var(--navy); }
+
+    /* TIMELINE */
+    .timeline { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .timeline-item { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 22px; display: flex; gap: 16px; }
+    .timeline-dot { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: white; font-family: 'DM Serif Display', serif; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; text-align: center; line-height: 1.2; font-weight: 700; }
+    .timeline-body h4 { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 8px; }
+    .timeline-body ul { padding-left: 18px; }
+    .timeline-body ul li { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* PRINCIPLES */
+    .principles-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+    .principle-item { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 18px; font-size: 14px; color: var(--text); line-height: 1.5; display: flex; align-items: flex-start; gap: 10px; }
+    .principle-item::before { content: '→'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* CALLOUT */
+    .callout-tip { background: #E8F8F7; border: 1px solid #0ABFBC; border-radius: 10px; padding: 16px 20px; font-size: 14px; color: #005F5E; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-start; }
+    .callout-tip .ci { flex-shrink: 0; font-size: 18px; margin-top: 1px; }
+
+    /* QUOTE */
+    .quote-block { background: linear-gradient(135deg, #002D6A 0%, #0A1A3A 100%); border-radius: 16px; padding: 28px 32px; margin-bottom: 32px; }
+    .quote-block blockquote { font-family: 'DM Serif Display', serif; font-size: 18px; color: white; line-height: 1.6; font-style: italic; }
+    .quote-block cite { display: block; margin-top: 12px; font-size: 11px; color: var(--gold); font-style: normal; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 24px 16px 60px; }
+      .page-hero { padding: 24px 20px; }
+      .mindset-grid { grid-template-columns: 1fr; }
+      .value-grid { grid-template-columns: 1fr; }
+      .tier-table th:nth-child(3), .tier-table td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1>Monthly to <em>Yearly Payments</em></h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">💳</div>
+      <div class="label">Resources</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="signature-programme.html"><span class="swift-letter">S</span><span class="swift-word">Signature</span></a>
+    <a class="swift-tab" href="webinar-programme.html"><span class="swift-letter">W</span><span class="swift-word">Webinar</span></a>
+    <a class="swift-tab" href="invite-programme.html"><span class="swift-letter">I</span><span class="swift-word">Invite</span></a>
+    <a class="swift-tab" href="fill-programme.html"><span class="swift-letter">F</span><span class="swift-word">Fill Class</span></a>
+    <a class="swift-tab" href="track-programme.html"><span class="swift-letter">T</span><span class="swift-word">Track</span></a>
+    <a class="swift-tab" href="casestudies.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">★</span><span class="swift-word">Case Studies</span></a>
+    <a class="swift-tab" href="planner.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">📅</span><span class="swift-word">30-Day Plan</span></a>
+    <div class="swift-tab-group">
+      <span class="swift-tab active" style="cursor:default;">
+        <span class="swift-letter" style="color:var(--gold);">✦</span>
+        <span class="swift-word">Other Resources ▾</span>
+      </span>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item active" href="payment-upgrade.html">💳 Monthly → Annual</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE SWIFT DROPDOWN -->
+  <div class="swift-nav-mobile" id="swiftMobileNav">
+    <button class="swift-dropdown-btn" id="swiftDropdownBtn" onclick="toggleSwiftDropdown()">
+      <span id="swiftCurrentLabel">Menu</span>
+      <span>▾</span>
+    </button>
+    <div class="swift-dropdown-menu" id="swiftDropdownMenu">
+      <a class="swift-dropdown-item" href="signature-programme.html"><span class="item-letter">S</span>Signature</a>
+      <a class="swift-dropdown-item" href="webinar-programme.html"><span class="item-letter">W</span>Webinar</a>
+      <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
+      <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
+      <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
+      <a class="swift-dropdown-item" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
+      <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
+      <a class="swift-dropdown-item" href="other-resources.html"><span class="item-letter">✦</span>Parties for Kids</a>
+      <a class="swift-dropdown-item" href="holiday-workshops.html"><span class="item-letter">✦</span>Holiday Workshops</a>
+      <a class="swift-dropdown-item active" href="payment-upgrade.html"><span class="item-letter">✦</span>Monthly → Annual</a>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var raw = location.pathname.split('/').pop() || 'signature-programme';
+      var page = raw.endsWith('.html') ? raw : raw + '.html';
+      var map = {
+        'signature-programme.html': 'S · Signature',
+        'webinar-programme.html': 'W · Webinar',
+        'invite-programme.html': 'I · Invite',
+        'fill-programme.html': 'F · Fill Class',
+        'track-programme.html': 'T · Track',
+        'casestudies.html': '★ Case Studies',
+        'casestudy-feon.html': '★ Case Studies',
+        'casestudy-fion.html': '★ Case Studies',
+        'planner.html': '📅 30-Day Plan',
+        'other-resources.html': '✦ Parties for Kids',
+        'holiday-workshops.html': '✦ Holiday Workshops',
+        'payment-upgrade.html': '✦ Monthly → Annual',
+      };
+      var el = document.getElementById('swiftCurrentLabel');
+      if (el) el.textContent = map[page] || 'Menu';
+    })();
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#swiftMobileNav')) {
+        var m = document.getElementById('swiftDropdownMenu');
+        if (m) m.classList.remove('open');
+      }
+    });
+  </script>
+
+  <!-- RESOURCE SUB-NAV -->
+  <nav class="res-subnav">
+    <a class="res-subnav-tab" href="other-resources.html">🎉 Parties for Kids</a>
+    <a class="res-subnav-tab" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+    <a class="res-subnav-tab active" href="payment-upgrade.html">💳 Monthly → Annual</a>
+  </nav>
+
+  <main class="main">
+
+    <div class="page-hero">
+      <div class="page-hero-tag">Payment Upgrade Framework · Sherina + Feon + John</div>
+      <h2>From Monthly Billing to <em>Annual Security</em></h2>
+      <p>A step-by-step system to move every parent from monthly payments to term, half-year, or annual — without discounting, without pressure, and without losing trust.</p>
+    </div>
+
+    <!-- MINDSET -->
+    <div class="section-header">
+      <span class="section-icon">🧠</span>
+      <h3>Mindset First</h3>
+    </div>
+
+    <div class="mindset-grid">
+      <div class="mindset-card">
+        <h4>Sherina's Core Shift</h4>
+        <div class="mindset-row">
+          <div class="dont">Pay $X for 4 sessions a month</div>
+          <div class="do">→ "In this programme, your child gets exam readiness — from now to PSLE"</div>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:12px;">Stop selling lessons. Start selling outcomes.</p>
+      </div>
+      <div class="mindset-card">
+        <h4>Feon's Core Shift</h4>
+        <div class="mindset-row">
+          <div class="dont">Worry about filling slots</div>
+          <div class="do">→ Lock in commitment. Don't discount — add value instead.</div>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:12px;">Annual = you can plan properly. Monthly = you're always chasing.</p>
+      </div>
+    </div>
+
+    <div class="callout-tip">
+      <span class="ci">💡</span>
+      <span>Ask yourself: Why do I deserve to collect upfront? What value can I demonstrate? How confident am I in my programme delivery? Answer these first — then the conversation with parents becomes easy.</span>
+    </div>
+
+    <!-- 4-TIER STRUCTURE -->
+    <div class="section-header">
+      <span class="section-icon">📊</span>
+      <h3>The 4-Tier Payment Structure</h3>
+    </div>
+
+    <div class="tier-table-wrap">
+      <table class="tier-table">
+        <thead>
+          <tr><th>Tier</th><th>Frequency</th><th>Incentive</th><th>Best For</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tier-name">Monthly</span><br><span class="tier-disc disc-none">Full price</span></td>
+            <td>Every month</td>
+            <td>Flexibility only</td>
+            <td>New parents, trust-building</td>
+          </tr>
+          <tr>
+            <td><span class="tier-name">Term (3 months)</span><br><span class="tier-disc disc-low">5–10% off</span></td>
+            <td>Every term</td>
+            <td>5–10% off or locked rate</td>
+            <td>After first term of good results</td>
+          </tr>
+          <tr>
+            <td><span class="tier-name">Half-Year (6 months)</span><br><span class="tier-disc disc-mid">10–12% off</span></td>
+            <td>Twice a year</td>
+            <td>10–12% off + priority scheduling</td>
+            <td>Mid-year upgrade, P5 → P6</td>
+          </tr>
+          <tr>
+            <td><span class="tier-name">Annual (9–12 months)</span><br><span class="tier-disc disc-high">15–20% off + bonuses</span></td>
+            <td>Once a year</td>
+            <td>15–20% off + all holiday workshops free</td>
+            <td>Committed families, exam year</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout-tip" style="margin-bottom:32px;">
+      <span class="ci">💡</span>
+      <span><strong>Feon's rule:</strong> Don't give a discount. Give free workshops instead. A 3-day holiday workshop at $150+ is worth more than a 10% discount — and it locks them in further.</span>
+    </div>
+
+    <!-- STEP BY STEP -->
+    <div class="section-header">
+      <span class="section-icon">🪜</span>
+      <h3>How to Upgrade Each Parent</h3>
+    </div>
+
+    <div class="phase-label">Phase 1 — Start on Monthly (Month 1–2)</div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Let New Parents Start Monthly</h4>
+          <p>Don't push for annual upfront. Parents need to experience your teaching first. Monthly is the entry point, not the destination.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Set Up Recurring Payment From Day 1</h4>
+          <p>Use Stripe, PayNow auto, or Enrolify. Make billing automatic — not manual invoicing every month. Less admin for you, seamless for them.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Get Them to Sign a Term Agreement</h4>
+          <p>Monthly is the payment method, not an exit door. They commit to the term. You commit to the programme. Both sides are protected.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-label">Phase 2 — The 60-Day Upgrade Window</div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>State the Upgrade Window in the Agreement</h4>
+          <blockquote>"You have 60 days from today to upgrade to term payment at the current discounted rate. After 60 days, this offer is no longer available."</blockquote>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Calculate the Top-Up When They're Ready</h4>
+          <p>Term rate minus what they've already paid = top-up amount. They pay it on the same day. Cancel the monthly link, send a new term recurring link.</p>
+          <blockquote>Example: Monthly rate $500/mth · Term rate $1,350 (3 mths)<br>After Month 1: Top-up = $850 · After Month 2: Top-up = $350</blockquote>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>If They Stay Monthly Past 60 Days — That's Fine</h4>
+          <p>They end up paying more in total. Either way works for you. The 60-day window creates urgency without pressure.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-label">Phase 3 — The Best Upgrade Windows</div>
+
+    <div class="window-cards">
+      <div class="window-card">
+        <div class="window-card-head">
+          <span class="window-badge">Window 1</span>
+          <h4>After Month 1 — Early Momentum</h4>
+        </div>
+        <blockquote>"[Child's name] has made a really good start. If you'd like to plan the rest of the term together, I can lock in the term rate for you now — it's a saving of $X versus monthly."</blockquote>
+        <div class="window-tip">— Feon's approach</div>
+      </div>
+      <div class="window-card">
+        <div class="window-card-head">
+          <span class="window-badge">Window 2</span>
+          <h4>After a Good Test or Report Card</h4>
+        </div>
+        <blockquote>"The results are showing. I'd love to plan the next phase properly with [child's name]. The half-year package means I can map out a full roadmap — want me to share the details?"</blockquote>
+        <div class="window-tip">— Sherina's approach</div>
+      </div>
+      <div class="window-card">
+        <div class="window-card-head">
+          <span class="window-badge" style="background:linear-gradient(135deg,#0ABFBC,#4A8FE7);">Window 3 · Golden</span>
+          <h4>June Holidays — Critical Period</h4>
+        </div>
+        <blockquote>"Since [child] is going into P6 next year, I want to plan the full journey — all the way to PSLE. The annual package means all holiday workshop slots are reserved, and I can customise as we go."</blockquote>
+        <div class="window-tip">Sherina's insight: Low rejection rates here — parents see Jan–May results and trust is established.</div>
+      </div>
+      <div class="window-card">
+        <div class="window-card-head">
+          <span class="window-badge">Window 4</span>
+          <h4>Before PSLE / O-Level Year</h4>
+        </div>
+        <blockquote>"Exam year is when consistency matters most. I'd like to make sure [child's name] has a guaranteed spot and a clear plan from January to the exam. The annual package locks that in."</blockquote>
+      </div>
+      <div class="window-card">
+        <div class="window-card-head">
+          <span class="window-badge">Window 5</span>
+          <h4>October/November — Annual Renewal</h4>
+        </div>
+        <blockquote>"It's been a great year with [child's name]. I'm planning my slots for next year now — I'd love for them to continue. If you renew before December, the rate is locked at this year's pricing."</blockquote>
+        <div class="window-tip">Target: 80% renewals before December. Your best December = financial security + a full January.</div>
+      </div>
+    </div>
+
+    <!-- ANNUAL ROADMAP -->
+    <div class="section-header">
+      <span class="section-icon">🗺️</span>
+      <h3>Show Parents the Annual Roadmap</h3>
+    </div>
+
+    <div class="callout-tip">
+      <span class="ci">💡</span>
+      <span><strong>Sherina's key insight:</strong> Parents pay for annual when they can see what they're buying. Show them the full journey — not just next month's lesson.</span>
+    </div>
+
+    <div class="roadmap-table-wrap">
+      <table class="roadmap-table">
+        <thead><tr><th>Period</th><th>Focus</th></tr></thead>
+        <tbody>
+          <tr><td class="period">Jan – May</td><td>Complete syllabus, focus on school WA performance</td></tr>
+          <tr><td class="period">June Holidays</td><td>Comprehensive revision based on WA results</td></tr>
+          <tr><td class="period">July – August</td><td>Intensive drilling and exam question practice</td></tr>
+          <tr><td class="period">September</td><td>Final revision and exam preparation</td></tr>
+          <tr><td class="period">Post-exam</td><td>Analysis, celebrate, prepare for next level</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout-tip" style="margin-bottom:32px;">
+      <span class="ci">🗣️</span>
+      <span><em>"You're not paying for lessons. You're buying exam readiness — a clear pathway from now to the day [child's name] walks into the exam hall feeling confident."</em></span>
+    </div>
+
+    <!-- ANNUAL PACKAGE VALUE -->
+    <div class="section-header">
+      <span class="section-icon">🎁</span>
+      <h3>What to Include in Annual Packages</h3>
+    </div>
+
+    <div class="value-grid">
+      <div class="value-item"><span class="vi">✅</span>All holiday workshops included free</div>
+      <div class="value-item"><span class="vi">✅</span>Recorded lesson library access</div>
+      <div class="value-item"><span class="vi">✅</span>Extra worksheets and materials</div>
+      <div class="value-item"><span class="vi">✅</span>Priority rescheduling — slot protected</div>
+      <div class="value-item"><span class="vi">✅</span>Head start workshop for next academic year</div>
+      <div class="value-item"><span class="vi">✅</span>Progress tracking summary every term</div>
+      <div class="value-item"><span class="vi">✅</span>Pre-exam intensive session (online booster)</div>
+      <div class="value-item"><span class="vi">✅</span>Extended Nov–Dec sessions (3 × 2.5hrs vs 6 short)</div>
+    </div>
+
+    <!-- HANDLING OBJECTIONS -->
+    <div class="section-header">
+      <span class="section-icon">💬</span>
+      <h3>Handling Common Parent Responses</h3>
+    </div>
+
+    <div class="response-cards">
+      <div class="response-card">
+        <div class="response-q">"Can I just stay monthly?"</div>
+        <div class="response-a">"Absolutely. Monthly gives you full flexibility. Just so you know — the monthly rate is at full price. The discounted rate is only available on term or annual packages."</div>
+      </div>
+      <div class="response-card">
+        <div class="response-q">"It's a lot to pay upfront."</div>
+        <div class="response-a">"Totally understand. We can do term payments — you pay once every 3 months instead. It's $X per term, which works out to less than monthly. Want me to set that up?"</div>
+      </div>
+      <div class="response-card">
+        <div class="response-q">"Let me see how the first month goes."</div>
+        <div class="response-a">"Of course — that's completely fair. I'll just let you know that the upgrade rate is locked for 60 days from today. After that, I can only offer the standard monthly rate. No rush at all."</div>
+      </div>
+      <div class="response-card">
+        <div class="response-q">"We might need to stop if results don't improve."</div>
+        <div class="response-a">"I hear you. That's why I build a roadmap upfront — so we both know exactly what we're working toward each month. If after the first term you feel it's not the right fit, we can part on good terms. But let's give it a proper run so [child's name] can really benefit."</div>
+      </div>
+    </div>
+
+    <!-- KNOW YOUR NUMBERS -->
+    <div class="section-header">
+      <span class="section-icon">🔢</span>
+      <h3>Know Your Numbers First</h3>
+    </div>
+
+    <div class="callout-tip">
+      <span class="ci">📐</span>
+      <span>Calculate before you offer any package: Total annual hours needed (typically 100–110hrs per student) · Factor in 10% overtime · Maximum sustainable discount · What monthly × 12 looks like vs your annual rate — annual should still net you more, not less.</span>
+    </div>
+
+    <div class="numbers-table-wrap">
+      <table class="numbers-table">
+        <thead><tr><th>Payment Tier</th><th>Typical Discount</th><th>Cash Flow</th><th>Admin Load</th></tr></thead>
+        <tbody>
+          <tr><td class="tier">Monthly</td><td>None (base price)</td><td>Unpredictable</td><td>High — bill every month</td></tr>
+          <tr><td class="tier">Term (3 mths)</td><td>5–10% off</td><td>Predictable per term</td><td>Medium — bill 4× a year</td></tr>
+          <tr><td class="tier">Half-Year</td><td>10–12% off</td><td>Stable</td><td>Low — bill twice a year</td></tr>
+          <tr><td class="tier">Annual</td><td>15–20% off + bonuses</td><td>Maximum security</td><td>Minimal — bill once</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- IMPLEMENTATION TIMELINE -->
+    <div class="section-header">
+      <span class="section-icon">📅</span>
+      <h3>Implementation Timeline</h3>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot">M1</div>
+        <div class="timeline-body">
+          <h4>Month 1 — Prepare</h4>
+          <ul>
+            <li>Audit current payment structure — who is monthly, who is term</li>
+            <li>Create annual curriculum roadmap for each level you teach</li>
+            <li>Write your T&C document (withdrawal, makeup, emergencies)</li>
+            <li>Calculate your pricing for each tier</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">M2–3</div>
+        <div class="timeline-body">
+          <h4>Month 2–3 — Soft Launch</h4>
+          <ul>
+            <li>Start with your most trusted existing clients (P5 → P6 is ideal)</li>
+            <li>Offer the upgrade conversation using the scripts above</li>
+            <li>Test the June-to-exam window — lowest resistance, highest trust</li>
+            <li>Refine roadmap presentation based on parent questions</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">M4+</div>
+        <div class="timeline-body">
+          <h4>Month 4 Onwards — Full System</h4>
+          <ul>
+            <li>All new clients start on monthly with 60-day upgrade window in their agreement</li>
+            <li>All existing clients offered annual renewal in October/November</li>
+            <li>Holiday workshops positioned as the key annual package incentive</li>
+            <li>Track who upgrades, when, and from which trigger — refine accordingly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORE PRINCIPLES -->
+    <div class="section-header">
+      <span class="section-icon">⚡</span>
+      <h3>Core Principles</h3>
+    </div>
+
+    <div class="principles-list">
+      <div class="principle-item">Sell outcomes, not hours — parents buy exam readiness, not lesson count</div>
+      <div class="principle-item">Don't discount — add value. Free workshops beat a 10% price cut every time</div>
+      <div class="principle-item">Monthly is the entry, not the destination — every monthly parent is an upgrade candidate</div>
+      <div class="principle-item">The 60-day window creates urgency without pressure — use it in every agreement</div>
+      <div class="principle-item">June is your golden window — low resistance, high trust, real urgency</div>
+      <div class="principle-item">Plan for your own students first — new students are a bonus, not a baseline</div>
+      <div class="principle-item">Recurring beats one-time — the goal is an active subscription, not a lump sum</div>
+      <div class="principle-item">Admin freedom = teaching freedom — annual billing gives you your energy back</div>
+    </div>
+
+    <div class="quote-block">
+      <blockquote>"Parents chose you over other options. Honour that trust — and give them the structure that lets you serve their child properly for the whole year."</blockquote>
+      <cite>— Sherina · Product Architect Coaching</cite>
+    </div>
+
+  </main>
+
+</body>
+</html>
