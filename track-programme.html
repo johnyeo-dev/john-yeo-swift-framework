@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track & Relaunch | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --step-done: #0ABFBC; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 9px; letter-spacing: 2px; color: var(--gold-light); text-transform: uppercase; margin-top: 2px; }
+
+    .progress-wrap { background: var(--navy-light); padding: 14px 40px; display: flex; align-items: center; gap: 16px; }
+    .progress-text { font-size: 12px; color: rgba(255,255,255,0.6); white-space: nowrap; }
+    .progress-bar-bg { flex: 1; height: 4px; background: rgba(255,255,255,0.15); border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 99px; transition: width 0.4s ease; }
+    .progress-count { font-size: 12px; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.4); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover:not([disabled]) { color: rgba(255,255,255,0.75); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-tab[disabled] { cursor: not-allowed; opacity: 0.35; pointer-events: none; }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; line-height: 1; }
+    .swift-tab:not(.active) .swift-letter { color: rgba(255,255,255,0.3); }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; }
+    .swift-done { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--step-done); background: rgba(10,191,188,0.12); border-radius: 4px; padding: 2px 6px; }
+
+    .tab-nav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn { padding: 16px 22px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .tab-btn:hover { color: var(--navy); }
+    .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+    .tab-num { width: 20px; height: 20px; border-radius: 50%; background: var(--cream-dark); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-shrink: 0; }
+    .tab-btn.active .tab-num { background: var(--navy); color: var(--white); }
+    .tab-btn.completed .tab-num { background: var(--step-done); color: white; }
+    .tab-btn.completed .tab-num::after { content: '✓'; }
+    .tab-btn.completed .tab-num span { display: none; }
+
+    .content { max-width: 820px; margin: 0 auto; padding: 40px 40px 80px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .panel-header { margin-bottom: 32px; }
+    .panel-step { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .panel-title { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 30px); color: var(--navy); line-height: 1.2; margin-bottom: 12px; }
+    .panel-desc { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 620px; }
+
+    .steps { display: flex; flex-direction: column; gap: 16px; }
+    .step-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 20px 24px; display: flex; gap: 16px; align-items: flex-start; cursor: pointer; transition: all 0.2s; }
+    .step-card:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(10,191,188,0.1); }
+    .step-card.checked { border-color: var(--step-done); background: #F0FAFA; }
+    .step-check { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px; transition: all 0.2s; background: var(--white); }
+    .step-card.checked .step-check { background: var(--step-done); border-color: var(--step-done); }
+    .step-check svg { display: none; }
+    .step-card.checked .step-check svg { display: block; }
+    .step-body { flex: 1; }
+    .step-badge { display: inline-block; background: var(--cream-dark); color: var(--navy); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 8px; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .step-title { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    .step-card.checked .step-title { text-decoration: line-through; color: var(--text-muted); }
+    .step-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.65; }
+    .step-quote { margin-top: 12px; background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; color: var(--text); line-height: 1.6; font-style: italic; }
+    .step-list { margin-top: 10px; list-style: none; }
+    .step-list li { font-size: 13px; color: var(--text-muted); padding: 4px 0; padding-left: 16px; position: relative; line-height: 1.5; }
+    .step-list li::before { content: '·'; position: absolute; left: 4px; color: var(--gold); font-weight: 700; }
+    .step-action { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+
+    .callout { border-radius: 10px; padding: 18px 22px; margin: 24px 0; display: flex; gap: 14px; align-items: flex-start; }
+    .callout-tip { background: #FFF8EE; border-left: 4px solid var(--gold); }
+    .callout-action { background: #EEF4FF; border-left: 4px solid #4A72C4; }
+    .callout-tool { background: #F0FBF2; border-left: 4px solid var(--step-done); }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .callout-text { font-size: 13.5px; line-height: 1.65; color: var(--text); }
+    .callout-text strong { font-weight: 600; display: block; margin-bottom: 4px; color: var(--navy); }
+
+    /* TIER CARDS */
+    .tier-grid { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+    .tier-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
+    .tier-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); white-space: nowrap; margin-top: 2px; min-width: 60px; }
+    .tier-body { flex: 1; }
+    .tier-who { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+    .tier-items { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+    /* USE CARDS */
+    .use-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+    @media (max-width: 580px) { .use-grid { grid-template-columns: 1fr; } }
+    .use-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+    .use-card .icon { font-size: 20px; margin-bottom: 6px; }
+    .use-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    .section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin: 28px 0 12px; }
+    .divider { border: none; border-top: 1.5px solid var(--border); margin: 28px 0; }
+
+    .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 24px; border-top: 1.5px solid var(--border); }
+    .btn { padding: 12px 24px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--navy); color: var(--white); }
+    .btn-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+    .btn-secondary { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--navy); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+    /* COMPLETE CELEBRATION */
+    .complete-box { background: linear-gradient(135deg, var(--navy) 0%, #0A3080 100%); border-radius: 16px; padding: 36px 32px; text-align: center; margin-top: 32px; border: 1px solid rgba(10,191,188,0.3); }
+    .complete-box .star { font-size: 48px; margin-bottom: 12px; }
+    .complete-box h3 { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--white); margin-bottom: 10px; }
+    .complete-box p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 480px; margin: 0 auto 24px; }
+    .swift-complete { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .swift-pill { background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 20px; padding: 6px 16px; font-size: 13px; font-weight: 600; color: var(--gold); }
+
+    .summary-box { background: var(--navy); border-radius: 12px; padding: 24px 28px; color: white; margin-top: 16px; }
+    .summary-box h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold-light); margin-bottom: 16px; }
+    .summary-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-item .num { font-size: 11px; font-weight: 700; color: var(--gold); background: rgba(10,191,188,0.15); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .summary-item p { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(10,15,28,0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.hidden { display: none; }
+    .modal-box { background: var(--white); border-radius: 16px; padding: 40px 36px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.3); animation: modalIn 0.3s ease; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-icon { font-size: 40px; margin-bottom: 16px; }
+    .modal-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 8px; }
+    .modal-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; }
+    .modal-input { width: 100%; padding: 14px 18px; font-family: 'DM Sans', sans-serif; font-size: 15px; border: 2px solid var(--border); border-radius: 10px; outline: none; color: var(--text); margin-bottom: 14px; transition: border-color 0.2s; }
+    .modal-input:focus { border-color: var(--gold); }
+    .modal-input::placeholder { color: var(--text-muted); }
+    .modal-btn { width: 100%; padding: 14px; background: var(--navy); color: white; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .modal-btn:hover { background: var(--navy-light); }
+    .modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .user-chip { display: flex; align-items: center; gap: 8px; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 20px; padding: 6px 14px 6px 8px; cursor: pointer; transition: all 0.2s; }
+    .user-chip:hover { background: rgba(10,191,188,0.25); }
+    .user-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--navy); }
+    .user-name { font-size: 12px; font-weight: 600; color: var(--white); }
+    .user-chip-wrap { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+    @media (max-width: 640px) {
+      .header { padding: 20px; flex-wrap: wrap; }
+      .progress-wrap { padding: 12px 20px; }
+      .swift-nav, .tab-nav { padding: 0 16px; }
+      .content { padding: 28px 20px 60px; }
+      .swift-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="modal-overlay" id="nameModal">
+    <div class="modal-box">
+      <div class="modal-icon">👋</div>
+      <h2 class="modal-title">Welcome to PAC</h2>
+      <p class="modal-sub">Enter your name so your progress gets saved just for you.</p>
+      <input class="modal-input" id="nameInput" type="text" placeholder="Your first name (e.g. Teacher Feon)" maxlength="40"
+        oninput="document.getElementById('startBtn').disabled = this.value.trim().length < 2"
+        onkeydown="if(event.key==='Enter') startSession()" autofocus />
+      <button class="modal-btn" id="startBtn" onclick="startSession()" disabled>Start My Journey →</button>
+    </div>
+  </div>
+
+  <div class="header">
+    <div>
+      <div class="header-label">Product Architect Coaching · by John Yeo</div>
+      <h1>SWIFT Framework —<br><em>Track &amp; Relaunch</em></h1>
+    </div>
+    <div class="user-chip-wrap">
+      <div class="user-chip" onclick="switchUser()" title="Switch user">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span class="user-name" id="userName">...</span>
+      </div>
+      <div class="swift-badge">
+        <div class="s">T</div>
+        <div class="label">Track</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <span class="progress-text">Your progress</span>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <span class="progress-count" id="progressCount">0 / 16 done</span>
+  </div>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="signature-programme.html">
+      <span class="swift-letter">S</span><span class="swift-word">Signature</span><span class="swift-done">Done</span>
+    </a>
+    <a class="swift-tab" href="webinar-programme.html">
+      <span class="swift-letter">W</span><span class="swift-word">Webinar</span><span class="swift-done">Done</span>
+    </a>
+    <a class="swift-tab" href="invite-programme.html">
+      <span class="swift-letter">I</span><span class="swift-word">Invite</span><span class="swift-done">Done</span>
+    </a>
+    <a class="swift-tab" href="fill-programme.html">
+      <span class="swift-letter">F</span><span class="swift-word">Fill Class</span><span class="swift-done">Done</span>
+    </a>
+    <button class="swift-tab active">
+      <span class="swift-letter">T</span><span class="swift-word">Track</span>
+    </button>
+  </nav>
+
+  <nav class="tab-nav" id="tabNav">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span class="tab-num"><span>1</span></span> Testimonials
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      <span class="tab-num"><span>2</span></span> Plan Round 2
+    </button>
+    <button class="tab-btn" onclick="switchTab(2)">
+      <span class="tab-num"><span>3</span></span> Relaunch
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <!-- ═══════════════════════════════════════════
+         TAB 1: TESTIMONIALS
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel active" id="panel-0">
+      <div class="panel-header">
+        <div class="panel-step">Part B · Track &amp; Relaunch</div>
+        <h2 class="panel-title">Collect <em>Testimonials</em> While the Momentum Is Hot</h2>
+        <p class="panel-desc">Testimonials from Round 1 are what fill Round 2 — bigger, faster, with more confidence. Collect them while the experience is still fresh. Don't wait until the workshop is over.</p>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-text">
+          <strong>You're not asking for a favour</strong>
+          You're giving other parents the chance to make a better decision for their child. Frame it that way and it never feels salesy — for you or for them.
+        </div>
+      </div>
+
+      <!-- TIER SYSTEM -->
+      <p class="section-label">Know Your Parent Types — Meet Them Where They Are</p>
+      <div class="tier-grid">
+        <div class="tier-card">
+          <div class="tier-label">Tier 1</div>
+          <div class="tier-body">
+            <div class="tier-who">Most parents — reserved, low-effort ask</div>
+            <div class="tier-items">Screenshot Zoom chat responses · WhatsApp wins (screenshot + ask permission) · NPS rating with one feedback question</div>
+          </div>
+        </div>
+        <div class="tier-card">
+          <div class="tier-label">Tier 2</div>
+          <div class="tier-body">
+            <div class="tier-who">Warmer parents — one extra step</div>
+            <div class="tier-items">Google review — send the direct link, don't make them search</div>
+          </div>
+        </div>
+        <div class="tier-card" style="border-color: var(--gold);">
+          <div class="tier-label">Tier 3</div>
+          <div class="tier-body">
+            <div class="tier-who">Your top 1–2 fans — ask privately, keep it casual</div>
+            <div class="tier-items">30-second voice note or short video testimony</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="steps" id="steps-0">
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-0')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 1 · Every Session</div>
+            <div class="step-title">Round robin at the end — "What's one thing you liked today?"</div>
+            <div class="step-desc">Before closing Zoom, go around and ask each parent or child: "What's one thing you or your child liked about today?" Record with permission. Unscripted, in-the-moment responses are more powerful than polished written ones.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-1')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 2 · As They Happen</div>
+            <div class="step-title">Screenshot WhatsApp wins the moment they arrive</div>
+            <div class="step-desc">When a parent sends a positive mid-conversation message, screenshot it immediately. Then reply:</div>
+            <div class="step-quote">"Thank you for sharing this 😊 Would you mind if I used this as feedback to help other parents decide?"</div>
+            <div class="step-action">→ Most say yes. Done in 30 seconds.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-2')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 3 · When They Don't Know What to Say</div>
+            <div class="step-title">Use trigger questions to draw out specific, emotional answers</div>
+            <div class="step-desc">Generic "good teacher" responses are useless. These questions pull out real stories:</div>
+            <ul class="step-list">
+              <li>"Was there a moment during the session when something really clicked for your child?"</li>
+              <li>"How does your child feel about this subject now compared to before?"</li>
+              <li>"What made you choose me over other tutors?"</li>
+              <li>"Has this helped your child beyond just the subject?"</li>
+              <li>"What would you tell a friend who was looking for similar help?"</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-3')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 4 · For Shy Parents</div>
+            <div class="step-title">Give them a simple 3-part structure to follow</div>
+            <div class="step-desc">If they freeze, remove the blank page pressure completely:</div>
+            <div class="step-quote">"Just share: the problem your child had, how we worked on it, and what's changed. Even two sentences is perfect."</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-4')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 5 · After the Workshop</div>
+            <div class="step-title">Send the NPS — one question, low pressure, high response rate</div>
+            <div class="step-desc">One WhatsApp message or Google Form immediately after the workshop ends:</div>
+            <div class="step-quote">"On a scale of 1–10, how likely are you to recommend this workshop to another parent? And what's one thing we did well / one thing we can improve?"</div>
+            <div class="step-action">→ Positive comments become testimonials with permission</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-5')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 6 · At Close</div>
+            <div class="step-title">Ask for a Google review — always send the direct link</div>
+            <div class="step-desc">Don't say "please leave a review" and leave them to find it. Send the link every time.</div>
+            <div class="step-quote">"If your child found this useful, would you mind leaving us a quick Google review? Even one sentence helps other parents find us 😊 [direct link]"</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-6')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 7 · Your Top 1–2 Fans Only</div>
+            <div class="step-title">Ask your warmest parents for a 30-second video — privately and casually</div>
+            <div class="step-desc">Identify 1–2 parents who already speak highly of you. Never ask publicly. Ask them privately in a DM:</div>
+            <div class="step-quote">"I have a small favour — would you be comfortable sharing a 30-second video about your child's experience? Totally casual, just talking to your phone."</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-7')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 8 · When You Need Both Praise and Feedback</div>
+            <div class="step-title">Use the Hamburger Method — positive, improve, positive</div>
+            <div class="step-desc">When you need both a testimonial and constructive feedback, structure your ask as: positive → area to improve → positive. This keeps parents feeling safe to be honest, and you get real insights without any awkwardness on either side.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-8')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 9 · After Every Round</div>
+            <div class="step-title">Compile everything into one folder — one folder per round</div>
+            <div class="step-desc">Create a dedicated folder for each workshop round. Store everything in one place so it's ready to pull for your Round 2 landing page, Instagram Stories, and WhatsApp broadcasts.</div>
+            <ul class="step-list">
+              <li>Screenshots from WhatsApp and Zoom chat</li>
+              <li>Google review links</li>
+              <li>Voice notes and video clips</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-9')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 10 · Mid-Session Gold</div>
+            <div class="step-title">Ask at the moment of a win — not just at the end</div>
+            <div class="step-desc">When a parent says "Wow that's so clear" or a child gets something right mid-session, capture it immediately:</div>
+            <div class="step-quote">"I'm glad it helped — would you mind sharing that in the chat so other parents can see?"</div>
+            <div class="step-action">→ In-the-moment responses are the most authentic</div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="divider" />
+
+      <p class="section-label">Where to Use What You Collect</p>
+      <div class="use-grid">
+        <div class="use-card">
+          <div class="icon">📄</div>
+          <p><strong style="color:var(--navy);">Landing page for Round 2</strong><br>Lead with 2–3 specific testimonials above the fold.</p>
+        </div>
+        <div class="use-card">
+          <div class="icon">📱</div>
+          <p><strong style="color:var(--navy);">Instagram Story slides</strong><br>Quote on slide. One testimonial per story. Simple and powerful.</p>
+        </div>
+        <div class="use-card">
+          <div class="icon">💬</div>
+          <p><strong style="color:var(--navy);">WhatsApp broadcast</strong><br>Send to warm leads who didn't sign up for Round 1. Let the testimonial do the work.</p>
+        </div>
+        <div class="use-card">
+          <div class="icon">📌</div>
+          <p><strong style="color:var(--navy);">Pinned post in your community</strong><br>Pin the best testimonial. New joiners see it immediately.</p>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" disabled>← Back</button>
+        <button class="btn btn-primary" onclick="switchTab(1)">Plan Round 2 →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TAB 2: PLAN ROUND 2
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-1">
+      <div class="panel-header">
+        <div class="panel-step">Part C · Track &amp; Relaunch</div>
+        <h2 class="panel-title">Plan <em>Round 2</em> Before Round 1 Even Ends</h2>
+        <p class="panel-desc">The best time to announce Round 2 is when your current students are still inside your workshop — their energy is at its peak, and the transformation is happening right in front of them.</p>
+      </div>
+
+      <div class="callout callout-action">
+        <span class="callout-icon">🚀</span>
+        <div class="callout-text">
+          <strong>Even one student is a win</strong>
+          It proves your funnel works. Iterate from there. Don't wait for a perfect round before planning the next one — the second round is always better than the first.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-1">
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-0')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 1 · Before Round 1 Closes</div>
+            <div class="step-title">Set the Round 2 date while momentum is at its peak</div>
+            <div class="step-desc">Announce Round 2 to your current workshop group before it ends. Their energy is highest right now — and students who had a great experience are the easiest next-round sign-ups you'll ever get. Don't wait until after it's over.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-1')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 2 · Pricing Structure</div>
+            <div class="step-title">Bundle all days as one package — no individual day pick-and-mix</div>
+            <div class="step-desc">Don't let parents select individual sessions. Sell the full workshop as one bundle. Less admin, more revenue, cleaner logistics, and parents who commit to the full run get better results — which means better testimonials for Round 3.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-2')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 3 · Promotion Timeline</div>
+            <div class="step-title">Start ads at least 4 weeks before the workshop date</div>
+            <div class="step-desc">Singapore parents often wait for school results before committing. Give yourself — and them — enough runway. For a June workshop, start promoting in late April. Starting too late means you're scrambling in the final week.</div>
+            <div style="margin-top: 10px; font-size: 13px; color: var(--text-muted); font-style: italic;">
+              June workshop → Start promoting: late April<br>
+              December workshop → Start promoting: early November<br>
+              March workshop → Start promoting: early February
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-3')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 4 · Revenue Optimisation</div>
+            <div class="step-title">Add upsells to your checkout — more revenue, no extra sessions</div>
+            <div class="step-desc">These easy add-ons increase revenue per parent without adding more teaching time:</div>
+            <ul class="step-list">
+              <li>Marking of child's work between sessions</li>
+              <li>One-to-one feedback session (30 min)</li>
+              <li>Digital resources bundle at a discount</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-4')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-badge">Step 5 · After Every Round</div>
+            <div class="step-title">Document and systemise — make the next round plug-and-play</div>
+            <div class="step-desc">After each round, spend 30 minutes writing down: what worked, what to change, what parents said, what you'd do differently. The goal is a workshop that runs smoother every single time — eventually, it becomes a system you can hand off.</div>
+            <div class="step-action">→ The 3rd round is always easier than the 1st</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(0)">← Testimonials</button>
+        <button class="btn btn-primary" onclick="switchTab(2)">Relaunch →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TAB 3: RELAUNCH + COMPLETE
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-2">
+      <div class="panel-header">
+        <div class="panel-step">Relaunch · Track &amp; Relaunch</div>
+        <h2 class="panel-title">You've Built the <em>Full System</em> — Now Repeat It</h2>
+        <p class="panel-desc">SWIFT isn't a one-time launch. Every round feeds the next one — better testimonials, warmer leads, stronger confidence. The system compounds over time.</p>
+      </div>
+
+      <div class="callout callout-tool">
+        <span class="callout-icon">🔄</span>
+        <div class="callout-text">
+          <strong>The SWIFT flywheel</strong>
+          Signature → Webinar → Invite → Fill Class → Track & Relaunch → back to Webinar, stronger than before. Every round shortens the time to fill your next one.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-2">
+        <div class="step-card" onclick="toggleStep(this, 'step-2-0')">
+          <div class="step-check"><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="step-body">
+            <div class="step-title">Set your Round 2 date and commit to it — publicly</div>
+            <div class="step-desc">Don't keep the date to yourself. Announce it to your WhatsApp community and existing workshop parents today. A public commitment creates accountability and gives warm leads a real deadline to act on.</div>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.9;">
+              📅 <strong>Round 2 date:</strong> _________________<br>
+              📢 <strong>Announced to community:</strong> Yes / Not yet<br>
+              🎯 <strong>Target students:</strong> _________________
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-box" style="margin-top: 32px;">
+        <h3>Your Track &amp; Relaunch Checklist</h3>
+        <div class="summary-item"><div class="num">T1</div><p>Did a round-robin at the end of every session — collected unscripted responses</p></div>
+        <div class="summary-item"><div class="num">T2</div><p>Screenshotted WhatsApp wins as they happened and asked for permission to use</p></div>
+        <div class="summary-item"><div class="num">T3</div><p>Used trigger questions to draw out specific, emotional testimonials</p></div>
+        <div class="summary-item"><div class="num">T4</div><p>Sent the NPS after the workshop — turned positive responses into testimonials</p></div>
+        <div class="summary-item"><div class="num">T5</div><p>Asked for Google reviews with the direct link — Tier 2 and above</p></div>
+        <div class="summary-item"><div class="num">T6</div><p>Compiled all testimonials into one folder, labelled by round</p></div>
+        <div class="summary-item"><div class="num">T7</div><p>Announced Round 2 date before Round 1 closed</p></div>
+        <div class="summary-item"><div class="num">T8</div><p>Set promotion start date 4+ weeks before the workshop</p></div>
+        <div class="summary-item"><div class="num">T9</div><p>Documented what worked and what to change for next round</p></div>
+      </div>
+
+      <!-- FULL SYSTEM COMPLETE -->
+      <div class="complete-box" style="margin-top: 32px;">
+        <div class="star">✶</div>
+        <h3>SWIFT System Complete</h3>
+        <p>You've built the full system — from your Signature Offer to your Track & Relaunch process. Every round from here gets bigger, faster, and smoother. Pace of Love.</p>
+        <div class="swift-complete">
+          <span class="swift-pill">S — Signature ✓</span>
+          <span class="swift-pill">W — Webinar ✓</span>
+          <span class="swift-pill">I — Invite ✓</span>
+          <span class="swift-pill">F — Fill Class ✓</span>
+          <span class="swift-pill">T — Track ✓</span>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(1)">← Plan Round 2</button>
+        <button class="btn btn-primary" onclick="alert('🎉 SWIFT complete! You\'ve built the full system. Now run it.')">Complete SWIFT ✓</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let currentTab = 0;
+    const TOTAL_STEPS = 16;
+    let currentUser = '';
+    let checkedSteps = new Set();
+
+    function storageKey(user) { return 'pac-track-' + user.toLowerCase().replace(/\s+/g, '-'); }
+
+    function startSession() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name.length < 2) return;
+      currentUser = name;
+      localStorage.setItem('pac-track-current-user', name);
+      loadUserProgress(name);
+      document.getElementById('nameModal').classList.add('hidden');
+      updateUserChip(name);
+    }
+
+    function loadUserProgress(name) {
+      const saved = localStorage.getItem(storageKey(name));
+      checkedSteps = new Set(saved ? JSON.parse(saved) : []);
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
+      checkedSteps.forEach(id => {
+        const el = document.querySelector(`[onclick="toggleStep(this, '${id}')"]`);
+        if (el) el.classList.add('checked');
+      });
+      updateProgress();
+    }
+
+    function updateUserChip(name) {
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+
+    function switchUser() {
+      if (!confirm('Switch to a different user? Your progress is saved.')) return;
+      localStorage.removeItem('pac-track-current-user');
+      currentUser = '';
+      checkedSteps = new Set();
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
+      updateProgress();
+      document.getElementById('nameInput').value = '';
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('nameModal').classList.remove('hidden');
+    }
+
+    const returning = localStorage.getItem('pac-track-current-user');
+    if (returning) {
+      currentUser = returning;
+      loadUserProgress(returning);
+      updateUserChip(returning);
+      document.getElementById('nameModal').classList.add('hidden');
+    }
+
+    function switchTab(index) {
+      document.querySelectorAll('.tab-btn').forEach((t, i) => t.classList.toggle('active', i === index));
+      document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === index));
+      currentTab = index;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleStep(card, id) {
+      if (!currentUser) return;
+      card.classList.toggle('checked');
+      if (card.classList.contains('checked')) { checkedSteps.add(id); } else { checkedSteps.delete(id); }
+      localStorage.setItem(storageKey(currentUser), JSON.stringify([...checkedSteps]));
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = checkedSteps.size;
+      const pct = Math.min(100, Math.round((count / TOTAL_STEPS) * 100));
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressCount').textContent = count + ' / ' + TOTAL_STEPS + ' done';
+      const tabStepMap = [10, 5, 1];
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabStepMap.forEach((c, i) => {
+        const ids = Array.from({length: c}, (_, j) => `step-${i}-${j}`);
+        const allDone = ids.every(id => checkedSteps.has(id));
+        if (allDone && i !== currentTab) { tabs[i].classList.add('completed'); } else { tabs[i].classList.remove('completed'); }
+      });
+    }
+  </script>
+</body>
+</html>

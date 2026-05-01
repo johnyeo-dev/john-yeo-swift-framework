@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Webinar | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A;
+      --navy-light: #0A0F1C;
+      --gold: #0ABFBC;
+      --gold-light: #4A8FE7;
+      --cream: #F4F7FB;
+      --cream-dark: #E8EDF5;
+      --text: #0A0F1C;
+      --text-muted: #6B7A96;
+      --white: #FFFFFF;
+      --step-done: #0ABFBC;
+      --border: #B8C4D4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--navy);
+      padding: 28px 40px 24px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .header-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(24px, 4vw, 36px);
+      color: var(--white);
+      line-height: 1.1;
+    }
+    .header h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .swift-badge {
+      margin-left: auto;
+      background: rgba(10,191,188,0.15);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 8px 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 9px; letter-spacing: 2px; color: var(--gold-light); text-transform: uppercase; margin-top: 2px; }
+
+    /* PROGRESS BAR */
+    .progress-wrap {
+      background: var(--navy-light);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .progress-text { font-size: 12px; color: rgba(255,255,255,0.6); white-space: nowrap; }
+    .progress-bar-bg {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+    .progress-count { font-size: 12px; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+
+    /* SWIFT TOP NAV */
+    .swift-nav {
+      background: var(--navy-light);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab {
+      padding: 14px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.4);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .swift-tab:hover:not([disabled]) { color: rgba(255,255,255,0.75); }
+    .swift-tab.active {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+    .swift-tab[disabled] { cursor: not-allowed; opacity: 0.35; pointer-events: none; }
+    .swift-letter {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .swift-tab:not(.active) .swift-letter { color: rgba(255,255,255,0.3); }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; }
+    .swift-coming {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+    .swift-done {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--step-done);
+      background: rgba(10,191,188,0.12);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    /* TAB NAV */
+    .tab-nav {
+      background: var(--white);
+      border-bottom: 2px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 16px 22px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover { color: var(--navy); }
+    .tab-btn.active {
+      color: var(--navy);
+      border-bottom-color: var(--gold);
+      font-weight: 600;
+    }
+    .tab-num {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .tab-btn.active .tab-num { background: var(--navy); color: var(--white); }
+    .tab-btn.completed .tab-num { background: var(--step-done); color: white; }
+    .tab-btn.completed .tab-num::after { content: '✓'; }
+    .tab-btn.completed .tab-num span { display: none; }
+
+    /* CONTENT AREA */
+    .content {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* PANEL HEADER */
+    .panel-header { margin-bottom: 32px; }
+    .panel-step {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .panel-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(22px, 3vw, 30px);
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .panel-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 620px;
+    }
+
+    /* STEPS */
+    .steps { display: flex; flex-direction: column; gap: 16px; }
+    .step-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .step-card:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(10,191,188,0.1); }
+    .step-card.checked { border-color: var(--step-done); background: #F0FAFA; }
+    .step-check {
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+      transition: all 0.2s;
+      background: var(--white);
+    }
+    .step-card.checked .step-check { background: var(--step-done); border-color: var(--step-done); }
+    .step-check svg { display: none; }
+    .step-card.checked .step-check svg { display: block; }
+    .step-body { flex: 1; }
+    .step-title { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    .step-card.checked .step-title { text-decoration: line-through; color: var(--text-muted); }
+    .step-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.65; }
+    .step-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* CALLOUT BOXES */
+    .callout {
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 24px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .callout-tip { background: #FFF8EE; border-left: 4px solid var(--gold); }
+    .callout-action { background: #EEF4FF; border-left: 4px solid #4A72C4; }
+    .callout-tool { background: #F0FBF2; border-left: 4px solid var(--step-done); }
+    .callout-warn { background: #FFF3F3; border-left: 4px solid #E05555; }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .callout-text { font-size: 13.5px; line-height: 1.65; color: var(--text); }
+    .callout-text strong { font-weight: 600; display: block; margin-bottom: 4px; color: var(--navy); }
+
+    /* PROMPT / SCRIPT BOX */
+    .prompt-box {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .prompt-box-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .prompt-text {
+      font-size: 13px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.85);
+      font-family: 'DM Sans', sans-serif;
+      white-space: pre-wrap;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(10,191,188,0.2);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: var(--gold); color: var(--navy); }
+    .copy-btn.copied { background: var(--step-done); border-color: var(--step-done); color: white; }
+
+    /* EXAMPLE / INFO CARDS */
+    .example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+    @media (max-width: 600px) { .example-grid { grid-template-columns: 1fr; } }
+    .example-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .example-card h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .example-card p { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+    .example-card ul { list-style: none; }
+    .example-card ul li { font-size: 12px; color: var(--text-muted); padding: 3px 0; line-height: 1.5; }
+    .example-card ul li span { font-weight: 600; color: var(--navy); }
+
+    /* TITLE EXAMPLES */
+    .title-example {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 8px 0;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .title-example em { color: var(--gold); font-style: normal; font-weight: 600; }
+
+    /* COMPARISON TABLE */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: var(--white);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      font-size: 13px;
+    }
+    .compare-table th {
+      background: var(--navy);
+      color: var(--white);
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+    .compare-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      line-height: 1.5;
+      vertical-align: top;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:nth-child(even) td { background: var(--cream); }
+    .compare-table td:first-child { font-weight: 600; color: var(--text-muted); font-size: 12px; }
+
+    /* TIMING STRIP */
+    .timing-strip {
+      display: flex;
+      gap: 8px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .timing-block {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      text-align: center;
+      flex: 1;
+      min-width: 100px;
+    }
+    .timing-block .t-min { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+    .timing-block .t-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 28px 0 12px;
+    }
+
+    /* NAV BUTTONS */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1.5px solid var(--border);
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { background: var(--navy); color: var(--white); }
+    .btn-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+    .btn-secondary { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--navy); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1.5px solid var(--border); margin: 28px 0; }
+
+    /* SUMMARY BOX */
+    .summary-box {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 28px;
+      color: white;
+      margin-top: 16px;
+    }
+    .summary-box h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold-light); margin-bottom: 16px; }
+    .summary-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-item .num { font-size: 11px; font-weight: 700; color: var(--gold); background: rgba(10,191,188,0.15); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .summary-item p { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; }
+
+    /* NAME MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,15,28,0.85);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 40px 36px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+      animation: modalIn 0.3s ease;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-icon { font-size: 40px; margin-bottom: 16px; }
+    .modal-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 8px; }
+    .modal-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; }
+    .modal-input {
+      width: 100%; padding: 14px 18px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      border: 2px solid var(--border); border-radius: 10px;
+      outline: none; color: var(--text); margin-bottom: 14px; transition: border-color 0.2s;
+    }
+    .modal-input:focus { border-color: var(--gold); }
+    .modal-input::placeholder { color: var(--text-muted); }
+    .modal-btn {
+      width: 100%; padding: 14px;
+      background: var(--navy); color: white; border: none; border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .modal-btn:hover { background: var(--navy-light); }
+    .modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* USER CHIP */
+    .user-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(10,191,188,0.15); border: 1px solid var(--gold);
+      border-radius: 20px; padding: 6px 14px 6px 8px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .user-chip:hover { background: rgba(10,191,188,0.25); }
+    .user-avatar {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--gold); display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--navy);
+    }
+    .user-name { font-size: 12px; font-weight: 600; color: var(--white); }
+    .user-chip-wrap { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+    /* CHECKLIST INSIDE SCRIPT */
+    .script-checklist { list-style: none; margin-top: 12px; }
+    .script-checklist li {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      padding: 5px 0;
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .script-checklist li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+
+    @media (max-width: 640px) {
+      .header { padding: 20px; flex-wrap: wrap; }
+      .progress-wrap { padding: 12px 20px; }
+      .swift-nav { padding: 0 16px; }
+      .tab-nav { padding: 0 16px; }
+      .content { padding: 28px 20px 60px; }
+      .swift-badge { display: none; }
+      .timing-strip { gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAME MODAL -->
+  <div class="modal-overlay" id="nameModal">
+    <div class="modal-box">
+      <div class="modal-icon">👋</div>
+      <h2 class="modal-title">Welcome to PAC</h2>
+      <p class="modal-sub">Enter your name so your progress gets saved just for you.</p>
+      <input
+        class="modal-input" id="nameInput" type="text"
+        placeholder="Your first name (e.g. Teacher Feon)" maxlength="40"
+        oninput="document.getElementById('startBtn').disabled = this.value.trim().length < 2"
+        onkeydown="if(event.key==='Enter') startSession()" autofocus
+      />
+      <button class="modal-btn" id="startBtn" onclick="startSession()" disabled>Start My Journey →</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-label">Product Architect Coaching · by John Yeo</div>
+      <h1>SWIFT Framework —<br><em>Webinar Programme</em></h1>
+    </div>
+    <div class="user-chip-wrap">
+      <div class="user-chip" onclick="switchUser()" title="Switch user">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span class="user-name" id="userName">...</span>
+      </div>
+      <div class="swift-badge">
+        <div class="s">W</div>
+        <div class="label">Webinar</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <span class="progress-text">Your progress</span>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <span class="progress-count" id="progressCount">0 / 17 done</span>
+  </div>
+
+  <!-- SWIFT TOP NAV -->
+  <nav class="swift-nav">
+    <a class="swift-tab" href="signature-programme.html">
+      <span class="swift-letter">S</span>
+      <span class="swift-word">Signature</span>
+      <span class="swift-done">Done</span>
+    </a>
+    <button class="swift-tab active">
+      <span class="swift-letter">W</span>
+      <span class="swift-word">Webinar</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='invite-programme.html'">
+      <span class="swift-letter">I</span>
+      <span class="swift-word">Invite</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='fill-programme.html'">
+      <span class="swift-letter">F</span>
+      <span class="swift-word">Fill Class</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='track-programme.html'">
+      <span class="swift-letter">T</span>
+      <span class="swift-word">Track</span>
+    </button>
+  </nav>
+
+  <!-- SUB-TAB NAV -->
+  <nav class="tab-nav" id="tabNav">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span class="tab-num"><span>1</span></span> Prepare
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      <span class="tab-num"><span>2</span></span> Teach
+    </button>
+    <button class="tab-btn" onclick="switchTab(2)">
+      <span class="tab-num"><span>3</span></span> Transition
+    </button>
+    <button class="tab-btn" onclick="switchTab(3)">
+      <span class="tab-num"><span>4</span></span> Pitch
+    </button>
+    <button class="tab-btn" onclick="switchTab(4)">
+      <span class="tab-num"><span>5</span></span> Follow-Up
+    </button>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <!-- ═══════════════════════════════════════════
+         TAB 1: PREPARE
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel active" id="panel-0">
+      <div class="panel-header">
+        <div class="panel-step">Step 1 of 5 · Webinar Module</div>
+        <h2 class="panel-title">Prepare Your <em>Webinar</em> Before You Go Live</h2>
+        <p class="panel-desc">A strong webinar starts long before you open Zoom. Lock in your title, agenda, bio, and logistics — then you can focus 100% on delivery.</p>
+      </div>
+
+      <!-- TIMING OVERVIEW -->
+      <p class="section-label">Webinar Timing Overview</p>
+      <div class="timing-strip">
+        <div class="timing-block">
+          <div class="t-min">30–40<span style="font-size:14px">min</span></div>
+          <div class="t-label">Teach</div>
+        </div>
+        <div class="timing-block">
+          <div class="t-min">2<span style="font-size:14px">min</span></div>
+          <div class="t-label">Transition</div>
+        </div>
+        <div class="timing-block">
+          <div class="t-min">10–15<span style="font-size:14px">min</span></div>
+          <div class="t-label">Pitch</div>
+        </div>
+        <div class="timing-block">
+          <div class="t-min">5<span style="font-size:14px">min</span></div>
+          <div class="t-label">Q&amp;A</div>
+        </div>
+        <div class="timing-block" style="border-color: var(--gold);">
+          <div class="t-min" style="color:var(--gold);">~60<span style="font-size:14px">min</span></div>
+          <div class="t-label">Total</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-text">
+          <strong>Your title is your first hook</strong>
+          Use the Pain → Pleasure formula. A parent scrolling Facebook should read your title and immediately think: "That's my child." Spend real time on this.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-0">
+        <div class="step-card" onclick="toggleStep(this, 'step-0-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Write your webinar title using the Pain → Pleasure formula</div>
+            <div class="step-desc">Formula: <strong>Why your child [pain happening now] (And How to [pleasure/fix it])</strong><br><br>
+              Pick one that fits your subject:
+            </div>
+            <div class="title-example">Why Your Child Can Do It at Home But <em>Struggles in Exams</em> (And How to Fix It)</div>
+            <div class="title-example">Why Your Child Studies Hard But Still Gets <em>Average Grades</em> (And How to Finally Break Through)</div>
+            <div class="title-example">Why Your Child Loses Marks on Questions They <em>Actually Know</em> (And How to Stop the Careless Mistakes)</div>
+            <div class="title-example">Why Your Child Panics When the Exam Paper Looks <em>Unfamiliar</em> (And How to Build the Confidence to Handle Anything)</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Plan your 4-point agenda ("What we'll cover today")</div>
+            <div class="step-desc">Open your webinar by telling parents exactly what they'll get. Use this structure:</div>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.8;">
+              ① Question types that kids commonly find confusing<br>
+              ② How your child can handle challenging questions confidently<br>
+              ③ What your child can do to consistently get the right answers<br>
+              ④ An invitation to be coached by me [before major exams / during school holidays]
+            </div>
+            <div class="step-action">→ Swap in your subject-specific language</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Write your 30-second coach introduction</div>
+            <div class="step-desc">Parents need to trust you before they'll listen. Keep it warm, human, and specific. Use this template — fill in the brackets:</div>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.8; font-style: italic;">
+              "Founder of [Organisation]. I've been teaching [subject] to kids and supporting parents since [year]. I'm also a parent myself — so I know what it feels like on both sides. I've written [X] guidebooks and helped hundreds of students [specific result]."
+            </div>
+            <div class="step-action">→ Keep it under 45 seconds when read aloud</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-3')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Lock in your logistics: date, time, platform, registration link</div>
+            <div class="step-desc">Decide all of these before you start promoting. Changing logistics after promoting destroys trust. One decision, stick to it.</div>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.8;">
+              📅 <strong>Date:</strong> _________________ &nbsp;&nbsp; 🕒 <strong>Time:</strong> _________________<br>
+              💻 <strong>Platform:</strong> Zoom / Google Meet / Facebook Live<br>
+              🔗 <strong>Registration link:</strong> _________________<br>
+              👥 <strong>Max participants:</strong> _________________ (keep it small for your first)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" disabled>← Back</button>
+        <button class="btn btn-primary" onclick="switchTab(1)">Teach →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TAB 2: TEACH
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-1">
+      <div class="panel-header">
+        <div class="panel-step">Step 2 of 5 · Webinar Module</div>
+        <h2 class="panel-title">Teach With <em>Heart</em> — Give Real Value First</h2>
+        <p class="panel-desc">The more generously you teach, the more trust you earn for the pitch. Don't hold back. Parents who feel taught — not sold — will lean in when you make your offer.</p>
+      </div>
+
+      <div class="callout callout-tool">
+        <span class="callout-icon">🎓</span>
+        <div class="callout-text">
+          <strong>The 3 Confidence Levels Framework — use this as your core teach content</strong>
+          This structure works for any subject. Walk parents through all three levels — most kids are stuck at Level 1.
+        </div>
+      </div>
+
+      <p class="section-label">The 3 Confidence Levels (Your Teaching Structure)</p>
+      <div class="example-grid">
+        <div class="example-card">
+          <h4>① Basic — Home Practice</h4>
+          <p>Your child attempts questions at home, you mark. They feel okay here because there's no pressure. <strong>Most kids are stuck at this level.</strong></p>
+        </div>
+        <div class="example-card">
+          <h4>② Intermediate — Think Out Loud</h4>
+          <p>Your child explains their thinking and simplifies their steps. This mirrors exam conditions where they can't freeze up. <strong>Guided by an experienced coach.</strong></p>
+        </div>
+        <div class="example-card">
+          <h4>③ Advanced — Teach It Back</h4>
+          <p>Your child teaches the concept to someone else. When they can teach it, they can handle it under pressure. <strong>Only possible in a class setting.</strong></p>
+        </div>
+        <div class="example-card">
+          <h4>Key Question to Ask Your Students</h4>
+          <ul>
+            <li>"Do you want to <span>choose your school</span>, or let your school choose you?"</li>
+            <li>"When you freeze in the exam — <span>what do you think will happen?</span>"</li>
+            <li>"So what do you need to <span>practise now</span>, so that doesn't happen?"</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="steps" id="steps-1">
+        <div class="step-card" onclick="toggleStep(this, 'step-1-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Prepare your 3 teaching points with real examples</div>
+            <div class="step-desc">Each point should: (1) name a struggle parents recognise, (2) explain WHY it happens, (3) give a practical insight they can use immediately. Keep each point under 10 minutes. Conversational, not lecture-style.</div>
+            <div style="margin-top: 10px; font-size: 13px; color: var(--text-muted); line-height: 1.8;">
+              <strong style="color: var(--navy);">Common reasons to use as your 3 points:</strong><br>
+              ① Not categorising questions by type — every unfamiliar question feels overwhelming<br>
+              ② No reliable go-to strategies — they stare at the question and give up<br>
+              ③ Never practised thinking under pressure — panic sets in immediately
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Prepare 1 live practice question for the session</div>
+            <div class="step-desc">Pick a real exam question from your subject. Walk parents through it exactly as you'd walk a student through it — showing your thinking process, not just the answer. This is the most powerful 5 minutes of your webinar. Parents watch your method live.</div>
+            <div class="step-action">→ Save this as Section G in your webinar notes</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Craft your "real student story" for credibility</div>
+            <div class="step-desc">One short before-and-after story from a real student. Format: "One of my students was [before — struggling with what]. After [X weeks] using this method, [after — specific result]. Same student. Different approach." Keep it under 60 seconds. This is not bragging — it's proof your method works.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(0)">← Prepare</button>
+        <button class="btn btn-primary" onclick="switchTab(2)">Transition →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TAB 3: TRANSITION
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-2">
+      <div class="panel-header">
+        <div class="panel-step">Step 3 of 5 · Webinar Module</div>
+        <h2 class="panel-title">The <em>Pivot</em> — From Teaching to Inviting</h2>
+        <p class="panel-desc">This moment decides everything. How you bridge from your content into your offer determines how natural — or awkward — the pitch feels. Practice this until it's second nature.</p>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚡</span>
+        <div class="callout-text">
+          <strong>The core principle</strong>
+          The goal is never to convince someone who isn't ready. The goal is to make it easy for the right person to say yes. Teach generously → Lower the guard → Invite, don't push → Let them self-select.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-2">
+        <div class="step-card" onclick="toggleStep(this, 'step-2-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Memorise your YES check-in moment (read aloud 5× until natural)</div>
+            <div class="step-desc">This is the pivot point — right after your 3rd teaching point. It's 3 sentences. Don't improvise it. Know it cold.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Choose your method: Method 1 (Permission Share) or Method 2 (Break & Segment)</div>
+            <div class="step-desc">Both work. Method 1 is continuous and confident. Method 2 is gentler — great for your first few webinars or when your audience is large (20+). Read both scripts below, then decide which feels like you.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Do a full dry run of your transition — out loud, on camera</div>
+            <div class="step-desc">Record yourself on your phone doing the full transition. Watch it back once. You're not looking for perfection — you're looking for "do I sound like a human or a robot?" Adjust anything that sounds stiff.</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- METHOD 1 SCRIPT -->
+      <p class="section-label">Method 1 — The Permission Share</p>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">Use this right after your 3rd teaching point. Continuous, confident, no break. Best for: warm audiences and confident presenters.</p>
+
+      <div class="prompt-box" id="script-method1">
+        <div class="prompt-box-label">📋 Method 1 Script — Copy Everything Below</div>
+        <button class="copy-btn" onclick="copyScript('script-method1', this)">Copy</button>
+        <div class="prompt-text">SAY: "This third technique is just ONE of the key parts I share with my own students to help them jump from [C grade] to [A grade] within [1-2 months]."
+
+[PAUSE 3 seconds]
+
+SAY: "Give me a YES in the chat if you got value from today's sharing."
+
+[WAIT 10 seconds]
+
+SAY: "I can see many yeses coming in. That's wonderful!"
+(Even if no one responds, say this anyway.)
+
+SAY: "Parents, is it okay if I spend the next 10 minutes sharing how you can access the REST of my complete teaching system?"
+
+[PAUSE 5 seconds]
+
+SAY: "Great! Let me share this with you..."
+
+[Proceed to your pitch →]</div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- METHOD 2 SCRIPT -->
+      <p class="section-label">Method 2 — The Break &amp; Segment (Alternative)</p>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">Use this when you're nervous about pitching, or when your audience is 20+ people. Filters out non-buyers naturally — those who stay are serious.</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Criteria</th>
+            <th>Method 1 — Permission Share</th>
+            <th>Method 2 — Break &amp; Segment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Best for</td><td>Confident presenters</td><td>First few webinars / nervous pitchers</td></tr>
+          <tr><td>Audience size</td><td>Any size</td><td>20+ works best</td></tr>
+          <tr><td>Pitch attendance</td><td>Higher attendance</td><td>Lower, but higher intent</td></tr>
+          <tr><td>Energy</td><td>One continuous flow</td><td>Natural break — cleaner energy</td></tr>
+          <tr><td>Ticket price</td><td>Any price</td><td>Better for $200+ offers</td></tr>
+        </tbody>
+      </table>
+
+      <div class="prompt-box" id="script-method2">
+        <div class="prompt-box-label">📋 Method 2 Script — Break &amp; Segment</div>
+        <button class="copy-btn" onclick="copyScript('script-method2', this)">Copy</button>
+        <div class="prompt-text">STEP 1 — After teaching:
+SAY: "Alright everyone, we've covered the three key techniques today. I hope you got value from that."
+
+STEP 2 — YES check-in:
+SAY: "Give me a YES in the chat if you found today's session helpful."
+[Wait 10 seconds, acknowledge responses]
+SAY: "Great! I can see many yeses coming through."
+
+STEP 3 — Segmentation:
+SAY: "Now, the next part is ONLY for those who want to know more about how to get the FULL system I use with my students.
+
+For those who are NOT interested, you're free to leave now — no hard feelings at all. Thank you for joining today!"
+
+STEP 4 — 2-minute break:
+SAY: "For those who ARE interested, I'm going to take a 2-minute break.
+
+Use this time to: grab some water, stretch a bit, or just process what we've covered.
+I'll start again in exactly 2 minutes."
+
+[Turn off camera. Put a 2-minute countdown on screen. Optional: soft background music.]
+
+STEP 5 — Welcome back:
+SAY: "Welcome back! For those still here, thank you for staying.
+
+This tells me you're serious about getting results for your child, and I respect that."
+
+STEP 6 — Bridge into pitch:
+SAY: "So let me share with you what I've put together, and how you can access the complete system..."
+
+[Proceed to your pitch →]</div>
+      </div>
+
+      <!-- SILENCE HANDLERS -->
+      <div class="callout callout-tip" style="margin-top: 24px;">
+        <span class="callout-icon">🤫</span>
+        <div class="callout-text">
+          <strong>What if no one responds?</strong>
+          If silence after "Give me a YES" → "I can see some yeses, and I know some of you are processing. That's normal."<br>
+          If silence after asking permission → "I'm seeing some nods and messages, so let me go ahead..."<br>
+          If no questions → "No questions? Great — that means I explained it clearly. Payment links are in the chat."
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(1)">← Teach</button>
+        <button class="btn btn-primary" onclick="switchTab(3)">Pitch →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TAB 4: PITCH
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-3">
+      <div class="panel-header">
+        <div class="panel-step">Step 4 of 5 · Webinar Module</div>
+        <h2 class="panel-title">Make Your <em>Offer</em> With Confidence</h2>
+        <p class="panel-desc">You've earned this moment. You gave real value, you asked permission. Now make the offer clearly — no apologies, no hesitation. You know you can help these families.</p>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">🎯</span>
+        <div class="callout-text">
+          <strong>Don't apologise for pitching</strong>
+          Price for the transformation, not the hours. Your offer is not an imposition — it's the next step for parents who are serious. Be confident.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-3">
+        <div class="step-card" onclick="toggleStep(this, 'step-3-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Fill in your offer details (name, date, time, venue, 3 outcomes)</div>
+            <div class="step-desc">Complete your offer card before the webinar. You should be able to describe your programme in one breath — date, time, what they'll cover, and what they'll walk away with.</div>
+            <div class="step-action">→ Use the Script — Step 1 below</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-3-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Build your value stack (main + 3 bonuses with dollar values)</div>
+            <div class="step-desc">Assign a monetary value to every piece of your offer — the main workshop AND every bonus. When parents see Total Value: $500 vs. Your Investment: $200, the gap does the selling for you.</div>
+            <div class="step-action">→ Use the Script — Step 3 below</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-3-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Set your urgency: limited spots + early bird price that expires today</div>
+            <div class="step-desc">Cap your spots (e.g. 10 students for personalised attention). Set an early bird price that's $30–$50 off — valid only while the call is live. This creates genuine action without fake pressure.</div>
+            <div class="step-action">→ Use the Script — Step 4 below</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-3-3')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Set up your 3 CTA options: registration link, QR code, and DM</div>
+            <div class="step-desc">Give 3 ways to register — different people take different actions. Drop the link in chat, have a QR code on screen, and tell them to DM you "INTERESTED". Then run a 5-minute countdown on screen.</div>
+            <div class="step-action">→ Use the Script — Step 5 below</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- FULL PITCH SCRIPT -->
+      <p class="section-label">Full 5-Step Pitch Script</p>
+
+      <div class="prompt-box" id="script-pitch">
+        <div class="prompt-box-label">📋 Full Pitch Script — Steps 1–5 (Fill in the Brackets)</div>
+        <button class="copy-btn" onclick="copyScript('script-pitch', this)">Copy</button>
+        <div class="prompt-text">STEP 1 — Describe Your Offer:
+SAY: "So here's what I've put together...
+
+I'm running a [Workshop Name] on [Topic], and it's happening on:
+• Date: [e.g. November 15th, Saturday]
+• Time: [e.g. 2pm to 5pm]
+• Where: Online via Zoom / At [location]
+• Duration: [e.g. 3 hours]
+
+In this workshop, we'll cover:
+• [Outcome 1]
+• [Outcome 2]
+• [Outcome 3]
+
+You'll walk away with [workbook/notes/template]."
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 2 — Qualify Your Audience:
+SAY: "Now, I want to be very clear — this workshop is ESPECIALLY designed for parents who are:
+• Hands-on — involved in your child's education and willing to support at home
+• Action-oriented — you want to implement and see real results
+• Committed — serious about improvement and ready to put in the work
+
+If that sounds like you, this will be a great fit."
+
+[PAUSE 2 seconds]
+
+SAY: "If you're looking for a quick fix or want the tutor to do everything... this probably isn't for you, and that's okay."
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 3 — Value Stack:
+SAY: "Here's everything you're getting:
+
+Main Workshop: [Name] — worth $[X]
+BONUS #1: [Name] — worth $[X]
+BONUS #2: [Name] — worth $[X]
+BONUS #3: [Name] — worth $[X]
+
+Total value: $[X]
+Your investment today: Just $[X]"
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 4 — Create Urgency:
+SAY: "Now, I can only take [10] students because I want to give personalised attention.
+
+EARLY BIRD SPECIAL: For those who sign up BEFORE this call ends today, you get $[50] off.
+
+Your price today: $[X]
+But this early bird rate expires when we finish today."
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 5 — Call to Action:
+SAY: "Here's how to register RIGHT NOW:
+
+Option 1: Click the registration link I'm dropping in the chat: [DROP LINK]
+Option 2: Scan this QR code [SHOW ON SCREEN]
+Option 3: Send me a DM saying 'INTERESTED'
+
+Once you've registered and paid, screenshot and send it to me for immediate confirmation.
+
+I'm putting a 5-minute countdown on screen right now. Use this time to register, and I'll be here to answer any questions."
+
+[START 5-MINUTE COUNTDOWN TIMER ON SCREEN]
+
+After 2 min: "I'm seeing some registrations coming in! 3 minutes left for early bird."
+After 4 min: "One minute left for the early bird discount! Registration link is in the chat."
+When timer ends: "Alright, early bird has ended. For those who registered — congratulations! For those who didn't make it, you can still register at the regular rate. Just DM me."</div>
+      </div>
+
+      <div class="callout callout-action" style="margin-top: 8px;">
+        <span class="callout-icon">✅</span>
+        <div class="callout-text">
+          <strong>Key reminders during your pitch</strong>
+          Read naturally — not like a robot · Smile when appropriate · Maintain eye contact with camera · Don't apologise for pitching · Be confident — you KNOW you can help · If nervous, keep going anyway · Goal: close just 1 person = SUCCESS
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(2)">← Transition</button>
+        <button class="btn btn-primary" onclick="switchTab(4)">Follow-Up →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TAB 5: FOLLOW-UP
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-4">
+      <div class="panel-header">
+        <div class="panel-step">Step 5 of 5 · Webinar Module</div>
+        <h2 class="panel-title">The Gold is in the <em>Follow-Up</em></h2>
+        <p class="panel-desc">Most sales happen after the webinar — not during. Send your WhatsApp sequence within 24 hours while the session is still fresh. Don't go quiet after the call ends.</p>
+      </div>
+
+      <div class="callout callout-action">
+        <span class="callout-icon">📱</span>
+        <div class="callout-text">
+          <strong>The 10-step WhatsApp sequence</strong>
+          This runs during the webinar itself — you drop these messages into your group as you speak. Customise every bracket before you go live. Test-send to yourself first.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-4">
+        <div class="step-card" onclick="toggleStep(this, 'step-4-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Customise the 10-step WhatsApp sequence with your details</div>
+            <div class="step-desc">Copy the sequence below and replace every [bracket] with your real content before the webinar. Paste each message into your group at the right moment during the session. This keeps the chat alive and supplements what you're saying on screen.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-4-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Send your follow-up within 24 hours of the webinar ending</div>
+            <div class="step-desc">After the webinar, send a personal follow-up to everyone who attended but didn't register. Message: "Hi [Name], so glad you joined today. Any questions about [workshop name]? I'd love to help you decide if it's right for your child." Personal, not mass broadcast.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-4-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">DM every "INTERESTED" response within 1 hour</div>
+            <div class="step-desc">Anyone who DMed you "INTERESTED" during the call is your hottest lead. Reply personally within 60 minutes. Ask one question: "What's your child's current level / biggest challenge?" This opens a conversation — conversations close sales, not broadcast messages.</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- WHATSAPP SEQUENCE -->
+      <p class="section-label">The 10-Step WhatsApp Sequence</p>
+
+      <div class="prompt-box" id="script-whatsapp">
+        <div class="prompt-box-label">📋 WhatsApp Sequence — Drop Into Your Group During the Webinar</div>
+        <button class="copy-btn" onclick="copyScript('script-whatsapp', this)">Copy</button>
+        <div class="prompt-text">STEP 0 — Hook Before You Start:
+"Here's a question that comes out in [Exam / Paper]:
+
+[Paste actual question]
+
+How would your child answer this? 👇"
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1 — Welcome:
+"So glad you're here. Everything I'm sharing today I use with my own students. Let's make this count."
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 2 — Promise:
+"By the end of today you'll have [specific outcome]. Stay with me."
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 3 — Mindset Shift:
+"Most students struggle with [subject] not because they're not smart — but because they've been taught to memorise, not understand. Here's what changes everything… [insight]"
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 4 — Common Mistake:
+"The #1 mistake I see in [subject]: [specific mistake]. Completely avoidable once you know this… [insight]"
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 5 — Your Method:
+"Here's what I actually use with my students: [your 3-step method]. Simple — but most students have never been shown this."
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 6 — Real Story:
+"One of my students [before]. After [X weeks] using this method, [after]. Same student. Different approach."
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 7 — Recap:
+"To recap:
+✅ [Takeaway 1]
+✅ [Takeaway 2]
+✅ [Takeaway 3]"
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 8 — Transition:
+"Knowing this is a start. Applying it under exam conditions — with guidance and real feedback — that's different. Which is why I put something together for students who are serious."
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 9 — Ask Permission:
+"Is it okay if I share something with you for the next 10 minutes? I think it could really help your child with [specific result]. 🙏"
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 10 — Pitch:
+"[Workshop Name] — [X hours / X days]
+
+We cover: [Topic 1], [Topic 2], [Topic 3]
+
+Your child walks away with:
+✅ [Outcome 1]
+✅ [Outcome 2]
+✅ [Outcome 3]
+
+Date: [Date] | Time: [Time]
+Venue: [Location / Zoom]
+Investment: $[Price]
+Spots: Limited to [X] students
+
+Register or ask me here: [link] 🙏"</div>
+      </div>
+
+      <!-- COMPLETION SUMMARY -->
+      <div class="summary-box" style="margin-top: 32px;">
+        <h3>🎉 Your Webinar Checklist</h3>
+        <div class="summary-item"><div class="num">W1</div><p>Locked in title, agenda, bio, date, time, and registration link</p></div>
+        <div class="summary-item"><div class="num">W2</div><p>Prepared 3 teaching points, practice question, and student story</p></div>
+        <div class="summary-item"><div class="num">W3</div><p>Chose transition method (Method 1 or 2) and did a dry run on camera</p></div>
+        <div class="summary-item"><div class="num">W4</div><p>Filled in pitch script: offer details, value stack, urgency, and CTA</p></div>
+        <div class="summary-item"><div class="num">W5</div><p>Customised WhatsApp sequence and planned 24-hour follow-up</p></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(3)">← Pitch</button>
+        <button class="btn btn-primary" onclick="alert('🎉 Webinar module complete! Head to the Invite & Follow-Up (I) module next.')">Complete W ✓</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let currentTab = 0;
+    const TOTAL_STEPS = 17;
+    let currentUser = '';
+    let checkedSteps = new Set();
+
+    function storageKey(user) {
+      return 'pac-web-' + user.toLowerCase().replace(/\s+/g, '-');
+    }
+
+    function startSession() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name.length < 2) return;
+      currentUser = name;
+      localStorage.setItem('pac-web-current-user', name);
+      loadUserProgress(name);
+      document.getElementById('nameModal').classList.add('hidden');
+      updateUserChip(name);
+    }
+
+    function loadUserProgress(name) {
+      const saved = localStorage.getItem(storageKey(name));
+      checkedSteps = new Set(saved ? JSON.parse(saved) : []);
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
+      checkedSteps.forEach(id => {
+        const el = document.querySelector(`[onclick="toggleStep(this, '${id}')"]`);
+        if (el) el.classList.add('checked');
+      });
+      updateProgress();
+    }
+
+    function updateUserChip(name) {
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+
+    function switchUser() {
+      if (!confirm('Switch to a different user? Your progress is saved.')) return;
+      localStorage.removeItem('pac-web-current-user');
+      currentUser = '';
+      checkedSteps = new Set();
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
+      updateProgress();
+      document.getElementById('nameInput').value = '';
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('nameModal').classList.remove('hidden');
+    }
+
+    const returning = localStorage.getItem('pac-web-current-user');
+    if (returning) {
+      currentUser = returning;
+      loadUserProgress(returning);
+      updateUserChip(returning);
+      document.getElementById('nameModal').classList.add('hidden');
+    }
+
+    function switchTab(index) {
+      document.querySelectorAll('.tab-btn').forEach((t, i) => t.classList.toggle('active', i === index));
+      document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === index));
+      currentTab = index;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleStep(card, id) {
+      if (!currentUser) return;
+      card.classList.toggle('checked');
+      if (card.classList.contains('checked')) {
+        checkedSteps.add(id);
+      } else {
+        checkedSteps.delete(id);
+      }
+      localStorage.setItem(storageKey(currentUser), JSON.stringify([...checkedSteps]));
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = checkedSteps.size;
+      const pct = Math.min(100, Math.round((count / TOTAL_STEPS) * 100));
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressCount').textContent = count + ' / ' + TOTAL_STEPS + ' done';
+
+      const tabStepMap = [4, 3, 3, 4, 3];
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabStepMap.forEach((c, i) => {
+        const ids = Array.from({length: c}, (_, j) => `step-${i}-${j}`);
+        const allDone = ids.every(id => checkedSteps.has(id));
+        if (allDone && i !== currentTab) {
+          tabs[i].classList.add('completed');
+        } else {
+          tabs[i].classList.remove('completed');
+        }
+      });
+    }
+
+    function copyScript(boxId, btn) {
+      const text = document.getElementById(boxId).querySelector('.prompt-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signature Programme | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A;
+      --navy-light: #0A0F1C;
+      --gold: #0ABFBC;
+      --gold-light: #4A8FE7;
+      --cream: #F4F7FB;
+      --cream-dark: #E8EDF5;
+      --text: #0A0F1C;
+      --text-muted: #6B7A96;
+      --white: #FFFFFF;
+      --step-done: #0ABFBC;
+      --border: #B8C4D4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--navy);
+      padding: 28px 40px 24px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .header-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(24px, 4vw, 36px);
+      color: var(--white);
+      line-height: 1.1;
+    }
+    .header h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .swift-badge {
+      margin-left: auto;
+      background: rgba(201,147,58,0.15);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 8px 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 9px; letter-spacing: 2px; color: var(--gold-light); text-transform: uppercase; margin-top: 2px; }
+
+    /* PROGRESS BAR */
+    .progress-wrap {
+      background: var(--navy-light);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .progress-text { font-size: 12px; color: rgba(255,255,255,0.6); white-space: nowrap; }
+    .progress-bar-bg {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+    .progress-count { font-size: 12px; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+
+    /* SWIFT TOP NAV */
+    .swift-nav {
+      background: var(--navy-light);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab {
+      padding: 14px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.4);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+    .swift-tab:hover:not(:disabled) { color: rgba(255,255,255,0.75); }
+    .swift-tab.active {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+    .swift-tab:disabled { cursor: not-allowed; opacity: 0.35; }
+    .swift-letter {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .swift-tab:not(.active) .swift-letter { color: rgba(255,255,255,0.3); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; }
+    .swift-coming {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    /* TAB NAV */
+    .tab-nav {
+      background: var(--white);
+      border-bottom: 2px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 16px 22px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover { color: var(--navy); }
+    .tab-btn.active {
+      color: var(--navy);
+      border-bottom-color: var(--gold);
+      font-weight: 600;
+    }
+    .tab-num {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .tab-btn.active .tab-num {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .tab-btn.completed .tab-num {
+      background: var(--step-done);
+      color: white;
+    }
+    .tab-btn.completed .tab-num::after { content: '✓'; }
+    .tab-btn.completed .tab-num span { display: none; }
+
+    /* CONTENT AREA */
+    .content {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* PANEL HEADER */
+    .panel-header {
+      margin-bottom: 32px;
+    }
+    .panel-step {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .panel-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(22px, 3vw, 30px);
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .panel-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 620px;
+    }
+
+    /* STEPS */
+    .steps { display: flex; flex-direction: column; gap: 16px; }
+
+    .step-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .step-card:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(201,147,58,0.1); }
+    .step-card.checked { border-color: var(--step-done); background: #F0FAFA; }
+
+    .step-check {
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+      transition: all 0.2s;
+      background: var(--white);
+    }
+    .step-card.checked .step-check {
+      background: var(--step-done);
+      border-color: var(--step-done);
+    }
+    .step-check svg { display: none; }
+    .step-card.checked .step-check svg { display: block; }
+
+    .step-body { flex: 1; }
+    .step-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .step-card.checked .step-title { text-decoration: line-through; color: var(--text-muted); }
+    .step-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .step-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* CALLOUT BOXES */
+    .callout {
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 24px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .callout-tip { background: #FFF8EE; border-left: 4px solid var(--gold); }
+    .callout-action { background: #EEF4FF; border-left: 4px solid #4A72C4; }
+    .callout-tool { background: #F0FBF2; border-left: 4px solid var(--step-done); }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .callout-text { font-size: 13.5px; line-height: 1.65; color: var(--text); }
+    .callout-text strong { font-weight: 600; display: block; margin-bottom: 4px; color: var(--navy); }
+
+    /* PROMPT BOX */
+    .prompt-box {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .prompt-box-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .prompt-text {
+      font-size: 13px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.85);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(201,147,58,0.2);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: var(--gold); color: var(--navy); }
+    .copy-btn.copied { background: var(--step-done); border-color: var(--step-done); color: white; }
+
+    /* EXAMPLE CARDS */
+    .example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+    @media (max-width: 600px) { .example-grid { grid-template-columns: 1fr; } }
+
+    .example-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .example-acronym {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .example-name { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 8px; }
+    .example-list { list-style: none; }
+    .example-list li { font-size: 12px; color: var(--text-muted); padding: 2px 0; line-height: 1.5; }
+    .example-list li span { font-weight: 600; color: var(--navy); }
+
+    /* NAV BUTTONS */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1.5px solid var(--border);
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { background: var(--navy); color: var(--white); }
+    .btn-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+    .btn-secondary { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--navy); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+    /* SECTION DIVIDER */
+    .divider { border: none; border-top: 1.5px solid var(--border); margin: 28px 0; }
+
+    /* TOOL LINK */
+    .tool-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--navy);
+      text-decoration: none;
+      transition: all 0.2s;
+      margin: 4px 4px 4px 0;
+    }
+    .tool-link:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* FRAMEWORK BUILDER */
+    .fw-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+    @media (max-width: 560px) { .fw-grid { grid-template-columns: 1fr 1fr; } }
+    .fw-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .fw-letter { font-family: 'DM Serif Display', serif; font-size: 30px; color: var(--navy); }
+    .fw-word { font-size: 12px; font-weight: 600; color: var(--gold); margin: 4px 0 2px; text-transform: uppercase; letter-spacing: 1px; }
+    .fw-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.5; }
+
+    /* CHECKLIST SUMMARY */
+    .summary-box {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 28px;
+      color: white;
+      margin-top: 16px;
+    }
+    .summary-box h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold-light); margin-bottom: 16px; }
+    .summary-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-item .num { font-size: 11px; font-weight: 700; color: var(--gold); background: rgba(201,147,58,0.15); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .summary-item p { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; }
+
+    @media (max-width: 640px) {
+      .header { padding: 20px; flex-wrap: wrap; }
+      .progress-wrap { padding: 12px 20px; }
+      .tab-nav { padding: 0 16px; }
+      .content { padding: 28px 20px 60px; }
+      .swift-badge { display: none; }
+    }
+
+    /* NAME MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,15,28,0.85);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 40px 36px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+      animation: modalIn 0.3s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-icon { font-size: 40px; margin-bottom: 16px; }
+    .modal-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .modal-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .modal-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      color: var(--text);
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .modal-input:focus { border-color: var(--gold); }
+    .modal-input::placeholder { color: var(--text-muted); }
+    .modal-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-btn:hover { background: var(--navy-light); }
+    .modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* USER CHIP in header */
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(10,191,188,0.15);
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      padding: 6px 14px 6px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .user-chip:hover { background: rgba(10,191,188,0.25); }
+    .user-avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .user-name { font-size: 12px; font-weight: 600; color: var(--white); }
+    .user-chip-wrap {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAME MODAL -->
+  <div class="modal-overlay" id="nameModal">
+    <div class="modal-box">
+      <div class="modal-icon">👋</div>
+      <h2 class="modal-title">Welcome to PAC</h2>
+      <p class="modal-sub">Enter your name so your progress gets saved just for you — even if others use this page on the same device.</p>
+      <input
+        class="modal-input"
+        id="nameInput"
+        type="text"
+        placeholder="Your first name (e.g. Teacher Feon)"
+        maxlength="40"
+        oninput="document.getElementById('startBtn').disabled = this.value.trim().length < 2"
+        onkeydown="if(event.key==='Enter') startSession()"
+        autofocus
+      />
+      <button class="modal-btn" id="startBtn" onclick="startSession()" disabled>
+        Start My Journey →
+      </button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-label">Product Architect Coaching · by John Yeo</div>
+      <h1>SWIFT Framework —<br><em>Signature Programme</em></h1>
+    </div>
+    <div class="user-chip-wrap">
+      <div class="user-chip" onclick="switchUser()" title="Switch user">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span class="user-name" id="userName">...</span>
+      </div>
+      <div class="swift-badge">
+        <div class="s">S</div>
+        <div class="label">Signature</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <span class="progress-text">Your progress</span>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <span class="progress-count" id="progressCount">0 / 14 done</span>
+  </div>
+
+  <!-- SWIFT TOP NAV -->
+  <nav class="swift-nav">
+    <button class="swift-tab active" onclick="switchSwiftTab('S')">
+      <span class="swift-letter">S</span>
+      <span class="swift-word">Signature</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='webinar-programme.html'">
+      <span class="swift-letter">W</span>
+      <span class="swift-word">Webinar</span>
+    </button>
+    <button class="swift-tab" disabled>
+      <span class="swift-letter">I</span>
+      <span class="swift-word">Invite</span>
+      <span class="swift-coming">Soon</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='fill-programme.html'">
+      <span class="swift-letter">F</span>
+      <span class="swift-word">Fill Class</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='track-programme.html'">
+      <span class="swift-letter">T</span>
+      <span class="swift-word">Track</span>
+    </button>
+  </nav>
+
+  <!-- TAB NAV -->
+  <nav class="tab-nav" id="tabNav">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span class="tab-num"><span>1</span></span> Your Why
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      <span class="tab-num"><span>2</span></span> Testimonials
+    </button>
+    <button class="tab-btn" onclick="switchTab(2)">
+      <span class="tab-num"><span>3</span></span> Framework
+    </button>
+    <button class="tab-btn" onclick="switchTab(3)">
+      <span class="tab-num"><span>4</span></span> Structure
+    </button>
+    <button class="tab-btn" onclick="switchTab(4)">
+      <span class="tab-num"><span>5</span></span> Packaging
+    </button>
+    <button class="tab-btn" onclick="switchTab(5)">
+      <span class="tab-num"><span>6</span></span> Launch
+    </button>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <!-- TAB 1: YOUR WHY -->
+    <div class="tab-panel active" id="panel-0">
+      <div class="panel-header">
+        <div class="panel-step">Step 1 of 6</div>
+        <h2 class="panel-title">Start with Your Heart — <em>Why</em> You Teach</h2>
+        <p class="panel-desc">Before building anything, get clear on what makes you different. This is the foundation everything else sits on. It takes 20 minutes. Don't skip it.</p>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-text">
+          <strong>Why this matters</strong>
+          Your signature programme isn't just a course — it's a transformation you've already been delivering. We're just giving it a name and a shape.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-0">
+        <div class="step-card" onclick="toggleStep(this, 'step-0-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Write your "why I teach" in 3 sentences</div>
+            <div class="step-desc">What called you into education? What breaks your heart when a student is stuck? What fills you up when a student finally gets it? Write it down — raw, honest, no editing.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Describe your unique teaching approach</div>
+            <div class="step-desc">How do you teach differently from everyone else? Is it the way you explain things? Your patience? How you connect with students emotionally before going academic? Be specific — "I'm passionate" isn't enough.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Name your ideal student clearly</div>
+            <div class="step-desc">Who is this programme for, exactly? What are they struggling with right now? What do they desperately want? The clearer you are, the more magnetic your programme becomes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" disabled>← Previous</button>
+        <button class="btn btn-primary" onclick="switchTab(1)">Testimonials →</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: TESTIMONIALS -->
+    <div class="tab-panel" id="panel-1">
+      <div class="panel-header">
+        <div class="panel-step">Step 2 of 6</div>
+        <h2 class="panel-title">Collect Your <em>Proof</em></h2>
+        <p class="panel-desc">Your past students already know what makes you special. Your job is to listen to them. Gather at least 10 testimonials — this is the raw material your framework is built from.</p>
+      </div>
+
+      <div class="callout callout-action">
+        <span class="callout-icon">📋</span>
+        <div class="callout-text">
+          <strong>Target: 10+ testimonials minimum</strong>
+          More is better. Even short ones count. Voice notes, WhatsApp messages, Google Form responses — all of it works.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-1">
+        <div class="step-card" onclick="toggleStep(this, 'step-1-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Ask your best students / parents for a testimonial</div>
+            <div class="step-desc">Send a simple message: "Hi [Name], I'm building a new programme and would love to hear how our sessions have helped you. Could you share 3–5 sentences on what changed for you?" Keep it casual. Most will say yes.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Dig through old messages, emails, WhatsApp chats</div>
+            <div class="step-desc">You already have testimonials — you just haven't collected them. Scroll through your chats. Look for "thank you" messages, parent updates, students sharing results. Screenshot and save them all.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Compile them into one document or PDF</div>
+            <div class="step-desc">Copy all testimonials into a single Word doc or PDF. One testimonial per paragraph is fine. This file gets uploaded to Claude in the next step — so keep it clean and readable.</div>
+            <div class="step-action">→ Save as "my-testimonials.pdf"</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-3')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Read through them and note what keeps repeating</div>
+            <div class="step-desc">Before the AI does anything — you do this first. What words or themes show up again and again? "Safe", "confident", "finally understood"? Jot down 3–5 words that keep appearing.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(0)">← Your Why</button>
+        <button class="btn btn-primary" onclick="switchTab(2)">Build Framework →</button>
+      </div>
+    </div>
+
+    <!-- TAB 3: FRAMEWORK -->
+    <div class="tab-panel" id="panel-2">
+      <div class="panel-header">
+        <div class="panel-step">Step 3 of 6</div>
+        <h2 class="panel-title">Create Your <em>Framework Acronym</em></h2>
+        <p class="panel-desc">This is the heart of your signature programme — a memorable acronym that captures exactly how you teach. Use Claude to generate it from your real testimonials.</p>
+      </div>
+
+      <div class="callout callout-tool">
+        <span class="callout-icon">🤖</span>
+        <div class="callout-text">
+          <strong>You'll need your testimonials PDF from Step 2</strong>
+          Open Claude in a new tab, upload your PDF, then paste the prompt below. Claude will give you 10 framework options to choose from.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-2">
+        <div class="step-card" onclick="toggleStep(this, 'step-2-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Open Claude and upload your testimonials PDF</div>
+            <div class="step-desc">Go to claude.ai → start a new chat → click the paperclip icon → upload your testimonials file. Then copy and paste the prompt below.</div>
+            <div style="margin-top: 10px;">
+              <a class="tool-link" href="https://claude.ai" target="_blank">↗ Open Claude</a>
+              <a class="tool-link" href="https://chatgpt.com/g/g-680b6273d1988191a7ad6d84cf52004a-product-architect-signature-framework-builder" target="_blank">↗ Use Custom GPT</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Copy and paste this prompt into Claude</div>
+            <div class="step-desc">Everything in the box below. Don't change it — it's written specifically to get you the best framework options.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROMPT BOX -->
+      <div class="prompt-box">
+        <div class="prompt-box-label">📋 Your Claude Prompt — Copy Everything Below</div>
+        <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Copy</button>
+        <div class="prompt-text" id="promptContent">I need help creating a signature framework for my heart-based education offer. I've uploaded testimonials from my students/clients.
+
+Please:
+1. Extract the essence and common themes from these testimonials
+2. Create a short, punchy, easy-to-remember acronym that captures this essence (4 letters is ideal)
+3. Provide 10 unique acronym variations, avoiding common ones like RISE, GIVE, CARE, or GROW
+4. For each acronym, explain what each letter represents in a way that's easily understood by an 8-year-old
+5. Ensure acronyms reflect motion or progress
+
+When generating acronyms, please:
+- Avoid commonly used acronyms in education
+- Suggest options that directly relate to my subject area
+- Include acronyms that create a visual metaphor or story
+- Focus on words that resonate both intellectually and emotionally
+
+Also answer these questions based on my testimonials:
+- What unique transformation do I consistently provide?
+- What is my distinctive teaching approach?
+- What emotional qualities do students repeatedly mention?
+- What specific results do my students value most?
+- What is the most compelling promise I could make in my signature offer?</div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="panel-header" style="margin-top: 24px; margin-bottom: 16px;">
+        <div class="panel-step">After Claude Responds</div>
+        <h2 class="panel-title" style="font-size: 22px;">Pick and Develop Your Acronym</h2>
+      </div>
+
+      <div class="steps">
+        <div class="step-card" onclick="toggleStep(this, 'step-2-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Choose 1 acronym (or ask Claude to combine two)</div>
+            <div class="step-desc">Read all 10 options out loud. Which one makes you feel "yes, that's me"? If two resonate, tell Claude: "Can you fuse Option 2 and Option 7 into one?" It works beautifully.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-3')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Get Claude to fully expand your chosen acronym</div>
+            <div class="step-desc">Ask Claude: "Expand [your acronym] — give me a full definition for each letter, how I implement it in teaching, and the benefit to the student. Use 'you/your child' not 'I/we'."</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-4')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Write a 1-sentence tagline for your framework</div>
+            <div class="step-desc">Something like: "The SPARK Method — where every student discovers they're a natural learner." Short, memorable, and yours. Ask Claude to help generate 5 options if you get stuck.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXAMPLES -->
+      <hr class="divider" />
+      <p style="font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px;">Framework Examples to Inspire You</p>
+      <div class="example-grid">
+        <div class="example-card">
+          <div class="example-acronym">SPARK</div>
+          <div class="example-name">Literacy / Reading</div>
+          <ul class="example-list">
+            <li><span>S</span> — Sensory Integration</li>
+            <li><span>P</span> — Phonological Awareness</li>
+            <li><span>A</span> — Accelerated Practice</li>
+            <li><span>R</span> — Relational Connection</li>
+            <li><span>K</span> — Knowledge Application</li>
+          </ul>
+        </div>
+        <div class="example-card">
+          <div class="example-acronym">SHINE</div>
+          <div class="example-name">Public Speaking</div>
+          <ul class="example-list">
+            <li><span>S</span> — Self-awareness</li>
+            <li><span>H</span> — Honest Expression</li>
+            <li><span>I</span> — Incremental Challenges</li>
+            <li><span>N</span> — Narrative Crafting</li>
+            <li><span>E</span> — Embodied Confidence</li>
+          </ul>
+        </div>
+        <div class="example-card">
+          <div class="example-acronym">HEART</div>
+          <div class="example-name">Emotional Intelligence</div>
+          <ul class="example-list">
+            <li><span>H</span> — Honest Communication</li>
+            <li><span>E</span> — Empathetic Listening</li>
+            <li><span>A</span> — Awareness Practices</li>
+            <li><span>R</span> — Response Strategies</li>
+            <li><span>T</span> — Transformational Integration</li>
+          </ul>
+        </div>
+        <div class="example-card">
+          <div class="example-acronym">LEAP</div>
+          <div class="example-name">Mathematics / Maths</div>
+          <ul class="example-list">
+            <li><span>L</span> — Link to Real Life</li>
+            <li><span>E</span> — Explore Concepts</li>
+            <li><span>A</span> — Apply with Confidence</li>
+            <li><span>P</span> — Progress Celebration</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(1)">← Testimonials</button>
+        <button class="btn btn-primary" onclick="switchTab(3)">Programme Structure →</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: STRUCTURE -->
+    <div class="tab-panel" id="panel-3">
+      <div class="panel-header">
+        <div class="panel-step">Step 4 of 6</div>
+        <h2 class="panel-title">Design Your Programme <em>Structure</em></h2>
+        <p class="panel-desc">Now turn your framework into a real programme. Decide how students move through it — from first contact to transformation complete.</p>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">📐</span>
+        <div class="callout-text">
+          <strong>Think in journeys, not just lessons</strong>
+          Every great programme has a beginning (entry), a middle (where the magic happens), and an end (transformation + what's next). Design all three.
+        </div>
+      </div>
+
+      <p style="font-size: 13px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px;">The 5 Parts of Your Programme</p>
+
+      <div class="fw-grid">
+        <div class="fw-card">
+          <div class="fw-letter">①</div>
+          <div class="fw-word">Entry Point</div>
+          <div class="fw-desc">How does a student begin? Assessment? Welcome session? First class ritual?</div>
+        </div>
+        <div class="fw-card">
+          <div class="fw-letter">②</div>
+          <div class="fw-word">Core Method</div>
+          <div class="fw-desc">Your framework in action — the weekly/session structure that delivers the transformation.</div>
+        </div>
+        <div class="fw-card">
+          <div class="fw-letter">③</div>
+          <div class="fw-word">Support</div>
+          <div class="fw-desc">How do you keep students on track? WhatsApp group? Parent updates? Monthly check-ins?</div>
+        </div>
+        <div class="fw-card">
+          <div class="fw-letter">④</div>
+          <div class="fw-word">Milestones</div>
+          <div class="fw-desc">How do you measure and celebrate progress? Mini-wins matter as much as the final result.</div>
+        </div>
+        <div class="fw-card">
+          <div class="fw-letter">⑤</div>
+          <div class="fw-word">Completion</div>
+          <div class="fw-desc">How does the programme end? Certificate? Review session? What's the next step for graduates?</div>
+        </div>
+      </div>
+
+      <div class="steps" id="steps-3" style="margin-top: 24px;">
+        <div class="step-card" onclick="toggleStep(this, 'step-3-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Write out each letter of your acronym as a module or stage</div>
+            <div class="step-desc">If your framework is LEAP, then each letter becomes a phase. "L Phase: Linking concepts to real life — weeks 1–3." Give each letter a timeframe and describe what students will do in that phase.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-3-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Decide on your delivery format</div>
+            <div class="step-desc">Group class, 1-to-1, hybrid? Online, in-person, or both? Weekly sessions or intensive? What fits your lifestyle AND what your ideal students need most?</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-3-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Define your one unique element (your "signature touch")</div>
+            <div class="step-desc">Every great programme has one thing that's distinctly yours. A "Progress Celebration Week"? A parent debrief session? A personalised student workbook? What would make your students say "I've never seen a tutor do this before"?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(2)">← Framework</button>
+        <button class="btn btn-primary" onclick="switchTab(4)">Packaging →</button>
+      </div>
+    </div>
+
+    <!-- TAB 5: PACKAGING -->
+    <div class="tab-panel" id="panel-4">
+      <div class="panel-header">
+        <div class="panel-step">Step 5 of 6</div>
+        <h2 class="panel-title">Package and <em>Price</em> Your Offer</h2>
+        <p class="panel-desc">Your programme needs a name, a price, and a clear way for students to enrol. This is where you make it real.</p>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">🎯</span>
+        <div class="callout-text">
+          <strong>Don't underprice out of fear</strong>
+          Your price signals your value. A $300 programme and a $3,000 programme feel completely different — even if the content is similar. Price for the transformation, not the hours.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-4">
+        <div class="step-card" onclick="toggleStep(this, 'step-4-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Name your programme</div>
+            <div class="step-desc">Combine your framework acronym with a descriptive phrase. Examples: "The SPARK Reading Acceleration Programme", "The LEAP Maths Confidence Method", "The HEART Learning Experience". Run 5 name options past a trusted student or parent. Which one makes them lean forward?</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-4-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Set your duration and format</div>
+            <div class="step-desc">Decide: How many weeks/months? How many sessions per week? Group size (if group)? One clear answer — not "it depends". Commit to a structure you can deliver consistently.</div>
+            <div class="step-action">→ Example: 12-week group programme, 2×/week, max 6 students</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-4-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Set your price point</div>
+            <div class="step-desc">Calculate: What's the total value of the transformation? What do alternatives (private tuition, other programmes) cost? Set a price that's premium but accessible to your ideal student. Offer a payment plan if needed.</div>
+            <div class="step-action">→ Range examples: $800–$5,000 for group programmes</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-4-3')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Write your 3-sentence programme promise</div>
+            <div class="step-desc">Sentence 1: Who it's for. Sentence 2: What they'll achieve. Sentence 3: What makes your approach different. This becomes your core marketing copy. Test it by reading it to someone — if they say "tell me more", you've got it.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(3)">← Structure</button>
+        <button class="btn btn-primary" onclick="switchTab(5)">Launch Plan →</button>
+      </div>
+    </div>
+
+    <!-- TAB 6: LAUNCH -->
+    <div class="tab-panel" id="panel-5">
+      <div class="panel-header">
+        <div class="panel-step">Step 6 of 6</div>
+        <h2 class="panel-title">Run Your <em>Pilot</em> and Launch</h2>
+        <p class="panel-desc">Don't wait until it's perfect. A pilot with 3–5 students gives you real feedback, real testimonials, and real confidence. Done is better than perfect.</p>
+      </div>
+
+      <div class="callout callout-action">
+        <span class="callout-icon">🚀</span>
+        <div class="callout-text">
+          <strong>Pilot first, polish later</strong>
+          Run your programme once at a discounted rate. Get real feedback. Improve once. Then charge full price. This is the fastest path to a programme that actually works.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-5">
+        <div class="step-card" onclick="toggleStep(this, 'step-5-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Test your framework with 1–2 trusted students first</div>
+            <div class="step-desc">Explain your framework to them. Ask: "Does this feel like what we've been doing together?" Their response will tell you if the framework is authentic. Adjust if needed before going public.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-5-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Recruit 3–5 pilot students (offer at 50% off)</div>
+            <div class="step-desc">Message your current or past students: "I'm launching a new signature programme and want to run a pilot with a small group. Interested in joining at a special rate?" Most will say yes — they want to support you.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-5-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Run the programme and collect feedback after every session</div>
+            <div class="step-desc">Use a simple 3-question form: "What was most useful today? What was confusing? What do you need more of?" This data shapes your final version — and becomes content for your marketing.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-5-3')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Collect a final testimonial from every pilot student</div>
+            <div class="step-desc">At the end of the pilot, ask each student/parent: "What changed for you? What would you tell a friend about this programme?" These testimonials power your full launch.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-5-4')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-title">Set your launch date and open enrolment</div>
+            <div class="step-desc">Pick a date 4–6 weeks away. Announce your programme on Facebook, WhatsApp community, and email list. Share one pilot testimonial per day in the week before launch opens. That's your launch campaign — simple and done.</div>
+            <div class="step-action">→ Next step in SWIFT: Webinar (W)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPLETION SUMMARY -->
+      <div class="summary-box">
+        <h3>🎉 Your Signature Programme Checklist</h3>
+        <div class="summary-item"><div class="num">S1</div><p>Written my "why I teach" and described my unique approach</p></div>
+        <div class="summary-item"><div class="num">S2</div><p>Collected 10+ testimonials in one document/PDF</p></div>
+        <div class="summary-item"><div class="num">S3</div><p>Used Claude to generate and select my framework acronym</p></div>
+        <div class="summary-item"><div class="num">S4</div><p>Designed my 5-part programme structure with a unique element</p></div>
+        <div class="summary-item"><div class="num">S5</div><p>Named, priced, and wrote the 3-sentence promise for my programme</p></div>
+        <div class="summary-item"><div class="num">S6</div><p>Ran a pilot, collected feedback, and set my launch date</p></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(4)">← Packaging</button>
+        <button class="btn btn-primary" onclick="alert('🎉 Signature Programme complete! Head to the Webinar (W) module next.')">Complete S ✓</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let currentTab = 0;
+    const TOTAL_STEPS = 14;
+    let currentUser = '';
+    let checkedSteps = new Set();
+
+    // ── USER SESSION ──────────────────────────────────
+    function storageKey(user) {
+      return 'pac-sig-' + user.toLowerCase().replace(/\s+/g, '-');
+    }
+
+    function startSession() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name.length < 2) return;
+      currentUser = name;
+      localStorage.setItem('pac-sig-current-user', name);
+      loadUserProgress(name);
+      document.getElementById('nameModal').classList.add('hidden');
+      updateUserChip(name);
+    }
+
+    function loadUserProgress(name) {
+      const saved = localStorage.getItem(storageKey(name));
+      checkedSteps = new Set(saved ? JSON.parse(saved) : []);
+      // Clear all checkmarks first
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
+      // Restore this user's checks
+      checkedSteps.forEach(id => {
+        const el = document.querySelector(`[onclick="toggleStep(this, '${id}')"]`);
+        if (el) el.classList.add('checked');
+      });
+      updateProgress();
+    }
+
+    function updateUserChip(name) {
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+
+    function switchUser() {
+      if (!confirm('Switch to a different user? Your progress is saved.')) return;
+      localStorage.removeItem('pac-sig-current-user');
+      currentUser = '';
+      checkedSteps = new Set();
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
+      updateProgress();
+      document.getElementById('nameInput').value = '';
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('nameModal').classList.remove('hidden');
+    }
+
+    // ── INIT ─────────────────────────────────────────
+    const returning = localStorage.getItem('pac-sig-current-user');
+    if (returning) {
+      currentUser = returning;
+      loadUserProgress(returning);
+      updateUserChip(returning);
+      document.getElementById('nameModal').classList.add('hidden');
+    }
+
+    // ── SWIFT TOP TABS ───────────────────────────────
+    function switchSwiftTab(letter) {
+      document.querySelectorAll('.swift-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.swift-tab').forEach(t => {
+        if (t.querySelector('.swift-letter').textContent === letter) t.classList.add('active');
+      });
+    }
+
+    // ── TABS ─────────────────────────────────────────
+    function switchTab(index) {
+      document.querySelectorAll('.tab-btn').forEach((t, i) => t.classList.toggle('active', i === index));
+      document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === index));
+      currentTab = index;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── STEPS ────────────────────────────────────────
+    function toggleStep(card, id) {
+      if (!currentUser) return;
+      card.classList.toggle('checked');
+      if (card.classList.contains('checked')) {
+        checkedSteps.add(id);
+      } else {
+        checkedSteps.delete(id);
+      }
+      localStorage.setItem(storageKey(currentUser), JSON.stringify([...checkedSteps]));
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = checkedSteps.size;
+      const pct = Math.min(100, Math.round((count / TOTAL_STEPS) * 100));
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressCount').textContent = count + ' / ' + TOTAL_STEPS + ' done';
+
+      const tabStepMap = [3, 4, 5, 3, 4, 5];
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabStepMap.forEach((c, i) => {
+        const ids = Array.from({length: c}, (_, j) => `step-${i}-${j}`);
+        const allDone = ids.every(id => checkedSteps.has(id));
+        if (allDone && i !== currentTab) {
+          tabs[i].classList.add('completed');
+        } else {
+          tabs[i].classList.remove('completed');
+        }
+      });
+    }
+
+    // ── COPY PROMPT ───────────────────────────────────
+    function copyPrompt() {
+      const text = document.getElementById('promptContent').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500);
+      });
+    }
+  </script>
+</body>
+</html>

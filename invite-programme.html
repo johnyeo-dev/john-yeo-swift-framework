@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invite & Follow-Up | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A;
+      --navy-light: #0A0F1C;
+      --gold: #0ABFBC;
+      --gold-light: #4A8FE7;
+      --cream: #F4F7FB;
+      --cream-dark: #E8EDF5;
+      --text: #0A0F1C;
+      --text-muted: #6B7A96;
+      --white: #FFFFFF;
+      --step-done: #0ABFBC;
+      --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 9px; letter-spacing: 2px; color: var(--gold-light); text-transform: uppercase; margin-top: 2px; }
+
+    .progress-wrap { background: var(--navy-light); padding: 14px 40px; display: flex; align-items: center; gap: 16px; }
+    .progress-text { font-size: 12px; color: rgba(255,255,255,0.6); white-space: nowrap; }
+    .progress-bar-bg { flex: 1; height: 4px; background: rgba(255,255,255,0.15); border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 99px; transition: width 0.4s ease; }
+    .progress-count { font-size: 12px; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.4); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover:not([disabled]) { color: rgba(255,255,255,0.75); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-tab[disabled] { cursor: not-allowed; opacity: 0.35; pointer-events: none; }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; line-height: 1; }
+    .swift-tab:not(.active) .swift-letter { color: rgba(255,255,255,0.3); }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; }
+    .swift-coming { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); background: rgba(255,255,255,0.06); border-radius: 4px; padding: 2px 6px; }
+    .swift-done { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--step-done); background: rgba(10,191,188,0.12); border-radius: 4px; padding: 2px 6px; }
+
+    .tab-nav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn { padding: 16px 22px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .tab-btn:hover { color: var(--navy); }
+    .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+    .tab-num { width: 20px; height: 20px; border-radius: 50%; background: var(--cream-dark); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-shrink: 0; }
+    .tab-btn.active .tab-num { background: var(--navy); color: var(--white); }
+    .tab-btn.completed .tab-num { background: var(--step-done); color: white; }
+    .tab-btn.completed .tab-num::after { content: '✓'; }
+    .tab-btn.completed .tab-num span { display: none; }
+
+    .content { max-width: 820px; margin: 0 auto; padding: 40px 40px 80px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .panel-header { margin-bottom: 32px; }
+    .panel-step { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .panel-title { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 30px); color: var(--navy); line-height: 1.2; margin-bottom: 12px; }
+    .panel-desc { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 620px; }
+
+    .steps { display: flex; flex-direction: column; gap: 16px; }
+    .step-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 20px 24px; display: flex; gap: 16px; align-items: flex-start; cursor: pointer; transition: all 0.2s; }
+    .step-card:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(10,191,188,0.1); }
+    .step-card.checked { border-color: var(--step-done); background: #F0FAFA; }
+    .step-check { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px; transition: all 0.2s; background: var(--white); }
+    .step-card.checked .step-check { background: var(--step-done); border-color: var(--step-done); }
+    .step-check svg { display: none; }
+    .step-card.checked .step-check svg { display: block; }
+    .step-body { flex: 1; }
+    .step-title { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    .step-card.checked .step-title { text-decoration: line-through; color: var(--text-muted); }
+    .step-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.65; }
+    .step-action { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+
+    .callout { border-radius: 10px; padding: 18px 22px; margin: 24px 0; display: flex; gap: 14px; align-items: flex-start; }
+    .callout-tip { background: #FFF8EE; border-left: 4px solid var(--gold); }
+    .callout-action { background: #EEF4FF; border-left: 4px solid #4A72C4; }
+    .callout-tool { background: #F0FBF2; border-left: 4px solid var(--step-done); }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .callout-text { font-size: 13.5px; line-height: 1.65; color: var(--text); }
+    .callout-text strong { font-weight: 600; display: block; margin-bottom: 4px; color: var(--navy); }
+
+    .prompt-box { background: var(--navy); border-radius: 12px; padding: 24px 28px; margin: 20px 0; position: relative; }
+    .prompt-box-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .prompt-text { font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.85); font-family: 'DM Sans', sans-serif; white-space: pre-wrap; }
+    .copy-btn { position: absolute; top: 16px; right: 16px; background: rgba(10,191,188,0.2); border: 1px solid var(--gold); color: var(--gold-light); font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: 6px; cursor: pointer; letter-spacing: 1px; transition: all 0.2s; }
+    .copy-btn:hover { background: var(--gold); color: var(--navy); }
+    .copy-btn.copied { background: var(--step-done); border-color: var(--step-done); color: white; }
+
+    .section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin: 28px 0 12px; }
+    .divider { border: none; border-top: 1.5px solid var(--border); margin: 28px 0; }
+
+    .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 24px; border-top: 1.5px solid var(--border); }
+    .btn { padding: 12px 24px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--navy); color: var(--white); }
+    .btn-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+    .btn-secondary { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--navy); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+    .summary-box { background: var(--navy); border-radius: 12px; padding: 24px 28px; color: white; margin-top: 16px; }
+    .summary-box h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold-light); margin-bottom: 16px; }
+    .summary-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-item .num { font-size: 11px; font-weight: 700; color: var(--gold); background: rgba(10,191,188,0.15); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .summary-item p { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; }
+
+    /* STEP BADGE */
+    .step-badge { display: inline-block; background: var(--cream-dark); color: var(--navy); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 8px; margin-bottom: 8px; letter-spacing: 0.5px; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(10,15,28,0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.hidden { display: none; }
+    .modal-box { background: var(--white); border-radius: 16px; padding: 40px 36px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.3); animation: modalIn 0.3s ease; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-icon { font-size: 40px; margin-bottom: 16px; }
+    .modal-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 8px; }
+    .modal-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; }
+    .modal-input { width: 100%; padding: 14px 18px; font-family: 'DM Sans', sans-serif; font-size: 15px; border: 2px solid var(--border); border-radius: 10px; outline: none; color: var(--text); margin-bottom: 14px; transition: border-color 0.2s; }
+    .modal-input:focus { border-color: var(--gold); }
+    .modal-input::placeholder { color: var(--text-muted); }
+    .modal-btn { width: 100%; padding: 14px; background: var(--navy); color: white; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .modal-btn:hover { background: var(--navy-light); }
+    .modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .user-chip { display: flex; align-items: center; gap: 8px; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 20px; padding: 6px 14px 6px 8px; cursor: pointer; transition: all 0.2s; }
+    .user-chip:hover { background: rgba(10,191,188,0.25); }
+    .user-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--navy); }
+    .user-name { font-size: 12px; font-weight: 600; color: var(--white); }
+    .user-chip-wrap { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+    @media (max-width: 640px) {
+      .header { padding: 20px; flex-wrap: wrap; }
+      .progress-wrap { padding: 12px 20px; }
+      .swift-nav, .tab-nav { padding: 0 16px; }
+      .content { padding: 28px 20px 60px; }
+      .swift-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAME MODAL -->
+  <div class="modal-overlay" id="nameModal">
+    <div class="modal-box">
+      <div class="modal-icon">👋</div>
+      <h2 class="modal-title">Welcome to PAC</h2>
+      <p class="modal-sub">Enter your name so your progress gets saved just for you.</p>
+      <input class="modal-input" id="nameInput" type="text" placeholder="Your first name (e.g. Teacher Feon)" maxlength="40"
+        oninput="document.getElementById('startBtn').disabled = this.value.trim().length < 2"
+        onkeydown="if(event.key==='Enter') startSession()" autofocus />
+      <button class="modal-btn" id="startBtn" onclick="startSession()" disabled>Start My Journey →</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-label">Product Architect Coaching · by John Yeo</div>
+      <h1>SWIFT Framework —<br><em>Invite &amp; Follow-Up</em></h1>
+    </div>
+    <div class="user-chip-wrap">
+      <div class="user-chip" onclick="switchUser()" title="Switch user">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span class="user-name" id="userName">...</span>
+      </div>
+      <div class="swift-badge">
+        <div class="s">I</div>
+        <div class="label">Invite</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <span class="progress-text">Your progress</span>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <span class="progress-count" id="progressCount">0 / 8 done</span>
+  </div>
+
+  <!-- SWIFT TOP NAV -->
+  <nav class="swift-nav">
+    <a class="swift-tab" href="signature-programme.html">
+      <span class="swift-letter">S</span>
+      <span class="swift-word">Signature</span>
+      <span class="swift-done">Done</span>
+    </a>
+    <a class="swift-tab" href="webinar-programme.html">
+      <span class="swift-letter">W</span>
+      <span class="swift-word">Webinar</span>
+      <span class="swift-done">Done</span>
+    </a>
+    <button class="swift-tab active">
+      <span class="swift-letter">I</span>
+      <span class="swift-word">Invite</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='fill-programme.html'">
+      <span class="swift-letter">F</span>
+      <span class="swift-word">Fill Class</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='track-programme.html'">
+      <span class="swift-letter">T</span>
+      <span class="swift-word">Track</span>
+    </button>
+  </nav>
+
+  <!-- SUB-TAB NAV -->
+  <nav class="tab-nav" id="tabNav">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      <span class="tab-num"><span>1</span></span> First Contact
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      <span class="tab-num"><span>2</span></span> Nurture
+    </button>
+    <button class="tab-btn" onclick="switchTab(2)">
+      <span class="tab-num"><span>3</span></span> Follow-Up
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <!-- ═══════════════════════════════════════════
+         TAB 1: FIRST CONTACT
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel active" id="panel-0">
+      <div class="panel-header">
+        <div class="panel-step">Step 1 of 3 · Invite Module</div>
+        <h2 class="panel-title">When a Parent <em>DMs You</em> — Start Here</h2>
+        <p class="panel-desc">A parent reaching out after your webinar is already warm. The biggest mistake tutors make is immediately sending a link. Don't. Start with a human conversation first.</p>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-text">
+          <strong>Mindset anchor</strong>
+          People are so used to being sold to. A human response — not a link — is what makes you stand out. They don't want a product. They want to know you can help their child.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-0">
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 1</div>
+            <div class="step-title">Reply like a human, not a bot</div>
+            <div class="step-desc">Turn off any automated responses. Send a personal reply the moment you see their message. Do not send the registration link yet — a link at this stage feels cold and transactional. You're opening a conversation, not closing a sale.</div>
+            <div class="step-action">→ No automation. No link. Just a warm, real reply.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 2</div>
+            <div class="step-title">Ask about their child first — listen before you pitch</div>
+            <div class="step-desc">Before you say anything about your programme, ask one of these opening questions:</div>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.9; font-style: italic;">
+              "What level is your child in?"<br>
+              "What's your child struggling with most right now?"<br>
+              "How long has this been a challenge?"
+            </div>
+            <div class="step-action">→ Their answer tells you exactly how to position your offer</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-0-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 3</div>
+            <div class="step-title">Qualify and connect — ask 2–3 genuine questions</div>
+            <div class="step-desc">Understand their child's grades, challenges, and goals. Not to screen them out — to show you actually care. When a parent feels genuinely heard, they stop comparing you to other tutors. You become the one who "gets it."</div>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.9; font-style: italic;">
+              "What does a typical study session at home look like?"<br>
+              "What result would make this worth it for your child?"<br>
+              "Have you tried anything else before this?"
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" disabled>← Back</button>
+        <button class="btn btn-primary" onclick="switchTab(1)">Nurture →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TAB 2: NURTURE
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-1">
+      <div class="panel-header">
+        <div class="panel-step">Step 2 of 3 · Invite Module</div>
+        <h2 class="panel-title">Warm Them Up — Then <em>Send the Link</em></h2>
+        <p class="panel-desc">A warm lead converts. A cold one ghosts. Once the parent feels heard and understood, they're ready. Only then do you share the link — it lands completely differently.</p>
+      </div>
+
+      <div class="callout callout-action">
+        <span class="callout-icon">🎯</span>
+        <div class="callout-text">
+          <strong>The order matters</strong>
+          Connection first, link second, reminders third. Skipping connection means your link goes unclicked. Most tutors skip the connection — that's why they get ghosted.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-1">
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 4</div>
+            <div class="step-title">Send a pre-frame video (if you have one)</div>
+            <div class="step-desc">A short 2–3 minute video explaining what your session or workshop covers builds enormous trust before any commitment is made. Especially powerful when they came from an ad and don't know you yet. It's you being you — no production needed, just clear and genuine.</div>
+            <div class="step-action">→ Record once, use for every new enquiry</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 5</div>
+            <div class="step-title">Send the registration link only after connection is made</div>
+            <div class="step-desc">Once they feel heard and you've answered their questions, share the link naturally — not as a broadcast, but as a next step in the conversation. Something like: "Based on what you've shared, I think this would really help [child's name]. Here's how to secure a spot:"</div>
+            <div class="step-action">→ Warm context + link = conversions. Cold link = silence.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-1-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 6</div>
+            <div class="step-title">Send 2–3 reminders before the appointment</div>
+            <div class="step-desc">Parents are busy — not uninterested. A reminder 2 days before, then again the day before, reduces no-shows significantly. Keep the tone warm and helpful, not chasing.</div>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.9; font-style: italic;">
+              2 days before: "Just a reminder — [workshop name] is on [date] at [time]. Looking forward to seeing you there!"<br>
+              1 day before: "See you tomorrow! Here's the Zoom link: [link]. Any last questions? I'm here."
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(0)">← First Contact</button>
+        <button class="btn btn-primary" onclick="switchTab(2)">Follow-Up →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TAB 3: FOLLOW-UP
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-2">
+      <div class="panel-header">
+        <div class="panel-step">Step 3 of 3 · Invite Module</div>
+        <h2 class="panel-title">After the Session — <em>Don't Go Quiet</em></h2>
+        <p class="panel-desc">Most sales happen after the silence, not before. A gentle nudge after 2–3 quiet days is not pushy — it's a service. And a happy parent's review is your best-ever ad.</p>
+      </div>
+
+      <div class="callout callout-tool">
+        <span class="callout-icon">💬</span>
+        <div class="callout-text">
+          <strong>Most parents just need a second prompt</strong>
+          They're not saying no — they're busy, distracted, or on the fence. One warm follow-up message reopens the conversation. Most tutors go quiet too early. Don't.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-2">
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-0')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 7</div>
+            <div class="step-title">Follow up after 2–3 days of silence with a gentle nudge</div>
+            <div class="step-desc">If a parent has gone quiet after showing interest, send one warm follow-up. Mention any real urgency (early bird closing, spots filling). Don't send a copy-paste blast — personalise it with their child's name or what they shared with you.</div>
+            <div style="margin-top: 12px; font-size: 13.5px; color: var(--text-muted); line-height: 1.7; font-style: italic;">
+              "Hi [Name], just checking in — were you still considering [workshop name] for [child's name]? We have [X] spots left and I wanted to make sure you didn't miss out. Happy to answer any questions 🙏"
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-1')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 8</div>
+            <div class="step-title">After the session, ask every happy parent for a Google review</div>
+            <div class="step-desc">One real review on your landing page or Google profile is worth more than any graphic or ad. Ask within 24 hours of the session ending — while the experience is still fresh. Make it easy: send them the direct review link.</div>
+            <div class="step-action">→ Happy parents become your best marketing</div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="divider" />
+
+      <!-- POST-WEBINAR DM SCRIPT -->
+      <p class="section-label">Post-Webinar DM — Send This Within 24 Hours</p>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">Send this to everyone who attended but didn't register. Wait for their reply, then go consultative from there — ask about their child, understand their situation, then guide them to the next step.</p>
+
+      <div class="prompt-box" id="script-dm">
+        <div class="prompt-box-label">📋 Post-Webinar DM — Copy and Personalise</div>
+        <button class="copy-btn" onclick="copyScript('script-dm', this)">Copy</button>
+        <div class="prompt-text">Hi [Parent's name]! Thanks for joining the session earlier 😊
+
+Just wanted to check in — was there anything that stood out for you, or any questions about [child's subject / challenge]?</div>
+      </div>
+
+      <div class="callout callout-tip" style="margin-top: 8px;">
+        <span class="callout-icon">💡</span>
+        <div class="callout-text">
+          <strong>After they reply — go consultative</strong>
+          Ask about their child. Understand their situation. Then guide them naturally toward the next step. The DM is just the door opener — the conversation is where trust is built.
+        </div>
+      </div>
+
+      <!-- COMPLETION SUMMARY -->
+      <div class="summary-box" style="margin-top: 32px;">
+        <h3>🎉 Your Invite &amp; Follow-Up Checklist</h3>
+        <div class="summary-item"><div class="num">I1</div><p>Turned off automation — replied personally to every DM without sending a link first</p></div>
+        <div class="summary-item"><div class="num">I2</div><p>Asked about their child before pitching anything</p></div>
+        <div class="summary-item"><div class="num">I3</div><p>Asked 2–3 genuine qualifying questions to understand their situation</p></div>
+        <div class="summary-item"><div class="num">I4</div><p>Sent a pre-frame video (or recorded one for future use)</p></div>
+        <div class="summary-item"><div class="num">I5</div><p>Sent the registration link only after connection was made</p></div>
+        <div class="summary-item"><div class="num">I6</div><p>Sent 2–3 reminders before the appointment</p></div>
+        <div class="summary-item"><div class="num">I7</div><p>Followed up after 2–3 days of silence with a personalised nudge</p></div>
+        <div class="summary-item"><div class="num">I8</div><p>Asked every happy parent for a Google review within 24 hours</p></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary" onclick="switchTab(1)">← Nurture</button>
+        <button class="btn btn-primary" onclick="alert('🎉 Invite module complete! Head to Fill Group Class (F) next.')">Complete I ✓</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let currentTab = 0;
+    const TOTAL_STEPS = 8;
+    let currentUser = '';
+    let checkedSteps = new Set();
+
+    function storageKey(user) { return 'pac-inv-' + user.toLowerCase().replace(/\s+/g, '-'); }
+
+    function startSession() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name.length < 2) return;
+      currentUser = name;
+      localStorage.setItem('pac-inv-current-user', name);
+      loadUserProgress(name);
+      document.getElementById('nameModal').classList.add('hidden');
+      updateUserChip(name);
+    }
+
+    function loadUserProgress(name) {
+      const saved = localStorage.getItem(storageKey(name));
+      checkedSteps = new Set(saved ? JSON.parse(saved) : []);
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
+      checkedSteps.forEach(id => {
+        const el = document.querySelector(`[onclick="toggleStep(this, '${id}')"]`);
+        if (el) el.classList.add('checked');
+      });
+      updateProgress();
+    }
+
+    function updateUserChip(name) {
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+
+    function switchUser() {
+      if (!confirm('Switch to a different user? Your progress is saved.')) return;
+      localStorage.removeItem('pac-inv-current-user');
+      currentUser = '';
+      checkedSteps = new Set();
+      document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
+      updateProgress();
+      document.getElementById('nameInput').value = '';
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('nameModal').classList.remove('hidden');
+    }
+
+    const returning = localStorage.getItem('pac-inv-current-user');
+    if (returning) {
+      currentUser = returning;
+      loadUserProgress(returning);
+      updateUserChip(returning);
+      document.getElementById('nameModal').classList.add('hidden');
+    }
+
+    function switchTab(index) {
+      document.querySelectorAll('.tab-btn').forEach((t, i) => t.classList.toggle('active', i === index));
+      document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === index));
+      currentTab = index;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleStep(card, id) {
+      if (!currentUser) return;
+      card.classList.toggle('checked');
+      if (card.classList.contains('checked')) { checkedSteps.add(id); } else { checkedSteps.delete(id); }
+      localStorage.setItem(storageKey(currentUser), JSON.stringify([...checkedSteps]));
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = checkedSteps.size;
+      const pct = Math.min(100, Math.round((count / TOTAL_STEPS) * 100));
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressCount').textContent = count + ' / ' + TOTAL_STEPS + ' done';
+      const tabStepMap = [3, 3, 2];
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabStepMap.forEach((c, i) => {
+        const ids = Array.from({length: c}, (_, j) => `step-${i}-${j}`);
+        const allDone = ids.every(id => checkedSteps.has(id));
+        if (allDone && i !== currentTab) { tabs[i].classList.add('completed'); } else { tabs[i].classList.remove('completed'); }
+      });
+    }
+
+    function copyScript(boxId, btn) {
+      const text = document.getElementById(boxId).querySelector('.prompt-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500);
+      });
+    }
+  </script>
+</body>
+</html>
