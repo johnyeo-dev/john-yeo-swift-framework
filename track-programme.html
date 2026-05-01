@@ -894,7 +894,9 @@
 
 
 
-    // ── BADGE NAME DISPLAY (synced from pac-swift-user) ────────
+
+  <script>
+    // ── BADGE NAME DISPLAY ──────────────────────────────────────
     (function syncBadge(){
       function update(){
         var n = localStorage.getItem('pac-swift-user') || '';
@@ -907,8 +909,8 @@
         }
       }
       update();
-      // Re-sync after programme page's own modal saves the name
       [300,800,1500].forEach(function(t){ setTimeout(update, t); });
     })();
+  </script>
 </body>
 </html>
