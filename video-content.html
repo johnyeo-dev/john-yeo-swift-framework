@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Content | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    /* MOBILE NAV */
+    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
+    .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
+    .mobile-menu-panel { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #111827; z-index: 501; overflow-y: auto; padding: 0 0 40px; transform: translateX(-100%); transition: transform 0.25s ease; pointer-events: none; }
+    .mobile-menu-panel.open { transform: translateX(0); pointer-events: auto; }
+    .mobile-menu-overlay.open { display: block; }
+    .mobile-menu-header { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 22px; cursor: pointer; }
+    .mobile-menu-section { padding: 16px 16px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; }
+    .mobile-menu-item:hover, .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
+    @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+
+    /* RESOURCE SUB-NAV */
+    .res-subnav { background: var(--white); position: sticky; top: 43px; z-index: 99; border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .res-subnav::-webkit-scrollbar { display: none; }
+    @media (max-width: 768px) { .res-subnav { padding: 0 12px; top: 53px; } .res-subnav-tab { padding: 12px 14px; font-size: 12px; } }
+    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    .res-subnav-tab:hover { color: var(--navy); }
+    .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+
+    /* MAIN */
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* HERO */
+    .page-hero { background: var(--navy); border-radius: 16px; padding: 36px 40px; margin-bottom: 32px; }
+    .page-hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 30px); color: var(--white); line-height: 1.2; margin-bottom: 10px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+    .core-principle { margin-top: 16px; padding: 14px 18px; background: rgba(10,191,188,0.12); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; font-size: 14px; color: rgba(255,255,255,0.9); font-style: italic; line-height: 1.6; }
+
+    /* SECTION */
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; margin-top: 36px; }
+    .section-icon { font-size: 22px; }
+    .section-header h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+    .stage-label { display: inline-flex; align-items: center; gap: 8px; background: rgba(10,191,188,0.1); border: 1px solid rgba(10,191,188,0.3); border-radius: 99px; padding: 4px 14px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .sub-section { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin: 24px 0 12px; }
+
+    /* STEP CARDS */
+    .steps-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+    .step-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 22px 24px; display: flex; gap: 18px; align-items: flex-start; }
+    .step-num { width: 34px; height: 34px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: 'DM Serif Display', serif; font-size: 16px; display: flex; align-items: center; justify-content: justify-content; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h4 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 6px; }
+    .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .step-body p + p { margin-top: 8px; }
+    .step-body ul, .step-body ol { margin-top: 8px; padding-left: 18px; }
+    .step-body li { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .step-body blockquote { margin-top: 10px; padding: 10px 14px; background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 14px; color: var(--text); font-style: italic; }
+
+    /* INFO CARD (no number) */
+    .info-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 14px; }
+    .info-card h4 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 8px; }
+    .info-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .info-card p + p { margin-top: 8px; }
+    .info-card ul, .info-card ol { padding-left: 18px; margin-top: 8px; }
+    .info-card li { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .info-card blockquote { margin-top: 10px; padding: 10px 14px; background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 14px; color: var(--text); font-style: italic; }
+
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; overflow: hidden; border: 1.5px solid var(--border); margin: 12px 0 20px; font-size: 13px; }
+    .data-table th { background: var(--navy); color: white; padding: 11px 14px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0.5px; }
+    .data-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); line-height: 1.5; vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: var(--cream); }
+    .td-bold { font-weight: 600; color: var(--navy) !important; }
+
+    /* CALLOUT TIP */
+    .callout-tip { background: #E8F8F7; border: 1px solid #0ABFBC; border-radius: 10px; padding: 14px 18px; font-size: 14px; color: #005F5E; margin: 14px 0 20px; display: flex; gap: 10px; align-items: flex-start; line-height: 1.6; }
+    .callout-tip .ci { flex-shrink: 0; font-size: 18px; }
+
+    /* FRAMEWORK CARD */
+    .framework-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+    .framework-header { background: var(--navy); padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+    .framework-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+    .framework-title { font-family: 'DM Serif Display', serif; font-size: 16px; color: white; }
+    .framework-body { padding: 16px 20px; }
+    .framework-row { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+    .framework-row:last-child { border-bottom: none; }
+    .framework-time { font-size: 11px; font-weight: 700; color: var(--gold); white-space: nowrap; min-width: 60px; padding-top: 1px; }
+    .framework-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    /* CHECKLIST */
+    .checklist { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 28px; }
+    .checklist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+    .checklist-item:last-child { border-bottom: none; }
+    .checklist-dot { width: 20px; height: 20px; border-radius: 50%; background: rgba(10,191,188,0.15); border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .checklist-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+    /* VIDEO GRID */
+    .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+    @media (max-width: 600px) { .video-grid { grid-template-columns: 1fr; } }
+    .video-wrap { border-radius: 14px; overflow: hidden; aspect-ratio: 16/9; background: #000; }
+    .video-wrap iframe { width: 100%; height: 100%; display: block; border: none; }
+
+    /* USER PILL */
+    .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 24px 16px 60px; }
+      .page-hero { padding: 24px 20px; }
+      .step-card, .info-card { padding: 16px; gap: 14px; }
+      .data-table { font-size: 12px; }
+      .data-table th, .data-table td { padding: 9px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1><em>Other Resources</em></h1>
+    </div>
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+      <div class="swift-badge" style="margin-left:0;">
+        <div class="s">✦</div>
+        <div class="label">Resources</div>
+      </div>
+      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+        <a class="swift-sub-item" href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item active" href="video-content.html">🎬 Video Content</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item active" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <!-- RESOURCE SUB-NAV -->
+  <nav class="res-subnav">
+    <a class="res-subnav-tab" href="other-resources.html">🎉 Parties for Kids</a>
+    <a class="res-subnav-tab" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+    <a class="res-subnav-tab" href="payment-upgrade.html">💳 Monthly → Annual</a>
+    <a class="res-subnav-tab" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+    <a class="res-subnav-tab" href="sales-call.html">📞 Sales Call</a>
+    <a class="res-subnav-tab" href="ai-automation.html">🤖 AI &amp; Automation</a>
+    <a class="res-subnav-tab" href="product-creation.html">⚡ Product Creation</a>
+    <a class="res-subnav-tab active" href="video-content.html">🎬 Video Content</a>
+  </nav>
+
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="page-hero-tag">Content Strategy · Morgan · Keith · EDUCreate</div>
+      <h2>🎬 Video Content — <em>The Complete Workflow</em></h2>
+      <p>The complete workflow for educators. Integrated from Morgan (Content Workflow), Keith (TikTok Growth) &amp; EDUCreate Playbook.</p>
+      <div class="core-principle">💡 <strong>Morgan:</strong> Content is a scientific game, not a creative one. Model what works. Test with data. Double down on what gets results.</div>
+      <div class="core-principle" style="margin-top:10px;">💡 <strong>Keith:</strong> Post every day. Be genuine. There are 40,000+ new P5/P6 students every year. Competition is not your real problem. Visibility is.</div>
+    </div>
+
+    <!-- VIDEO EMBEDS -->
+    <div class="video-grid">
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/G5mGF46eSJk" title="Video Content Part 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/7OXCLMaqZdA" title="Video Content Part 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- STAGE 1 -->
+    <div class="stage-label">Stage 1</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">💡</span>
+      <h3>Ideation</h3>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:20px;">Ideation = your message + your format. Get this right before you film anything.</p>
+
+    <div class="sub-section">1A — Define Your Message</div>
+    <div class="info-card">
+      <h4>Your Value &amp; Your Values</h4>
+      <p><strong style="color:var(--navy);">Your Value (What You Can Deliver):</strong> Your teaching skills, methods, and style. The results you get. Your unique approach that no one else does.</p>
+      <p><strong style="color:var(--navy);">Your Values (What You Believe In):</strong> Students don't scroll social media to learn Maths. They scroll to feel something. Your values are what make them stop and watch.</p>
+      <ul style="margin-top:10px;">
+        <li>Keith gives Roblox gift cards to motivate students — he posts it even knowing some parents won't like it. That authenticity attracts the right parents.</li>
+        <li>Dylan (young tutor) competes on energy and relatability, not experience — his weakness becomes his differentiator.</li>
+        <li>A female-run tuition centre attracts 80–90% female students because the vibe is consistent throughout all content.</li>
+      </ul>
+      <div class="callout-tip" style="margin-top:14px;margin-bottom:0;"><span class="ci">💡</span>Ask your existing students and parents: "Why did you choose me?" If 3 or more say the same thing — that's your content pillar. Build your videos around it.</div>
+    </div>
+
+    <div class="sub-section">1B — Choose Your Format</div>
+    <table class="data-table">
+      <thead><tr><th>Category</th><th>Format</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">Planned Content</td><td>Talking head, whiteboard, Q&amp;A, skit</td><td>Teaching tips, frameworks, advice</td></tr>
+        <tr><td class="td-bold">Clip Content</td><td>Recording from your actual class</td><td>Authenticity, behind-the-scenes, student moments</td></tr>
+        <tr><td class="td-bold">Easy Content</td><td>AI video, meme, B-roll with captions</td><td>Volume, testing hooks, quick posts</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-tip"><span class="ci">💡</span>Don't just teach on camera. Parents don't wake up wanting to watch a maths tutorial. They wake up wanting to feel understood, inspired, or reassured. Lead with that.</div>
+
+    <div class="sub-section">1C — Build Your Swipe File</div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Create a Telegram Group Called 'Swipe File'</h4>
+          <p>Add yourself and any team members. Every time you see a video that stops your scroll — save it here.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Save What Works Across All Platforms</h4>
+          <p>IG Reels, TikTok, Facebook Reels. You're saving the format and hook style — not the content itself.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Model the Outliers, Not Random Videos</h4>
+          <p>Only model videos that clearly outperformed. A popular video you see first in your feed might just have good timing — look for proven outliers in the creator's analytics.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-section">1D — Find Your Baseline and Track Outliers</div>
+    <div class="info-card">
+      <h4>Your Baseline = Average Views Across Last 10 Videos</h4>
+      <p>An outlier is any video that gets <strong>3x or more</strong> your baseline. When you find one:</p>
+      <ul>
+        <li>Analyse it. Was it the topic? The hook? The format?</li>
+        <li>Form a hypothesis about why it worked</li>
+        <li>Create 3–5 more videos testing that same variable</li>
+        <li>Look at the data again — did it hold?</li>
+      </ul>
+    </div>
+
+    <div class="sub-section">1E — Use Trial Reels to Test Before Investing</div>
+    <div class="info-card">
+      <h4>Instagram Trial Reels = Posts to Non-Followers Only</h4>
+      <p>Your existing audience won't see it. This is the fairest test for new ideas.</p>
+      <ol style="margin-top:10px;">
+        <li><strong>Record</strong> a simple, raw, unedited talking head video. No editing. No captions. 30–60 seconds.</li>
+        <li><strong>Post as Trial Reel</strong> on Instagram (Business/Creator account required).</li>
+        <li><strong>If it gets 3x+ baseline views</strong> — edit fully, add text hook, music, captions, B-rolls. Then publish as a full reel.</li>
+        <li><strong>If it gets low views</strong> — move on. Don't edit it. You saved hours.</li>
+      </ol>
+      <div class="callout-tip" style="margin-top:14px;margin-bottom:0;"><span class="ci">💡</span>Morgan's team posts up to 17 pieces of content per day across platforms. Most of that is trial reels and reposts. Volume + testing is the engine.</div>
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="stage-label" style="margin-top:36px;">Stage 2</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🎥</span>
+      <h3>Shooting</h3>
+    </div>
+
+    <div class="sub-section">2A — Two Types of Shoots</div>
+    <table class="data-table">
+      <thead><tr><th>Type</th><th>What It Is</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">Event Shoot</td><td>You film what's happening naturally</td><td>Your class, a workshop, a speaking event, a vlog</td></tr>
+        <tr><td class="td-bold">Planned Shoot</td><td>You schedule time to create content</td><td>Talking head, whiteboard explanation, structured teaching clip</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-section">2B — Camera Setup</div>
+    <div class="info-card">
+      <h4>For Planned Shoots (1 camera)</h4>
+      <ul>
+        <li>Position main camera directly in front, at eye level or slightly above</li>
+        <li>Never have the light source behind you — it silhouettes your face</li>
+        <li>Shoot from the same direction as your light source, or from the side</li>
+        <li>Optional: a second camera at a side angle gives editing variety</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>For Event Shoots (up to 3 cameras)</h4>
+      <ul>
+        <li><strong>Camera 1 (Main):</strong> Directly in front, captures you clearly at all times</li>
+        <li><strong>Camera 2 (Side):</strong> Optional angle for variety in editing</li>
+        <li><strong>Camera 3 (Audience angle):</strong> Captures students/attendees asking questions — essential for Q&amp;A content</li>
+      </ul>
+    </div>
+
+    <div class="sub-section">2C — Equipment Priorities</div>
+    <table class="data-table">
+      <thead><tr><th>Equipment</th><th>Recommendation</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">Microphone</td><td>DJI Osmo Mic (clip to phone/lapel)</td><td>★★★★★ HIGHEST</td></tr>
+        <tr><td class="td-bold">Phone Camera</td><td>iPhone 15 or above (minimum)</td><td>★★★★ HIGH</td></tr>
+        <tr><td class="td-bold">Event Camera</td><td>Sony vlog camera (e.g. ZV-E10)</td><td>★★★ MEDIUM</td></tr>
+        <tr><td class="td-bold">Stabilisation</td><td>Tripod or stable surface</td><td>★★★ MEDIUM</td></tr>
+        <tr><td class="td-bold">Lighting</td><td>Natural light or ring light</td><td>★★★ MEDIUM</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-tip"><span class="ci">💡</span>Audio quality matters more than video quality. A blurry video with clear audio is watchable. Clear video with bad audio gets scrolled past immediately. Run audio through <strong>Adobe Podcast</strong> to strip background noise — free with Microsoft account.</div>
+
+    <div class="sub-section">2D — Class Recording Setup (Keith's Method)</div>
+    <div class="info-card">
+      <h4>Record Every Physical Class with an Insta360</h4>
+      <p>Every lesson is uploaded to Google Drive (viewer access only). This achieves two things at once:</p>
+      <ul>
+        <li>Parents can watch any lesson at any time — full transparency, builds massive trust</li>
+        <li>You have raw footage ready to clip into TikTok content after every class</li>
+      </ul>
+      <p>One lesson = one video archive for parents + 2–3 potential TikTok clips. No extra work.</p>
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="stage-label" style="margin-top:36px;">Stage 3</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">✂️</span>
+      <h3>Editing</h3>
+    </div>
+
+    <div class="sub-section">3A — The Correct Editing Order</div>
+    <div class="callout-tip"><span class="ci">⚠️</span>Always follow this order. If you do captions first, everything goes out of sync when you cut.</div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Step</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">1</td><td>Cut — Remove silences, filler words, dead air</td><td>Tighten the pacing before anything else</td></tr>
+        <tr><td class="td-bold">2</td><td>Zooms — Add zoom-in effects for emphasis</td><td>Every 3–5 seconds, add a change to maintain retention</td></tr>
+        <tr><td class="td-bold">3</td><td>B-Rolls — Overlay footage showing what you're talking about</td><td>Show don't tell — adds emotion and proof</td></tr>
+        <tr><td class="td-bold">4</td><td>Captions — Auto-generate, then clean up typos</td><td>Done last so it's perfectly synced to the cut video</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-tip"><span class="ci">💡</span>Speed your video up to <strong>1.2–1.3x</strong> on export. It tightens everything and feels more energetic without sounding rushed.</div>
+
+    <div class="sub-section">3B — B-Rolls: Show, Don't Tell</div>
+    <div class="info-card">
+      <h4>B-Roll Shows Your Life and Values, Not Just Decorates</h4>
+      <p>You say: <em>"I really care about my students' wellbeing"</em></p>
+      <ul>
+        <li>Without B-roll: Just you saying words</li>
+        <li>With B-roll: Clip of you staying late with a student, or a message from a grateful parent on screen</li>
+      </ul>
+      <p style="margin-top:8px;"><strong style="color:var(--navy);">Use B-roll whenever:</strong></p>
+      <ul>
+        <li>You make a claim about yourself — show the evidence</li>
+        <li>You mention a place, a student, an event — show a clip</li>
+        <li>You want to add emotion to a statement — show a relevant moment</li>
+      </ul>
+    </div>
+
+    <div class="sub-section">3C — Editing Options by Team Size</div>
+    <table class="data-table">
+      <thead><tr><th>Option</th><th>Who It's For</th><th>Tools</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">Self-edit with AI</td><td>Solo tutors, just starting</td><td>Audisee (odysse.com), Submagic.co</td><td>~$20–30/month</td></tr>
+        <tr><td class="td-bold">Overseas editor</td><td>Moderate budget</td><td>Upwork (Philippines/Malaysia)</td><td>$25–30/video</td></tr>
+        <tr><td class="td-bold">Local SG editor</td><td>Quality + easy comms</td><td>Referrals, freelance platforms</td><td>$80–150/video</td></tr>
+        <tr><td class="td-bold">AI + trained editor</td><td>Scaling with a team</td><td>Submagic + editor trained in AI tools</td><td>Best ROI long-term</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-tip"><span class="ci">💡</span><strong>Audisee</strong> (odysse.com) is easier to start — purely prompt-based. <strong>Submagic</strong> (submagic.co) is more powerful but requires editing knowledge. For overseas editors, budget extra time for corrections — they won't understand Singlish or local context.</div>
+
+    <!-- STAGE 3B — THE 5 HOOKS -->
+    <div class="stage-label" style="margin-top:36px;">The 5 Hooks</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🪝</span>
+      <h3>Morgan's Hook Framework</h3>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:20px;">Every video needs to pass through 5 hooks to maximise views, follows, leads, and sales.</p>
+
+    <div class="info-card" style="border-left:3px solid #0ABFBC;">
+      <h4>Hook 1 — Visual Hook</h4>
+      <p>How you look in the first frame. The first frame is a frozen image for many viewers. Make it worth clicking.</p>
+      <ul>
+        <li>Position camera at eye level or slightly above</li>
+        <li>Face the light source, never have it behind you</li>
+        <li>Wear something that matches your brand and personality</li>
+      </ul>
+    </div>
+
+    <div class="info-card" style="border-left:3px solid #4A8FE7;">
+      <h4>Hook 2 — Verbal Hook (first 3–7 seconds)</h4>
+      <p>Your first words must earn the next 60 seconds.</p>
+      <table class="data-table" style="margin-top:10px;">
+        <thead><tr><th>Hook Type</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td class="td-bold">Dramatic drop</td><td>"My student's results dropped from 80 to 50. I asked what happened..."</td></tr>
+          <tr><td class="td-bold">Shocking statement</td><td>"I didn't speak to my children the whole day."</td></tr>
+          <tr><td class="td-bold">Challenge question</td><td>"Why is Singapore PSLE Maths so hard?"</td></tr>
+          <tr><td class="td-bold">Bold result claim</td><td>"No tuition. Jumped from AL5 to AL2. Really meh?"</td></tr>
+          <tr><td class="td-bold">Curiosity gap</td><td>"The one thing I wish I knew before I started teaching..."</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-card" style="border-left:3px solid #8B5CF6;">
+      <h4>Hook 3 — Text Hook (biggest underused lever)</h4>
+      <p>A bold text overlay in the first 5–9 seconds. This single element can multiply your views by <strong>1.5x to 3x</strong>.</p>
+      <ul style="margin-top:8px;">
+        <li>Position above your head or below your chin (not blocking your face)</li>
+        <li>Keep it for 5–9 seconds only, then remove it</li>
+        <li>Create an open loop — viewers want to know more</li>
+      </ul>
+      <p style="margin-top:8px;font-style:italic;font-size:13px;color:var(--text-muted);">Examples: "When grades suddenly crashed" · "What teachers do behind the scenes" · "I just rejected a $30K client"</p>
+      <blockquote>"The text hook creates the open loop in their brain. Even if they don't hear your first line clearly, they read the text and stay to find out what happens." — Morgan Tay</blockquote>
+    </div>
+
+    <div class="info-card" style="border-left:3px solid #F59E0B;">
+      <h4>Hook 4 — Music Hook (the emotion layer)</h4>
+      <p>Music sets the emotional tone before you say a single word.</p>
+      <ul style="margin-top:8px;">
+        <li>Search: "TikTok songs motivational 2025" or "TikTok songs emotional"</li>
+        <li>Only use songs with <strong>1 million+ views</strong> — skip anything under 1M</li>
+        <li>Keep music under <strong>10% of total sound level</strong> — background, not foreground</li>
+      </ul>
+      <table class="data-table" style="margin-top:10px;">
+        <thead><tr><th>Video Type</th><th>Music Style</th></tr></thead>
+        <tbody>
+          <tr><td>Personal story / emotional</td><td>Soft piano, acoustic, 'Blue' by Yung Kai</td></tr>
+          <tr><td>Product promo / high energy</td><td>Upbeat, motivational pop</td></tr>
+          <tr><td>Teaching content</td><td>Light, neutral background tone</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-card" style="border-left:3px solid #10B981;">
+      <h4>Hook 5 — Caption Hook (the most skipped hook)</h4>
+      <p>The first 1–2 lines of your written post caption, visible before the "more" button. On Facebook and IG, people often read this before they even click play.</p>
+      <blockquote>"Kamala spent $1.1 billion and lost. Here's what Trump did differently that every educator can learn from."</blockquote>
+      <p><strong style="color:var(--navy);">How to write caption hooks with AI (Claude):</strong></p>
+      <ol style="margin-top:8px;">
+        <li>Send Claude 5–10 examples of your past posts (teaches your voice)</li>
+        <li>Copy the transcript from your video (Fathom or CapCut)</li>
+        <li>Paste both with this prompt: <em>"Use my voice and style to convert this transcript into a Facebook/IG caption. Start with a strong hook that creates curiosity."</em></li>
+        <li>Review and tweak — never post raw AI output. Read it aloud first.</li>
+      </ol>
+      <div class="callout-tip" style="margin-top:12px;margin-bottom:0;"><span class="ci">💡</span>You don't write captions. You convert transcripts into captions using AI. One video = one transcript = one caption. Done in 2 minutes.</div>
+    </div>
+
+    <!-- STAGE 4 -->
+    <div class="stage-label" style="margin-top:36px;">Stage 4</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">📱</span>
+      <h3>Publishing</h3>
+    </div>
+
+    <div class="sub-section">4A — Platform Priority</div>
+    <div class="info-card">
+      <p><strong style="color:var(--navy);">Instagram</strong> is where the real buyers live. <strong style="color:var(--navy);">TikTok</strong> is where you get discovered. <strong style="color:var(--navy);">Facebook</strong> is where the parents are. Post everywhere — but prioritise IG.</p>
+      <p style="margin-top:8px;font-style:italic;font-size:13px;">On TikTok, most followers have no profile picture — they're there to be entertained. On Instagram, everyone has a name and face — they're there to connect. Buyers come from Instagram.</p>
+    </div>
+
+    <div class="sub-section">4B — The Posting Order</div>
+    <table class="data-table">
+      <thead><tr><th>Order</th><th>Platform</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">1st</td><td>Instagram Trial Reel</td><td>Test with non-followers before committing to full publish</td></tr>
+        <tr><td class="td-bold">2nd</td><td>TikTok (1–2 min before everything else)</td><td>TikTok penalises content that already exists online</td></tr>
+        <tr><td class="td-bold">3rd</td><td>Instagram (full post)</td><td>Primary platform for leads and sales</td></tr>
+        <tr><td class="td-bold">4th</td><td>Facebook (separate post)</td><td>Separate posts = 3–5x more reach than cross-posting</td></tr>
+        <tr><td class="td-bold">5th</td><td>YouTube Shorts</td><td>Long-term SEO and reach</td></tr>
+        <tr><td class="td-bold">6th</td><td>LinkedIn</td><td>Branding only. Low views but professional presence</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-tip"><span class="ci">💡</span>Cross-posting IG + Facebook together kills your Facebook reach. Always post them separately, even if it takes 5 more minutes.</div>
+
+    <div class="sub-section">4C — ManyChat Automation</div>
+    <div class="info-card">
+      <h4>Convert Comments Into Leads Automatically</h4>
+      <p>When someone comments a keyword on your post, they automatically receive a DM with your link, resource, or next step.</p>
+      <p style="margin-top:8px;"><strong style="color:var(--navy);">Example:</strong> Post a video about a study technique. Caption ends with: "Comment PSLE and I'll DM you the full worksheet." Every person who comments gets automatically sent a link.</p>
+      <p style="margin-top:8px;"><strong style="color:var(--navy);">What to offer via ManyChat:</strong></p>
+      <ul>
+        <li>Assessment paper or worksheet (free resource)</li>
+        <li>Workshop registration link</li>
+        <li>Book or PDF product link</li>
+        <li>Schedule a call link</li>
+      </ul>
+      <p style="margin-top:8px;font-size:13px;font-style:italic;">ManyChat works on Instagram. For TikTok and Facebook, Claude Code can build a similar automation.</p>
+    </div>
+
+    <div class="sub-section">4D — The 4 Metrics That Matter</div>
+    <table class="data-table">
+      <thead><tr><th>Metric</th><th>What It Tells You</th><th>When To Use It</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">Views</td><td>Reach and discoverability</td><td>Check which topics and hooks attract new eyeballs</td></tr>
+        <tr><td class="td-bold">Follows</td><td>New followers generated</td><td>Measures how well you convert viewers into audience</td></tr>
+        <tr><td class="td-bold">Leads</td><td>DMs, comments, keyword triggers</td><td>Measures how well you attract your target audience</td></tr>
+        <tr><td class="td-bold">Sales</td><td>Actual signups or purchases</td><td>The ultimate metric — most important, hardest to track</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-tip"><span class="ci">💡</span>A video with 200 views but 5 leads is a better video than one with 5,000 views and 0 leads. Always measure against your actual business goal.</div>
+    <div class="info-card">
+      <h4>Outlier Decisions</h4>
+      <ul>
+        <li><strong>High views, low follows:</strong> Adjust your profile and bio to capture the attention</li>
+        <li><strong>Low views, high comments/leads:</strong> This is a niche goldmine. Post more of this.</li>
+        <li><strong>Any metric below baseline for 3+ videos on the same topic:</strong> Stop that topic. Move on.</li>
+      </ul>
+    </div>
+
+    <!-- TIKTOK -->
+    <div class="stage-label" style="margin-top:36px;">TikTok Growth</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🎵</span>
+      <h3>How to Grow on TikTok — Keith's Method</h3>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:20px;">Keith grew from 0 to 10K+ TikTok followers in 2 years with $0 in ads. 50% of his students now come from TikTok.</p>
+
+    <div class="sub-section">Foundation</div>
+    <div class="info-card">
+      <ul>
+        <li>Create a <strong>TikTok Business Account</strong> (not personal) — gives analytics to confirm Singapore-based audience</li>
+        <li>Pick a tight niche and never break it. Keith teaches P5/P6 Science only. Parents know exactly what he does.</li>
+        <li>Set up <strong>3 pinned posts</strong>: (1) You teaching your subject, (2) Your origin story and values, (3) Your most popular video</li>
+      </ul>
+    </div>
+
+    <div class="sub-section">Content Strategy</div>
+    <div class="info-card">
+      <ul>
+        <li>Post every day when building your base. Raw, unedited is fine. Done beats perfect.</li>
+        <li>Post 2–3 times per week for maintenance once your base is full</li>
+        <li>Record your classes with an Insta360. One lesson = parent replay + TikTok content</li>
+        <li>Go viral by posting exam analysis the same day results or papers come out</li>
+        <li>80% teaching/value content, 10–20% personal life</li>
+      </ul>
+      <p style="margin-top:10px;"><strong style="color:var(--navy);">Keith's content that goes viral:</strong></p>
+      <ul>
+        <li>Immediately after PSLE: Record students recalling questions. Post within hours.</li>
+        <li>Before WA/Prelims: Exam tips and common mistakes in your subject</li>
+        <li>Student funny moments or common errors (no names shown)</li>
+        <li>Points reward system content — Roblox cards, K-pop merch, student reactions</li>
+      </ul>
+    </div>
+
+    <div class="sub-section">Conversion Funnel</div>
+    <div class="info-card">
+      <p style="font-size:15px;font-weight:600;color:var(--navy);text-align:center;padding:8px 0;">TikTok discovers you → IG connects you → WhatsApp converts you</p>
+      <ul style="margin-top:10px;">
+        <li>Every TikTok DM gets moved to WhatsApp immediately</li>
+        <li>First WhatsApp question: "What level is your child in?"</li>
+        <li>Never send a link or price before qualifying the parent first</li>
+        <li>Build a Telegram channel for free resources — parents share it, your reach grows organically</li>
+      </ul>
+      <div class="callout-tip" style="margin-top:14px;margin-bottom:0;"><span class="ci">💡</span>Keith has never spent a dollar on ads. Organic content + word of mouth = 127 students. If you need ads to survive, something is wrong with your content first.</div>
+    </div>
+
+    <div class="sub-section">TikTok Content Calendar</div>
+    <table class="data-table">
+      <thead><tr><th>Period</th><th>TikTok Activity</th><th>Content to Post</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">January</td><td>Rising views — new school year energy</td><td>New year strategies, syllabus overviews</td></tr>
+        <tr><td class="td-bold">March / June Holidays</td><td>High intent — parents looking for workshops</td><td>Workshop promos, study tips, holiday plans</td></tr>
+        <tr><td class="td-bold">After WA2 / Prelims</td><td>Peak anxiety — parents searching for help</td><td>Exam analysis, result breakdowns, what to do next</td></tr>
+        <tr><td class="td-bold">PSLE / O-Level Day</td><td>Highest viral window of the year</td><td>Post exam question analysis within hours</td></tr>
+        <tr><td class="td-bold">Nov / Dec</td><td>Low views — everyone overseas</td><td>Maintain 2x/week. Don't expect high numbers.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- TALKING HEAD -->
+    <div class="stage-label" style="margin-top:36px;">Filming Guide</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🎙️</span>
+      <h3>How to Film a Talking Head Video</h3>
+    </div>
+
+    <div class="sub-section">The Script Formula (60–90 seconds max)</div>
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Duration</th><th>What To Do</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">Emotional Hook</td><td>0–5 sec</td><td>Say the most interesting, dramatic, or provocative thing first. Create an open loop.</td></tr>
+        <tr><td class="td-bold">Text Hook on screen</td><td>0–8 sec</td><td>Bold title overlay. Shows what the video is about. Disappears at 7–8 seconds.</td></tr>
+        <tr><td class="td-bold">Super-Hook (credibility)</td><td>5–15 sec</td><td>"I've taught 143 students..." or "As a teacher of 7 years..."</td></tr>
+        <tr><td class="td-bold">Body</td><td>15–50 sec</td><td>Your 2–3 main points. Short sentences. One idea at a time.</td></tr>
+        <tr><td class="td-bold">Resolution / CTA</td><td>50–70 sec</td><td>Close the loop. Ask a question, give a CTA, or end with emotional payoff.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 4 FRAMEWORKS -->
+    <div class="sub-section">4 Video Frameworks for Educators</div>
+
+    <div class="framework-card">
+      <div class="framework-header">
+        <div><div class="framework-label">Framework 1</div><div class="framework-title">Personal Story: Student Crisis</div></div>
+      </div>
+      <div class="framework-body">
+        <div class="framework-row"><span class="framework-time">0–5s</span><span class="framework-desc"><strong>Hook:</strong> Student's results dropped dramatically. Emotional discovery.</span></div>
+        <div class="framework-row"><span class="framework-time">5–15s</span><span class="framework-desc"><strong>Discovery:</strong> You asked what happened. Something broke open.</span></div>
+        <div class="framework-row"><span class="framework-time">15–30s</span><span class="framework-desc"><strong>Context:</strong> Reveal the deeper issue. Your background. Your response.</span></div>
+        <div class="framework-row"><span class="framework-time">30–45s</span><span class="framework-desc"><strong>Dedication:</strong> You stayed late. You went beyond the lesson.</span></div>
+        <div class="framework-row"><span class="framework-time">45–55s</span><span class="framework-desc"><strong>Personal cost:</strong> It was 11pm. Your own family was waiting.</span></div>
+        <div class="framework-row"><span class="framework-time">55–70s</span><span class="framework-desc"><strong>Resolution:</strong> How it turned out. End with a question for the viewer.</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;font-style:italic;">Best for: Building emotional connection. Showcasing your heart. Attracting parents who value genuine care.</p>
+      </div>
+    </div>
+
+    <div class="framework-card">
+      <div class="framework-header">
+        <div><div class="framework-label">Framework 2</div><div class="framework-title">Teacher Dedication: Sacrifice</div></div>
+      </div>
+      <div class="framework-body">
+        <div class="framework-row"><span class="framework-time">0–5s</span><span class="framework-desc"><strong>Hook:</strong> "I didn't speak to my children the whole day."</span></div>
+        <div class="framework-row"><span class="framework-time">5–15s</span><span class="framework-desc"><strong>Challenge:</strong> What happened to you (illness, personal problem, long day)</span></div>
+        <div class="framework-row"><span class="framework-time">15–30s</span><span class="framework-desc"><strong>Inner conflict:</strong> But your students were expecting you.</span></div>
+        <div class="framework-row"><span class="framework-time">30–45s</span><span class="framework-desc"><strong>Dedication:</strong> What you did to show up anyway.</span></div>
+        <div class="framework-row"><span class="framework-time">45–55s</span><span class="framework-desc"><strong>Personal cost:</strong> What it took out of you physically or emotionally.</span></div>
+        <div class="framework-row"><span class="framework-time">55–70s</span><span class="framework-desc"><strong>Resolution:</strong> A parent thanked you. A student noticed. Was it worth it?</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;font-style:italic;">Best for: Showcasing commitment. Attracting parents who value consistency and reliability.</p>
+      </div>
+    </div>
+
+    <div class="framework-card">
+      <div class="framework-header">
+        <div><div class="framework-label">Framework 3</div><div class="framework-title">Product Promotion</div></div>
+      </div>
+      <div class="framework-body">
+        <div class="framework-row"><span class="framework-time">0–10s</span><span class="framework-desc"><strong>Problem:</strong> Name the pain point parents already feel.</span></div>
+        <div class="framework-row"><span class="framework-time">10–20s</span><span class="framework-desc"><strong>Stakes:</strong> Why does this matter now? What's at risk?</span></div>
+        <div class="framework-row"><span class="framework-time">20–30s</span><span class="framework-desc"><strong>Failed solution:</strong> What a parent tried that didn't work.</span></div>
+        <div class="framework-row"><span class="framework-time">30–45s</span><span class="framework-desc"><strong>Solution:</strong> Show your product. Step by step. Just follow.</span></div>
+        <div class="framework-row"><span class="framework-time">45–55s</span><span class="framework-desc"><strong>USP:</strong> What makes yours better. No guessing. No questioning.</span></div>
+        <div class="framework-row"><span class="framework-time">55–70s</span><span class="framework-desc"><strong>Success + CTA:</strong> One result. Then: "Comment X and I'll DM you."</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;font-style:italic;">Best for: Promoting books, worksheets, assessment papers, digital products.</p>
+      </div>
+    </div>
+
+    <div class="framework-card">
+      <div class="framework-header">
+        <div><div class="framework-label">Framework 4</div><div class="framework-title">Subject-Specific Product</div></div>
+      </div>
+      <div class="framework-body">
+        <div class="framework-row"><span class="framework-time">0–5s</span><span class="framework-desc"><strong>Dynamic hook:</strong> Bold movement or gesture. "No tuition. AL5 to AL2. Really possible?"</span></div>
+        <div class="framework-row"><span class="framework-time">5–15s</span><span class="framework-desc"><strong>Problem:</strong> What parents or students are struggling with in this subject.</span></div>
+        <div class="framework-row"><span class="framework-time">15–30s</span><span class="framework-desc"><strong>Investigation:</strong> How you discovered the root issue.</span></div>
+        <div class="framework-row"><span class="framework-time">30–40s</span><span class="framework-desc"><strong>Solution:</strong> Introduce your guide/resource. Show it on camera.</span></div>
+        <div class="framework-row"><span class="framework-time">40–50s</span><span class="framework-desc"><strong>Metaphor:</strong> "It's like following a buffet line. Just pick up and go."</span></div>
+        <div class="framework-row"><span class="framework-time">50–60s</span><span class="framework-desc"><strong>CTA:</strong> "Comment PSLE and I'll DM you the details."</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;font-style:italic;">Best for: Subject-specific books, assessment kits, exam prep guides.</p>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="section-header">
+      <span class="section-icon">✅</span>
+      <h3>Universal Filming Checklist</h3>
+    </div>
+    <div class="checklist">
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Film in vertical format (9:16)</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Face the light source — never have it behind you</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Mic on before you press record — always</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>First 3 seconds: your strongest hook. Move it to the front in editing if needed.</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Text hook visible for first 5–9 seconds of the video</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Music: background only, under 10% volume, 1M+ view songs</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Edit order: Cut → Zooms → B-rolls → Captions</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Speed up to 1.2–1.3x on export</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Length: 60–90 seconds maximum</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Post TikTok first (1–2 min before IG and Facebook)</span></div>
+      <div class="checklist-item"><div class="checklist-dot"></div><span>Post Facebook separately from Instagram for 3–5x more reach</span></div>
+    </div>
+
+    <!-- CONTENT MIX -->
+    <div class="section-header">
+      <span class="section-icon">📊</span>
+      <h3>Content Mix Recommendation</h3>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Frequency</th><th>Content Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">Weekly (1–2x)</td><td>Personal story or teacher dedication video</td><td>Build emotional connection and trust</td></tr>
+        <tr><td class="td-bold">Weekly (1–2x)</td><td>Teaching tip or subject content</td><td>Establish expertise and niche authority</td></tr>
+        <tr><td class="td-bold">Monthly (2x)</td><td>Product promotion video</td><td>Drive sales and leads</td></tr>
+        <tr><td class="td-bold">Exam season</td><td>Exam analysis and results content</td><td>Viral potential, highest reach window</td></tr>
+        <tr><td class="td-bold">Ongoing</td><td>Trial reels (unedited, raw)</td><td>Test topics and hooks before investing editing time</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout-tip" style="margin-top:8px;"><span class="ci">💡</span>Aim for <strong>100 videos in your first 3 months</strong> without expecting leads. After 50–100 videos, your style finds itself, your outliers emerge, and your audience starts growing. Don't measure too early.</div>
+
+  </main>
+
+  <!-- NAME MODAL -->
+  <div id="nameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,20,0.75);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:20px;padding:40px 32px;width:min(380px,90vw);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:36px;margin-bottom:16px;">👋</div>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:#002D6A;margin-bottom:8px;">What's your name?</h3>
+      <p style="font-size:14px;color:#6B7A96;margin-bottom:24px;line-height:1.6;">So we know who's using the SWIFT Framework.</p>
+      <input id="nameModalInput" type="text" placeholder="e.g. Sherina" autocomplete="given-name" style="width:100%;border:1.5px solid #B8C4D4;border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#0A0F1C;outline:none;margin-bottom:16px;box-sizing:border-box;" />
+      <button onclick="saveNameAndClose()" style="width:100%;background:#0ABFBC;color:#002D6A;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Get Started →</button>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var saved = localStorage.getItem('pac-swift-user') || '';
+      var disp = document.getElementById('nameDisplay');
+      if (disp && saved) { disp.textContent = saved; disp.style.display = 'block'; disp.style.border = '1px solid rgba(255,255,255,0.25)'; disp.style.background = 'rgba(255,255,255,0.08)'; }
+      if (!saved) { var modal = document.getElementById('nameModal'); if (modal) { modal.style.display = 'flex'; setTimeout(function(){ var i = document.getElementById('nameModalInput'); if(i) i.focus(); }, 150); } }
+    })();
+    function saveNameAndClose() {
+      var v = (document.getElementById('nameModalInput').value || '').trim();
+      if (!v) return;
+      localStorage.setItem('pac-swift-user', v);
+      var disp = document.getElementById('nameDisplay');
+      if (disp) { disp.textContent = v; disp.style.display = 'block'; disp.style.border = '1px solid rgba(255,255,255,0.25)'; disp.style.background = 'rgba(255,255,255,0.08)'; }
+      document.getElementById('nameModal').style.display = 'none';
+    }
+    function promptChangeName() {
+      var modal = document.getElementById('nameModal');
+      if (modal) { var inp = document.getElementById('nameModalInput'); if (inp) inp.value = localStorage.getItem('pac-swift-user') || ''; modal.style.display = 'flex'; setTimeout(function(){ if(inp) inp.focus(); }, 100); }
+    }
+    (function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(group){
+        var closeTimer;
+        group.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); group.classList.add('open'); });
+        group.addEventListener('mouseleave', function(){ closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120); });
+        var btn = group.querySelector('button');
+        if (btn) btn.addEventListener('click', function(e){ e.stopPropagation(); var isOpen = group.classList.contains('open'); document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); if (!isOpen) group.classList.add('open'); });
+      });
+      document.addEventListener('click', function(){ document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); });
+    })();
+    function openMobileMenu() { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
+    function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
+  </script>
+</body>
+</html>
