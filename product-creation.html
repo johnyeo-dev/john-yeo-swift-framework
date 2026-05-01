@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Creation | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    /* MOBILE NAV */
+    .swift-nav-mobile { display: none; }
+    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
+    .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
+    .mobile-menu-panel { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #111827; z-index: 501; overflow-y: auto; padding: 0 0 40px; transform: translateX(-100%); transition: transform 0.25s ease; pointer-events: none; }
+    .mobile-menu-panel.open { transform: translateX(0); pointer-events: auto; }
+    .mobile-menu-overlay.open { display: block; }
+    .mobile-menu-header { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 22px; cursor: pointer; }
+    .mobile-menu-section { padding: 16px 16px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; }
+    .mobile-menu-item:hover, .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
+    @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+
+    /* RESOURCE SUB-NAV */
+    .res-subnav { background: var(--white); position: sticky; top: 43px; z-index: 99; border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .res-subnav::-webkit-scrollbar { display: none; }
+    @media (max-width: 768px) { .res-subnav { padding: 0 12px; top: 53px; } .res-subnav-tab { padding: 12px 14px; font-size: 12px; } }
+    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    .res-subnav-tab:hover { color: var(--navy); }
+    .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+
+    /* MAIN */
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* HERO */
+    .page-hero { background: var(--navy); border-radius: 16px; padding: 36px 40px; margin-bottom: 32px; }
+    .page-hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 30px); color: var(--white); line-height: 1.2; margin-bottom: 10px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+    .core-principle { margin-top: 20px; padding: 16px 20px; background: rgba(10,191,188,0.12); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; font-size: 15px; color: rgba(255,255,255,0.9); font-style: italic; line-height: 1.6; }
+
+    /* SECTION HEADER */
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; margin-top: 36px; }
+    .section-icon { font-size: 22px; }
+    .section-header h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+
+    /* STEP CARDS */
+    .steps-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 22px 24px; display: flex; gap: 18px; align-items: flex-start; }
+    .step-num { width: 34px; height: 34px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: 'DM Serif Display', serif; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h4 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 6px; }
+    .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .step-body p + p { margin-top: 8px; }
+    .step-body ul { margin-top: 8px; padding-left: 18px; }
+    .step-body ul li { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .step-body blockquote { margin-top: 10px; padding: 10px 14px; background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 14px; color: var(--text); font-style: italic; }
+
+    /* STAGE LABEL */
+    .stage-label { display: inline-flex; align-items: center; gap: 8px; background: rgba(10,191,188,0.1); border: 1px solid rgba(10,191,188,0.3); border-radius: 99px; padding: 4px 14px; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+
+    /* PRODUCT STACK LADDER */
+    .stack-ladder { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 32px; }
+    .stack-rung { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+    .stack-rung:last-child { border-bottom: none; }
+    .stack-level { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: 'DM Serif Display', serif; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .stack-info h5 { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); }
+    .stack-info p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .stack-price { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--gold); white-space: nowrap; background: rgba(10,191,188,0.08); border-radius: 6px; padding: 4px 10px; flex-shrink: 0; }
+
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; overflow: hidden; border: 1.5px solid var(--border); margin-bottom: 24px; font-size: 13px; }
+    .data-table th { background: var(--navy); color: white; padding: 12px 16px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0.5px; }
+    .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-muted); line-height: 1.5; vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: var(--cream); }
+    .td-bold { font-weight: 600; color: var(--navy) !important; }
+
+    /* TIMELINE */
+    .timeline { display: flex; flex-direction: column; gap: 0; margin-bottom: 32px; }
+    .timeline-week { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 12px; }
+    .week-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .timeline-items { display: flex; flex-direction: column; gap: 6px; }
+    .timeline-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+    .timeline-arrow { color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* CALLOUT */
+    .callout-tip { background: #E8F8F7; border: 1px solid #0ABFBC; border-radius: 10px; padding: 16px 20px; font-size: 14px; color: #005F5E; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-start; }
+    .callout-tip .ci { flex-shrink: 0; font-size: 18px; margin-top: 1px; }
+    .callout-final { background: var(--navy); border-radius: 14px; padding: 28px 32px; margin-top: 40px; }
+    .callout-final p { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.7; font-style: italic; }
+    .callout-final strong { color: var(--gold); font-style: normal; }
+
+    /* USER PILL */
+    .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
+    .user-logout-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(255,255,255,0.75); font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 24px 16px 60px; }
+      .page-hero { padding: 24px 20px; }
+      .step-card { padding: 18px 16px; gap: 14px; }
+      .stack-rung { flex-wrap: wrap; }
+      .stack-price { margin-left: 0; }
+      .data-table { font-size: 12px; }
+      .data-table th, .data-table td { padding: 10px 12px; }
+      .callout-final { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1><em>Other Resources</em></h1>
+    </div>
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+      <div class="swift-badge" style="margin-left:0;">
+        <div class="s">✦</div>
+        <div class="label">Resources</div>
+      </div>
+      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab " href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab " style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item " href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item " href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item " href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item " href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item " href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item " href="casestudies.html">★ Case Studies</a>
+        <a class="swift-sub-item " href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item " href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item " href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item " href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item " href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item " href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item " href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item active" href="product-creation.html">⚡ Product Creation</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item active" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <!-- RESOURCE SUB-NAV -->
+  <nav class="res-subnav">
+    <a class="res-subnav-tab" href="other-resources.html">🎉 Parties for Kids</a>
+    <a class="res-subnav-tab" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+    <a class="res-subnav-tab" href="payment-upgrade.html">💳 Monthly → Annual</a>
+    <a class="res-subnav-tab" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+    <a class="res-subnav-tab" href="sales-call.html">📞 Sales Call</a>
+    <a class="res-subnav-tab" href="ai-automation.html">🤖 AI &amp; Automation</a>
+    <a class="res-subnav-tab active" href="product-creation.html">⚡ Product Creation</a>
+  </nav>
+
+  <main class="main">
+
+    <div class="page-hero">
+      <div class="page-hero-tag">Product Strategy · Full Stack Edition</div>
+      <h2>⚡ Product Creation — <em>From Idea to Stack</em></h2>
+      <p>From idea to product stack without creating anything first.</p>
+      <div class="core-principle">
+        Don't create the product first and hope there's demand. Run the session first. Sell the seats. The session IS the product creation. Everything after is packaging.
+      </div>
+    </div>
+
+    <!-- PRODUCT STACK LADDER -->
+    <div class="section-header">
+      <span class="section-icon">🪜</span>
+      <h3>The Product Stack Ladder</h3>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;">Every buyer at Level 2 is a candidate for Level 3. Every Level 3 buyer is a candidate for Level 4. The stack does the upselling for you.</p>
+    <div class="stack-ladder">
+      <div class="stack-rung">
+        <div class="stack-level">1</div>
+        <div class="stack-info"><h5>Free / Lead Magnet</h5><p>One-page summary, revision tip, checklist</p></div>
+        <div class="stack-price">Free</div>
+      </div>
+      <div class="stack-rung">
+        <div class="stack-level">2</div>
+        <div class="stack-info"><h5>Low-ticket Digital</h5><p>PDF guide, revision notes, worksheet pack</p></div>
+        <div class="stack-price">$10–$30</div>
+      </div>
+      <div class="stack-rung">
+        <div class="stack-level">3</div>
+        <div class="stack-info"><h5>Mid-ticket Product</h5><p>Workbook, assessment book, exercise book, textbook</p></div>
+        <div class="stack-price">$40–$80</div>
+      </div>
+      <div class="stack-rung">
+        <div class="stack-level">4</div>
+        <div class="stack-info"><h5>Product + Video Bundle</h5><p>Physical/PDF book + Zoom session recordings</p></div>
+        <div class="stack-price">$80–$150</div>
+      </div>
+      <div class="stack-rung">
+        <div class="stack-level">5</div>
+        <div class="stack-info"><h5>Product + Live Access</h5><p>Book + live session (Wave 1 buyers only)</p></div>
+        <div class="stack-price">$150–$300</div>
+      </div>
+      <div class="stack-rung">
+        <div class="stack-level">6</div>
+        <div class="stack-info"><h5>Workshop / Programme</h5><p>Full group programme with ongoing support</p></div>
+        <div class="stack-price">$300–$800</div>
+      </div>
+    </div>
+
+    <!-- STAGE 1 -->
+    <div class="stage-label">Stage 1</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🎯</span>
+      <h3>Validate Demand Through a Live Session</h3>
+    </div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Pick the Product Idea Based on Your Best Client's Need</h4>
+          <p>Don't ask "is there demand?" — ask "what does she keep asking me about?" That is your demand signal.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Sell Tickets to a Live Zoom Session Before You Create Anything</h4>
+          <p>Price: $20–$50 per seat. Frame it as:</p>
+          <blockquote>"Join me for a live [topic] session. First group gets the recording and a PDF summary included — all for the early bird price."</blockquote>
+          <p>You earn while you create. If nobody buys the ticket — the demand isn't there yet. No wasted effort.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Run the Session with Fathom Recording + Zoom Cloud Recording Active</h4>
+          <ul>
+            <li>Fathom captures the transcript (for converting to PDF/text products)</li>
+            <li>Zoom captures the video (for video add-ons and future waves)</li>
+            <li>Run it like you're teaching your best student — not performing for a camera</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="stage-label">Stage 2</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🌊</span>
+      <h3>Wave 1 Buyers — Founding Members</h3>
+    </div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Give Wave 1 Buyers the Full Live Experience + Raw Recordings for Free</h4>
+          <p>They paid the early price. In return they get:</p>
+          <ul>
+            <li>Live attendance</li>
+            <li>Zoom session recording (unedited is fine for Wave 1)</li>
+            <li>PDF summary from the transcript (Claude converts this for you)</li>
+            <li>Your direct attention during the live Q&amp;A</li>
+          </ul>
+          <p>This is your highest-trust group. They become your testimonial sources and your best referrers.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Collect Feedback from Wave 1 Before Editing Anything</h4>
+          <p>Google Form or WhatsApp voice note. Ask:</p>
+          <ul>
+            <li>What was most useful?</li>
+            <li>What was confusing?</li>
+            <li>What would you add?</li>
+          </ul>
+          <p>This shapes your final product before you invest editing time.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="stage-label">Stage 3</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">✂️</span>
+      <h3>Edit the Video with Descript</h3>
+    </div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Edit the Zoom Recording in Descript</h4>
+          <p>Descript lets you edit video by editing the transcript text — delete a word in the transcript, the video clip is cut. No timeline editing needed.</p>
+          <p><strong style="color:var(--navy);">Cut:</strong> long silences, technical glitches, off-topic tangents, screen-share setup moments.</p>
+          <p><strong style="color:var(--navy);">Keep:</strong> your actual teaching, student Q&amp;A (these are gold), moments of insight that landed well.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <h4>Add Value Layers in Descript</h4>
+          <ul>
+            <li>Add text captions (auto-generated, then clean up)</li>
+            <li>Add intro/outro slides</li>
+            <li>Add chapter markers so buyers can navigate by topic</li>
+            <li>Export as MP4</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">8</div>
+        <div class="step-body">
+          <h4>Create a Short Highlight Reel (2–3 Minutes) from the Full Recording</h4>
+          <p>Use this as your marketing asset for Wave 2. Post as a Reel, TikTok, or YouTube Short. This is your social proof + sales tool in one.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 4 -->
+    <div class="stage-label">Stage 4</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">📝</span>
+      <h3>Convert Transcript to Text Products (Claude)</h3>
+    </div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">9</div>
+        <div class="step-body">
+          <h4>Export Fathom Transcript → Paste into Claude</h4>
+          <p>Prompts to use:</p>
+          <blockquote>"Convert this session transcript into a clean revision notes PDF for [level] students. Use clear headers, simple language, worked examples where possible."</blockquote>
+          <blockquote>"Turn this into a structured workbook — include explanations, practice questions, and a self-assessment at the end."</blockquote>
+          <blockquote>"Create a one-page parent summary of what was covered in this session and what to practise at home."</blockquote>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">10</div>
+        <div class="step-body">
+          <h4>Design the Cover and Layout in Canva</h4>
+          <ul>
+            <li>Use your brand colours</li>
+            <li>Add your photo (credibility)</li>
+            <li>Label it "Volume 1" even if Volume 2 doesn't exist yet</li>
+            <li>Export as PDF</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 5 -->
+    <div class="stage-label">Stage 5</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🎬</span>
+      <h3>Build the Video Add-On Product</h3>
+    </div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">11</div>
+        <div class="step-body">
+          <h4>Package the Edited Zoom Recording as a Paid Add-On</h4>
+          <table class="data-table" style="margin-top:12px;">
+            <thead><tr><th>Product</th><th>Price</th></tr></thead>
+            <tbody>
+              <tr><td>PDF only</td><td class="td-bold">$20–$40</td></tr>
+              <tr><td>PDF + Video recordings</td><td class="td-bold">$60–$100</td></tr>
+              <tr><td>PDF + Video + Live Q&amp;A access (Wave 1)</td><td class="td-bold">$80–$150</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">12</div>
+        <div class="step-body">
+          <h4>Host the Video for Wave 2 Buyers</h4>
+          <ul>
+            <li><strong>Gumroad</strong> — simple, pay once, get link</li>
+            <li><strong>Google Drive</strong> — unlisted folder, share link after payment</li>
+            <li><strong>Teachable / Kajabi</strong> — if you want a proper course platform</li>
+            <li><strong>Loom</strong> — simple hosting, shareable link</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">13</div>
+        <div class="step-body">
+          <h4>Wave 2 Buyers Get the Edited Video — Not the Live Session</h4>
+          <blockquote>"Wave 1 joined live and got the raw recording. Wave 2 gets the edited, cleaned-up version — chapter-marked and captioned."</blockquote>
+          <p>This makes Wave 2 feel like they're getting a polished product, not leftovers. Both groups feel they got a good deal.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 6 -->
+    <div class="stage-label">Stage 6</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">📦</span>
+      <h3>Print the Physical Product (Optional Upgrade)</h3>
+    </div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">14</div>
+        <div class="step-body">
+          <h4>Print Once You've Validated Demand with Digital Sales</h4>
+          <p>Don't print first. Sell the PDF. When enough people buy — print a physical run.</p>
+          <table class="data-table" style="margin-top:12px;">
+            <thead><tr><th>Option</th><th>MOQ</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td class="td-bold">Local SG vendor</td><td>100–200 pcs</td><td>Fastest, highest cost</td></tr>
+              <tr><td class="td-bold">Johor Bahru</td><td>100–200 pcs</td><td>Cheaper, 1–2 day pickup</td></tr>
+              <tr><td class="td-bold">China (Taobao / 1688)</td><td>100+ pcs</td><td>Cheapest, 2–3 weeks</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">15</div>
+        <div class="step-body">
+          <h4>Add Packaging That Elevates Perceived Value</h4>
+          <ul>
+            <li>SmartPac envelope</li>
+            <li>Brand sticker seal</li>
+            <li>Handwritten thank-you note (or printed one with your signature)</li>
+            <li>Freebie insert (bookmark, card, small printout)</li>
+            <li>Price to include packing + postage + your time</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 7 -->
+    <div class="stage-label">Stage 7</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🤖</span>
+      <h3>Extended AI Product Formats</h3>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;">Beyond PDF and video, the same transcript and content can become:</p>
+    <table class="data-table">
+      <thead><tr><th>Tool</th><th>What You Create</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">NotebookLM</td><td>Podcast-style audio summary, study guide, FAQ doc</td></tr>
+        <tr><td class="td-bold">Suno AI</td><td>Background audio for study videos, branded intro music</td></tr>
+        <tr><td class="td-bold">Canva AI</td><td>Poster, infographic, social carousel</td></tr>
+        <tr><td class="td-bold">Claude Code / Cursor</td><td>Simple interactive app or quiz tool</td></tr>
+        <tr><td class="td-bold">Custom GPT</td><td>AI tutor trained on your book — buyers get access as a bonus</td></tr>
+        <tr><td class="td-bold">Gemini</td><td>Cover design brief, additional content variants</td></tr>
+      </tbody>
+    </table>
+
+    <!-- STAGE 8 -->
+    <div class="stage-label">Stage 8</div>
+    <div class="section-header" style="margin-top:4px;">
+      <span class="section-icon">🤝</span>
+      <h3>The Meet Your Book Buyer Session</h3>
+    </div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num">16</div>
+        <div class="step-body">
+          <h4>After Every Product Launch, Run a Buyer-Exclusive Zoom Session</h4>
+          <p>Free for buyers. Invite-only. Topics:</p>
+          <ul>
+            <li>Walk through how to use the product</li>
+            <li>Answer their top 3 questions live</li>
+            <li>Add bonus tips not in the book</li>
+            <li>Naturally introduce your next level (workshop, programme)</li>
+          </ul>
+          <p>This converts product buyers into lesson/programme clients. They already trust you — they bought your book. The session closes the gap.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="section-header">
+      <span class="section-icon">📅</span>
+      <h3>The Full 4-Week Timeline</h3>
+    </div>
+    <div class="timeline">
+      <div class="timeline-week">
+        <div class="week-label">Week 1</div>
+        <div class="timeline-items">
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Identify topic (ask your best client)</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Open Wave 1 registrations ($20–$50/seat)</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Run live Zoom session (Fathom + Zoom recording)</span></div>
+        </div>
+      </div>
+      <div class="timeline-week">
+        <div class="week-label">Week 2</div>
+        <div class="timeline-items">
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Export Fathom transcript → Claude → PDF draft</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Design cover in Canva</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Deliver PDF + raw Zoom recording to Wave 1 buyers</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Collect Wave 1 feedback via Google Form</span></div>
+        </div>
+      </div>
+      <div class="timeline-week">
+        <div class="week-label">Week 3</div>
+        <div class="timeline-items">
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Edit video in Descript (cut, caption, chapter-mark)</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Refine PDF based on feedback</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Create highlight reel for social media</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Launch Wave 2 ($40–$100 for PDF + edited video)</span></div>
+        </div>
+      </div>
+      <div class="timeline-week">
+        <div class="week-label">Week 4</div>
+        <div class="timeline-items">
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Host "Meet Your Book Buyer" session</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Upsell into workshop or programme</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Decide if demand justifies print run</span></div>
+          <div class="timeline-item"><span class="timeline-arrow">→</span><span>Repurpose content across all channels</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WAVE SUMMARY TABLE -->
+    <div class="section-header">
+      <span class="section-icon">📊</span>
+      <h3>The Full Product Stack at a Glance</h3>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Wave</th><th>What They Get</th><th>Price</th></tr></thead>
+      <tbody>
+        <tr><td class="td-bold">Wave 1 (live)</td><td>Live session + raw recording + PDF</td><td>$20–$80</td></tr>
+        <tr><td class="td-bold">Wave 2 (after edit)</td><td>Edited video + PDF</td><td>$40–$100</td></tr>
+        <tr><td class="td-bold">Wave 3 (physical)</td><td>Printed book ± video access</td><td>$50–$120</td></tr>
+        <tr><td class="td-bold">Buyer session attendees</td><td>Live Q&amp;A + upsell to programme</td><td>Free → paid</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout-final">
+      <p>💡 <strong>Core principle:</strong> You don't need the product before the demand. The live session IS the demand validation. Run it, sell tickets, record it — and the product builds itself around your existing work.</p>
+    </div>
+
+  </main>
+
+  <!-- NAME MODAL -->
+  <div id="nameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,20,0.75);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:20px;padding:40px 32px;width:min(380px,90vw);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:36px;margin-bottom:16px;">👋</div>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:#002D6A;margin-bottom:8px;">What's your name?</h3>
+      <p style="font-size:14px;color:#6B7A96;margin-bottom:24px;line-height:1.6;">So we know who's using the SWIFT Framework.</p>
+      <input id="nameModalInput" type="text" placeholder="e.g. Sherina" autocomplete="given-name" style="width:100%;border:1.5px solid #B8C4D4;border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#0A0F1C;outline:none;margin-bottom:16px;box-sizing:border-box;" />
+      <button onclick="saveNameAndClose()" style="width:100%;background:#0ABFBC;color:#002D6A;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Get Started →</button>
+    </div>
+  </div>
+
+  <script>
+    // NAME MODAL & BADGE
+    (function(){
+      var saved = localStorage.getItem('pac-swift-user') || '';
+      var disp = document.getElementById('nameDisplay');
+      if (disp && saved) {
+        disp.textContent = saved;
+        disp.style.display = 'block';
+        disp.style.border = '1px solid rgba(255,255,255,0.25)';
+        disp.style.background = 'rgba(255,255,255,0.08)';
+      }
+      if (!saved) {
+        var modal = document.getElementById('nameModal');
+        if (modal) {
+          modal.style.display = 'flex';
+          setTimeout(function(){ var i = document.getElementById('nameModalInput'); if(i) i.focus(); }, 150);
+        }
+      }
+    })();
+    function saveNameAndClose() {
+      var v = (document.getElementById('nameModalInput').value || '').trim();
+      if (!v) return;
+      localStorage.setItem('pac-swift-user', v);
+      var disp = document.getElementById('nameDisplay');
+      if (disp) {
+        disp.textContent = v;
+        disp.style.display = 'block';
+        disp.style.border = '1px solid rgba(255,255,255,0.25)';
+        disp.style.background = 'rgba(255,255,255,0.08)';
+      }
+      document.getElementById('nameModal').style.display = 'none';
+    }
+    function promptChangeName() {
+      var modal = document.getElementById('nameModal');
+      if (modal) {
+        var cur = localStorage.getItem('pac-swift-user') || '';
+        var inp = document.getElementById('nameModalInput');
+        if (inp) inp.value = cur;
+        modal.style.display = 'flex';
+        setTimeout(function(){ if(inp) inp.focus(); }, 100);
+      }
+    }
+
+    // DROPDOWN NAV
+    (function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(group){
+        var closeTimer;
+        group.addEventListener('mouseenter', function(){
+          clearTimeout(closeTimer);
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          group.classList.add('open');
+        });
+        group.addEventListener('mouseleave', function(){
+          closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+        });
+        var btn = group.querySelector('button');
+        if (btn) btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isOpen = group.classList.contains('open');
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          if (!isOpen) group.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(){
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      });
+    })();
+
+    // MOBILE MENU
+    function openMobileMenu() {
+      document.getElementById('mobilePanel').classList.add('open');
+      document.getElementById('mobileOverlay').classList.add('open');
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobilePanel').classList.remove('open');
+      document.getElementById('mobileOverlay').classList.remove('open');
+    }
+  </script>
+
+</body>
+</html>
