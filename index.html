@@ -167,7 +167,7 @@
     <div class="user-pill" id="userPill">
       <span class="user-avatar" id="userAvatar">J</span>
       <span class="user-name" id="userNameDisplay"></span>
-      <button class="user-logout-btn" onclick="doLogout()">Log Out</button>
+      <button id="headerManageBtn" onclick="openUserManager()" style="display:none;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">Manage Users</button><button class="user-logout-btn" onclick="doLogout()">Log Out</button>
     </div>
     <div class="swift-badge">
       <div class="s">⌂</div>
@@ -208,7 +208,7 @@
   <main class="main">
 
   <!-- WELCOME BANNER (first login only) -->
-  <div id="welcomeBanner" style="display:none;background:linear-gradient(135deg,rgba(10,191,188,0.12),rgba(74,143,231,0.1));border:1px solid rgba(10,191,188,0.3);border-radius:12px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+  <div id="welcomeBanner" style="display:none;background:linear-gradient(135deg,rgba(10,191,188,0.12),rgba(74,143,231,0.1));border:1px solid rgba(10,191,188,0.3);border-radius:12px;padding:16px 20px;margin-bottom:28px;align-items:center;justify-content:space-between;gap:12px;">
     <div style="display:flex;align-items:center;gap:12px;">
       <span style="font-size:22px;">👋</span>
       <div>
@@ -389,7 +389,6 @@
       </div>
     </div>
   </div>
-  </div>
 
   <script>
     /* AUTH / USER PILL JS */
@@ -417,6 +416,8 @@
       if (s.role === 'admin') {
         var nb = document.getElementById('navManageUsersBtn');
         if (nb) nb.style.display = 'block';
+        var hb = document.getElementById('headerManageBtn');
+        if (hb) hb.style.display = 'inline-block';
       }
     })();
 
