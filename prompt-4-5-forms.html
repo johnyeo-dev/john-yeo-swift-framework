@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompts 4 & 5: Google Forms | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{--navy:#002D6A;--navy-light:#0A0F1C;--gold:#0ABFBC;--gold-light:#4A8FE7;--cream:#F4F7FB;--cream-dark:#E8EDF5;--text:#0A0F1C;--text-muted:#6B7A96;--white:#FFFFFF;--border:#B8C4D4;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+    .header{background:var(--navy);padding:28px 40px 24px;display:flex;align-items:flex-end;gap:20px;}
+    .header-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+    .header h1{font-family:'DM Serif Display',serif;font-size:clamp(24px,4vw,36px);color:var(--white);line-height:1.1;}
+    .header h1 em{font-style:italic;color:var(--gold-light);}
+    .swift-badge{margin-left:auto;background:rgba(10,191,188,0.15);border:1px solid var(--gold);border-radius:6px;padding:8px 16px;text-align:center;flex-shrink:0;}
+    .swift-badge .s{font-family:'DM Serif Display',serif;font-size:16px;color:var(--gold);line-height:1;}
+    .swift-badge .label{font-size:11px;letter-spacing:2px;color:var(--white);text-transform:uppercase;margin-top:2px;font-weight:600;}
+    .swift-nav{background:var(--navy-light);position:sticky;top:0;z-index:100;padding:0 16px;display:flex;gap:0;overflow:visible;border-bottom:1px solid rgba(255,255,255,0.08);}
+    .swift-tab{padding:14px 20px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,0.65);border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .swift-tab:hover{color:rgba(255,255,255,0.85);}
+    .swift-tab.active{color:var(--white);border-bottom-color:var(--gold);}
+    .swift-letter{font-family:'DM Serif Display',serif;font-size:20px;color:rgba(255,255,255,0.3);line-height:1;}
+    .swift-word{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;}
+    .swift-tab-group{position:relative;display:flex;align-items:stretch;}
+    .swift-sub-menu{position:absolute;top:100%;left:0;background:#111827;border:1px solid rgba(255,255,255,0.15);border-radius:0 0 10px 10px;z-index:200;overflow:hidden;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5);min-width:210px;white-space:nowrap;}
+    .swift-tab-group.open .swift-sub-menu{display:block;}
+    .swift-sub-item{display:flex;align-items:center;gap:10px;padding:13px 16px;color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.06);font-family:'DM Sans',sans-serif;transition:background 0.15s;}
+    .swift-sub-item:last-child{border-bottom:none;}
+    .swift-sub-item:hover{background:rgba(255,255,255,0.06);color:white;}
+    .swift-sub-item.active{color:white;background:rgba(10,191,188,0.12);}
+    .mobile-menu-bar{display:none;background:var(--navy-light);padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.08);position:relative;z-index:200;}
+    .mobile-menu-btn{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 16px;color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+    .mobile-menu-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;}
+    .mobile-menu-panel{position:fixed;top:0;left:0;width:280px;height:100%;background:#111827;z-index:501;overflow-y:auto;padding:0 0 40px;transform:translateX(-100%);transition:transform 0.25s ease;pointer-events:none;}
+    .mobile-menu-panel.open{transform:translateX(0);pointer-events:auto;}
+    .mobile-menu-overlay.open{display:block;}
+    .mobile-menu-header{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;}
+    .mobile-menu-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer;}
+    .mobile-menu-section{padding:16px 16px 6px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+    .mobile-menu-item{display:flex;align-items:center;gap:12px;padding:13px 16px;color:rgba(255,255,255,0.75);font-size:14px;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.05);font-family:'DM Sans',sans-serif;}
+    .mobile-menu-item:hover,.mobile-menu-item.active{color:white;background:rgba(10,191,188,0.1);}
+    .mobile-menu-letter{font-family:'DM Serif Display',serif;font-size:18px;width:24px;text-align:center;flex-shrink:0;}
+    @media(max-width:768px){.swift-nav{display:none!important;}.mobile-menu-bar{display:block;}}
+    @media(min-width:769px){.mobile-menu-bar{display:none!important;}}
+
+    .main{max-width:800px;margin:0 auto;padding:40px 24px 80px;}
+    .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:24px;font-size:13px;color:var(--text-muted);}
+    .breadcrumb a{color:var(--gold);text-decoration:none;font-weight:600;}
+    .breadcrumb span{color:var(--border);}
+
+    /* VIDEO */
+    .video-section{margin-bottom:32px;}
+    .video-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+    .video-wrap{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;}
+    .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+    /* PROMPT CARDS */
+    .prompt-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,45,106,0.06);margin-bottom:24px;}
+    .prompt-card-header{background:var(--navy);padding:22px 28px;display:flex;align-items:center;gap:16px;}
+    .prompt-number{background:var(--gold);color:var(--navy);font-family:'DM Serif Display',serif;font-size:18px;font-weight:700;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .prompt-card-header-text{flex:1;}
+    .prompt-card-header-text .prompt-category{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:4px;}
+    .prompt-card-header-text h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--white);line-height:1.2;}
+    .prompt-card-header-text h3 em{font-style:italic;color:#88d8d7;}
+    .prompt-card-body{padding:28px;}
+    .section-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
+    .instructions-intro{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:20px;}
+
+    /* FIELDS LIST */
+    .fields-list{background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:24px;}
+    .fields-list-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;}
+    .field-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--cream-dark);font-size:13px;color:var(--text);}
+    .field-item:last-child{border-bottom:none;}
+    .field-num{background:var(--navy);color:white;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+    .callout{background:linear-gradient(135deg,rgba(10,191,188,0.07) 0%,rgba(74,143,231,0.07) 100%);border:1.5px solid rgba(10,191,188,0.3);border-radius:14px;padding:18px 20px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start;}
+    .callout .icon{font-size:22px;flex-shrink:0;margin-top:1px;}
+    .callout-text strong{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+    .callout-text p{font-size:13px;color:var(--text-muted);line-height:1.6;}
+
+    .divider{border:none;border-top:1.5px solid var(--cream-dark);margin:26px 0;}
+    .prompt-box{background:#0A0F1C;border-radius:14px;overflow:hidden;}
+    .prompt-box-top{padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
+    .prompt-box-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+    .copy-btn{background:rgba(10,191,188,0.15);border:1px solid rgba(10,191,188,0.4);color:var(--gold);border-radius:6px;padding:6px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+    .copy-btn:hover{background:rgba(10,191,188,0.25);}
+    .copy-btn.copied{background:var(--gold);border-color:var(--gold);color:#002D6A;}
+    .prompt-text{padding:20px 22px;font-family:'DM Mono','Courier New',monospace;font-size:13px;line-height:1.75;color:#CBD5E1;white-space:pre-wrap;word-break:break-word;max-height:460px;overflow-y:auto;}
+    .prompt-text::-webkit-scrollbar{width:4px;}
+    .prompt-text::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);}
+    .prompt-text::-webkit-scrollbar-thumb{background:rgba(10,191,188,0.4);border-radius:99px;}
+
+    @media(max-width:600px){.header{padding:20px 16px;}.main{padding:28px 16px 60px;}.prompt-card-body{padding:18px 16px;}.prompt-card-header{padding:18px 18px;}.prompt-text{font-size:12px;max-height:340px;}}
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · 6 Prompts</div>
+      <h1>Prompts 4 &amp; 5 — <em>Google Forms</em></h1>
+    </div>
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+      <div class="swift-badge" style="margin-left:0;"><div class="s">4 + 5</div><div class="label">of 6</div></div>
+      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+        <a class="swift-sub-item" href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;border-bottom:3px solid var(--gold);color:white;"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item active" href="prompt-4-5-forms.html">✦ Google Forms</a>
+        <a class="swift-sub-item" style="opacity:0.4;pointer-events:none;" href="#">✦ Upsell Offer <span style="font-size:10px;margin-left:6px;background:rgba(255,255,255,0.1);border-radius:4px;padding:2px 6px;">Soon</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item active" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Google Forms</a>
+    <a class="mobile-menu-item" href="#" style="padding-left:36px;font-size:13px;opacity:0.4;pointer-events:none;">✦ Upsell Offer <span style="font-size:10px;opacity:0.7;">Soon</span></a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()"><span>☰ &nbsp;Menu</span><span style="font-size:11px;opacity:0.5;">▾</span></button>
+  </div>
+
+  <main class="main">
+    <div class="breadcrumb"><a href="6-prompts.html">← 6 Prompts</a><span>/</span><span>Google Forms</span></div>
+
+    <!-- VIDEO -->
+    <div class="video-section">
+      <div class="video-label">Watch First — How to set up Google Forms with Apps Script</div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/YKGa8ZpYpdQ" title="How to Build a Google Form in 2 Minutes Using Claude + Apps Script" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- ══ PROMPT 4 ══ -->
+    <div class="prompt-card">
+      <div class="prompt-card-header">
+        <div class="prompt-number">4</div>
+        <div class="prompt-card-header-text">
+          <div class="prompt-category">Prompt 4 of 6</div>
+          <h3>Leads Collection <em>Enquiry Form</em></h3>
+        </div>
+      </div>
+      <div class="prompt-card-body">
+        <div class="section-label">What This Creates</div>
+        <p class="instructions-intro">A Google Form built automatically via Apps Script that captures warm leads from parents interested in your programme. Copy the prompt, paste into Claude, and you'll get a ready-to-run script — no coding needed.</p>
+
+        <div class="fields-list">
+          <div class="fields-list-title">Form Fields</div>
+          <div class="field-item"><div class="field-num">1</div>Parent's name</div>
+          <div class="field-item"><div class="field-num">2</div>Child's education level</div>
+          <div class="field-item"><div class="field-num">3</div>Contact number</div>
+          <div class="field-item"><div class="field-num">4</div>Email address</div>
+          <div class="field-item"><div class="field-num">5</div>Biggest challenge your child is facing right now</div>
+        </div>
+
+        <div class="callout">
+          <div class="icon">⚙️</div>
+          <div class="callout-text">
+            <strong>How to use the Apps Script Claude generates</strong>
+            <p>Go to <strong>script.google.com</strong> → New Project → paste the script → click Run. The form is created instantly in your Google Drive. Watch the video above for a step-by-step walkthrough.</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="prompt-box">
+          <div class="prompt-box-top">
+            <div class="prompt-box-label">📋 Prompt 4 — Copy &amp; Paste into Claude</div>
+            <button class="copy-btn" id="copyBtn4" onclick="copyPrompt('promptContent4','copyBtn4')">Copy</button>
+          </div>
+          <div class="prompt-text" id="promptContent4">Please write a complete Google Apps Script that automatically creates a Google Form for collecting leads from parents interested in my tutoring or coaching programme.
+
+The form should collect the following fields:
+1. Parent's name (short answer, required)
+2. Child's education level (multiple choice — required)
+   Options: Primary 1, Primary 2, Primary 3, Primary 4, Primary 5, Primary 6, Secondary 1, Secondary 2, Secondary 3, Secondary 4, Secondary 5, JC 1, JC 2, Other
+3. Contact number (short answer, required)
+4. Email address (short answer, required)
+5. What is the biggest challenge your child is facing right now? (paragraph, required)
+
+Script requirements:
+- Create the entire form programmatically using Google Apps Script
+- Set the form title to: "Tell Me About Your Child"
+- Set the form description to: "I'd love to learn more about your child and how I can help. This takes about 2 minutes to fill in."
+- Make all questions required
+- Set the confirmation message (shown after submission) to: "Thank you! I'll be in touch within 24 hours."
+- Link the form to a new Google Sheet to collect responses automatically
+- Name the Google Sheet: "Leads"
+
+After the script, please also give me:
+1. Step-by-step instructions: how to open Google Apps Script, paste the code, and run it
+2. How to find the form link once the script has run
+3. How to view responses in the connected Google Sheet
+4. A short message I can send to parents (WhatsApp or Instagram DM) asking them to fill in the form</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROMPT 5 ══ -->
+    <div class="prompt-card">
+      <div class="prompt-card-header">
+        <div class="prompt-number">5</div>
+        <div class="prompt-card-header-text">
+          <div class="prompt-category">Prompt 5 of 6</div>
+          <h3>Student &amp; Parent <em>Feedback Form</em></h3>
+        </div>
+      </div>
+      <div class="prompt-card-body">
+        <div class="section-label">What This Creates</div>
+        <p class="instructions-intro">A feedback form that helps you understand how your students and parents feel about your programme — and surfaces testimonials, referrals, and improvement areas automatically.</p>
+
+        <div class="fields-list">
+          <div class="fields-list-title">Form Fields</div>
+          <div class="field-item"><div class="field-num">1</div>How likely are you to recommend us to a friend? (1–10 scale)</div>
+          <div class="field-item"><div class="field-num">2</div>One area where we could improve</div>
+          <div class="field-item"><div class="field-num">3</div>What have we done well?</div>
+          <div class="field-item"><div class="field-num">4</div>What other support would be helpful for your child?</div>
+        </div>
+
+        <div class="callout">
+          <div class="icon">💡</div>
+          <div class="callout-text">
+            <strong>Send this at the end of every term or programme</strong>
+            <p>Responses with a score of 9–10 are your best candidates to ask for a public testimonial. The improvement field often surfaces the next programme idea.</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="prompt-box">
+          <div class="prompt-box-top">
+            <div class="prompt-box-label">📋 Prompt 5 — Copy &amp; Paste into Claude</div>
+            <button class="copy-btn" id="copyBtn5" onclick="copyPrompt('promptContent5','copyBtn5')">Copy</button>
+          </div>
+          <div class="prompt-text" id="promptContent5">Please write a complete Google Apps Script that automatically creates a feedback form for parents and students currently in my tutoring or coaching programme.
+
+The form should collect the following:
+1. How likely are you to recommend us to a friend or family member? (linear scale 1–10, required)
+   Label 1 as "Not likely at all" and 10 as "Extremely likely"
+2. One area where we could improve (paragraph, required)
+3. What have we done well? (paragraph, required)
+4. What other support would be helpful for your child? (paragraph, optional)
+5. Your name (short answer, optional — label it "Your name (optional)")
+
+Script requirements:
+- Create the entire form programmatically using Google Apps Script
+- Set the form title to: "Share Your Feedback"
+- Set the form description to: "Your feedback means a lot to us and helps us improve. This takes less than 2 minutes."
+- Set the confirmation message to: "Thank you so much for taking the time — we really appreciate it!"
+- Link the form to a new Google Sheet to collect responses automatically
+- Name the Google Sheet: "Feedback"
+
+After the script, please also give me:
+1. Step-by-step instructions: how to open Google Apps Script, paste the code, and run it
+2. How to view the responses in the connected Google Sheet
+3. A warm WhatsApp message I can send to parents and students asking them to fill in the feedback form (keep it short, friendly, not corporate)</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="nameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,20,0.75);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:20px;padding:40px 32px;width:min(380px,90vw);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:36px;margin-bottom:16px;">👋</div>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:#002D6A;margin-bottom:8px;">What's your name?</h3>
+      <p style="font-size:14px;color:#6B7A96;margin-bottom:24px;line-height:1.6;">So we know who's using the SWIFT Framework.</p>
+      <input id="nameModalInput" type="text" placeholder="e.g. Sherina" autocomplete="given-name" style="width:100%;border:1.5px solid #B8C4D4;border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#0A0F1C;outline:none;margin-bottom:16px;box-sizing:border-box;" />
+      <button onclick="saveNameAndClose()" style="width:100%;background:#0ABFBC;color:#002D6A;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Get Started →</button>
+    </div>
+  </div>
+  <script>
+    (function(){var s=localStorage.getItem('pac-swift-user')||'';var d=document.getElementById('nameDisplay');if(d&&s){d.textContent=s;d.style.display='block';d.style.border='1px solid rgba(255,255,255,0.25)';d.style.background='rgba(255,255,255,0.08)';}if(!s){var m=document.getElementById('nameModal');if(m){m.style.display='flex';setTimeout(function(){var i=document.getElementById('nameModalInput');if(i)i.focus();},150);}}})();
+    function saveNameAndClose(){var v=(document.getElementById('nameModalInput').value||'').trim();if(!v)return;localStorage.setItem('pac-swift-user',v);var d=document.getElementById('nameDisplay');if(d){d.textContent=v;d.style.display='block';d.style.border='1px solid rgba(255,255,255,0.25)';d.style.background='rgba(255,255,255,0.08)';}document.getElementById('nameModal').style.display='none';}
+    function promptChangeName(){var m=document.getElementById('nameModal');if(m){var i=document.getElementById('nameModalInput');if(i)i.value=localStorage.getItem('pac-swift-user')||'';m.style.display='flex';setTimeout(function(){if(i)i.focus();},100);}}
+    (function(){document.querySelectorAll('.swift-tab-group').forEach(function(g){var t;g.addEventListener('mouseenter',function(){clearTimeout(t);document.querySelectorAll('.swift-tab-group').forEach(function(x){x.classList.remove('open');});g.classList.add('open');});g.addEventListener('mouseleave',function(){t=setTimeout(function(){g.classList.remove('open');},120);});var b=g.querySelector('button');if(b)b.addEventListener('click',function(e){e.stopPropagation();var o=g.classList.contains('open');document.querySelectorAll('.swift-tab-group').forEach(function(x){x.classList.remove('open');});if(!o)g.classList.add('open');});});document.addEventListener('click',function(){document.querySelectorAll('.swift-tab-group').forEach(function(g){g.classList.remove('open');});});})();
+    function openMobileMenu(){document.getElementById('mobilePanel').classList.add('open');document.getElementById('mobileOverlay').classList.add('open');}
+    function closeMobileMenu(){document.getElementById('mobilePanel').classList.remove('open');document.getElementById('mobileOverlay').classList.remove('open');}
+    function copyPrompt(cid,bid){var el=document.getElementById(cid);var btn=document.getElementById(bid);if(!el||!btn)return;var t=el.innerText||el.textContent;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2500);}).catch(function(){fb(t,btn);});}else{fb(t,btn);}}
+    function fb(t,btn){var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2500);}catch(e){}document.body.removeChild(ta);}
+  </script>
+</body>
+</html>

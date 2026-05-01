@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt 3: Content Style | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy:#002D6A;--navy-light:#0A0F1C;--gold:#0ABFBC;--gold-light:#4A8FE7;--cream:#F4F7FB;--cream-dark:#E8EDF5;--text:#0A0F1C;--text-muted:#6B7A96;--white:#FFFFFF;--border:#B8C4D4; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+    .header{background:var(--navy);padding:28px 40px 24px;display:flex;align-items:flex-end;gap:20px;}
+    .header-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+    .header h1{font-family:'DM Serif Display',serif;font-size:clamp(24px,4vw,36px);color:var(--white);line-height:1.1;}
+    .header h1 em{font-style:italic;color:var(--gold-light);}
+    .swift-badge{margin-left:auto;background:rgba(10,191,188,0.15);border:1px solid var(--gold);border-radius:6px;padding:8px 16px;text-align:center;flex-shrink:0;}
+    .swift-badge .s{font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold);line-height:1;}
+    .swift-badge .label{font-size:11px;letter-spacing:2px;color:var(--white);text-transform:uppercase;margin-top:2px;font-weight:600;}
+    .swift-nav{background:var(--navy-light);position:sticky;top:0;z-index:100;padding:0 16px;display:flex;gap:0;overflow:visible;border-bottom:1px solid rgba(255,255,255,0.08);}
+    .swift-tab{padding:14px 20px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,0.65);border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .swift-tab:hover{color:rgba(255,255,255,0.85);}
+    .swift-tab.active{color:var(--white);border-bottom-color:var(--gold);}
+    .swift-letter{font-family:'DM Serif Display',serif;font-size:20px;color:rgba(255,255,255,0.3);line-height:1;}
+    .swift-word{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;}
+    .swift-tab-group{position:relative;display:flex;align-items:stretch;}
+    .swift-sub-menu{position:absolute;top:100%;left:0;background:#111827;border:1px solid rgba(255,255,255,0.15);border-radius:0 0 10px 10px;z-index:200;overflow:hidden;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5);min-width:210px;white-space:nowrap;}
+    .swift-tab-group.open .swift-sub-menu{display:block;}
+    .swift-sub-item{display:flex;align-items:center;gap:10px;padding:13px 16px;color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.06);font-family:'DM Sans',sans-serif;transition:background 0.15s;}
+    .swift-sub-item:last-child{border-bottom:none;}
+    .swift-sub-item:hover{background:rgba(255,255,255,0.06);color:white;}
+    .swift-sub-item.active{color:white;background:rgba(10,191,188,0.12);}
+    .mobile-menu-bar{display:none;background:var(--navy-light);padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.08);position:relative;z-index:200;}
+    .mobile-menu-btn{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 16px;color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+    .mobile-menu-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;}
+    .mobile-menu-panel{position:fixed;top:0;left:0;width:280px;height:100%;background:#111827;z-index:501;overflow-y:auto;padding:0 0 40px;transform:translateX(-100%);transition:transform 0.25s ease;pointer-events:none;}
+    .mobile-menu-panel.open{transform:translateX(0);pointer-events:auto;}
+    .mobile-menu-overlay.open{display:block;}
+    .mobile-menu-header{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;}
+    .mobile-menu-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer;}
+    .mobile-menu-section{padding:16px 16px 6px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+    .mobile-menu-item{display:flex;align-items:center;gap:12px;padding:13px 16px;color:rgba(255,255,255,0.75);font-size:14px;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.05);font-family:'DM Sans',sans-serif;}
+    .mobile-menu-item:hover,.mobile-menu-item.active{color:white;background:rgba(10,191,188,0.1);}
+    .mobile-menu-letter{font-family:'DM Serif Display',serif;font-size:18px;width:24px;text-align:center;flex-shrink:0;}
+    @media(max-width:768px){.swift-nav{display:none!important;}.mobile-menu-bar{display:block;}}
+    @media(min-width:769px){.mobile-menu-bar{display:none!important;}}
+    .main{max-width:800px;margin:0 auto;padding:40px 24px 80px;}
+    .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:28px;font-size:13px;color:var(--text-muted);}
+    .breadcrumb a{color:var(--gold);text-decoration:none;font-weight:600;}
+    .breadcrumb span{color:var(--border);}
+    .prompt-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,45,106,0.06);}
+    .prompt-card-header{background:var(--navy);padding:22px 28px;display:flex;align-items:center;gap:16px;}
+    .prompt-number{background:var(--gold);color:var(--navy);font-family:'DM Serif Display',serif;font-size:18px;font-weight:700;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .prompt-card-header-text{flex:1;}
+    .prompt-card-header-text .prompt-category{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:4px;}
+    .prompt-card-header-text h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--white);line-height:1.2;}
+    .prompt-card-header-text h3 em{font-style:italic;color:#88d8d7;}
+    .prompt-card-body{padding:28px;}
+    .section-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
+    .instructions-intro{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:20px;}
+    .steps-list{display:flex;flex-direction:column;gap:12px;margin-bottom:28px;}
+    .step-item{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--cream);border:1.5px solid var(--border);border-radius:12px;}
+    .step-num{background:var(--navy);color:var(--white);font-size:12px;font-weight:700;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content{flex:1;}
+    .step-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px;}
+    .step-desc{font-size:13px;color:var(--text-muted);line-height:1.6;}
+    .step-action{display:inline-block;margin-top:7px;font-size:12px;font-weight:600;color:var(--gold);background:rgba(10,191,188,0.08);border:1px solid rgba(10,191,188,0.25);border-radius:6px;padding:4px 10px;}
+    .callout{background:linear-gradient(135deg,rgba(10,191,188,0.07) 0%,rgba(74,143,231,0.07) 100%);border:1.5px solid rgba(10,191,188,0.3);border-radius:14px;padding:20px 22px;margin-bottom:28px;display:flex;gap:14px;align-items:flex-start;}
+    .callout .icon{font-size:26px;flex-shrink:0;margin-top:1px;}
+    .callout-text strong{display:block;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:5px;}
+    .callout-text p{font-size:13px;color:var(--text-muted);line-height:1.6;}
+    .divider{border:none;border-top:1.5px solid var(--cream-dark);margin:26px 0;}
+    .prompt-box{background:#0A0F1C;border-radius:14px;overflow:hidden;}
+    .prompt-box-top{padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
+    .prompt-box-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+    .copy-btn{background:rgba(10,191,188,0.15);border:1px solid rgba(10,191,188,0.4);color:var(--gold);border-radius:6px;padding:6px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
+    .copy-btn:hover{background:rgba(10,191,188,0.25);}
+    .copy-btn.copied{background:var(--gold);border-color:var(--gold);color:#002D6A;}
+    .prompt-text{padding:20px 22px;font-family:'DM Mono','Courier New',monospace;font-size:13px;line-height:1.75;color:#CBD5E1;white-space:pre-wrap;word-break:break-word;max-height:480px;overflow-y:auto;}
+    .prompt-text::-webkit-scrollbar{width:4px;}
+    .prompt-text::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);}
+    .prompt-text::-webkit-scrollbar-thumb{background:rgba(10,191,188,0.4);border-radius:99px;}
+    .outcome-section{margin-top:28px;padding-top:24px;border-top:1.5px solid var(--cream-dark);}
+    .outcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .outcome-item{background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:13px 15px;display:flex;gap:10px;align-items:flex-start;}
+    .outcome-item .o-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .outcome-item .o-text{font-size:13px;color:var(--text);line-height:1.5;}
+    .outcome-item .o-text strong{display:block;font-weight:600;color:var(--navy);margin-bottom:2px;font-size:13px;}
+    @media(max-width:600px){.header{padding:20px 16px;}.main{padding:28px 16px 60px;}.prompt-card-body{padding:20px 18px;}.prompt-card-header{padding:18px 20px;}.outcome-grid{grid-template-columns:1fr;}.prompt-text{font-size:12px;max-height:360px;}}
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · 6 Prompts</div>
+      <h1>Prompt 3 — <em>Content Style</em></h1>
+    </div>
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+      <div class="swift-badge" style="margin-left:0;"><div class="s">3</div><div class="label">of 6</div></div>
+      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+        <a class="swift-sub-item" href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;border-bottom:3px solid var(--gold);color:white;"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item active" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Google Forms</a>
+        <a class="swift-sub-item" style="opacity:0.4;pointer-events:none;" href="#">✦ Upsell Offer <span style="font-size:10px;margin-left:6px;background:rgba(255,255,255,0.1);border-radius:4px;padding:2px 6px;">Soon</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item active" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Google Forms</a>
+    <a class="mobile-menu-item" href="#" style="padding-left:36px;font-size:13px;opacity:0.4;pointer-events:none;">✦ Upsell Offer <span style="font-size:10px;opacity:0.7;">Soon</span></a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()"><span>☰ &nbsp;Menu</span><span style="font-size:11px;opacity:0.5;">▾</span></button>
+  </div>
+
+  <main class="main">
+    <div class="breadcrumb"><a href="6-prompts.html">← 6 Prompts</a><span>/</span><span>Content Style</span></div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-header">
+        <div class="prompt-number">3</div>
+        <div class="prompt-card-header-text">
+          <div class="prompt-category">Prompt 3 of 6</div>
+          <h3>Extract Your <em>Content Writing Style</em></h3>
+        </div>
+      </div>
+
+      <div class="prompt-card-body">
+        <div class="section-label">Instructions</div>
+        <p class="instructions-intro">Claude can learn to write exactly like you — but only if you show it your real writing first. This prompt analyses your best posts to extract your voice, tone, and patterns, then creates a reusable style guide so every future piece of content sounds unmistakably like you.</p>
+
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">Collect your 10 best social media posts</div>
+              <div class="step-desc">Pick posts that felt most natural to write — the ones where people responded "this is so you." Copy-paste the text of each post. Include captions, carousels, or even WhatsApp broadcasts. The more variety the better.</div>
+              <span class="step-action">→ Aim for 10 posts minimum</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">Paste your posts into Claude</div>
+              <div class="step-desc">Go to <strong>claude.ai</strong> → start a new chat → paste all 10 posts directly into the chat window (or upload a document with them). Label each post clearly: "Post 1:", "Post 2:" etc.</div>
+              <span class="step-action">→ <a href="https://claude.ai" target="_blank" style="color:var(--gold);text-decoration:none;">Open Claude ↗</a></span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">Copy and paste the prompt below, then send</div>
+              <div class="step-desc">After pasting your posts, copy the full prompt below and paste it into the same message (or as a follow-up). Claude will analyse your writing and give you a complete style profile and reusable guide.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <div class="step-title">Save your style guide for future use</div>
+              <div class="step-desc">Claude will generate a short "standing instruction" block at the end. Copy that block and paste it at the start of any future Claude conversation — Claude will instantly write in your voice every time.</div>
+              <span class="step-action">→ Save it in Notes or a doc for easy access</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="icon">✍️</div>
+          <div class="callout-text">
+            <strong>Use posts you wrote yourself — not posts you hired someone to write</strong>
+            <p>The whole point is to capture your authentic voice. Ghostwritten posts or heavily edited content will confuse the analysis. Use raw, unfiltered posts where you typed it yourself.</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="prompt-box">
+          <div class="prompt-box-top">
+            <div class="prompt-box-label">📋 Your Claude Prompt — Copy Everything Below</div>
+            <button class="copy-btn" id="copyBtn3" onclick="copyPrompt('promptContent3','copyBtn3')">Copy</button>
+          </div>
+          <div class="prompt-text" id="promptContent3">I have pasted 10 of my social media posts above. Please read through all of them carefully before responding.
+
+Once you have read all 10 posts, complete all four parts below:
+
+──────────────────────────────────────
+PART 1 — MY WRITING STYLE PROFILE
+──────────────────────────────────────
+Extract and document my writing style in detail:
+
+1. Overall tone — how would you describe how I "feel" to the reader? (e.g. warm, direct, conversational, educational, motivating, real)
+2. Sentence structure — do I write short sentences? Long ones? Fragments? Rhetorical questions?
+3. How I open posts — what kinds of hooks do I use to pull people in?
+4. How I close posts — how do I end? CTAs, questions, sign-offs?
+5. Words and phrases I use often — list at least 10 specific examples from my posts
+6. Words and phrases I would never use — anything that sounds corporate, formal, or unlike me
+7. How I use punctuation — do I use ellipsis? Em dashes? Lots of exclamation marks or none?
+8. How I tell stories — do I use personal anecdotes? Client stories? Metaphors? Humour?
+9. My pacing — how do I break up ideas and information across a post?
+10. My personality in 3 words — based purely on what you've read
+
+──────────────────────────────────────
+PART 2 — MY STYLE GUIDE
+──────────────────────────────────────
+Write a clear, concise style guide I can paste into any future Claude conversation.
+
+It should be:
+- Short enough to read in 30 seconds
+- Specific enough that Claude could write a post that sounds exactly like me
+- Written as a set of clear rules or instructions, not a description
+
+──────────────────────────────────────
+PART 3 — TEST REWRITE
+──────────────────────────────────────
+Take the last post I shared (Post 10) and rewrite it two ways:
+
+Version A — Same message, but slightly more punchy and direct
+Version B — Same message, but slightly warmer and more story-driven
+
+Both versions must sound like me — not like generic social media content. Reference my style guide from Part 2 when writing both versions.
+
+──────────────────────────────────────
+PART 4 — STANDING INSTRUCTIONS FOR FUTURE USE
+──────────────────────────────────────
+Write a short block of text I can paste at the top of any future Claude conversation so Claude always writes in my style automatically.
+
+Format it exactly like this:
+
+"When writing content for me, always follow these style rules: [insert extracted style guide here. Write it as direct instructions to Claude, not a description of my writing.]"
+
+This block should be specific enough that I could paste it cold into a new chat and immediately get content that sounds like me.</div>
+        </div>
+
+        <div class="outcome-section">
+          <div class="section-label">What You'll Get From Claude</div>
+          <div class="outcome-grid">
+            <div class="outcome-item"><div class="o-icon">🎨</div><div class="o-text"><strong>Your Style Profile</strong>10-point breakdown of how you write</div></div>
+            <div class="outcome-item"><div class="o-icon">📋</div><div class="o-text"><strong>Reusable Style Guide</strong>Paste once, write in your voice forever</div></div>
+            <div class="outcome-item"><div class="o-icon">✏️</div><div class="o-text"><strong>2 Rewritten Versions</strong>Punchy and warm — both in your voice</div></div>
+            <div class="outcome-item"><div class="o-icon">⚡</div><div class="o-text"><strong>Standing Instructions</strong>1-click to make Claude sound like you</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="nameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,20,0.75);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:20px;padding:40px 32px;width:min(380px,90vw);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:36px;margin-bottom:16px;">👋</div>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:#002D6A;margin-bottom:8px;">What's your name?</h3>
+      <p style="font-size:14px;color:#6B7A96;margin-bottom:24px;line-height:1.6;">So we know who's using the SWIFT Framework.</p>
+      <input id="nameModalInput" type="text" placeholder="e.g. Sherina" autocomplete="given-name" style="width:100%;border:1.5px solid #B8C4D4;border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#0A0F1C;outline:none;margin-bottom:16px;box-sizing:border-box;" />
+      <button onclick="saveNameAndClose()" style="width:100%;background:#0ABFBC;color:#002D6A;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Get Started →</button>
+    </div>
+  </div>
+  <script>
+    (function(){var s=localStorage.getItem('pac-swift-user')||'';var d=document.getElementById('nameDisplay');if(d&&s){d.textContent=s;d.style.display='block';d.style.border='1px solid rgba(255,255,255,0.25)';d.style.background='rgba(255,255,255,0.08)';}if(!s){var m=document.getElementById('nameModal');if(m){m.style.display='flex';setTimeout(function(){var i=document.getElementById('nameModalInput');if(i)i.focus();},150);}}})();
+    function saveNameAndClose(){var v=(document.getElementById('nameModalInput').value||'').trim();if(!v)return;localStorage.setItem('pac-swift-user',v);var d=document.getElementById('nameDisplay');if(d){d.textContent=v;d.style.display='block';d.style.border='1px solid rgba(255,255,255,0.25)';d.style.background='rgba(255,255,255,0.08)';}document.getElementById('nameModal').style.display='none';}
+    function promptChangeName(){var m=document.getElementById('nameModal');if(m){var i=document.getElementById('nameModalInput');if(i)i.value=localStorage.getItem('pac-swift-user')||'';m.style.display='flex';setTimeout(function(){if(i)i.focus();},100);}}
+    (function(){document.querySelectorAll('.swift-tab-group').forEach(function(g){var t;g.addEventListener('mouseenter',function(){clearTimeout(t);document.querySelectorAll('.swift-tab-group').forEach(function(x){x.classList.remove('open');});g.classList.add('open');});g.addEventListener('mouseleave',function(){t=setTimeout(function(){g.classList.remove('open');},120);});var b=g.querySelector('button');if(b)b.addEventListener('click',function(e){e.stopPropagation();var o=g.classList.contains('open');document.querySelectorAll('.swift-tab-group').forEach(function(x){x.classList.remove('open');});if(!o)g.classList.add('open');});});document.addEventListener('click',function(){document.querySelectorAll('.swift-tab-group').forEach(function(g){g.classList.remove('open');});});})();
+    function openMobileMenu(){document.getElementById('mobilePanel').classList.add('open');document.getElementById('mobileOverlay').classList.add('open');}
+    function closeMobileMenu(){document.getElementById('mobilePanel').classList.remove('open');document.getElementById('mobileOverlay').classList.remove('open');}
+    function copyPrompt(cid,bid){var el=document.getElementById(cid);var btn=document.getElementById(bid);if(!el||!btn)return;var t=el.innerText||el.textContent;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2500);}).catch(function(){fb(t,btn);});}else{fb(t,btn);}}
+    function fb(t,btn){var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');btn.textContent='✓ Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2500);}catch(e){}document.body.removeChild(ta);}
+  </script>
+</body>
+</html>
