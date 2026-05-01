@@ -226,7 +226,7 @@
         <div class="s">T</div>
         <div class="label">Track</div>
       </div>
-      <input id="globalNameInput" type="text" placeholder="your name" style="width:100%;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:5px;padding:4px 8px;color:white;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;text-align:center;letter-spacing:0.5px;" />
+      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.25);min-width:80px;white-space:nowrap;background:rgba(255,255,255,0.08);">— tap to set —</div>
     </div>
     </div>
   </div>
@@ -893,18 +893,17 @@
   </script>
 
 
-    // Global name input
-    (function(){
-      var inp = document.getElementById('globalNameInput');
-      if (!inp) return;
-      var saved = localStorage.getItem('pac-swift-user') || '';
-      if (saved) inp.value = saved;
-      function saveName() {
-        var v = inp.value.trim();
-        if (v) localStorage.setItem('pac-swift-user', v);
+
+    // ── BADGE NAME DISPLAY (synced from pac-swift-user) ────────
+    (function syncBadge(){
+      function update(){
+        var n = localStorage.getItem('pac-swift-user') || '';
+        var d = document.getElementById('nameDisplay');
+        if (d && n) d.textContent = n;
       }
-      inp.addEventListener('blur', saveName);
-      inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ saveName(); inp.blur(); } });
+      update();
+      // Re-sync after programme page's own modal saves the name
+      [300,800,1500].forEach(function(t){ setTimeout(update, t); });
     })();
 </body>
 </html>
