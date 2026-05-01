@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+(function(){
+  try{var s=JSON.parse(localStorage.getItem('pac-swift-session'));if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}
+})();
+</script>
+  <title>Sales Call Framework | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+
+    /* USER PILL */
+    .user-pill { position: relative; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 99px; padding: 6px 12px 6px 6px; cursor: pointer; flex-shrink: 0; margin-left: auto; }
+    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: var(--navy); font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+    .user-name { font-size: 13px; color: white; font-weight: 500; }
+    .user-menu { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; min-width: 160px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 300; }
+    .user-menu.open { display: block; }
+    .user-menu-name { padding: 12px 16px; font-size: 12px; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+    .user-menu-item { display: block; width: 100%; padding: 11px 16px; background: none; border: none; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 500; cursor: pointer; text-align: left; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .user-menu-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .user-menu-item.logout { color: #f87171; }
+    .user-menu-item.logout:hover { background: rgba(248,113,113,0.1); }
+
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 12px 16px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-size: 12px; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 220px; white-space: nowrap; }
+    .swift-tab-group:hover .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    /* MOBILE NAV */
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
+    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
+    .swift-dropdown-menu.open { display: block; }
+    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-dropdown-item:last-child { border-bottom: none; }
+    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
+
+    /* RES SUBNAV */
+    .res-subnav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .res-subnav::-webkit-scrollbar { display: none; }
+    @media (max-width: 768px) { .res-subnav { padding: 0 12px; } .res-subnav-tab { padding: 12px 14px; font-size: 12px; } }
+    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    .res-subnav-tab:hover { color: var(--navy); }
+    .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+
+    /* MAIN */
+    .main { max-width: 820px; margin: 0 auto; padding: 36px 24px 80px; }
+
+    /* PAGE HERO */
+    .page-hero { margin-bottom: 40px; }
+    .page-hero-tag { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(24px,3.5vw,34px); color: var(--navy); line-height: 1.2; margin-bottom: 12px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero p { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 580px; }
+
+    /* MINDSET BLOCK */
+    .mindset-block { background: var(--navy); border-radius: 16px; padding: 28px 32px; margin-bottom: 40px; }
+    .mindset-block .label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 14px; }
+    .mindset-block blockquote { font-family: 'DM Serif Display', serif; font-size: clamp(16px,2.2vw,20px); color: var(--white); font-style: italic; line-height: 1.55; margin-bottom: 12px; }
+    .mindset-block .attr { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: 1px; }
+    .mindset-block .attr strong { color: var(--gold); }
+    .mindset-bullets { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .mindset-bullet { display: flex; align-items: flex-start; gap: 12px; background: rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 16px; }
+    .mindset-bullet .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .mindset-bullet p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.55; }
+
+    /* STAGE CARDS */
+    .stages { display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; }
+    .stage-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .stage-header { padding: 18px 24px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); }
+    .stage-num { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 20px; color: white; flex-shrink: 0; }
+    .stage-header-text h3 { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); }
+    .stage-header-text .time { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+    .stage-body { padding: 20px 24px; }
+    .stage-why { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; background: var(--cream); border-radius: 8px; padding: 12px 14px; }
+    .stage-why strong { color: var(--navy); font-weight: 700; }
+    .script-block { background: #F0FDF4; border-left: 3px solid #16a34a; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; font-size: 13px; color: #166534; font-style: italic; line-height: 1.6; }
+    .objection-block { margin-bottom: 16px; }
+    .objection-q { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .objection-a { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .rules-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+    .rule-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text); line-height: 1.55; }
+    .rule-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 6px; }
+    .layers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+    .layer { background: var(--cream); border-radius: 8px; padding: 12px 14px; }
+    .layer-num { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+    .layer p { font-size: 13px; color: var(--text); line-height: 1.6; }
+    .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .dont-col { background: #FEF2F2; border-radius: 8px; padding: 12px 14px; }
+    .do-col   { background: #F0FDF4; border-radius: 8px; padding: 12px 14px; }
+    .do-dont .col-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .dont-col .col-label { color: #dc2626; }
+    .do-col   .col-label { color: #16a34a; }
+    .do-dont p { font-size: 12px; line-height: 1.55; }
+    .dont-col p { color: #b91c1c; text-decoration: line-through; }
+    .do-col   p { color: #166534; }
+
+    /* QUICK REFERENCE TABLE */
+    .ref-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 14px; overflow: hidden; border: 1.5px solid var(--border); margin-bottom: 32px; font-size: 13px; }
+    .ref-table thead tr { background: var(--navy); }
+    .ref-table thead th { padding: 12px 16px; color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-align: left; }
+    .ref-table tbody tr { border-bottom: 1px solid var(--border); }
+    .ref-table tbody tr:last-child { border-bottom: none; }
+    .ref-table tbody td { padding: 12px 16px; vertical-align: top; color: var(--text); line-height: 1.5; }
+    .ref-table tbody td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .stage-badge { display: inline-block; width: 28px; height: 28px; border-radius: 6px; text-align: center; line-height: 28px; font-weight: 700; color: white; font-size: 12px; margin-right: 6px; }
+
+    /* JAMIE QUOTE */
+    .jamie-quote { background: linear-gradient(135deg, rgba(10,191,188,0.08), rgba(74,143,231,0.08)); border: 1.5px solid rgba(10,191,188,0.3); border-radius: 14px; padding: 24px 28px; margin-bottom: 40px; }
+    .jamie-quote .label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .jamie-quote blockquote { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); font-style: italic; line-height: 1.6; margin-bottom: 8px; }
+    .jamie-quote .attr { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 24px 16px 60px; }
+      .stage-body { padding: 16px; }
+      .do-dont { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">Sales Framework · Jamie's Masterclass</div>
+      <h1>📞 Sales Call — <em>Heart-Based Closing</em></h1>
+    </div>
+    <div class="user-pill" id="userPill" onclick="toggleUserMenu()">
+      <span class="user-avatar" id="userAvatar">J</span>
+      <span class="user-name" id="userNameDisplay">...</span>
+      <div class="user-menu" id="userMenu">
+        <div class="user-menu-name" id="userMenuName">user</div>
+        <button class="user-menu-item" onclick="openUserManager()">Manage Users</button>
+        <button class="user-menu-item logout" onclick="doLogout()">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter" style="color:rgba(255,255,255,0.4);">⌂</span><span class="swift-word">Home</span></a>
+    <a class="swift-tab" href="signature-programme.html"><span class="swift-letter">S</span><span class="swift-word">Signature</span></a>
+    <a class="swift-tab" href="webinar-programme.html"><span class="swift-letter">W</span><span class="swift-word">Webinar</span></a>
+    <a class="swift-tab" href="invite-programme.html"><span class="swift-letter">I</span><span class="swift-word">Invite</span></a>
+    <a class="swift-tab" href="fill-programme.html"><span class="swift-letter">F</span><span class="swift-word">Fill Class</span></a>
+    <a class="swift-tab" href="track-programme.html"><span class="swift-letter">T</span><span class="swift-word">Track</span></a>
+    <a class="swift-tab" href="casestudies.html"><span class="swift-letter" style="color:rgba(255,255,255,0.4);">★</span><span class="swift-word">Case Studies</span></a>
+    <a class="swift-tab" href="planner.html"><span class="swift-letter" style="color:rgba(255,255,255,0.4);">📅</span><span class="swift-word">30-Day Plan</span></a>
+    <div class="swift-tab-group"><a class="swift-tab active" href="other-resources.html"><span class="swift-letter" style="color:var(--gold);">✦</span><span class="swift-word">Other Resources ▾</span></a><div class="swift-sub-menu"><a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a><a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a><a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a><a class="swift-sub-item" href="ig-ads.html">📸 IG Ads</a><a class="swift-sub-item active" href="sales-call.html">📞 Sales Call</a></div></div>
+  </nav>
+
+  <div class="swift-nav-mobile" id="swiftMobileNav">
+    <button class="swift-dropdown-btn" id="swiftDropdownBtn" onclick="toggleSwiftDropdown()">
+      <span id="swiftCurrentLabel">✦ Other Resources</span>
+      <span>▾</span>
+    </button>
+    <div class="swift-dropdown-menu" id="swiftDropdownMenu">
+      <a class="swift-dropdown-item" href="index.html"><span class="item-letter">⌂</span>Home</a>
+      <a class="swift-dropdown-item" href="signature-programme.html"><span class="item-letter">S</span>Signature</a>
+      <a class="swift-dropdown-item" href="webinar-programme.html"><span class="item-letter">W</span>Webinar</a>
+      <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
+      <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
+      <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
+      <a class="swift-dropdown-item" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
+      <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
+      <a class="swift-dropdown-item active" href="other-resources.html"><span class="item-letter">✦</span>Other Resources</a>
+    </div>
+  </div>
+
+  <nav class="res-subnav">
+    <a class="res-subnav-tab" href="other-resources.html">🎉 Parties for Kids</a>
+    <a class="res-subnav-tab" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+    <a class="res-subnav-tab" href="payment-upgrade.html">💳 Monthly → Annual</a>
+    <a class="res-subnav-tab" href="ig-ads.html">📸 IG Ads</a>
+    <a class="res-subnav-tab active" href="sales-call.html">📞 Sales Call</a>
+  </nav>
+
+  <main class="main">
+
+    <div class="page-hero">
+      <div class="page-hero-tag">Sales Framework · 7 Stages</div>
+      <h2>📞 The Sales Call Framework — <em>For Tutors & Educators</em></h2>
+      <p>Based on Jamie's High-Ticket Closing Masterclass. A heart-based approach to identifying mental blocks and guiding parents toward a decision — without pressure.</p>
+    </div>
+
+    <!-- MINDSET -->
+    <div class="mindset-block">
+      <div class="label">The Mindset Shift Before Anything Else</div>
+      <blockquote>"Sales is not about making a transaction. It's about identifying the mental blocks stopping someone from moving towards what they already want — and helping them see through those blocks using their own logic."</blockquote>
+      <div class="attr">— <strong>Jamie</strong></div>
+      <div class="mindset-bullets">
+        <div class="mindset-bullet"><span class="icon">🔍</span><p><strong style="color:white;">Diagnostic work</strong> — helping a student identify where they're stuck</p></div>
+        <div class="mindset-bullet"><span class="icon">🔄</span><p><strong style="color:white;">Reframing work</strong> — turning a wrong method into the right one</p></div>
+        <div class="mindset-bullet"><span class="icon">🎯</span><p><strong style="color:white;">Closing work</strong> — guiding a parent to see their child's potential</p></div>
+      </div>
+      <p style="margin-top:16px; font-size:13px; color:rgba(255,255,255,0.5);">The only difference in a sales call: there's a transaction at the end.</p>
+    </div>
+
+    <!-- STAGES -->
+    <div class="stages">
+
+      <!-- STAGE 1 -->
+      <div class="stage-card">
+        <div class="stage-header">
+          <div class="stage-num" style="background:#0ABFBC;">1</div>
+          <div class="stage-header-text">
+            <h3>Set the Frame</h3>
+            <div class="time">First 2–5 minutes · You lead, not them</div>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="stage-why"><strong>Why it matters:</strong> If you lose the frame here, the parent will lead the call — and you'll end up on a 2-hour emotional unloading session with no sale.</div>
+          <div class="script-block">"Hi [Name], can you see me okay? Great. I'm John. So I saw that you reached out about support for [child's name] — I'd love to hear more about where things are at. Can you give me a quick 30-second intro of who you are?"</div>
+          <div class="script-block">"Okay great. So here's what we'll do today — I'll ask you a few questions to understand [child's name]'s situation, and then I'll share a bit about how I work. If there's a fit, I'll walk you through how we can work together. And if there isn't, no worries — I'll point you in the right direction either way. Sound good?"</div>
+          <div class="rules-list">
+            <div class="rule-item"><div class="rule-dot"></div>Keep their intro to 30 seconds — don't let them ramble</div>
+            <div class="rule-item"><div class="rule-dot"></div>State the agenda so they follow your flow, not their own</div>
+            <div class="rule-item"><div class="rule-dot"></div>Project calm confidence — not enthusiasm, not eagerness</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 2 -->
+      <div class="stage-card">
+        <div class="stage-header">
+          <div class="stage-num" style="background:#4A8FE7;">2</div>
+          <div class="stage-header-text">
+            <h3>The Diagnostic</h3>
+            <div class="time">20 minutes · They reveal their pain</div>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="stage-why"><strong>Why it matters:</strong> People only believe what they say themselves. If you tell them their child needs help, they push back. If they say it themselves, they believe it deeply.</div>
+          <div class="layers">
+            <div class="layer">
+              <div class="layer-num">Layer 1 · Current Situation</div>
+              <p>"So tell me, how is [child's name] doing in [subject] right now?"</p>
+            </div>
+            <div class="layer">
+              <div class="layer-num">Layer 2 · The Emotion Under the Facts</div>
+              <p>"How do you feel about that?" → If flat answer: "What does that mean for you? What does 'like that' actually look like at home?"</p>
+            </div>
+            <div class="layer">
+              <div class="layer-num">Layer 3 · The Future Vision</div>
+              <p>"If we could fast forward — what would it look like if [child's name] was doing well? How would that change things for him and for you?"</p>
+            </div>
+            <div class="layer">
+              <div class="layer-num">Layer 4 · Widen the Gap</div>
+              <p>"What if nothing changes from here? What does that cost you — and him?"</p>
+            </div>
+          </div>
+          <div class="rules-list">
+            <div class="rule-item"><div class="rule-dot"></div>Don't give advice yet — you're listening, not coaching</div>
+            <div class="rule-item"><div class="rule-dot"></div>Attach facts to emotions, not just outcomes</div>
+            <div class="rule-item"><div class="rule-dot"></div>Anchor these answers — you'll use them in your pitch</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 3 -->
+      <div class="stage-card">
+        <div class="stage-header">
+          <div class="stage-num" style="background:#8B5CF6;">3</div>
+          <div class="stage-header-text">
+            <h3>Pre-empt Objections</h3>
+            <div class="time">10 minutes · Close doors before price</div>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="stage-why"><strong>Why it matters:</strong> Once price is said, tension builds and trust drops. Handle objections before you reveal the number.</div>
+          <div class="objection-block">
+            <div class="objection-q">Pre-empt: Priority</div>
+            <div class="script-block">"On a scale of 1–10, how important is it to solve this before [PSLE / exam / new school year]?"<br>If 7 or below: "What would make it a 10? What's holding it back from being more urgent?"</div>
+          </div>
+          <div class="objection-block">
+            <div class="objection-q">Pre-empt: Decision-Making</div>
+            <div class="script-block">"When you find something that feels right for [child's name], are you someone who can make a decision on the same day, or do you usually need more time?"</div>
+          </div>
+          <div class="objection-block">
+            <div class="objection-q">Pre-empt: Investment Mindset</div>
+            <div class="script-block">"Have you invested in support like this before? How did you think about that decision?"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 4 -->
+      <div class="stage-card">
+        <div class="stage-header">
+          <div class="stage-num" style="background:#F59E0B;">4</div>
+          <div class="stage-header-text">
+            <h3>The Transition</h3>
+            <div class="time">2–3 minutes · Bridge to your solution</div>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="stage-why"><strong>Why it matters:</strong> Don't jump straight into your pitch — earn the right to present it. Mirror back what they said so they feel heard.</div>
+          <div class="script-block">"Okay, so just to make sure I've understood — [child's name] is currently at C grade, it's affecting his confidence, and you've tried a few things but nothing has stuck. And for you, it's important that he improves before PSLE because you want him to get into [school]. Is that right?"</div>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Wait for them to say yes. Then:</p>
+          <div class="script-block">"Based on what you've shared, I think I can help. Let me walk you through how I work — and you can tell me if it feels like a fit."</div>
+        </div>
+      </div>
+
+      <!-- STAGE 5 -->
+      <div class="stage-card">
+        <div class="stage-header">
+          <div class="stage-num" style="background:#10B981;">5</div>
+          <div class="stage-header-text">
+            <h3>The Pitch</h3>
+            <div class="time">5–10 minutes · Outcomes, not features</div>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="do-dont">
+            <div class="dont-col">
+              <div class="col-label">❌ Don't say</div>
+              <p>"You get 12 lessons over 3 months."</p>
+            </div>
+            <div class="do-col">
+              <div class="col-label">✅ Say instead</div>
+              <p>"Your child gets a full roadmap from now to PSLE — every key topic, progress checks every term, holiday workshops included."</p>
+            </div>
+          </div>
+          <div class="script-block">"You mentioned that [child's name] is struggling with confidence. In the first month, that's exactly what we focus on — building the foundation so he stops second-guessing himself. By Month 3, we're drilling exam technique. By the time PSLE comes, he'll be walking in prepared — not just hoping for the best."</div>
+          <div class="stage-why" style="margin-top:12px;"><strong>The what vs. the how:</strong> Share what results they'll get. Keep how you teach for when they're enrolled — that's what they're paying for.</div>
+          <div class="script-block" style="margin-top:12px;">"The full programme is $X for the year, which includes everything I've just walked you through. There's also a term-by-term option if that works better for your cashflow."<br><br><em style="color:#15803d; font-style:normal; font-weight:700;">Then go quiet. Let them respond.</em></div>
+        </div>
+      </div>
+
+      <!-- STAGE 6 -->
+      <div class="stage-card">
+        <div class="stage-header">
+          <div class="stage-num" style="background:#EC4899;">6</div>
+          <div class="stage-header-text">
+            <h3>Handle Objections</h3>
+            <div class="time">As long as needed · Agree → Isolate → Tackle → Re-close</div>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="objection-block">
+            <div class="objection-q">"It's expensive."</div>
+            <div class="script-block">"Yeah, I totally understand — it is a significant investment."<br><br>Then isolate: "When you say you need to think about it — what are the one or two things you're most unsure about?"<br><br>If value issue: "If [child's name] does well in PSLE and gets into his dream school, what's that worth to you? And what's it costing right now to stay where things are?"<br><br>If cash flow: "I do have a term payment option — you'd pay $X every 3 months instead of upfront. Would that work better?"</div>
+          </div>
+          <div class="objection-block">
+            <div class="objection-q">"I need to discuss with my husband/wife."</div>
+            <div class="script-block">"Of course, that makes sense. Can I ask — if your husband/wife is fully on board, would you want to move forward?"<br><br>If yes: "Great — would it help to hop on a quick call together? I'm happy to walk both of you through it."</div>
+          </div>
+          <div class="objection-block">
+            <div class="objection-q">"Let me think about it."</div>
+            <div class="script-block">"Totally. Just so I understand — what would make you feel more confident about moving forward? Is it more information, or is it more time?"</div>
+          </div>
+          <div class="stage-why"><strong>The re-close:</strong> After handling every objection, always bring it back: "So if those two things are sorted — would you want to go ahead?"</div>
+        </div>
+      </div>
+
+      <!-- STAGE 7 -->
+      <div class="stage-card">
+        <div class="stage-header">
+          <div class="stage-num" style="background:#6366F1;">7</div>
+          <div class="stage-header-text">
+            <h3>The Close</h3>
+            <div class="time">Final 2–3 minutes · Clear yes or no</div>
+          </div>
+        </div>
+        <div class="stage-body">
+          <div class="script-block">"Based on everything we've talked about, it really does sound like this is what [child's name] needs right now. Shall we get started?"</div>
+          <div class="script-block">"I really enjoyed this conversation and I can see myself working with [child's name]. I want to be honest — I do think this is the right fit. But it's your decision. What would you like to do?"</div>
+          <div class="stage-why" style="margin-top:12px;"><strong>If yes:</strong> Confirm start date → send payment link same day → follow up within 24 hours with onboarding details.<br><br><strong>If no:</strong> "No worries at all. Let me share a few resources that might still be helpful. And if things change, feel free to reach out." Leave the door open. Never pressure. Never chase.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- QUICK REFERENCE TABLE -->
+    <h3 style="font-family:'DM Serif Display',serif; font-size:20px; color:var(--navy); margin-bottom:16px;">Quick Reference: The 7 Stages at a Glance</h3>
+    <table class="ref-table">
+      <thead>
+        <tr><th>Stage</th><th>Time</th><th>Goal</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="stage-badge" style="background:#0ABFBC;">1</span> Set the Frame</td><td>2–5 min</td><td>You lead, not them</td></tr>
+        <tr><td><span class="stage-badge" style="background:#4A8FE7;">2</span> Diagnostic</td><td>20 min</td><td>They reveal their pain</td></tr>
+        <tr><td><span class="stage-badge" style="background:#8B5CF6;">3</span> Pre-empt Objections</td><td>10 min</td><td>Close doors before price</td></tr>
+        <tr><td><span class="stage-badge" style="background:#F59E0B;">4</span> Transition</td><td>2–3 min</td><td>Bridge to your solution</td></tr>
+        <tr><td><span class="stage-badge" style="background:#10B981;">5</span> Pitch</td><td>5–10 min</td><td>Outcomes, not features</td></tr>
+        <tr><td><span class="stage-badge" style="background:#EC4899;">6</span> Handle Objections</td><td>As needed</td><td>Agree → Isolate → Tackle → Re-close</td></tr>
+        <tr><td><span class="stage-badge" style="background:#6366F1;">7</span> Close</td><td>2–3 min</td><td>Clear yes or no</td></tr>
+      </tbody>
+    </table>
+
+    <!-- JAMIE FINAL QUOTE -->
+    <div class="jamie-quote">
+      <div class="label">💡 Jamie's Biggest Takeaway</div>
+      <blockquote>"Put less focus on the transaction and more focus on the person you're talking to and how you can add value — and the money will naturally follow."</blockquote>
+      <div class="attr">— Jamie, High-Ticket Closing Masterclass</div>
+    </div>
+
+  </main>
+
+  <!-- USER MANAGER MODAL -->
+  <div id="userManagerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:16px; width:min(500px,94vw); max-height:85vh; overflow:hidden; display:flex; flex-direction:column;">
+      <div style="background:#002D6A; padding:20px 24px; display:flex; align-items:center; justify-content:space-between;">
+        <h3 style="font-family:'DM Serif Display',serif; color:white; font-size:20px;">Manage Users</h3>
+        <button onclick="document.getElementById('userManagerModal').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;">&#215;</button>
+      </div>
+      <div style="padding:24px; overflow-y:auto; flex:1;">
+        <div id="pendingList" style="margin-bottom:20px;"></div>
+        <div id="userList" style="margin-bottom:20px;"></div>
+        <div style="border-top:1px solid #E8EDF5; padding-top:20px;">
+          <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:12px;">Add User Manually</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input id="newUsername" placeholder="Username" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
+            <input id="newPassword" placeholder="Password" type="text" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
+            <button onclick="addUser()" style="background:#002D6A;color:white;border:none;border-radius:8px;padding:9px 16px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;">Add</button>
+          </div>
+          <p id="addUserMsg" style="font-size:12px;margin-top:8px;color:#0ABFBC;display:none;"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      var mob = document.getElementById('swiftMobileNav');
+      if (mob && !mob.contains(e.target)) document.getElementById('swiftDropdownMenu').classList.remove('open');
+    });
+
+    /* AUTH / USER PILL JS */
+    function getSession() { try { return JSON.parse(localStorage.getItem('pac-swift-session')); } catch(e) { return null; } }
+    function doLogout() { localStorage.removeItem('pac-swift-session'); window.location.href = 'login.html'; }
+    function toggleUserMenu() { document.getElementById('userMenu').classList.toggle('open'); }
+    document.addEventListener('click', function(e) {
+      var pill = document.getElementById('userPill');
+      if (pill && !pill.contains(e.target)) document.getElementById('userMenu').classList.remove('open');
+    });
+    function openUserManager() {
+      document.getElementById('userManagerModal').style.display = 'flex';
+      renderPending(); renderUserList();
+      document.getElementById('userMenu').classList.remove('open');
+    }
+    (function initUser() {
+      var s = getSession();
+      if (!s) return;
+      document.getElementById('userNameDisplay').textContent = s.u;
+      document.getElementById('userAvatar').textContent = s.u.charAt(0).toUpperCase();
+      document.getElementById('userMenuName').textContent = s.u;
+      if (s.role !== 'admin') {
+        var btn = document.querySelector('.user-menu-item[onclick="openUserManager()"]');
+        if (btn) btn.style.display = 'none';
+      }
+    })();
+
+    /* USER MANAGER JS */
+    function getUsers()     { try { return JSON.parse(localStorage.getItem('pac-swift-users')   || '{}'); } catch(e) { return {}; } }
+    function saveUsers(u)   { localStorage.setItem('pac-swift-users', JSON.stringify(u)); }
+    function getPending()   { try { return JSON.parse(localStorage.getItem('pac-swift-pending') || '{}'); } catch(e) { return {}; } }
+    function savePending(p) { localStorage.setItem('pac-swift-pending', JSON.stringify(p)); }
+    function renderPending() {
+      var pending = getPending(); var keys = Object.keys(pending);
+      var el = document.getElementById('pendingList'); if (!el) return;
+      if (!keys.length) { el.innerHTML = ''; return; }
+      el.innerHTML = '<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F59E0B;margin-bottom:10px;">⏳ Pending Requests (' + keys.length + ')</p>' +
+        keys.map(function(k) {
+          var d = pending[k].requestedAt ? new Date(pending[k].requestedAt).toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}) : '';
+          return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;margin-bottom:8px;gap:8px;">' +
+            '<div><div style="font-size:13px;font-weight:700;color:#92400E;">' + k + '</div>' + (d ? '<div style="font-size:11px;color:#B45309;margin-top:2px;">Requested ' + d + '</div>' : '') + '</div>' +
+            '<div style="display:flex;gap:6px;flex-shrink:0;"><button onclick="approvePending(\'' + k + '\')" style="background:#16a34a;color:white;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Approve</button>' +
+            '<button onclick="rejectPending(\'' + k + '\')" style="background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Reject</button></div></div>';
+        }).join('');
+    }
+    function approvePending(u) { var p=getPending(),users=getUsers(); if(!p[u])return; users[u]={password:p[u].password,role:'user'}; saveUsers(users); delete p[u]; savePending(p); renderPending(); renderUserList(); }
+    function rejectPending(u)  { if(!confirm('Reject "'+u+'"?'))return; var p=getPending(); delete p[u]; savePending(p); renderPending(); }
+    function renderUserList() {
+      var users=getUsers(); var keys=Object.keys(users); var el=document.getElementById('userList'); if(!el)return;
+      if(!keys.length){el.innerHTML='<p style="font-size:13px;color:#6B7A96;">No approved users yet.</p>';return;}
+      el.innerHTML='<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:10px;">✅ Approved Users</p>'+
+        keys.map(function(k){return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#F4F7FB;border-radius:8px;margin-bottom:6px;"><span style="font-size:13px;font-weight:600;color:#0A0F1C;">'+k+'</span><button onclick="removeUser(\''+k+'\')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button></div>';}).join('');
+    }
+    function addUser() {
+      var u=document.getElementById('newUsername').value.trim(),p=document.getElementById('newPassword').value.trim(),msg=document.getElementById('addUserMsg');
+      if(!u||!p){msg.textContent='Please fill in both fields.';msg.style.color='#ef4444';msg.style.display='block';return;}
+      if(u==='johnyeo'){msg.textContent='Cannot overwrite master account.';msg.style.color='#ef4444';msg.style.display='block';return;}
+      var users=getUsers();users[u]={password:p,role:'user'};saveUsers(users);
+      document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';
+      msg.textContent='User "'+u+'" added!';msg.style.color='#0ABFBC';msg.style.display='block';
+      setTimeout(function(){msg.style.display='none';},3000);renderUserList();
+    }
+    function removeUser(u){if(!confirm('Remove "'+u+'"?'))return;var users=getUsers();delete users[u];saveUsers(users);renderUserList();}
+  </script>
+
+</body>
+</html>
