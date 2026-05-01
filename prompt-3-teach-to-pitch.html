@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt 3: Teach to Pitch | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy:#002D6A;--navy-light:#0A0F1C;--gold:#0ABFBC;--gold-light:#4A8FE7;--cream:#F4F7FB;--cream-dark:#E8EDF5;--text:#0A0F1C;--text-muted:#6B7A96;--white:#FFFFFF;--border:#B8C4D4; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+    .header{background:var(--navy);padding:28px 40px 24px;display:flex;align-items:flex-end;gap:20px;}
+    .header-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+    .header h1{font-family:'DM Serif Display',serif;font-size:clamp(24px,4vw,36px);color:var(--white);line-height:1.1;}
+    .header h1 em{font-style:italic;color:var(--gold-light);}
+    .swift-badge{margin-left:auto;background:rgba(10,191,188,0.15);border:1px solid var(--gold);border-radius:6px;padding:8px 16px;text-align:center;flex-shrink:0;}
+    .swift-badge .s{font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold);line-height:1;}
+    .swift-badge .label{font-size:11px;letter-spacing:2px;color:var(--white);text-transform:uppercase;margin-top:2px;font-weight:600;}
+    .swift-nav{background:var(--navy-light);position:sticky;top:0;z-index:100;padding:0 16px;display:flex;gap:0;overflow:visible;border-bottom:1px solid rgba(255,255,255,0.08);}
+    .swift-tab{padding:14px 20px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,0.65);border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .swift-tab:hover{color:rgba(255,255,255,0.85);}
+    .swift-tab.active{color:var(--white);border-bottom-color:var(--gold);}
+    .swift-letter{font-family:'DM Serif Display',serif;font-size:20px;color:rgba(255,255,255,0.3);line-height:1;}
+    .swift-tab.active .swift-letter{color:var(--gold);}
+    .swift-word{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;}
+    .swift-tab-group{position:relative;display:flex;align-items:stretch;}
+    .swift-sub-menu{position:absolute;top:100%;left:0;background:#111827;border:1px solid rgba(255,255,255,0.15);border-radius:0 0 10px 10px;z-index:200;overflow:hidden;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5);min-width:200px;white-space:nowrap;}
+    .swift-tab-group.open .swift-sub-menu{display:block;}
+    .swift-sub-item{display:flex;align-items:center;gap:10px;padding:13px 16px;color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.06);font-family:'DM Sans',sans-serif;transition:background 0.15s;}
+    .swift-sub-item:last-child{border-bottom:none;}
+    .swift-sub-item:hover{background:rgba(255,255,255,0.06);color:white;}
+    .swift-sub-item.active{color:white;background:rgba(10,191,188,0.12);}
+    .mobile-menu-bar{display:none;background:var(--navy-light);padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.08);position:relative;z-index:200;}
+    .mobile-menu-btn{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 16px;color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+    .mobile-menu-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;}
+    .mobile-menu-panel{position:fixed;top:0;left:0;width:280px;height:100%;background:#111827;z-index:501;overflow-y:auto;padding:0 0 40px;transform:translateX(-100%);transition:transform 0.25s ease;pointer-events:none;}
+    .mobile-menu-panel.open{transform:translateX(0);pointer-events:auto;}
+    .mobile-menu-overlay.open{display:block;}
+    .mobile-menu-header{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;}
+    .mobile-menu-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer;}
+    .mobile-menu-section{padding:16px 16px 6px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+    .mobile-menu-item{display:flex;align-items:center;gap:12px;padding:13px 16px;color:rgba(255,255,255,0.75);font-size:14px;font-weight:500;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.05);font-family:'DM Sans',sans-serif;}
+    .mobile-menu-item:hover,.mobile-menu-item.active{color:white;background:rgba(10,191,188,0.1);}
+    .mobile-menu-letter{font-family:'DM Serif Display',serif;font-size:18px;width:24px;text-align:center;flex-shrink:0;}
+    @media(max-width:768px){.swift-nav{display:none!important;}.mobile-menu-bar{display:block;}}
+    @media(min-width:769px){.mobile-menu-bar{display:none!important;}}
+
+    .main{max-width:800px;margin:0 auto;padding:40px 24px 80px;}
+    .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:28px;font-size:13px;color:var(--text-muted);}
+    .breadcrumb a{color:var(--gold);text-decoration:none;font-weight:600;}
+    .breadcrumb span{color:var(--border);}
+
+    /* STEPS */
+    .steps-section{margin-bottom:28px;}
+    .steps-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;}
+    .steps-list{display:flex;flex-direction:column;gap:10px;}
+    .step-item{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:flex-start;gap:14px;}
+    .step-num{background:var(--navy);color:var(--white);font-family:'DM Serif Display',serif;font-size:14px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-body{}
+    .step-title{font-weight:600;font-size:14px;color:var(--navy);margin-bottom:3px;}
+    .step-desc{font-size:13px;color:var(--text-muted);line-height:1.5;}
+
+    /* CALLOUT */
+    .callout{background:rgba(10,191,188,0.08);border:1.5px solid rgba(10,191,188,0.3);border-radius:12px;padding:14px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start;}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-text{font-size:13px;color:var(--text);line-height:1.6;}
+    .callout-text strong{color:var(--navy);font-weight:600;}
+
+    /* PROMPT CARD */
+    .prompt-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,45,106,0.06);}
+    .prompt-card-header{background:var(--navy);padding:20px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .prompt-card-header-text{}
+    .prompt-category{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:6px;}
+    .prompt-card-header h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--white);line-height:1.2;}
+    .prompt-card-header h3 em{font-style:italic;color:var(--gold-light);}
+    .prompt-card-body{padding:24px 24px 20px;}
+    .prompt-box{background:#0D1117;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+    .prompt-box-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);}
+    .prompt-box-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);}
+    .copy-btn{background:var(--gold);color:var(--navy);border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:opacity 0.15s;font-family:'DM Sans',sans-serif;}
+    .copy-btn:hover{opacity:0.85;}
+    .copy-btn.copied{background:#10B981;color:white;}
+    .prompt-text{padding:20px 22px;font-family:'DM Mono','Courier New',monospace;font-size:13px;line-height:1.75;color:#CBD5E1;white-space:pre-wrap;word-break:break-word;max-height:560px;overflow-y:auto;}
+    .prompt-text::-webkit-scrollbar{width:4px;}
+    .prompt-text::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);}
+    .prompt-text::-webkit-scrollbar-thumb{background:rgba(10,191,188,0.4);border-radius:99px;}
+
+    @media(max-width:600px){
+      .header{padding:20px 16px;}
+      .main{padding:28px 16px 60px;}
+      .prompt-card-body{padding:20px 18px;}
+      .prompt-card-header{padding:18px 20px;}
+      .prompt-text{font-size:12px;max-height:400px;}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · 6 Prompts</div>
+      <h1>Prompt 3 — <em>Teach to Pitch</em></h1>
+    </div>
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+      <div class="swift-badge" style="margin-left:0;"><div class="s">3</div><div class="label">of 6</div></div>
+      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+        <a class="swift-sub-item" href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;border-bottom:3px solid var(--gold);color:white;"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item active" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
+        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
+        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item active" href="prompt-3-teach-to-pitch.html" style="padding-left:36px;font-size:13px;">✦ Teach to Pitch</a>
+    <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Lead Collection Form</a>
+    <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <main class="main">
+
+    <div class="breadcrumb"><a href="6-prompts.html">← 6 Prompts</a><span>/</span><span>Teach to Pitch</span></div>
+
+    <!-- STEPS -->
+    <div class="steps-section">
+      <div class="steps-title">How to use this prompt</div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Prepare your teaching slides</div>
+            <div class="step-desc">Export your webinar slides as a PDF, or take screenshots of each slide. Any format Claude can read works.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Upload the slides to Claude</div>
+            <div class="step-desc">Open Claude, click the paperclip icon, and attach your slides file before pasting the prompt.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Copy and paste the prompt below</div>
+            <div class="step-desc">Paste it into the same message as your slides. Send it and wait for Claude to ask you questions.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Fill in the missing details when prompted</div>
+            <div class="step-desc">Claude will ask for your offer details — workshop name, price, bonuses, date, and anything not on the slides. Answer each question and it will write your complete script.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-icon">🔍</div>
+      <div class="callout-text"><strong>Claude will probe you for missing details.</strong> It reads your slides first, then asks specifically for what it needs to complete the script — so nothing gets left as a blank placeholder.</div>
+    </div>
+
+    <!-- PROMPT CARD -->
+    <div class="prompt-card">
+      <div class="prompt-card-header">
+        <div class="prompt-card-header-text">
+          <div class="prompt-category">Prompt 3 of 6</div>
+          <h3>Generate Your <em>Webinar Pitch Script</em></h3>
+        </div>
+      </div>
+      <div class="prompt-card-body">
+        <div class="prompt-box">
+          <div class="prompt-box-top">
+            <div class="prompt-box-label">📋 Prompt 3 — Copy &amp; Paste into Claude</div>
+            <button class="copy-btn" id="copyBtn" onclick="copyPrompt('promptContent','copyBtn')">Copy</button>
+          </div>
+          <div class="prompt-text" id="promptContent">I'm a tutor preparing for a free webinar. I've uploaded my teaching slides above.
+
+I want you to help me generate a complete, ready-to-read webinar script using the exact framework below.
+
+Before writing the script, please read my slides carefully and then ask me for any details you still need. Specifically, check whether I've already provided:
+
+1. My workshop or programme name
+2. The main transformation I promise students
+3. Workshop date, time and location (online via Zoom or in-person)
+4. Workshop duration
+5. The 3 main outcomes or things covered in the workshop
+6. What participants walk away with (workbook, notes, template, etc.)
+7. Regular price and early bird price
+8. Maximum number of students
+9. Bonuses — name each one and its individual value
+10. How to register (link, QR code or DM)
+
+Ask me only for what's missing. Once you have everything, fill in all the [bracketed placeholders] in the script below and write it out in full — ready for me to read on the day.
+
+---
+
+WEBINAR SCRIPT - READ THIS EXACTLY
+
+PART 1: TEACH (30-40 minutes)
+[Share your 3 teaching points with examples. Keep it conversational and valuable.]
+
+PART 2: TRANSITION
+After Your 3rd Teaching Point:
+SAY:
+"This third technique is just ONE of the key parts I share with my own students to help them jump from [C grade] to [A grade] within [1-2 months]."
+[PAUSE 3 seconds]
+SAY:
+"Give me a YES in the chat if you got value from today's sharing."
+[WAIT 10 seconds]
+SAY:
+"I can see many yeses coming in. That's wonderful!"
+[Even if no one responds, say this anyway]
+SAY:
+"Parents, is it okay if I spend the next 10 minutes sharing how you can access the REST of my complete teaching system?"
+[PAUSE 5 seconds]
+SAY:
+"Great! Let me share this with you..."
+
+PART 3: PITCH
+Step 1: Describe Your Offer
+SAY:
+"So here's what I've put together...
+I'm running a [Workshop Name] on [Topic], and it's happening on:
+Date: [November 15th, Saturday]
+Time: [2pm to 5pm]
+Where: Online via Zoom / At [location]
+Duration: [3 hours]
+In this workshop, we'll cover:
+[Outcome 1]
+[Outcome 2]
+[Outcome 3]
+You'll walk away with [workbook/notes/template]."
+
+Step 2: Qualify Your Audience
+SAY:
+"Now, I want to be very clear - this workshop is ESPECIALLY designed for parents who are:
+Hands-on - Involved in your child's education and willing to support at home
+Action-oriented - You want to implement and see real results
+Committed - Serious about improvement and ready to put in the work
+If that sounds like you, this will be a great fit."
+[PAUSE 2 seconds]
+SAY:
+"If you're looking for a quick fix or want the tutor to do everything... this probably isn't for you, and that's okay."
+
+Step 3: Value Stack
+SAY:
+"Here's everything you're getting:
+Main Workshop: [Name] - worth $250
+BONUS #1: [Name] - worth $80
+BONUS #2: [Name] - worth $100
+BONUS #3: [Name] - worth $70
+Total value: $500
+Your investment today: Just $200"
+
+Step 4: Create Urgency
+SAY:
+"Now, I can only take [10] students because I want to give personalized attention.
+EARLY BIRD SPECIAL: For those who sign up BEFORE this call ends today, you get $50 off.
+Your price today: $150
+But this early bird rate expires when we finish today."
+
+Step 5: Call to Action
+SAY:
+"Here's how to register RIGHT NOW:
+Option 1: Click the registration link I'm dropping in the chat: [DROP LINK]
+Option 2: Scan this QR code [SHOW ON SCREEN]
+Option 3: Send me a DM saying 'INTERESTED'
+Once you've registered and paid, screenshot and send it to me for immediate confirmation.
+I'm going to put a 5-minute countdown timer on the screen right now. Use this time to register, and I'll be here to answer any questions you have."
+[START 5-MINUTE COUNTDOWN TIMER ON SCREEN]
+[Stay on camera, smile, answer questions in chat, encourage registrations]
+WHAT TO SAY DURING THE 5 MINUTES:
+[After 2 minutes]:
+"I'm seeing some registrations coming in - that's great! We have 3 minutes left for the early bird rate."
+[After 4 minutes]:
+"One minute left for the early bird discount! If you're on the fence, now's the time. Registration link is in the chat."
+[When timer ends]:
+"Alright, the early bird period has ended. For those who registered, congratulations - you've secured your spot! For those who didn't make it in time, you can still register at the regular rate. Just DM me."
+
+WHAT IF NO ONE RESPONDS?
+If silence after "Give me a YES":
+"I can see some yeses, and I know some of you are processing. That's normal."
+If silence after "Is it okay if I share more?":
+"I'm seeing some nods and messages, so let me go ahead..."
+If no questions:
+"No questions? Great! That means I explained it clearly. Payment links are in the chat. I'm seeing some of you taking action already!"
+
+KEY REMINDERS:
+✓ Read naturally - not like a robot ✓ Maintain eye contact with camera ✓ Smile when appropriate ✓ Don't apologize for pitching ✓ Be confident - you KNOW you can help ✓ If nervous, it's okay - keep going ✓ Goal: Close just 1 person = SUCCESS
+YOU'VE GOT THIS! 🎯</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Name display
+    const stored = localStorage.getItem('pac-swift-user');
+    if (stored) {
+      const nd = document.getElementById('nameDisplay');
+      nd.textContent = stored;
+      nd.style.display = 'block';
+    }
+    function promptChangeName() {
+      const n = prompt('Enter your name:', localStorage.getItem('pac-swift-user') || '');
+      if (n && n.trim()) {
+        localStorage.setItem('pac-swift-user', n.trim());
+        const nd = document.getElementById('nameDisplay');
+        nd.textContent = n.trim();
+        nd.style.display = 'block';
+      }
+    }
+
+    // Copy button
+    function copyPrompt(id, btnId) {
+      const text = document.getElementById(id).innerText;
+      const btn = document.getElementById(btnId);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        });
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      }
+    }
+
+    // Mobile menu
+    function openMobileMenu() {
+      document.getElementById('mobilePanel').classList.add('open');
+      document.getElementById('mobileOverlay').classList.add('open');
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobilePanel').classList.remove('open');
+      document.getElementById('mobileOverlay').classList.remove('open');
+    }
+
+    // Desktop dropdowns
+    document.querySelectorAll('.swift-tab-group').forEach(group => {
+      const btn = group.querySelector('button.swift-tab');
+      if (!btn) return;
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const isOpen = group.classList.contains('open');
+        document.querySelectorAll('.swift-tab-group').forEach(g => g.classList.remove('open'));
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.swift-tab-group').forEach(g => g.classList.remove('open'));
+    });
+  </script>
+</body>
+</html>
