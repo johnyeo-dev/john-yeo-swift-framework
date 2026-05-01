@@ -150,6 +150,10 @@
       .stage-body { padding: 16px; }
       .do-dont { grid-template-columns: 1fr; }
     }
+
+    .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
+    .user-logout-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(255,255,255,0.75); font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; white-space:nowrap; }
+    .user-logout-btn:hover { background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.4); color:#fca5a5; }
   </style>
 </head>
 <body>
@@ -159,14 +163,10 @@
       <div class="header-label">Sales Framework · Jamie's Masterclass</div>
       <h1>📞 Sales Call — <em>Heart-Based Closing</em></h1>
     </div>
-    <div class="user-pill" id="userPill" onclick="toggleUserMenu()">
+    <div class="user-pill" id="userPill">
       <span class="user-avatar" id="userAvatar">J</span>
-      <span class="user-name" id="userNameDisplay">...</span>
-      <div class="user-menu" id="userMenu">
-        <div class="user-menu-name" id="userMenuName">user</div>
-        <button class="user-menu-item" onclick="openUserManager()">Manage Users</button>
-        <button class="user-menu-item logout" onclick="doLogout()">Log out</button>
-      </div>
+      <span class="user-name" id="userNameDisplay"></span>
+      <button class="user-logout-btn" onclick="doLogout()">Log Out</button>
     </div>
   </header>
 
@@ -464,22 +464,15 @@
     /* AUTH / USER PILL JS */
     function getSession() { try { return JSON.parse(localStorage.getItem('pac-swift-session')); } catch(e) { return null; } }
     function doLogout() { localStorage.removeItem('pac-swift-session'); window.location.href = 'login.html'; }
-    function toggleUserMenu() { document.getElementById('userMenu').classList.toggle('open'); }
-    document.addEventListener('click', function(e) {
-      var pill = document.getElementById('userPill');
-      if (pill && !pill.contains(e.target)) document.getElementById('userMenu').classList.remove('open');
-    });
     function openUserManager() {
       document.getElementById('userManagerModal').style.display = 'flex';
       renderPending(); renderUserList();
-      document.getElementById('userMenu').classList.remove('open');
-    }
+      }
     (function initUser() {
       var s = getSession();
       if (!s) return;
       document.getElementById('userNameDisplay').textContent = s.u;
       document.getElementById('userAvatar').textContent = s.u.charAt(0).toUpperCase();
-      document.getElementById('userMenuName').textContent = s.u;
       if (s.role !== 'admin') {
         var btn = document.querySelector('.user-menu-item[onclick="openUserManager()"]');
         if (btn) btn.style.display = 'none';
