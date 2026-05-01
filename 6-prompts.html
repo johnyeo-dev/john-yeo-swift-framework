@@ -16,6 +16,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
 
+    /* ── HEADER ── */
     .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
     .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
     .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
@@ -24,6 +25,7 @@
     .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
     .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
 
+    /* ── DESKTOP NAV ── */
     .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .swift-tab:hover { color: rgba(255,255,255,0.85); }
@@ -39,7 +41,7 @@
     .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
     .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
 
-    /* MOBILE NAV */
+    /* ── MOBILE NAV ── */
     .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
     .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
     .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
@@ -55,14 +57,94 @@
     @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
     @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
 
-    .main { max-width: 860px; margin: 0 auto; padding: 60px 24px 80px; text-align: center; }
-    .coming-soon { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 60px 40px; display: inline-block; width: 100%; }
-    .coming-soon .icon { font-size: 48px; margin-bottom: 20px; }
-    .coming-soon h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--navy); margin-bottom: 12px; }
-    .coming-soon p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+    /* ── MAIN CONTENT ── */
+    .main { max-width: 800px; margin: 0 auto; padding: 50px 24px 80px; }
+
+    /* ── PAGE INTRO ── */
+    .page-intro { margin-bottom: 40px; }
+    .page-intro .overline { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-intro h2 { font-family: 'DM Serif Display', serif; font-size: clamp(26px, 4vw, 38px); color: var(--navy); line-height: 1.15; margin-bottom: 14px; }
+    .page-intro h2 em { font-style: italic; color: var(--gold-light); }
+    .page-intro p { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 600px; }
+
+    /* ── PROMPT CARD ── */
+    .prompt-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 2px 16px rgba(0,45,106,0.06); }
+    .prompt-card-header { background: var(--navy); padding: 22px 28px; display: flex; align-items: center; gap: 16px; }
+    .prompt-number { background: var(--gold); color: var(--navy); font-family: 'DM Serif Display', serif; font-size: 18px; font-weight: 700; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .prompt-card-header-text { flex: 1; }
+    .prompt-card-header-text .prompt-category { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+    .prompt-card-header-text h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--white); line-height: 1.2; }
+    .prompt-card-header-text h3 em { font-style: italic; color: #88d8d7; }
+    .prompt-card-body { padding: 28px; }
+
+    /* ── INSTRUCTIONS ── */
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+    .instructions-intro { font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 20px; }
+
+    /* ── STEPS ── */
+    .steps-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .step-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: var(--cream); border: 1.5px solid var(--border); border-radius: 12px; }
+    .step-num { background: var(--navy); color: var(--white); font-size: 12px; font-weight: 700; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-content { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+    .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .step-action { display: inline-block; margin-top: 7px; font-size: 12px; font-weight: 600; color: var(--gold); background: rgba(10,191,188,0.08); border: 1px solid rgba(10,191,188,0.25); border-radius: 6px; padding: 4px 10px; }
+
+    /* ── TESTIMONIAL CALLOUT ── */
+    .testimonial-callout { background: linear-gradient(135deg, rgba(10,191,188,0.07) 0%, rgba(74,143,231,0.07) 100%); border: 1.5px solid rgba(10,191,188,0.3); border-radius: 14px; padding: 20px 22px; margin-bottom: 28px; display: flex; gap: 14px; align-items: flex-start; }
+    .testimonial-callout .icon { font-size: 26px; flex-shrink: 0; margin-top: 1px; }
+    .testimonial-callout-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .testimonial-callout-text p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .testimonial-callout-text ul { margin-top: 8px; padding-left: 18px; }
+    .testimonial-callout-text ul li { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1.5px solid var(--cream-dark); margin: 26px 0; }
+
+    /* ── PROMPT BOX ── */
+    .prompt-box { background: #0A0F1C; border-radius: 14px; overflow: hidden; margin-bottom: 0; }
+    .prompt-box-top { padding: 14px 18px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .prompt-box-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+    .copy-btn { background: rgba(10,191,188,0.15); border: 1px solid rgba(10,191,188,0.4); color: var(--gold); border-radius: 6px; padding: 6px 14px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
+    .copy-btn:hover { background: rgba(10,191,188,0.25); }
+    .copy-btn.copied { background: var(--gold); border-color: var(--gold); color: #002D6A; }
+    .prompt-text { padding: 20px 22px; font-family: 'DM Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.75; color: #CBD5E1; white-space: pre-wrap; word-break: break-word; max-height: 480px; overflow-y: auto; }
+    .prompt-text::-webkit-scrollbar { width: 4px; }
+    .prompt-text::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .prompt-text::-webkit-scrollbar-thumb { background: rgba(10,191,188,0.4); border-radius: 99px; }
+
+    /* ── OUTCOME SECTION ── */
+    .outcome-section { margin-top: 28px; padding-top: 24px; border-top: 1.5px solid var(--cream-dark); }
+    .outcome-section .section-label { margin-bottom: 12px; }
+    .outcome-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .outcome-item { background: var(--cream); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px 15px; display: flex; gap: 10px; align-items: flex-start; }
+    .outcome-item .o-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .outcome-item .o-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .outcome-item .o-text strong { display: block; font-weight: 600; color: var(--navy); margin-bottom: 2px; font-size: 13px; }
+
+    /* ── COMING SOON CARDS ── */
+    .coming-cards { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+    .coming-card { background: var(--white); border: 1.5px dashed var(--border); border-radius: 16px; padding: 20px 22px; display: flex; align-items: center; gap: 16px; opacity: 0.65; }
+    .coming-num { background: var(--cream-dark); color: var(--text-muted); font-family: 'DM Serif Display', serif; font-size: 16px; font-weight: 700; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .coming-text .coming-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+    .coming-text .coming-title { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--text-muted); }
+    .coming-badge { margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--text-muted); background: var(--cream-dark); border-radius: 20px; padding: 4px 12px; flex-shrink: 0; }
+
+    /* ── SECTION TITLES ── */
+    .section-heading { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 16px; padding-top: 8px; }
+    .section-heading em { font-style: italic; color: var(--gold-light); }
+
+    /* ── USER PILL ── */
     .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
 
-    @media (max-width: 600px) { .header { padding: 20px 16px; } .main { padding: 40px 16px 60px; } .coming-soon { padding: 40px 24px; } }
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 32px 16px 60px; }
+      .prompt-card-body { padding: 20px 18px; }
+      .prompt-card-header { padding: 18px 20px; }
+      .outcome-grid { grid-template-columns: 1fr; }
+      .prompt-text { font-size: 12px; max-height: 360px; }
+    }
   </style>
 </head>
 <body>
@@ -146,12 +228,243 @@
     </button>
   </div>
 
+  <!-- ═══════════════════════════════════════════════ MAIN ═══ -->
   <main class="main">
-    <div class="coming-soon">
-      <div class="icon">✨</div>
-      <h2>6 Prompts — Coming Soon</h2>
-      <p>Content for this section is being prepared. Check back shortly.</p>
+
+    <div class="page-intro">
+      <div class="overline">AI Prompts for Educators</div>
+      <h2>6 Prompts to Build Your<br><em>Education Business</em></h2>
+      <p>Each prompt is crafted to help you create the core pillars of your teaching business — from your signature programme to your content, offers and sales systems. Copy, paste into Claude, and let the AI do the heavy lifting.</p>
     </div>
+
+    <!-- ══════════ PROMPT 1 ══════════ -->
+    <h3 class="section-heading">Prompt 1 — <em>Signature Programme</em></h3>
+
+    <div class="prompt-card">
+      <div class="prompt-card-header">
+        <div class="prompt-number">1</div>
+        <div class="prompt-card-header-text">
+          <div class="prompt-category">Prompt 1 of 6</div>
+          <h3>Create Your <em>Signature Programme</em></h3>
+        </div>
+      </div>
+
+      <div class="prompt-card-body">
+
+        <!-- Instructions -->
+        <div class="section-label">Instructions</div>
+        <p class="instructions-intro">Your signature programme is the cornerstone of your education business — a named, structured offer that sets you apart from every other tutor or educator in your space. This prompt uses your real student testimonials to build a framework that's authentically yours.</p>
+
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">Collect your testimonials</div>
+              <div class="step-desc">Gather feedback from your best students and parents. Scroll through WhatsApp chats, emails, and old messages. Look for "thank you" notes, parent updates, and any message where someone described a result or transformation.</div>
+              <span class="step-action">→ Aim for at least 10 testimonials</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">Compile them into a single document</div>
+              <div class="step-desc">Copy all testimonials into one Word doc or PDF — one testimonial per paragraph is fine. Keep it clean and readable. This file will be uploaded directly to Claude.</div>
+              <span class="step-action">→ Save as "my-testimonials.pdf"</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">Open Claude and upload your document</div>
+              <div class="step-desc">Go to <strong>claude.ai</strong> → start a new chat → click the paperclip icon → upload your testimonials file. Then copy and paste the full prompt below into Claude.</div>
+              <span class="step-action">→ <a href="https://claude.ai" target="_blank" style="color:var(--gold);text-decoration:none;">Open Claude ↗</a></span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <div class="step-title">Paste the prompt and run it</div>
+              <div class="step-desc">Copy the entire prompt in the box below and paste it into Claude. Claude will analyse your testimonials and generate your personalised Signature Programme framework, including a memorable acronym, full programme structure, pricing guidance, and your first marketing message.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial upload callout -->
+        <div class="testimonial-callout">
+          <div class="icon">📋</div>
+          <div class="testimonial-callout-text">
+            <strong>Upload at least 10 testimonials before running this prompt</strong>
+            <p>The more testimonials you provide, the more specific and powerful your framework will be. Look for these sources:</p>
+            <ul>
+              <li>WhatsApp messages from parents or students</li>
+              <li>Google or Facebook reviews</li>
+              <li>Email replies saying "thank you" or sharing results</li>
+              <li>Screenshots of progress photos with captions</li>
+              <li>Comments from your social media posts</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Prompt Box -->
+        <div class="prompt-box">
+          <div class="prompt-box-top">
+            <div class="prompt-box-label">📋 Your Claude Prompt — Copy Everything Below</div>
+            <button class="copy-btn" id="copyBtn1" onclick="copyPrompt('promptContent1','copyBtn1')">Copy</button>
+          </div>
+          <div class="prompt-text" id="promptContent1">I am an educator / tutor and I want to create my Signature Programme — a named, structured offer that positions me as the go-to expert in my space. I have uploaded my student and parent testimonials above.
+
+Please complete the following steps using ONLY the testimonials I've provided as your primary source material:
+
+──────────────────────────────────────
+STEP 1 — ANALYSE MY TESTIMONIALS
+──────────────────────────────────────
+Read through all my testimonials and identify:
+
+1. The core transformation I consistently deliver (what changes for students before → after)
+2. My distinctive teaching approach (how do I teach differently from others?)
+3. The emotional qualities mentioned repeatedly (e.g. patient, safe, encouraging, fun)
+4. The specific results my students value most (confidence, grades, mindset, skills)
+5. The most compelling promise I could make based on real evidence from these testimonials
+6. 3–5 recurring words or phrases that show up across multiple testimonials
+
+──────────────────────────────────────
+STEP 2 — CREATE MY FRAMEWORK ACRONYM
+──────────────────────────────────────
+Based on the themes in my testimonials, create a memorable acronym that captures the essence of how I teach. This acronym will become the name of my Signature Programme.
+
+Rules for the acronym:
+- 4–5 letters is ideal (shorter = more memorable)
+- Each letter represents a stage, principle, or pillar of my teaching method
+- It must reflect motion, progress, or transformation
+- Avoid overused education acronyms: RISE, GIVE, CARE, GROW, LEAP, SPARK (unless it genuinely fits perfectly)
+- Each letter's meaning should be understandable by a parent or 8-year-old
+
+Give me 10 unique acronym options. For each one:
+a) State the acronym
+b) Explain what each letter stands for
+c) Write one sentence explaining the overall concept in plain language
+
+──────────────────────────────────────
+STEP 3 — BUILD THE FULL PROGRAMME STRUCTURE
+──────────────────────────────────────
+Choose the acronym you believe fits best from your 10 options (or wait for me to select one — you can proceed with your top recommendation).
+
+Using the chosen acronym, design the full Signature Programme:
+
+1. Programme Name: "[ACRONYM] + a descriptive phrase" (give 3 name options)
+2. Tagline: A 1-sentence description of the transformation (3 options)
+3. Ideal Student: Who is this programme for? Describe them specifically — age, struggles, what they want
+4. Programme Duration: Recommended weeks/months and sessions per week
+5. Delivery Format: Group, 1-to-1, hybrid, online or in-person — and why this format suits my audience
+6. Module Breakdown: For each letter of the acronym, describe:
+   - What students do in this phase
+   - What they feel and gain
+   - Approximate timeframe
+7. Signature Touch: 1 unique element of this programme that no other tutor offers (derived from my testimonials)
+8. Programme Outcome Statement: Complete this sentence — "By the end of [Programme Name], your child will…"
+
+──────────────────────────────────────
+STEP 4 — PRICING GUIDANCE
+──────────────────────────────────────
+Based on the transformation described in my testimonials and the programme structure above:
+
+1. Suggest a pricing range for this programme (per month / per term / full programme)
+2. Explain the pricing rationale — why this price reflects the value, not just the hours
+3. Describe 2 pricing tiers: a Standard and a Premium version of this programme
+
+──────────────────────────────────────
+STEP 5 — FIRST MARKETING MESSAGE
+──────────────────────────────────────
+Write the first marketing message I can use to introduce this programme. This should be:
+
+1. A short Instagram / Facebook caption (150 words max) announcing my Signature Programme
+2. A WhatsApp message I can send to past students/parents to invite them into this programme
+3. A 1-paragraph "about the programme" bio I can use on my website or profile
+
+Use "you / your child" language, not "I / we". Write with warmth and specificity — pull phrases from the actual testimonials where possible.
+
+──────────────────────────────────────
+FORMAT NOTES
+──────────────────────────────────────
+- Present each step as a clearly labelled section
+- Use bullet points and bold headers for easy reading
+- Do not use generic language — everything should be grounded in my specific testimonials
+- If you notice anything surprising or powerful in my testimonials, call it out explicitly</div>
+        </div>
+
+        <!-- Outcome section -->
+        <div class="outcome-section">
+          <div class="section-label">What You'll Get From Claude</div>
+          <div class="outcome-grid">
+            <div class="outcome-item">
+              <div class="o-icon">🔤</div>
+              <div class="o-text"><strong>Your Framework Acronym</strong>10 options drawn from your real testimonials</div>
+            </div>
+            <div class="outcome-item">
+              <div class="o-icon">📐</div>
+              <div class="o-text"><strong>Full Programme Structure</strong>Modules, duration, format &amp; delivery</div>
+            </div>
+            <div class="outcome-item">
+              <div class="o-icon">💰</div>
+              <div class="o-text"><strong>Pricing Guidance</strong>Standard &amp; Premium tiers with rationale</div>
+            </div>
+            <div class="outcome-item">
+              <div class="o-icon">📣</div>
+              <div class="o-text"><strong>Launch Messages</strong>Instagram post, WhatsApp invite &amp; website bio</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════ PROMPTS 2–6 COMING SOON ══════════ -->
+    <h3 class="section-heading" style="margin-top: 44px; color: var(--text-muted);">More Prompts — <em>Coming Soon</em></h3>
+    <div class="coming-cards">
+      <div class="coming-card">
+        <div class="coming-num">2</div>
+        <div class="coming-text">
+          <div class="coming-label">Prompt 2</div>
+          <div class="coming-title">Create Your Webinar</div>
+        </div>
+        <div class="coming-badge">Coming Soon</div>
+      </div>
+      <div class="coming-card">
+        <div class="coming-num">3</div>
+        <div class="coming-text">
+          <div class="coming-label">Prompt 3</div>
+          <div class="coming-title">Write Your Sales Message</div>
+        </div>
+        <div class="coming-badge">Coming Soon</div>
+      </div>
+      <div class="coming-card">
+        <div class="coming-num">4</div>
+        <div class="coming-text">
+          <div class="coming-label">Prompt 4</div>
+          <div class="coming-title">Create Your Content Plan</div>
+        </div>
+        <div class="coming-badge">Coming Soon</div>
+      </div>
+      <div class="coming-card">
+        <div class="coming-num">5</div>
+        <div class="coming-text">
+          <div class="coming-label">Prompt 5</div>
+          <div class="coming-title">Build Your Referral System</div>
+        </div>
+        <div class="coming-badge">Coming Soon</div>
+      </div>
+      <div class="coming-card">
+        <div class="coming-num">6</div>
+        <div class="coming-text">
+          <div class="coming-label">Prompt 6</div>
+          <div class="coming-title">Design Your Upsell Offer</div>
+        </div>
+        <div class="coming-badge">Coming Soon</div>
+      </div>
+    </div>
+
   </main>
 
   <!-- NAME MODAL -->
@@ -196,6 +509,30 @@
     })();
     function openMobileMenu() { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
     function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
+    function copyPrompt(contentId, btnId) {
+      var el = document.getElementById(contentId);
+      var btn = document.getElementById(btnId);
+      if (!el || !btn) return;
+      var text = el.innerText || el.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function(){
+          btn.textContent = '✓ Copied!';
+          btn.classList.add('copied');
+          setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500);
+        }).catch(function(){ fallbackCopy(text, btn); });
+      } else {
+        fallbackCopy(text, btn);
+      }
+    }
+    function fallbackCopy(text, btn) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      try { document.execCommand('copy'); btn.textContent = '✓ Copied!'; btn.classList.add('copied'); setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500); } catch(e) {}
+      document.body.removeChild(ta);
+    }
   </script>
 </body>
 </html>
