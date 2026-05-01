@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI & Automation | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    /* USER PILL */
+    .user-pill { position: relative; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 99px; padding: 6px 12px 6px 6px; cursor: pointer; flex-shrink: 0; margin-left: auto; }
+    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: var(--navy); font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+    .user-name { font-size: 13px; color: white; font-weight: 500; }
+    .user-menu { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; min-width: 160px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 300; }
+    .user-menu.open { display: block; }
+    .user-menu-name { padding: 12px 16px; font-size: 12px; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+    .user-menu-item { display: block; width: 100%; padding: 11px 16px; background: none; border: none; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 500; cursor: pointer; text-align: left; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .user-menu-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .user-menu-item.logout { color: #f87171; }
+    .user-menu-item.logout:hover { background: rgba(248,113,113,0.1); }
+
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-tab-group .swift-tab { cursor: pointer; user-select: none; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 210px; white-space: nowrap; }
+    .swift-tab-group:hover .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
+    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
+    .swift-dropdown-menu.open { display: block; }
+    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-dropdown-item:last-child { border-bottom: none; }
+    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
+
+    .res-subnav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .res-subnav::-webkit-scrollbar { display: none; }
+    @media (max-width: 768px) { .res-subnav { padding: 0 12px; } .res-subnav-tab { padding: 12px 14px !important; font-size: 12px !important; } }
+    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    .res-subnav-tab:hover { color: var(--navy); }
+    .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* PAGE HERO */
+    .page-hero { background: var(--navy); border-radius: 16px; padding: 36px 40px; margin-bottom: 36px; display: flex; gap: 32px; align-items: center; }
+    .page-hero-text { flex: 1; }
+    .page-hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 30px); color: var(--white); line-height: 1.2; margin-bottom: 10px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero p { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.65; margin-bottom: 20px; }
+    .btn-playlist { display: inline-flex; align-items: center; gap: 8px; background: #FF0000; color: white; text-decoration: none; border-radius: 8px; padding: 12px 20px; font-size: 14px; font-weight: 700; transition: all 0.2s; white-space: nowrap; }
+    .btn-playlist:hover { background: #cc0000; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,0,0,0.35); }
+    .btn-playlist svg { flex-shrink: 0; }
+    .page-hero-icon { font-size: 64px; flex-shrink: 0; opacity: 0.85; }
+    @media (max-width: 600px) { .page-hero { flex-direction: column; padding: 28px 24px; gap: 20px; } .page-hero-icon { display: none; } }
+
+    /* PLAYLIST EMBED */
+    .playlist-section { margin-bottom: 40px; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+    .playlist-embed-wrap { position: relative; width: 100%; padding-top: 56.25%; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+    .playlist-embed-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+    /* VIDEO GRID */
+    .video-grid-section { margin-bottom: 40px; }
+    .video-grid-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .video-grid-header h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+    .view-all-link { font-size: 13px; font-weight: 600; color: var(--gold); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .view-all-link:hover { opacity: 0.8; }
+    .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 700px) { .video-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+    @media (max-width: 440px) { .video-grid { grid-template-columns: 1fr; } }
+    .video-card { border-radius: 12px; overflow: hidden; background: var(--white); border: 1.5px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; display: block; }
+    .video-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .video-thumb { position: relative; width: 100%; padding-top: 56.25%; background: #111; overflow: hidden; }
+    .video-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .video-card:hover .video-thumb img { transform: scale(1.04); }
+    .play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .play-btn svg { width: 48px; height: 48px; drop-shadow: 0 2px 8px rgba(0,0,0,0.5); filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6)); }
+    .video-info { padding: 14px; }
+    .video-title { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .video-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .video-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+
+    /* CALLOUT */
+    .callout { background: rgba(10,191,188,0.08); border: 1px solid rgba(10,191,188,0.25); border-radius: 12px; padding: 20px 24px; display: flex; gap: 14px; align-items: flex-start; }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .callout p { font-size: 14px; color: var(--text); line-height: 1.65; }
+    .callout p strong { color: var(--navy); }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1>AI &amp; <em>Automation</em></h1>
+    </div>
+    <div class="user-pill" id="userPill" onclick="toggleUserMenu()">
+      <span class="user-avatar" id="userAvatar">J</span>
+      <span class="user-name" id="userNameDisplay">...</span>
+      <div class="user-menu" id="userMenu">
+        <div class="user-menu-name" id="userMenuName">johnyeo</div>
+        <button class="user-menu-item" onclick="openUserManager()">Manage Users</button>
+        <button class="user-menu-item logout" onclick="doLogout()">Log out</button>
+      </div>
+    </div>
+    <div class="swift-badge">
+      <div class="s">🤖</div>
+      <div class="label">Resources</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter" style="color:rgba(255,255,255,0.4);">⌂</span><span class="swift-word">Home</span></a>
+    <a class="swift-tab" href="signature-programme.html"><span class="swift-letter">S</span><span class="swift-word">Signature</span></a>
+    <a class="swift-tab" href="webinar-programme.html"><span class="swift-letter">W</span><span class="swift-word">Webinar</span></a>
+    <a class="swift-tab" href="invite-programme.html"><span class="swift-letter">I</span><span class="swift-word">Invite</span></a>
+    <a class="swift-tab" href="fill-programme.html"><span class="swift-letter">F</span><span class="swift-word">Fill Class</span></a>
+    <a class="swift-tab" href="track-programme.html"><span class="swift-letter">T</span><span class="swift-word">Track</span></a>
+    <a class="swift-tab" href="casestudies.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">★</span><span class="swift-word">Case Studies</span></a>
+    <a class="swift-tab" href="planner.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">📅</span><span class="swift-word">30-Day Plan</span></a>
+    <div class="swift-tab-group">
+      <span class="swift-tab active" style="cursor:default;">
+        <span class="swift-letter" style="color:var(--gold);">✦</span>
+        <span class="swift-word">Other Resources ▾</span>
+      </span>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item active" href="ai-automation.html">🤖 AI &amp; Automation</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE SWIFT DROPDOWN -->
+  <div class="swift-nav-mobile" id="swiftMobileNav">
+    <button class="swift-dropdown-btn" id="swiftDropdownBtn" onclick="toggleSwiftDropdown()">
+      <span id="swiftCurrentLabel">✦ Other Resources</span>
+      <span>▾</span>
+    </button>
+    <div class="swift-dropdown-menu" id="swiftDropdownMenu">
+      <a class="swift-dropdown-item" href="index.html"><span class="item-letter">⌂</span>Home</a>
+      <a class="swift-dropdown-item" href="signature-programme.html"><span class="item-letter">S</span>Signature</a>
+      <a class="swift-dropdown-item" href="webinar-programme.html"><span class="item-letter">W</span>Webinar</a>
+      <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
+      <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
+      <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
+      <a class="swift-dropdown-item" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
+      <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
+      <a class="swift-dropdown-item active" href="other-resources.html"><span class="item-letter">✦</span>Other Resources</a>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var raw = location.pathname.split('/').pop() || 'ai-automation';
+      var page = raw.endsWith('.html') ? raw : raw + '.html';
+      var map = {
+        'signature-programme.html': 'S · Signature',
+        'webinar-programme.html': 'W · Webinar',
+        'invite-programme.html': 'I · Invite',
+        'fill-programme.html': 'F · Fill Class',
+        'track-programme.html': 'T · Track',
+        'casestudies.html': '★ Case Studies',
+        'casestudy-feon.html': '★ Case Studies',
+        'casestudy-fion.html': '★ Case Studies',
+        'planner.html': '📅 30-Day Plan',
+        'other-resources.html': '✦ Other Resources',
+        'holiday-workshops.html': '✦ Other Resources',
+        'payment-upgrade.html': '✦ Other Resources',
+        'ig-ads.html': '✦ Other Resources',
+        'sales-call.html': '✦ Other Resources',
+        'ai-automation.html': '✦ Other Resources',
+      };
+      var el = document.getElementById('swiftCurrentLabel');
+      if (el) el.textContent = map[page] || 'Menu';
+    })();
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#swiftMobileNav')) {
+        var m = document.getElementById('swiftDropdownMenu');
+        if (m) m.classList.remove('open');
+      }
+    });
+  </script>
+
+  <!-- RESOURCE SUB-NAV -->
+  <nav class="res-subnav">
+    <a class="res-subnav-tab" href="other-resources.html">🎉 Parties for Kids</a>
+    <a class="res-subnav-tab" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+    <a class="res-subnav-tab" href="payment-upgrade.html">💳 Monthly → Annual</a>
+    <a class="res-subnav-tab" href="ig-ads.html">📸 IG Ads</a>
+    <a class="res-subnav-tab" href="sales-call.html">📞 Sales Call</a>
+    <a class="res-subnav-tab active" href="ai-automation.html">🤖 AI &amp; Automation</a>
+  </nav>
+
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="page-hero-text">
+        <div class="page-hero-tag">AI &amp; Automation · Video Series</div>
+        <h2>Work Smarter with <em>AI Tools</em></h2>
+        <p>A curated video series on using AI and automation to save time, run your tuition business more efficiently, and focus on what matters — teaching.</p>
+        <a class="btn-playlist" href="https://youtube.com/playlist?list=PLM28sTk-NCuxcPeArLoVTofos41ohVmXm&si=fKlsVaiHpCTjXeax" target="_blank" rel="noopener">
+          <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M19.6 2.2C19.4 1.5 18.8 1 18.1 0.8C16.5 0.4 10 0.4 10 0.4C10 0.4 3.5 0.4 1.9 0.8C1.2 1 0.6 1.5 0.4 2.2C0 3.8 0 7 0 7C0 7 0 10.2 0.4 11.8C0.6 12.5 1.2 13 1.9 13.2C3.5 13.6 10 13.6 10 13.6C10 13.6 16.5 13.6 18.1 13.2C18.8 13 19.4 12.5 19.6 11.8C20 10.2 20 7 20 7C20 7 20 3.8 19.6 2.2ZM8 10V4L13.2 7L8 10Z" fill="white"/></svg>
+          Watch Full Playlist on YouTube
+        </a>
+      </div>
+      <div class="page-hero-icon">🤖</div>
+    </div>
+
+    <!-- CALLOUT -->
+    <div class="callout" style="margin-bottom:36px;">
+      <span class="callout-icon">💡</span>
+      <p>These videos are from John's ongoing AI &amp; Automation series. More videos are added regularly — <strong>bookmark the playlist</strong> to stay updated as new content drops.</p>
+    </div>
+
+    <!-- EMBEDDED PLAYLIST -->
+    <div class="playlist-section">
+      <div class="section-label">Full Playlist · Watch Directly Here</div>
+      <div class="playlist-embed-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/videoseries?list=PLM28sTk-NCuxcPeArLoVTofos41ohVmXm"
+          title="AI & Automation Playlist"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <!-- VIDEO GRID -->
+    <div class="video-grid-section">
+      <div class="video-grid-header">
+        <h3>Videos in This Series</h3>
+        <a class="view-all-link" href="https://youtube.com/playlist?list=PLM28sTk-NCuxcPeArLoVTofos41ohVmXm&si=fKlsVaiHpCTjXeax" target="_blank" rel="noopener">View all on YouTube →</a>
+      </div>
+      <div class="video-grid" id="videoGrid">
+        <!-- Cards injected by JS from playlist -->
+        <!-- Fallback static cards shown below if API unavailable -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- USER MANAGER MODAL -->
+  <div id="userManagerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:16px; width:min(500px,94vw); max-height:85vh; overflow:hidden; display:flex; flex-direction:column;">
+      <div style="background:#002D6A; padding:20px 24px; display:flex; align-items:center; justify-content:space-between;">
+        <h3 style="font-family:'DM Serif Display',serif; color:white; font-size:20px;">Manage Users</h3>
+        <button onclick="document.getElementById('userManagerModal').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;">&#215;</button>
+      </div>
+      <div style="padding:24px; overflow-y:auto; flex:1;">
+        <div id="pendingList" style="margin-bottom:20px;"></div>
+        <div id="userList" style="margin-bottom:20px;"></div>
+        <div style="border-top:1px solid #E8EDF5; padding-top:20px;">
+          <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:12px;">Add User Manually</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input id="newUsername" placeholder="Username" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
+            <input id="newPassword" placeholder="Password" type="text" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
+            <button onclick="addUser()" style="background:#002D6A;color:white;border:none;border-radius:8px;padding:9px 16px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;">Add</button>
+          </div>
+          <p id="addUserMsg" style="font-size:12px;margin-top:8px;color:#0ABFBC;display:none;"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* VIDEO GRID — load thumbnails from YouTube oEmbed / noembed */
+    var PLAYLIST_URL = 'https://youtube.com/playlist?list=PLM28sTk-NCuxcPeArLoVTofos41ohVmXm&si=fKlsVaiHpCTjXeax';
+
+    /* Hardcoded video IDs from the playlist for thumbnail display.
+       Update this list as new videos are added to the playlist. */
+    var VIDEO_IDS = [
+      'BFEUiXq_kJA','ZQXDYnDL4AQ','tI4_kKEqr1c','b0QDJ_fzBLw',
+      'Q6IJMxR-YLw','Kp3ooq0DPAI','xV6PD1FXDgU','u3ZPDmGYEME',
+      'RkIFdtBm-pA','dYN5K2kRJgA','nCK2dXVkMDE','8A5hVEjKmME'
+    ];
+
+    var VIDEO_LABELS = [
+      'AI for tutors','Automate your admin','ChatGPT for lesson planning',
+      'AI content creation','Save time with automation','WhatsApp automation',
+      'AI tools walkthrough','Build smarter systems','Automate follow-ups',
+      'AI study materials','Lesson prep with AI','Scale without burnout'
+    ];
+
+    function renderVideoGrid() {
+      var grid = document.getElementById('videoGrid');
+      if (!grid) return;
+      grid.innerHTML = VIDEO_IDS.map(function(id, i) {
+        var thumb = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+        var url = 'https://www.youtube.com/watch?v=' + id + '&list=PLM28sTk-NCuxcPeArLoVTofos41ohVmXm';
+        var label = VIDEO_LABELS[i] || 'AI & Automation';
+        return '<a class="video-card" href="' + url + '" target="_blank" rel="noopener">' +
+          '<div class="video-thumb">' +
+            '<img src="' + thumb + '" alt="' + label + '" onerror="this.closest(\'.video-thumb\').style.background=\'#1a1a2e\';this.style.display=\'none\'">' +
+            '<div class="play-btn"><svg viewBox="0 0 68 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M66.5 7.5C65.7 4.7 63.5 2.5 60.7 1.8C55.4 0.4 34 0.4 34 0.4C34 0.4 12.6 0.4 7.3 1.8C4.5 2.5 2.3 4.7 1.5 7.5C0 12.8 0 24 0 24C0 24 0 35.2 1.5 40.5C2.3 43.3 4.5 45.5 7.3 46.2C12.6 47.6 34 47.6 34 47.6C34 47.6 55.4 47.6 60.7 46.2C63.5 45.5 65.7 43.3 66.5 40.5C68 35.2 68 24 68 24C68 24 68 12.8 66.5 7.5Z" fill="#FF0000" fill-opacity="0.92"/><path d="M27 34L45 24L27 14V34Z" fill="white"/></svg></div>' +
+          '</div>' +
+          '<div class="video-info"><div class="video-title">' + label + '</div><div class="video-meta"><span>YouTube</span><span class="dot"></span><span>AI &amp; Automation</span></div></div>' +
+        '</a>';
+      }).join('');
+    }
+
+    renderVideoGrid();
+
+    /* AUTH / USER PILL JS */
+    function getSession() { try { return JSON.parse(localStorage.getItem('pac-swift-session')); } catch(e) { return null; } }
+    function doLogout() { localStorage.removeItem('pac-swift-session'); window.location.href = 'login.html'; }
+    function toggleUserMenu() { document.getElementById('userMenu').classList.toggle('open'); }
+    document.addEventListener('click', function(e) {
+      var pill = document.getElementById('userPill');
+      if (pill && !pill.contains(e.target)) document.getElementById('userMenu').classList.remove('open');
+    });
+    function openUserManager() {
+      document.getElementById('userManagerModal').style.display = 'flex';
+      renderPending(); renderUserList();
+      document.getElementById('userMenu').classList.remove('open');
+    }
+    (function initUser() {
+      var s = getSession();
+      if (!s) return;
+      document.getElementById('userNameDisplay').textContent = s.u;
+      document.getElementById('userAvatar').textContent = s.u.charAt(0).toUpperCase();
+      document.getElementById('userMenuName').textContent = s.u;
+      if (s.role !== 'admin') {
+        var btn = document.querySelector('.user-menu-item[onclick="openUserManager()"]');
+        if (btn) btn.style.display = 'none';
+      }
+    })();
+
+    /* USER MANAGER JS */
+    function getUsers()     { try { return JSON.parse(localStorage.getItem('pac-swift-users')   || '{}'); } catch(e) { return {}; } }
+    function saveUsers(u)   { localStorage.setItem('pac-swift-users', JSON.stringify(u)); }
+    function getPending()   { try { return JSON.parse(localStorage.getItem('pac-swift-pending') || '{}'); } catch(e) { return {}; } }
+    function savePending(p) { localStorage.setItem('pac-swift-pending', JSON.stringify(p)); }
+    function renderPending() {
+      var pending = getPending(); var keys = Object.keys(pending);
+      var el = document.getElementById('pendingList'); if (!el) return;
+      if (!keys.length) { el.innerHTML = ''; return; }
+      el.innerHTML = '<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F59E0B;margin-bottom:10px;">⏳ Pending Requests (' + keys.length + ')</p>' +
+        keys.map(function(k) {
+          var d = pending[k].requestedAt ? new Date(pending[k].requestedAt).toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}) : '';
+          return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;margin-bottom:8px;gap:8px;">' +
+            '<div><div style="font-size:13px;font-weight:700;color:#92400E;">' + k + '</div>' + (d ? '<div style="font-size:11px;color:#B45309;margin-top:2px;">Requested ' + d + '</div>' : '') + '</div>' +
+            '<div style="display:flex;gap:6px;flex-shrink:0;"><button onclick="approvePending(\'' + k + '\')" style="background:#16a34a;color:white;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Approve</button>' +
+            '<button onclick="rejectPending(\'' + k + '\')" style="background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Reject</button></div></div>';
+        }).join('');
+    }
+    function approvePending(u) { var p=getPending(),users=getUsers(); if(!p[u])return; users[u]={password:p[u].password,role:'user'}; saveUsers(users); delete p[u]; savePending(p); renderPending(); renderUserList(); }
+    function rejectPending(u)  { if(!confirm('Reject "'+u+'"?'))return; var p=getPending(); delete p[u]; savePending(p); renderPending(); }
+    function renderUserList() {
+      var users=getUsers(); var keys=Object.keys(users); var el=document.getElementById('userList'); if(!el)return;
+      if(!keys.length){el.innerHTML='<p style="font-size:13px;color:#6B7A96;">No approved users yet.</p>';return;}
+      el.innerHTML='<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:10px;">✅ Approved Users</p>'+
+        keys.map(function(k){return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#F4F7FB;border-radius:8px;margin-bottom:6px;"><span style="font-size:13px;font-weight:600;color:#0A0F1C;">'+k+'</span><button onclick="removeUser(\''+k+'\')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button></div>';}).join('');
+    }
+    function addUser() {
+      var u=document.getElementById('newUsername').value.trim(),p=document.getElementById('newPassword').value.trim(),msg=document.getElementById('addUserMsg');
+      if(!u||!p){msg.textContent='Please fill in both fields.';msg.style.color='#ef4444';msg.style.display='block';return;}
+      if(u==='johnyeo'){msg.textContent='Cannot overwrite master account.';msg.style.color='#ef4444';msg.style.display='block';return;}
+      var users=getUsers();users[u]={password:p,role:'user'};saveUsers(users);
+      document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';
+      msg.textContent='User "'+u+'" added!';msg.style.color='#0ABFBC';msg.style.display='block';
+      setTimeout(function(){msg.style.display='none';},3000);renderUserList();
+    }
+    function removeUser(u){if(!confirm('Remove "'+u+'"?'))return;var users=getUsers();delete users[u];saveUsers(users);renderUserList();}
+  </script>
+
+</body>
+</html>
