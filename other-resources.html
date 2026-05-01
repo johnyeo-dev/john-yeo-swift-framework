@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Other Resources | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+
+    /* MOBILE NAV */
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
+    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
+    .swift-dropdown-menu.open { display: block; }
+    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-dropdown-item:last-child { border-bottom: none; }
+    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
+
+    /* RESOURCE SUB-NAV */
+    .res-subnav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .res-subnav::-webkit-scrollbar { display: none; }
+    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    .res-subnav-tab:hover { color: var(--navy); }
+    .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+    @media (max-width: 600px) { .res-subnav { padding: 0 16px; } .res-subnav-tab { padding: 12px 14px; } }
+
+    /* MAIN */
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    .page-hero { background: var(--navy); border-radius: 16px; padding: 36px 40px; margin-bottom: 32px; }
+    .page-hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 30px); color: var(--white); line-height: 1.2; margin-bottom: 10px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+    /* SECTION HEADER */
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; margin-top: 36px; }
+    .section-icon { font-size: 22px; }
+    .section-header h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+
+    /* STEP CARDS */
+    .steps-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 22px 24px; display: flex; gap: 18px; align-items: flex-start; }
+    .step-num { width: 34px; height: 34px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: 'DM Serif Display', serif; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h4 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 6px; }
+    .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .step-body ul { margin-top: 8px; padding-left: 18px; }
+    .step-body ul li { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .step-body blockquote { margin-top: 8px; padding: 10px 14px; background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 14px; color: var(--text); font-style: italic; }
+
+    /* CALLOUT */
+    .callout-tip { background: #E8F8F7; border: 1px solid #0ABFBC; border-radius: 10px; padding: 16px 20px; font-size: 14px; color: #005F5E; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-start; }
+    .callout-tip .ci { flex-shrink: 0; font-size: 18px; margin-top: 1px; }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 24px 16px 60px; }
+      .page-hero { padding: 24px 20px; }
+      .step-card { padding: 18px 16px; gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1><em>Other Resources</em></h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">✦</div>
+      <div class="label">Resources</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="signature-programme.html"><span class="swift-letter">S</span><span class="swift-word">Signature</span></a>
+    <a class="swift-tab" href="webinar-programme.html"><span class="swift-letter">W</span><span class="swift-word">Webinar</span></a>
+    <a class="swift-tab" href="invite-programme.html"><span class="swift-letter">I</span><span class="swift-word">Invite</span></a>
+    <a class="swift-tab" href="fill-programme.html"><span class="swift-letter">F</span><span class="swift-word">Fill Class</span></a>
+    <a class="swift-tab" href="track-programme.html"><span class="swift-letter">T</span><span class="swift-word">Track</span></a>
+    <a class="swift-tab" href="casestudies.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">★</span><span class="swift-word">Case Studies</span></a>
+    <a class="swift-tab" href="planner.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">📅</span><span class="swift-word">30-Day Plan</span></a>
+    <a class="swift-tab active" href="other-resources.html"><span class="swift-letter" style="color:var(--gold);">✦</span><span class="swift-word">Other Resources</span></a>
+  </nav>
+
+  <!-- MOBILE SWIFT DROPDOWN -->
+  <div class="swift-nav-mobile" id="swiftMobileNav">
+    <button class="swift-dropdown-btn" id="swiftDropdownBtn" onclick="toggleSwiftDropdown()">
+      <span id="swiftCurrentLabel">Menu</span>
+      <span>▾</span>
+    </button>
+    <div class="swift-dropdown-menu" id="swiftDropdownMenu">
+      <a class="swift-dropdown-item" href="signature-programme.html"><span class="item-letter">S</span>Signature</a>
+      <a class="swift-dropdown-item" href="webinar-programme.html"><span class="item-letter">W</span>Webinar</a>
+      <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
+      <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
+      <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
+      <a class="swift-dropdown-item" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
+      <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
+      <a class="swift-dropdown-item active" href="other-resources.html"><span class="item-letter">✦</span>Other Resources</a>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var raw = location.pathname.split('/').pop() || 'signature-programme';
+      var page = raw.endsWith('.html') ? raw : raw + '.html';
+      var map = {
+        'signature-programme.html': 'S · Signature',
+        'webinar-programme.html': 'W · Webinar',
+        'invite-programme.html': 'I · Invite',
+        'fill-programme.html': 'F · Fill Class',
+        'track-programme.html': 'T · Track',
+        'casestudies.html': '★ Case Studies',
+        'casestudy-feon.html': '★ Case Studies',
+        'casestudy-fion.html': '★ Case Studies',
+        'planner.html': '📅 30-Day Plan',
+        'other-resources.html': '✦ Other Resources',
+      };
+      var el = document.getElementById('swiftCurrentLabel');
+      if (el) el.textContent = map[page] || 'Menu';
+      document.querySelectorAll('#swiftDropdownMenu .swift-dropdown-item').forEach(function(item) {
+        if (item.getAttribute('href') === page) item.classList.add('active');
+      });
+    })();
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#swiftMobileNav')) {
+        var m = document.getElementById('swiftDropdownMenu');
+        if (m) m.classList.remove('open');
+      }
+    });
+  </script>
+
+  <!-- RESOURCE SUB-NAV -->
+  <nav class="res-subnav">
+    <a class="res-subnav-tab active" href="other-resources.html">🎉 Parties for Kids</a>
+  </nav>
+
+  <main class="main">
+
+    <div class="page-hero">
+      <div class="page-hero-tag">Community Building · Extra Activities</div>
+      <h2>🎉 Parties for Kids — <em>Build Community</em> With Your Students</h2>
+      <p>These are extra activities you can run alongside your teaching. They're not compulsory — but done right, they turn students and parents into a loyal community that stays and refers.</p>
+    </div>
+
+    <div class="section-header">
+      <span class="section-icon">🪜</span>
+      <h3>The 8 Steps</h3>
+    </div>
+
+    <div class="steps-list">
+
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Ask the Kids What They Want</h4>
+          <p>Don't plan in a vacuum. Let students tell you what they actually want.</p>
+          <blockquote>"What do you want to eat? What do you want to do?"</blockquote>
+          <p>CC's kids gave her their menu. She cooked or ordered accordingly. That's it.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Keep It Low-Key and Low-Pressure</h4>
+          <p>You don't need a programme or itinerary. Food + free play is enough. Kids organise themselves once they're comfortable with each other.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Small Groups, Not One Big Event</h4>
+          <p>Cap at 20 per session. If you have more students, run multiple smaller sessions — by level, by cohort, or by interest.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Match Activities to What You Enjoy Too</h4>
+          <p>CC offered what she was genuinely interested in. Don't force what drains you.</p>
+          <ul>
+            <li>Art jamming / free-flow painting</li>
+            <li>Baking (small group)</li>
+            <li>Sports / football outing</li>
+            <li>Eating together at home</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>End-of-Year Incentive Trip for Graduating Cohort</h4>
+          <p>CC sponsors a USS trip for all P6 students at year-end. Rules are simple:</p>
+          <ul>
+            <li>Only P6s get sponsored entry</li>
+            <li>Siblings and parents can come but pay their own way</li>
+            <li>Kids roam freely — she's available if they need help</li>
+          </ul>
+          <p style="margin-top:8px;">It becomes something students look forward to from P5. They ask about it. They work for it.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Don't Announce It as a Sales Pitch</h4>
+          <p>She doesn't put the trip in her marketing. Word spreads through students and Instagram. The mystique is part of the appeal.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <h4>Invite Parents but Let Them Self-Organise Too</h4>
+          <p>Some parents volunteer to come. She places extrovert parents between quieter ones to get conversation going. Parents end up bonding with each other — and she becomes the reason their community exists.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">8</div>
+        <div class="step-body">
+          <h4>Do It Because You Mean It, Not Because It's a Strategy</h4>
+          <p>The moment parents sense it's transactional, it loses its power.</p>
+          <blockquote>"All parents need their community too. As a teacher, we are just a catalyst to build community for them." — CC</blockquote>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout-tip">
+      <span class="ci">💡</span>
+      <span><strong>Start small:</strong> One casual meal with your current students this term. Let them pick the food. That's your first community event.</span>
+    </div>
+
+  </main>
+
+</body>
+</html>
