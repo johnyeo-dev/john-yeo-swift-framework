@@ -147,6 +147,20 @@
       .content { padding: 28px 20px 60px; }
       .swift-badge { display: none; }
     }
+
+    /* MOBILE SWIFT DROPDOWN */
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
+    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
+    .swift-dropdown-menu.open { display: block; }
+    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-dropdown-item:last-child { border-bottom: none; }
+    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
   </style>
 </head>
 <body>
@@ -224,6 +238,51 @@
       <span class="swift-word">Case Study 2 - Referral</span>
     </button>
   </nav>
+  <!-- MOBILE SWIFT DROPDOWN -->
+  <div class="swift-nav-mobile" id="swiftMobileNav">
+    <button class="swift-dropdown-btn" id="swiftDropdownBtn" onclick="toggleSwiftDropdown()">
+      <span id="swiftCurrentLabel">Menu</span>
+      <span>▾</span>
+    </button>
+    <div class="swift-dropdown-menu" id="swiftDropdownMenu">
+      <a class="swift-dropdown-item" href="signature-programme.html"><span class="item-letter">S</span>Signature</a>
+      <a class="swift-dropdown-item" href="webinar-programme.html"><span class="item-letter">W</span>Webinar</a>
+      <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
+      <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
+      <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
+      <a class="swift-dropdown-item" href="casestudy-feon.html"><span class="item-letter">★</span>Case Study 1 – Paid Ads</a>
+      <a class="swift-dropdown-item" href="casestudy-fion.html"><span class="item-letter">★</span>Case Study 2 – Referral</a>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var raw = location.pathname.split('/').pop() || 'signature-programme';
+      var page = raw.endsWith('.html') ? raw : raw + '.html';
+      var map = {
+        'signature-programme.html': 'S · Signature',
+        'webinar-programme.html': 'W · Webinar',
+        'invite-programme.html': 'I · Invite',
+        'fill-programme.html': 'F · Fill Class',
+        'track-programme.html': 'T · Track',
+        'casestudy-feon.html': '★ Case Study 1 – Paid Ads',
+        'casestudy-fion.html': '★ Case Study 2 – Referral',
+      };
+      var el = document.getElementById('swiftCurrentLabel');
+      if (el) el.textContent = map[page] || 'Menu';
+      document.querySelectorAll('#swiftDropdownMenu .swift-dropdown-item').forEach(function(item) {
+        if (item.getAttribute('href') === page) item.classList.add('active');
+      });
+    })();
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#swiftMobileNav')) {
+        var m = document.getElementById('swiftDropdownMenu');
+        if (m) m.classList.remove('open');
+      }
+    });
+  </script>
 
   <!-- SUB-TAB NAV -->
   <nav class="tab-nav" id="tabNav">
