@@ -154,7 +154,6 @@
     .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
     .user-logout-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(255,255,255,0.75); font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; white-space:nowrap; }
     .user-logout-btn:hover { background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.4); color:#fca5a5; }
-    #navManageUsersBtn { display: none; }
   </style>
 </head>
 <body>
@@ -484,7 +483,7 @@
       // Show Manage Users only for admin
       if (s.role === 'admin' || s.u === 'johnyeo') {
         var nb = document.getElementById('navManageUsersBtn');
-        if (nb) nb.style.display = 'block';
+        if (nb) { nb.style.setProperty('display','block','important'); }
         var hb = document.getElementById('headerManageBtn');
         if (hb) hb.style.display = 'inline-block';
       }
