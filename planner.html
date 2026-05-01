@@ -500,7 +500,7 @@
 
     // --- INIT ---
     function init() {
-      userName = localStorage.getItem('pac-swift-user') || '';
+      try { var _s = JSON.parse(localStorage.getItem('pac-swift-session')); userName = (_s && _s.u) ? _s.u : ''; } catch(e) { userName = ''; }
       if (userName) {
         document.getElementById('greeting').textContent = `${userName}'s 30-Day Plan`;
         document.getElementById('subtext').textContent = 'Pick a start date and assign SWIFT tasks to each day.';
