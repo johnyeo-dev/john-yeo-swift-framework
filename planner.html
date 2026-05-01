@@ -227,6 +227,10 @@
       <div class="legend-pill"><div class="legend-dot" style="background:var(--i)"></div> I · Invite</div>
       <div class="legend-pill"><div class="legend-dot" style="background:var(--f)"></div> F · Fill Class</div>
       <div class="legend-pill"><div class="legend-dot" style="background:var(--t)"></div> T · Track</div>
+      <div class="legend-pill"><div class="legend-dot" style="background:#EC4899"></div> 🎉 Parties</div>
+      <div class="legend-pill"><div class="legend-dot" style="background:#F97316"></div> 🗓️ Workshops</div>
+      <div class="legend-pill"><div class="legend-dot" style="background:#6366F1"></div> 💳 Monthly→Annual</div>
+      <div class="legend-pill"><div class="legend-dot" style="background:#E11D48"></div> 📸 IG Ads</div>
     </div>
 
     <div class="plan-progress" id="progressWrap" style="display:none">
@@ -257,7 +261,7 @@
       <button class="ep-close" onclick="closePanel()">×</button>
     </div>
     <div class="ep-body">
-      <div class="ep-label">Phase</div>
+      <div class="ep-label">SWIFT Phase</div>
       <div class="phase-btns" id="phaseBtns">
         <button class="phase-btn" data-phase="S" onclick="selectPhase('S')" style="color:var(--s)">
           <div class="pb-letter">S</div><div class="pb-name">Sig</div>
@@ -273,6 +277,22 @@
         </button>
         <button class="phase-btn" data-phase="T" onclick="selectPhase('T')" style="color:var(--t)">
           <div class="pb-letter">T</div><div class="pb-name">Track</div>
+        </button>
+      </div>
+
+      <div class="ep-label" style="margin-top:16px;">Other Activities</div>
+      <div class="phase-btns" style="grid-template-columns:repeat(4,1fr);">
+        <button class="phase-btn" data-phase="PK" onclick="selectPhase('PK')" style="color:#EC4899">
+          <div class="pb-letter" style="font-size:16px;">🎉</div><div class="pb-name">Parties</div>
+        </button>
+        <button class="phase-btn" data-phase="HW" onclick="selectPhase('HW')" style="color:#F97316">
+          <div class="pb-letter" style="font-size:16px;">🗓️</div><div class="pb-name">Workshop</div>
+        </button>
+        <button class="phase-btn" data-phase="MA" onclick="selectPhase('MA')" style="color:#6366F1">
+          <div class="pb-letter" style="font-size:16px;">💳</div><div class="pb-name">Mo→Annual</div>
+        </button>
+        <button class="phase-btn" data-phase="IG" onclick="selectPhase('IG')" style="color:#E11D48">
+          <div class="pb-letter" style="font-size:16px;">📸</div><div class="pb-name">IG Ads</div>
         </button>
       </div>
 
@@ -376,10 +396,68 @@
         "Set your Round 2 official launch date",
         "Celebrate — you completed Round 1! 🎉",
       ],
+      PK: [
+        "Choose party theme & target age group",
+        "Set date, time & venue",
+        "Create guest list & send invitations to parents",
+        "Plan activities, games & schedule",
+        "Source materials, prizes & goodie bags",
+        "Send reminder to confirmed families",
+        "Set up venue & prepare all materials",
+        "Run the party",
+        "Photograph highlights for social proof",
+        "Follow up with thank-you message & photos",
+        "Collect testimonials from parents",
+        "Post recap on social media",
+      ],
+      HW: [
+        "Decide workshop topic & learning outcomes",
+        "Set workshop dates & hours per day",
+        "Set pricing for existing students",
+        "Set pricing for new students",
+        "Calculate revenue target",
+        "Create promotional material",
+        "Invite existing students",
+        "Run paid ads or outreach for new students",
+        "Confirm bookings & send details",
+        "Prepare workshop content & materials",
+        "Run the workshop",
+        "Collect feedback & testimonials",
+        "Follow up with parents",
+        "Plan next holiday workshop",
+      ],
+      MA: [
+        "List all students currently on monthly payment",
+        "Calculate annual package value per student",
+        "Identify the right upgrade window",
+        "Craft your upgrade offer & value stack",
+        "Prepare objection-handling responses",
+        "Send upgrade message to first batch",
+        "Follow up with non-responders (Day 3)",
+        "Handle objections with care",
+        "Confirm annual payment & update records",
+        "Send welcome & thank-you to upgraded students",
+        "Track conversion rate",
+        "Plan next upgrade window",
+      ],
+      IG: [
+        "Define target audience profile",
+        "Choose season hook & course name",
+        "Write pain-point caption",
+        "Film the video reel",
+        "Add text overlays & CTA",
+        "Set up campaign in Meta Ads Manager",
+        "Set budget & audience targeting",
+        "Launch the ad",
+        "Monitor reach, clicks & leads (Day 3 check)",
+        "Respond to DMs & enquiries",
+        "Review results & optimise",
+        "Plan next ad creative",
+      ],
     };
 
-    const PHASE_COLORS = { S: '#0ABFBC', W: '#4A8FE7', I: '#8B5CF6', F: '#F59E0B', T: '#10B981' };
-    const PHASE_NAMES = { S: 'Signature', W: 'Webinar', I: 'Invite', F: 'Fill Class', T: 'Track' };
+    const PHASE_COLORS = { S: '#0ABFBC', W: '#4A8FE7', I: '#8B5CF6', F: '#F59E0B', T: '#10B981', PK: '#EC4899', HW: '#F97316', MA: '#6366F1', IG: '#E11D48' };
+    const PHASE_NAMES = { S: 'Signature', W: 'Webinar', I: 'Invite', F: 'Fill Class', T: 'Track', PK: 'Parties for Kids', HW: 'Holiday Workshop', MA: 'Monthly → Annual', IG: 'IG Ads' };
     const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     let userName = '';
@@ -481,9 +559,12 @@
 
         if (entry && entry.phase) {
           const color = PHASE_COLORS[entry.phase];
-          const stepTitle = entry.stepIndex != null ? STEPS[entry.phase][entry.stepIndex] : '';
+          const phaseSteps = STEPS[entry.phase] || [];
+          const stepTitle = entry.stepIndex != null ? phaseSteps[entry.stepIndex] : '';
           const truncated = stepTitle.length > 22 ? stepTitle.slice(0,22)+'…' : stepTitle;
-          html += `<div class="day-pill" style="background:${color}">${entry.phase} · ${truncated}</div>`;
+          const pillLabels = { PK:'🎉', HW:'🗓️', MA:'💳', IG:'📸' };
+          const prefix = pillLabels[entry.phase] || entry.phase;
+          html += `<div class="day-pill" style="background:${color}">${prefix} · ${truncated}</div>`;
           if (entry.notes) html += `<div class="day-note-icon">📝 note</div>`;
         }
 
