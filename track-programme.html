@@ -226,7 +226,7 @@
         <div class="s">T</div>
         <div class="label">Track</div>
       </div>
-      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.25);min-width:80px;white-space:nowrap;background:rgba(255,255,255,0.08);"></div>
+      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
     </div>
     </div>
   </div>
@@ -899,7 +899,12 @@
       function update(){
         var n = localStorage.getItem('pac-swift-user') || '';
         var d = document.getElementById('nameDisplay');
-        if (d && n) d.textContent = n;
+        if (d && n) {
+          d.textContent = n;
+          d.style.display = 'block';
+          d.style.border = '1px solid rgba(255,255,255,0.25)';
+          d.style.background = 'rgba(255,255,255,0.08)';
+        }
       }
       update();
       // Re-sync after programme page's own modal saves the name

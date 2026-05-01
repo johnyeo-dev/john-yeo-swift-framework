@@ -122,16 +122,12 @@
       <div class="header-label">PAC · SWIFT Framework</div>
       <h1><em>Other Resources</em></h1>
     </div>
-    <div class="user-pill" id="userPill">
-      <span class="user-avatar" id="userAvatar">J</span>
-      <span class="user-name" id="userNameDisplay"></span>
-    </div>
     <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
 <div class="swift-badge" style="margin-left:0;">
       <div class="s">✦</div>
       <div class="label">Resources</div>
     </div>
-      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.25);min-width:80px;white-space:nowrap;background:rgba(255,255,255,0.08);"></div>
+      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
     </div>
   </header>
 
@@ -420,7 +416,7 @@
         keys.map(function(k) {
           return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#F4F7FB;border-radius:8px;margin-bottom:6px;">' +
             '<span style="font-size:13px;font-weight:600;color:#0A0F1C;">' + k + '</span>' +
-            '<button onclick="removeUser('' + k + '')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button>' +
+            '<button onclick="removeUser(\'' + k + '\')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button>' +
             '</div>';
         }).join('');
     }
@@ -456,5 +452,48 @@
       <button onclick="saveNameAndClose()" style="width:100%;background:#0ABFBC;color:#002D6A;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Get Started →</button>
     </div>
   </div>
+  <script>
+    // ── NAME MODAL & BADGE ──────────────────────────────────────
+    (function(){
+      var saved = localStorage.getItem('pac-swift-user') || '';
+      var disp = document.getElementById('nameDisplay');
+      if (disp && saved) {
+        disp.textContent = saved;
+        disp.style.display = 'block';
+        disp.style.border = '1px solid rgba(255,255,255,0.25)';
+        disp.style.background = 'rgba(255,255,255,0.08)';
+      }
+      if (!saved) {
+        var modal = document.getElementById('nameModal');
+        if (modal) {
+          modal.style.display = 'flex';
+          setTimeout(function(){ var i = document.getElementById('nameModalInput'); if(i) i.focus(); }, 150);
+        }
+      }
+    })();
+    function saveNameAndClose() {
+      var v = (document.getElementById('nameModalInput').value || '').trim();
+      if (!v) return;
+      localStorage.setItem('pac-swift-user', v);
+      var disp = document.getElementById('nameDisplay');
+      if (disp) {
+        disp.textContent = v;
+        disp.style.display = 'block';
+        disp.style.border = '1px solid rgba(255,255,255,0.25)';
+        disp.style.background = 'rgba(255,255,255,0.08)';
+      }
+      document.getElementById('nameModal').style.display = 'none';
+    }
+    function promptChangeName() {
+      var modal = document.getElementById('nameModal');
+      var inp = document.getElementById('nameModalInput');
+      if (inp) inp.value = localStorage.getItem('pac-swift-user') || '';
+      if (modal) { modal.style.display = 'flex'; setTimeout(function(){ if(inp) inp.focus(); }, 150); }
+    }
+    document.addEventListener('keydown', function(e){
+      var modal = document.getElementById('nameModal');
+      if (e.key === 'Enter' && modal && modal.style.display !== 'none') saveNameAndClose();
+    });
+  </script>
 </body>
 </html>
