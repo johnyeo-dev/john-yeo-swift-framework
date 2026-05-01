@@ -336,6 +336,7 @@
       <div class="legend-pill"><div class="legend-dot" style="background:#F97316"></div> 🗓️ Workshops</div>
       <div class="legend-pill"><div class="legend-dot" style="background:#6366F1"></div> 💳 Monthly→Annual</div>
       <div class="legend-pill"><div class="legend-dot" style="background:#E11D48"></div> 📸 IG &amp; FB Ads</div>
+      <div class="legend-pill"><div class="legend-dot" style="background:#0ABFBC;border:2px dashed #0ABFBC;background:none;"></div> ✦ 6 Prompts</div>
     </div>
 
     <div class="plan-progress" id="progressWrap" style="display:none">
@@ -398,6 +399,28 @@
         </button>
         <button class="phase-btn" data-phase="IG" onclick="selectPhase('IG')" style="color:#E11D48">
           <div class="pb-letter" style="font-size:16px;">📸</div><div class="pb-name">IG Ads</div>
+        </button>
+      </div>
+
+      <div class="ep-label" style="margin-top:16px;">6 AI Prompts</div>
+      <div class="phase-btns" style="grid-template-columns:repeat(3,1fr);">
+        <button class="phase-btn" data-phase="P1" onclick="selectPhase('P1')" style="color:#0ABFBC">
+          <div class="pb-letter" style="font-size:15px;">✦</div><div class="pb-name">Signature</div>
+        </button>
+        <button class="phase-btn" data-phase="P2" onclick="selectPhase('P2')" style="color:#4A8FE7">
+          <div class="pb-letter" style="font-size:15px;">✦</div><div class="pb-name">Lead Magnet</div>
+        </button>
+        <button class="phase-btn" data-phase="P3" onclick="selectPhase('P3')" style="color:#8B5CF6">
+          <div class="pb-letter" style="font-size:15px;">✦</div><div class="pb-name">Teach→Pitch</div>
+        </button>
+        <button class="phase-btn" data-phase="P4" onclick="selectPhase('P4')" style="color:#F59E0B">
+          <div class="pb-letter" style="font-size:15px;">✦</div><div class="pb-name">Content Style</div>
+        </button>
+        <button class="phase-btn" data-phase="P5" onclick="selectPhase('P5')" style="color:#10B981">
+          <div class="pb-letter" style="font-size:15px;">✦</div><div class="pb-name">Leads Form</div>
+        </button>
+        <button class="phase-btn" data-phase="P6" onclick="selectPhase('P6')" style="color:#EC4899">
+          <div class="pb-letter" style="font-size:15px;">✦</div><div class="pb-name">Feedback Form</div>
         </button>
       </div>
 
@@ -561,8 +584,82 @@
       ],
     };
 
-    const PHASE_COLORS = { S: '#0ABFBC', W: '#4A8FE7', I: '#8B5CF6', F: '#F59E0B', T: '#10B981', PK: '#EC4899', HW: '#F97316', MA: '#6366F1', IG: '#E11D48' };
-    const PHASE_NAMES = { S: 'Signature', W: 'Webinar', I: 'Invite', F: 'Fill Class', T: 'Track', PK: 'Parties for Kids', HW: 'Holiday Workshop', MA: 'Monthly → Annual', IG: 'IG Ads' };
+      P1: [
+        "Collect 10+ student testimonials",
+        "Compile testimonials into one document",
+        "Open Claude and upload testimonials",
+        "Paste Prompt 1 and generate framework",
+        "Review the 10 acronym options from Claude",
+        "Choose your framework name & acronym",
+        "Copy the full programme structure output",
+        "Review pricing guidance from Claude",
+        "Save your first marketing message",
+        "Update signature-programme.html with new name",
+      ],
+      P2: [
+        "Record a coaching / discovery call with Fathom",
+        "Download the Fathom transcript",
+        "Open Claude and upload the transcript",
+        "Fill in the [bracketed details] in Prompt 2",
+        "Paste Prompt 2 and generate lead magnet draft",
+        "Review the 7-page lead magnet output",
+        "Edit the backstory section in your voice",
+        "Edit the client story section",
+        "Design the PDF cover in Canva",
+        "Export final PDF and save to Google Drive",
+      ],
+      P3: [
+        "Prepare your webinar teaching slides",
+        "Export slides as PDF or take screenshots",
+        "Open Claude and upload the slide file",
+        "Paste Prompt 3 and answer Claude's questions",
+        "Review the completed pitch script",
+        "Rehearse Part 1 (Teach) section out loud",
+        "Rehearse Part 2 (Transition) with the 3 pauses",
+        "Rehearse Part 3 (Pitch) with the value stack",
+        "Set up your countdown timer tool",
+        "Do a dry run of the full script",
+      ],
+      P4: [
+        "Collect 10 pieces of your own written content",
+        "Paste all 10 posts into a Claude message",
+        "Paste Prompt 4 and generate style profile",
+        "Review the 10-point style breakdown",
+        "Check the 3-word personality description",
+        "Read Version A and Version B rewrites",
+        "Choose which rewrite feels most like you",
+        "Save the Standing Instructions block",
+        "Add Standing Instructions to your Claude Projects",
+        "Test with a new piece of content",
+      ],
+      P5: [
+        "Open Claude and paste Prompt 5",
+        "Copy the Apps Script code from Claude",
+        "Go to script.google.com and open new project",
+        "Paste the script and click Run",
+        "Authorise the script in Google",
+        "Open Google Forms and check the form was created",
+        "Check the linked Google Sheet 'Leads'",
+        "Copy the shareable form link",
+        "Embed or share the form link",
+        "Send WhatsApp message to parents with the link",
+      ],
+      P6: [
+        "Open Claude and paste Prompt 6",
+        "Copy the Apps Script code from Claude",
+        "Go to script.google.com and open new project",
+        "Paste the script and click Run",
+        "Authorise the script in Google",
+        "Open Google Forms and check the feedback form",
+        "Check the linked Google Sheet 'Feedback'",
+        "Copy the shareable form link",
+        "Schedule when to send it (end of term)",
+        "Send the warm WhatsApp message to students",
+      ],
+    };
+
+    const PHASE_COLORS = { S: '#0ABFBC', W: '#4A8FE7', I: '#8B5CF6', F: '#F59E0B', T: '#10B981', PK: '#EC4899', HW: '#F97316', MA: '#6366F1', IG: '#E11D48', P1: '#0ABFBC', P2: '#4A8FE7', P3: '#8B5CF6', P4: '#F59E0B', P5: '#10B981', P6: '#EC4899' };
+    const PHASE_NAMES = { S: 'Signature', W: 'Webinar', I: 'Invite', F: 'Fill Class', T: 'Track', PK: 'Parties for Kids', HW: 'Holiday Workshop', MA: 'Monthly → Annual', IG: 'IG Ads', P1: 'Prompt 1 · Signature', P2: 'Prompt 2 · Lead Magnet', P3: 'Prompt 3 · Teach to Pitch', P4: 'Prompt 4 · Content Style', P5: 'Prompt 5 · Leads Form', P6: 'Prompt 6 · Feedback Form' };
     const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     let userName = '';
@@ -667,7 +764,7 @@
           const phaseSteps = STEPS[entry.phase] || [];
           const stepTitle = entry.stepIndex != null ? phaseSteps[entry.stepIndex] : '';
           const truncated = stepTitle.length > 22 ? stepTitle.slice(0,22)+'…' : stepTitle;
-          const pillLabels = { PK:'🎉', HW:'🗓️', MA:'💳', IG:'📸' };
+          const pillLabels = { PK:'🎉', HW:'🗓️', MA:'💳', IG:'📸', P1:'✦1', P2:'✦2', P3:'✦3', P4:'✦4', P5:'✦5', P6:'✦6' };
           const prefix = pillLabels[entry.phase] || entry.phase;
           html += `<div class="day-pill" style="background:${color}">${prefix} · ${truncated}</div>`;
           if (entry.notes) html += `<div class="day-note-icon">📝 note</div>`;
