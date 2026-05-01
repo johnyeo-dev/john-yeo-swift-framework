@@ -414,7 +414,7 @@
       }
       // Hide Manage Users for non-admin
       // Show Manage Users only for admin
-      if (s.role === 'admin') {
+      if (s.role === 'admin' || s.u === 'johnyeo') {
         var nb = document.getElementById('navManageUsersBtn');
         if (nb) nb.style.display = 'inline-flex';
       }

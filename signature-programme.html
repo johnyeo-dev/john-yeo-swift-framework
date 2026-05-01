@@ -633,6 +633,8 @@
         <div class="user-avatar" id="userAvatar">?</div>
         <span class="user-name" id="userName">...</span>
       </div>
+      <button id="headerManageBtn" onclick="openUserManager()" style="display:none;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">Manage Users</button>
+      <button onclick="doLogout()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;" onmouseover="this.style.background='rgba(248,113,113,0.15)';this.style.color='#fca5a5'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.75)'">Log Out</button>
       <div class="swift-badge">
         <div class="s">S</div>
         <div class="label">Signature</div>
@@ -651,7 +653,8 @@
 
   <!-- SWIFT TOP NAV -->
   <nav class="swift-nav">
-    <div class="swift-tab-group"><a class="swift-tab" href="index.html"><span class="swift-letter" style="color:rgba(255,255,255,0.4);">⌂</span><span class="swift-word">Home ▾</span></a><div class="swift-sub-menu"><a class="swift-sub-item" href="index.html">🏠 Home</a><button class="swift-sub-item" id="navManageUsersBtn" onclick="openUserManager()" style="border:none;background:none;cursor:pointer;width:100%;text-align:left;font-family:'DM Sans',sans-serif;">👥 Manage Users</button><button class="swift-sub-item" onclick="doLogout()" style="border:none;background:none;cursor:pointer;width:100%;text-align:left;font-family:'DM Sans',sans-serif;color:#f87171;">🚪 Log Out</button></div></div>
+    <a class="swift-tab" href="index.html"><span class="swift-letter" style="color:rgba(255,255,255,0.4);">⌂</span><span class="swift-word">Home</span></a>
+    <button class="swift-tab" id="navManageUsersBtn" onclick="openUserManager()" style="display:none;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter">👥</span><span class="swift-word">Manage Users</span></button>
     <a class="swift-tab active" href="signature-programme.html"><span class="swift-letter">S</span><span class="swift-word">Signature</span></a>
     <a class="swift-tab" href="webinar-programme.html"><span class="swift-letter">W</span><span class="swift-word">Webinar</span></a>
     <a class="swift-tab" href="invite-programme.html"><span class="swift-letter">I</span><span class="swift-word">Invite</span></a>
@@ -1421,7 +1424,14 @@ Also answer these questions based on my testimonials:
       document.getElementById('userNameDisplay').textContent = s.u;
       document.getElementById('userAvatar').textContent = s.u.charAt(0).toUpperCase();
       // Show Manage Users only for admin
-      if (s.role === 'admin') {
+      if (s.role === 'admin' || s.u === 'johnyeo') {
+        var nb = document.getElementById('navManageUsersBtn');
+        if (nb) nb.style.display = 'block';
+      }
+
+      if (s.role === 'admin' || s.u === 'johnyeo') {
+        var hb = document.getElementById('headerManageBtn');
+        if (hb) hb.style.display = 'inline-block';
         var nb = document.getElementById('navManageUsersBtn');
         if (nb) nb.style.display = 'block';
       }
