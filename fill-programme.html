@@ -314,6 +314,13 @@
       .results-val { font-size: 18px; }
       .slot-form-row { grid-template-columns: 1fr; }
     }
+
+    /* ── COLLAPSIBLE MOBILE SECTIONS ── */
+    .mobile-menu-section { cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .mobile-menu-section:hover { color: rgba(255,255,255,0.6); }
+    .ms-chevron { font-size: 14px; opacity: 0.45; flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
+    .mobile-section-items { overflow: hidden; max-height: 600px; transition: max-height 0.25s ease; }
+    .mobile-section-items.ms-collapsed { max-height: 0; }
   </style>
 </head>
 <body>
@@ -1620,6 +1627,56 @@ POST-WORKSHOP — Non-converter follow-up:
     document.getElementById('mobilePanel').classList.remove('open');
     document.getElementById('mobileOverlay').classList.remove('open');
   }
+  </script>
+
+  <script>
+  (function() {
+    function initCollapse() {
+      var panel = document.getElementById('mobilePanel');
+      if (!panel) return;
+      var STORE_KEY = 'pac-menu-state';
+      var state = {};
+      try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) {}
+
+      panel.querySelectorAll('.mobile-menu-section').forEach(function(section) {
+        var label = section.textContent.trim();
+        var key = label.toLowerCase().replace(/\s+/g, '-');
+
+        var chev = document.createElement('span');
+        chev.className = 'ms-chevron';
+        section.appendChild(chev);
+
+        var items = [];
+        var el = section.nextElementSibling;
+        while (el && !el.classList.contains('mobile-menu-section')) {
+          items.push(el);
+          el = el.nextElementSibling;
+        }
+        if (!items.length) return;
+
+        var wrap = document.createElement('div');
+        wrap.className = 'mobile-section-items';
+        section.parentNode.insertBefore(wrap, items[0]);
+        items.forEach(function(item) { wrap.appendChild(item); });
+
+        var hasActive = !!wrap.querySelector('.active');
+        var savedState = state[key];
+        var startCollapsed = savedState !== undefined ? savedState : !hasActive;
+
+        if (startCollapsed) { wrap.classList.add('ms-collapsed'); chev.textContent = '›'; }
+        else { chev.textContent = '⌄'; }
+
+        section.addEventListener('click', function() {
+          var nowCollapsed = wrap.classList.toggle('ms-collapsed');
+          chev.textContent = nowCollapsed ? '›' : '⌄';
+          state[key] = nowCollapsed;
+          try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+        });
+      });
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCollapse); }
+    else { initCollapse(); }
+  })();
   </script>
 </body>
 </html>
