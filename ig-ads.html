@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-(function(){
-  try{var s=JSON.parse(localStorage.getItem('pac-swift-session'));if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}
-})();
-</script>
   <title>IG &amp; FB Ads | SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -159,7 +154,6 @@
     <div class="user-pill" id="userPill">
       <span class="user-avatar" id="userAvatar">J</span>
       <span class="user-name" id="userNameDisplay"></span>
-      <button id="headerManageBtn" onclick="openUserManager()" style="display:none;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">Manage Users</button><button class="user-logout-btn" onclick="doLogout()">Log Out</button>
     </div>
     <div class="swift-badge">
       <div class="s">📸</div>

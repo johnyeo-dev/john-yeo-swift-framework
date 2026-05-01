@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-(function(){
-  try{var s=JSON.parse(localStorage.getItem('pac-swift-session'));if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}
-})();
-</script>
   <title>Invite & Follow-Up | SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -217,8 +212,6 @@
         <div class="user-avatar" id="userAvatar">?</div>
         <span class="user-name" id="userName">...</span>
       </div>
-      <button id="headerManageBtn" onclick="openUserManager()" style="display:none;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">Manage Users</button>
-      <button onclick="doLogout()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;" onmouseover="this.style.background='rgba(248,113,113,0.15)';this.style.color='#fca5a5'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.75)'">Log Out</button>
       <div class="swift-badge">
         <div class="s">I</div>
         <div class="label">Invite</div>
@@ -268,7 +261,7 @@
       <span class="swift-letter" style="color:rgba(255,255,255,0.5);">📅</span>
       <span class="swift-word">30-Day Plan</span>
     </button>
-    <div class="swift-tab-group"><a class="swift-tab" href="other-resources.html" style="cursor:pointer;"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">✦</span><span class="swift-word">Other Resources ▾</span></a><div class="swift-sub-menu"><a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a><a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a><a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a><a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a><a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a><a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a><button class="swift-sub-item" id="navManageUsersBtn" onclick="openUserManager()" style="display:none;border:none;background:none;cursor:pointer;width:100%;text-align:left;font-family:'DM Sans',sans-serif;">👥 Manage Users</button></div></div>
+    <div class="swift-tab-group"><a class="swift-tab" href="other-resources.html" style="cursor:pointer;"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">✦</span><span class="swift-word">Other Resources ▾</span></a><div class="swift-sub-menu"><a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a><a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a><a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a><a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a><a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a><a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a></div></div>
   </nav>
   <!-- MOBILE SWIFT DROPDOWN -->
   <div class="swift-nav-mobile" id="swiftMobileNav">

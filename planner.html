@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-(function(){
-  try{var s=JSON.parse(localStorage.getItem('pac-swift-session'));if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}
-})();
-</script>
   <title>30-Day Planner | SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -204,7 +199,6 @@
     <div class="user-pill" id="userPill">
       <span class="user-avatar" id="userAvatar">J</span>
       <span class="user-name" id="userNameDisplay"></span>
-      <button id="headerManageBtn" onclick="openUserManager()" style="display:none;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">Manage Users</button><button class="user-logout-btn" onclick="doLogout()">Log Out</button>
     </div>
     <div class="swift-badge">
       <div class="s">📅</div>
@@ -222,7 +216,7 @@
     <a class="swift-tab" href="track-programme.html"><span class="swift-letter">T</span><span class="swift-word">Track</span></a>
     <a class="swift-tab" href="casestudies.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">★</span><span class="swift-word">Case Studies</span></a>
     <a class="swift-tab active" href="planner.html"><span class="swift-letter">📅</span><span class="swift-word">30-Day Plan</span></a>
-    <div class="swift-tab-group"><a class="swift-tab" href="other-resources.html" style="cursor:pointer;"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">✦</span><span class="swift-word">Other Resources ▾</span></a><div class="swift-sub-menu"><a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a><a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a><a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a><a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a><a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a><a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a><button class="swift-sub-item" id="navManageUsersBtn" onclick="openUserManager()" style="display:none;border:none;background:none;cursor:pointer;width:100%;text-align:left;font-family:'DM Sans',sans-serif;">👥 Manage Users</button></div></div>
+    <div class="swift-tab-group"><a class="swift-tab" href="other-resources.html" style="cursor:pointer;"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">✦</span><span class="swift-word">Other Resources ▾</span></a><div class="swift-sub-menu"><a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a><a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a><a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a><a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a><a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a><a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a></div></div>
   </nav>
 
   <!-- MOBILE DROPDOWN -->
@@ -505,7 +499,7 @@
 
     // --- INIT ---
     function init() {
-      try { var _s = JSON.parse(localStorage.getItem('pac-swift-session')); userName = (_s && _s.u) ? _s.u : ''; } catch(e) { userName = ''; }
+      userName = localStorage.getItem('pac-swift-user') || '';
       if (userName) {
         document.getElementById('greeting').textContent = `${userName}'s 30-Day Plan`;
         document.getElementById('subtext').textContent = 'Pick a start date and assign SWIFT tasks to each day.';
