@@ -54,8 +54,9 @@
     .swift-dropdown-item.active .item-letter { color: var(--gold); }
     @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
 
-    .res-subnav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .res-subnav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .res-subnav::-webkit-scrollbar { display: none; }
+    @media (max-width: 768px) { .res-subnav { padding: 0 12px; } .res-subnav-tab { padding: 12px 14px; font-size: 12px; } }
     .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
     .res-subnav-tab:hover { color: var(--navy); }
     .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
