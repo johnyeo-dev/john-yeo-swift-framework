@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Study: Fion | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A;
+      --navy-light: #0A0F1C;
+      --gold: #0ABFBC;
+      --gold-light: #4A8FE7;
+      --cream: #F4F7FB;
+      --cream-dark: #E8EDF5;
+      --text: #0A0F1C;
+      --text-muted: #6B7A96;
+      --white: #FFFFFF;
+      --step-done: #0ABFBC;
+      --border: #B8C4D4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: var(--navy);
+      padding: 28px 40px 24px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .header-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(24px, 4vw, 36px);
+      color: var(--white);
+      line-height: 1.1;
+    }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge {
+      margin-left: auto;
+      background: rgba(10,191,188,0.15);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 8px 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; letter-spacing: 2px; }
+    .swift-badge .label { font-size: 9px; letter-spacing: 2px; color: var(--gold-light); text-transform: uppercase; margin-top: 2px; }
+
+    .swift-nav {
+      background: var(--navy-light);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab {
+      padding: 14px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.4);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .swift-tab:hover { color: rgba(255,255,255,0.75); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; }
+
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      margin-bottom: 28px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .back-link:hover { opacity: 1; }
+
+    .case-hero {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 36px 40px;
+      margin-bottom: 24px;
+      color: var(--white);
+    }
+    .case-hero-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .case-hero h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(22px, 3vw, 32px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .case-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .case-hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+    /* RESULT BANNER */
+    .result-banner {
+      background: linear-gradient(135deg, #0ABFBC 0%, #4A8FE7 100%);
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .result-banner .trophy { font-size: 36px; flex-shrink: 0; }
+    .result-banner h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .result-banner p { font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.6; }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .metric-card {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+      color: var(--white);
+    }
+    .metric-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: var(--gold);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .metric-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-head .icon {
+      width: 36px; height: 36px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .section-head h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--navy);
+    }
+
+    .start-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold-light);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 36px;
+    }
+    .start-card ul {
+      list-style: none;
+      margin-top: 8px;
+    }
+    .start-card ul li {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      padding: 4px 0 4px 18px;
+      position: relative;
+    }
+    .start-card ul li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .steps-section { margin-bottom: 40px; }
+    .step-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 36px; height: 36px;
+      background: var(--cream-dark);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      color: var(--navy);
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+    .step-body h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .step-body p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .step-body p strong { color: var(--text); }
+    .step-quote {
+      margin-top: 10px;
+      background: var(--cream);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* FLYWHEEL */
+    .flywheel {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 600px) { .flywheel { grid-template-columns: 1fr; } }
+    .flywheel-stage {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+      color: var(--white);
+      position: relative;
+    }
+    .flywheel-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .flywheel-stage h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .flywheel-stage p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.5;
+    }
+
+    /* CHECKLIST TABLE */
+    .checklist { margin-bottom: 40px; }
+    .checklist-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 20px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+    .checklist-row .check-icon {
+      width: 28px; height: 28px;
+      background: var(--cream-dark);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .checklist-action {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+    .checklist-when {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .quote-block {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .quote-block .quote-mark {
+      font-family: 'DM Serif Display', serif;
+      font-size: 64px;
+      color: var(--gold);
+      line-height: 0.6;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .quote-block blockquote {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(16px, 2.5vw, 22px);
+      color: var(--white);
+      line-height: 1.5;
+      font-style: italic;
+      max-width: 620px;
+      margin: 0 auto 16px;
+    }
+    .quote-block cite {
+      font-size: 13px;
+      color: var(--gold-light);
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .callout-tip {
+      background: #E8F8F7;
+      border: 1px solid #0ABFBC;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 14px;
+      color: #005F5E;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .callout-tip .ci { flex-shrink: 0; font-size: 18px; margin-top: 1px; }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px; }
+      .main { padding: 24px 16px 60px; }
+      .case-hero { padding: 24px 20px; }
+      .result-banner { flex-direction: column; gap: 12px; padding: 20px; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1>Case Study: <em>Fion</em></h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">★</div>
+      <div class="label">Real Results</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <button class="swift-tab" onclick="window.location.href='signature-programme.html'">
+      <span class="swift-letter">S</span>
+      <span class="swift-word">Signature</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='webinar-programme.html'">
+      <span class="swift-letter">W</span>
+      <span class="swift-word">Webinar</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='invite-programme.html'">
+      <span class="swift-letter">I</span>
+      <span class="swift-word">Invite</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='fill-programme.html'">
+      <span class="swift-letter">F</span>
+      <span class="swift-word">Fill Class</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='track-programme.html'">
+      <span class="swift-letter">T</span>
+      <span class="swift-word">Track</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='casestudy-feon.html'">
+      <span class="swift-letter" style="color:rgba(255,255,255,0.3);">★</span>
+      <span class="swift-word">Case Study 1 - Paid Ads</span>
+    </button>
+    <button class="swift-tab active">
+      <span class="swift-letter" style="color:var(--gold);">★</span>
+      <span class="swift-word">Case Study 2 - Referral</span>
+    </button>
+  </nav>
+
+  <main class="main">
+
+    <a href="javascript:history.back()" class="back-link">← Back</a>
+
+    <div class="case-hero">
+      <div class="case-hero-tag">Real Student · Real Results</div>
+      <h2>From 10 Students to <em>76 Students</em> —<br>Now Fully Booked</h2>
+      <p>Built entirely through referrals. Zero paid ads. Fion grew from 10 students to 50+, then to 76 — and is now fully booked with a waitlist forming.</p>
+    </div>
+
+    <div class="result-banner">
+      <div class="trophy">🏆</div>
+      <div>
+        <h3>End Result: 76 students. Waitlist forming. No more capacity.</h3>
+        <p>Started with 10 students. Grew to 50+, then 76 — all through referrals and community. She didn't run a single paid ad. She is now fully booked and cannot take new students.</p>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value">76</div>
+        <div class="metric-label">Students</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">$0</div>
+        <div class="metric-label">Ad Spend</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">10→76</div>
+        <div class="metric-label">Growth</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">Waitlist</div>
+        <div class="metric-label">Status</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div class="icon">🏁</div>
+      <h3>Her Starting Point</h3>
+    </div>
+    <div class="start-card">
+      <ul>
+        <li>Around 10 students</li>
+        <li>No paid ads, no big following</li>
+        <li>Word of mouth but no system behind it</li>
+        <li>Growth was slow and unpredictable</li>
+      </ul>
+    </div>
+
+    <div class="section-head">
+      <div class="icon">🪜</div>
+      <h3>What She Did (Step by Step)</h3>
+    </div>
+    <div class="steps-section">
+
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Built trust with each client individually before anything else</h4>
+          <p>She didn't try to grow fast. One relationship at a time — understanding each family's needs, communicating clearly, and consistently delivering more than expected. <strong>Trust came before any ask.</strong></p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Set clear boundaries from Day 1</h4>
+          <p>She told parents upfront what her role was — and what it wasn't. Clear boundaries made parents feel safe. Safe parents become loyal parents. <strong>Loyal parents refer.</strong></p>
+          <div class="step-quote">"When you entrust your child to me, this should be the last thing you worry about. I don't expect you to teach at home — that's my job."</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Practised generous giving consistently</h4>
+          <p>She didn't just teach. She taught ahead of the curriculum, gave extra materials for weak areas, stayed longer when students needed it, and <strong>checked in on parents personally</strong> — not just about academics, but about how they were doing as people.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Created a year-end handwritten feedback form</h4>
+          <p>Every November/December, she gave each parent a simple one-page <strong>handwritten form</strong> (not typed — the personal touch matters). The last question:</p>
+          <div class="step-quote">"Can you recommend one student to me? If someone comes to mind, please write their name and contact here. No pressure at all."</div>
+          <p style="margin-top:8px;">No monetary incentives. Just a genuine ask rooted in trust.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Followed up on feedback personally</h4>
+          <p>After collecting forms, she reached out to each parent with a personal message acknowledging what they wrote:</p>
+          <div class="step-quote">"Hi [Name], thank you for the feedback. I noticed you mentioned [specific thing]. I really appreciate your honesty. About the referral — if anyone comes to mind later, I'd be grateful if you could share my contact. No pressure."</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Hosted 2–3 community events per year</h4>
+          <p>Small group events planned <strong>6 weeks in advance</strong>. Each client could bring <strong>ONE guest</strong> — not unlimited. Guests had to confirm. Events were casual: achievement picnics, educational workshops, holiday gatherings.</p>
+          <p style="margin-top:8px;">Not sales events. <strong>Relationship events.</strong> Sign-ups came naturally.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <h4>Used conversation starters at events to open referral doors</h4>
+          <p>She didn't pitch. She asked natural questions. Parents introduced each other — and she was the common thread.</p>
+          <div class="step-quote">"How do you and [other parent] know each other?"<br>"What subjects does your friend's child find difficult?"</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">8</div>
+        <div class="step-body">
+          <h4>Followed up with new contacts within 48 hours</h4>
+          <p>After every event, a personal thank you note to new families. She mentioned a <strong>specific moment from the event</strong> and offered a no-commitment conversation.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">9</div>
+        <div class="step-body">
+          <h4>Created organic referral moments during regular sessions</h4>
+          <p>During normal sessions she'd casually open the door — natural conversation, no sales pressure:</p>
+          <div class="step-quote">"[Student] mentioned they study with [friend] sometimes — how is [friend] doing with the subject?"</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">10</div>
+        <div class="step-body">
+          <h4>Handled crisis enquiries with honesty, not promises</h4>
+          <p>During exam periods, she was honest rather than over-promising:</p>
+          <div class="step-quote">"With exams so close, I can't guarantee dramatic improvement. But I can help with confidence and strategy. After exams, we can talk about longer-term support."</div>
+          <p style="margin-top:8px;"><strong>Transparency built more trust than any promise could.</strong></p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">11</div>
+        <div class="step-body">
+          <h4>Tracked every referral in a simple log</h4>
+          <p>Notebook or spreadsheet: date, referrer name, new client, source, status, follow-up date, notes. <strong>She always knew which method was working best.</strong></p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">12</div>
+        <div class="step-body">
+          <h4>Let the community run itself</h4>
+          <p>Over time, clients started introducing each other without being asked. They helped organise events. Referrals came in without prompting. <strong>She moved from doing community to having one.</strong></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-head">
+      <div class="icon">🔄</div>
+      <h3>The 3-Stage Flywheel</h3>
+    </div>
+    <div class="flywheel">
+      <div class="flywheel-stage">
+        <div class="flywheel-num">Stage 1</div>
+        <h4>Individual Relationships</h4>
+        <p>One parent at a time, deep trust built before any ask</p>
+      </div>
+      <div class="flywheel-stage">
+        <div class="flywheel-num">Stage 2</div>
+        <h4>Group Connections</h4>
+        <p>Events, introductions, peer relationships between families</p>
+      </div>
+      <div class="flywheel-stage">
+        <div class="flywheel-num">Stage 3</div>
+        <h4>Community Ownership</h4>
+        <p>Clients refer, organise, advocate — completely unprompted</p>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div class="icon">✅</div>
+      <h3>Replication Checklist</h3>
+    </div>
+    <div class="checklist">
+      <div class="checklist-row">
+        <div class="check-icon">🤝</div>
+        <div>
+          <div class="checklist-action">Set clear boundaries</div>
+          <div class="checklist-when">Day 1 with every new client</div>
+        </div>
+      </div>
+      <div class="checklist-row">
+        <div class="check-icon">🎁</div>
+        <div>
+          <div class="checklist-action">Practise generous giving</div>
+          <div class="checklist-when">Every session</div>
+        </div>
+      </div>
+      <div class="checklist-row">
+        <div class="check-icon">📝</div>
+        <div>
+          <div class="checklist-action">Send handwritten feedback form with referral ask</div>
+          <div class="checklist-when">November/December annually</div>
+        </div>
+      </div>
+      <div class="checklist-row">
+        <div class="check-icon">💬</div>
+        <div>
+          <div class="checklist-action">Follow up on feedback personally</div>
+          <div class="checklist-when">Within 1 week of collecting</div>
+        </div>
+      </div>
+      <div class="checklist-row">
+        <div class="check-icon">🎉</div>
+        <div>
+          <div class="checklist-action">Host community event — ONE-guest rule</div>
+          <div class="checklist-when">2–3 times per year</div>
+        </div>
+      </div>
+      <div class="checklist-row">
+        <div class="check-icon">📩</div>
+        <div>
+          <div class="checklist-action">Follow up with new contacts after events</div>
+          <div class="checklist-when">Within 48 hours</div>
+        </div>
+      </div>
+      <div class="checklist-row">
+        <div class="check-icon">🗣️</div>
+        <div>
+          <div class="checklist-action">Create organic referral moments in sessions</div>
+          <div class="checklist-when">Every session, ongoing</div>
+        </div>
+      </div>
+      <div class="checklist-row">
+        <div class="check-icon">📊</div>
+        <div>
+          <div class="checklist-action">Track all referrals in a simple log</div>
+          <div class="checklist-when">Continuously</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <span class="quote-mark">"</span>
+      <blockquote>It's not about perfecting sales techniques. It's about becoming the kind of professional people naturally want to recommend. Referrals become a natural outcome — not a forced process.</blockquote>
+      <cite>— Fion</cite>
+    </div>
+
+    <div class="callout-tip">
+      <span class="ci">💡</span>
+      <span>Fion's growth didn't come from ads or tactics — it came from being genuinely excellent and making people feel valued. The system amplified what was already there.</span>
+    </div>
+
+  </main>
+
+</body>
+</html>
