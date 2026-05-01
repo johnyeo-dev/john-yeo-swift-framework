@@ -167,6 +167,12 @@
     .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
     .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
     .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    .swift-dropdown-sub-group { }
+    .has-sub { cursor: pointer; justify-content: flex-start; width: 100%; text-align: left; border-radius: 0; }
+    .has-sub .sub-arrow { margin-left: auto; font-size: 11px; opacity: 0.5; }
+    .swift-dropdown-sub { display: none; background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.04); }
+    .swift-dropdown-sub.open { display: block; }
+    .swift-dropdown-item.sub-item { padding-left: 30px; font-size: 13px; }
     @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
   </style>
 </head>
@@ -262,10 +268,15 @@
       <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
       <a class="swift-dropdown-item" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
       <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
-      <a class="swift-dropdown-item" href="other-resources.html"><span class="item-letter">✦</span>Parties for Kids</a>
-      <a class="swift-dropdown-item" href="holiday-workshops.html"><span class="item-letter">✦</span>Holiday Workshops</a>
-      <a class="swift-dropdown-item" href="payment-upgrade.html"><span class="item-letter">✦</span>Monthly → Annual</a>
-      <a class="swift-dropdown-item" href="ig-ads.html"><span class="item-letter">✦</span>IG Ads</a>
+      <div class="swift-dropdown-sub-group">
+        <button class="swift-dropdown-item has-sub" onclick="toggleMobileSub(this)"><span class="item-letter">✦</span>Other Resources <span class="sub-arrow">▾</span></button>
+        <div class="swift-dropdown-sub ">
+        <a class="swift-dropdown-item sub-item" href="other-resources.html"><span class="item-letter">✦</span>🎉 Parties for Kids</a>
+        <a class="swift-dropdown-item sub-item" href="holiday-workshops.html"><span class="item-letter">✦</span>🗓️ Holiday Workshops</a>
+        <a class="swift-dropdown-item sub-item" href="payment-upgrade.html"><span class="item-letter">✦</span>💳 Monthly → Annual</a>
+        <a class="swift-dropdown-item sub-item" href="ig-ads.html"><span class="item-letter">✦</span>📸 IG Ads</a>
+        </div>
+      </div>
     </div>
   </div>
   <script>
