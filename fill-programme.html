@@ -158,7 +158,7 @@
       <div class="modal-icon">👋</div>
       <h2 class="modal-title">Welcome to PAC</h2>
       <p class="modal-sub">Enter your name so your progress gets saved just for you.</p>
-      <input class="modal-input" id="nameInput" type="text" placeholder="Your first name (e.g. Teacher Feon)" maxlength="40"
+      <input class="modal-input" id="nameInput" type="text" placeholder="Your first name" maxlength="40"
         oninput="document.getElementById('startBtn').disabled = this.value.trim().length < 2"
         onkeydown="if(event.key==='Enter') startSession()" autofocus />
       <button class="modal-btn" id="startBtn" onclick="startSession()" disabled>Start My Journey →</button>
