@@ -430,9 +430,12 @@
       <span class="user-avatar" id="userAvatar">J</span>
       <span class="user-name" id="userNameDisplay"></span>
     </div>
-    <div class="swift-badge">
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+<div class="swift-badge" style="margin-left:0;">
       <div class="s">★</div>
       <div class="label">Real Results</div>
+    </div>
+      <input id="globalNameInput" type="text" placeholder="your name" style="width:100%;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:5px;padding:4px 8px;color:white;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;text-align:center;letter-spacing:0.5px;" />
     </div>
   </header>
 
@@ -842,5 +845,19 @@
     }
   </script>
 
+
+    // Global name input
+    (function(){
+      var inp = document.getElementById('globalNameInput');
+      if (!inp) return;
+      var saved = localStorage.getItem('pac-swift-user') || '';
+      if (saved) inp.value = saved;
+      function saveName() {
+        var v = inp.value.trim();
+        if (v) localStorage.setItem('pac-swift-user', v);
+      }
+      inp.addEventListener('blur', saveName);
+      inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ saveName(); inp.blur(); } });
+    })();
 </body>
 </html>

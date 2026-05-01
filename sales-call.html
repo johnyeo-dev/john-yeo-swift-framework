@@ -158,9 +158,12 @@
       <div class="header-label">Sales Framework · Jamie's Masterclass</div>
       <h1>📞 Sales Call — <em>Heart-Based Closing</em></h1>
     </div>
-    <div class="user-pill" id="userPill">
-      <span class="user-avatar" id="userAvatar">J</span>
-      <span class="user-name" id="userNameDisplay"></span>
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+      <div style="background:rgba(10,191,188,0.15);border:1px solid var(--gold);border-radius:6px;padding:8px 16px;text-align:center;">
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold);line-height:1;">📞</div>
+        <div style="font-size:11px;letter-spacing:2px;color:white;text-transform:uppercase;margin-top:2px;font-weight:600;">Resources</div>
+      </div>
+      <input id="globalNameInput" type="text" placeholder="your name" style="width:100%;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:5px;padding:4px 8px;color:white;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;text-align:center;letter-spacing:0.5px;" />
     </div>
   </header>
 
@@ -521,5 +524,19 @@
     function removeUser(u){if(!confirm('Remove "'+u+'"?'))return;var users=getUsers();delete users[u];saveUsers(users);renderUserList();}
   </script>
 
+
+    // Global name input
+    (function(){
+      var inp = document.getElementById("globalNameInput");
+      if (!inp) return;
+      var saved = localStorage.getItem("pac-swift-user") || "";
+      if (saved) inp.value = saved;
+      function saveName() {
+        var v = inp.value.trim();
+        if (v) localStorage.setItem("pac-swift-user", v);
+      }
+      inp.addEventListener("blur", saveName);
+      inp.addEventListener("keydown", function(e){ if(e.key==="Enter"){ saveName(); inp.blur(); } });
+    })();
 </body>
 </html>
