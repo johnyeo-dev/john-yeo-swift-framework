@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IG Ads | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-tab-group .swift-tab { cursor: pointer; user-select: none; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 210px; white-space: nowrap; }
+    .swift-tab-group:hover .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
+    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
+    .swift-dropdown-menu.open { display: block; }
+    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-dropdown-item:last-child { border-bottom: none; }
+    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
+
+    .res-subnav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .res-subnav::-webkit-scrollbar { display: none; }
+    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    .res-subnav-tab:hover { color: var(--navy); }
+    .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+    @media (max-width: 600px) { .res-subnav { padding: 0 16px; } .res-subnav-tab { padding: 12px 14px; } }
+
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    .page-hero { background: var(--navy); border-radius: 16px; padding: 36px 40px; margin-bottom: 32px; }
+    .page-hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 30px); color: var(--white); line-height: 1.2; margin-bottom: 10px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; margin-top: 36px; }
+    .section-icon { font-size: 22px; }
+    .section-header h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+
+    /* SAMPLE AD + AUDIENCE SIDE BY SIDE */
+    .ad-layout { display: grid; grid-template-columns: auto 1fr; gap: 28px; margin-bottom: 36px; align-items: start; }
+    .ig-embed-wrap { width: 320px; flex-shrink: 0; }
+    .ig-embed-wrap .instagram-media { min-width: unset !important; width: 100% !important; }
+
+    /* AUDIENCE CARD */
+    .audience-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; height: fit-content; }
+    .audience-card h4 { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 16px; }
+    .audience-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--cream-dark); }
+    .audience-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .audience-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .audience-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+    .audience-val { font-size: 14px; font-weight: 600; color: var(--navy); line-height: 1.5; }
+
+    @media (max-width: 700px) {
+      .ad-layout { grid-template-columns: 1fr; }
+      .ig-embed-wrap { width: 100%; }
+    }
+
+    /* AD FRAMEWORK ELEMENTS */
+    .framework-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+    .framework-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+    .framework-card-num { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .framework-card h4 { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 6px; }
+    .framework-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .framework-card .example { margin-top: 8px; font-size: 12px; background: var(--cream); padding: 8px 12px; border-radius: 6px; color: var(--text); font-style: italic; border-left: 2px solid var(--gold); }
+
+    /* FORMULA BANNER */
+    .formula-banner { background: linear-gradient(135deg, #002D6A 0%, #0A3A6A 100%); border-radius: 14px; padding: 24px 28px; margin-bottom: 36px; }
+    .formula-banner h4 { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .formula-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .formula-step { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: white; white-space: nowrap; }
+    .formula-arrow { color: var(--gold); font-size: 16px; font-weight: 700; }
+
+    /* COLD TRAFFIC STEPS */
+    .steps-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 22px 24px; display: flex; gap: 18px; align-items: flex-start; }
+    .step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: 'DM Serif Display', serif; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h4 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 6px; }
+    .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .step-body blockquote { margin-top: 10px; padding: 10px 14px; background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 13px; color: var(--text); font-style: italic; line-height: 1.6; }
+    .step-body .step-tag { display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(10,191,188,0.1); color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+
+    .callout-tip { background: #E8F8F7; border: 1px solid #0ABFBC; border-radius: 10px; padding: 16px 20px; font-size: 14px; color: #005F5E; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-start; }
+    .callout-tip .ci { flex-shrink: 0; font-size: 18px; margin-top: 1px; }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 24px 16px 60px; }
+      .page-hero { padding: 24px 20px; }
+      .framework-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1>Instagram <em>Ads Framework</em></h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">📸</div>
+      <div class="label">Resources</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="signature-programme.html"><span class="swift-letter">S</span><span class="swift-word">Signature</span></a>
+    <a class="swift-tab" href="webinar-programme.html"><span class="swift-letter">W</span><span class="swift-word">Webinar</span></a>
+    <a class="swift-tab" href="invite-programme.html"><span class="swift-letter">I</span><span class="swift-word">Invite</span></a>
+    <a class="swift-tab" href="fill-programme.html"><span class="swift-letter">F</span><span class="swift-word">Fill Class</span></a>
+    <a class="swift-tab" href="track-programme.html"><span class="swift-letter">T</span><span class="swift-word">Track</span></a>
+    <a class="swift-tab" href="casestudies.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">★</span><span class="swift-word">Case Studies</span></a>
+    <a class="swift-tab" href="planner.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">📅</span><span class="swift-word">30-Day Plan</span></a>
+    <div class="swift-tab-group">
+      <span class="swift-tab active" style="cursor:default;">
+        <span class="swift-letter" style="color:var(--gold);">✦</span>
+        <span class="swift-word">Other Resources ▾</span>
+      </span>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item active" href="ig-ads.html">📸 IG Ads</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE SWIFT DROPDOWN -->
+  <div class="swift-nav-mobile" id="swiftMobileNav">
+    <button class="swift-dropdown-btn" id="swiftDropdownBtn" onclick="toggleSwiftDropdown()">
+      <span id="swiftCurrentLabel">Menu</span>
+      <span>▾</span>
+    </button>
+    <div class="swift-dropdown-menu" id="swiftDropdownMenu">
+      <a class="swift-dropdown-item" href="signature-programme.html"><span class="item-letter">S</span>Signature</a>
+      <a class="swift-dropdown-item" href="webinar-programme.html"><span class="item-letter">W</span>Webinar</a>
+      <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
+      <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
+      <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
+      <a class="swift-dropdown-item" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
+      <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
+      <a class="swift-dropdown-item" href="other-resources.html"><span class="item-letter">✦</span>Parties for Kids</a>
+      <a class="swift-dropdown-item" href="holiday-workshops.html"><span class="item-letter">✦</span>Holiday Workshops</a>
+      <a class="swift-dropdown-item" href="payment-upgrade.html"><span class="item-letter">✦</span>Monthly → Annual</a>
+      <a class="swift-dropdown-item active" href="ig-ads.html"><span class="item-letter">✦</span>IG Ads</a>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var raw = location.pathname.split('/').pop() || 'signature-programme';
+      var page = raw.endsWith('.html') ? raw : raw + '.html';
+      var map = {
+        'signature-programme.html': 'S · Signature',
+        'webinar-programme.html': 'W · Webinar',
+        'invite-programme.html': 'I · Invite',
+        'fill-programme.html': 'F · Fill Class',
+        'track-programme.html': 'T · Track',
+        'casestudies.html': '★ Case Studies',
+        'casestudy-feon.html': '★ Case Studies',
+        'casestudy-fion.html': '★ Case Studies',
+        'planner.html': '📅 30-Day Plan',
+        'other-resources.html': '✦ Parties for Kids',
+        'holiday-workshops.html': '✦ Holiday Workshops',
+        'payment-upgrade.html': '✦ Monthly → Annual',
+        'ig-ads.html': '✦ IG Ads',
+      };
+      var el = document.getElementById('swiftCurrentLabel');
+      if (el) el.textContent = map[page] || 'Menu';
+    })();
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#swiftMobileNav')) {
+        var m = document.getElementById('swiftDropdownMenu');
+        if (m) m.classList.remove('open');
+      }
+    });
+  </script>
+
+  <!-- RESOURCE SUB-NAV -->
+  <nav class="res-subnav">
+    <a class="res-subnav-tab" href="other-resources.html">🎉 Parties for Kids</a>
+    <a class="res-subnav-tab" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+    <a class="res-subnav-tab" href="payment-upgrade.html">💳 Monthly → Annual</a>
+    <a class="res-subnav-tab active" href="ig-ads.html">📸 IG Ads</a>
+  </nav>
+
+  <main class="main">
+
+    <div class="page-hero">
+      <div class="page-hero-tag">Instagram Ads · Cold Traffic Framework</div>
+      <h2>Run Ads That <em>Convert Cold Parents</em></h2>
+      <p>How to structure an IG ad that stops the scroll, filters the right audience, and turns strangers into students — based on Teacher Feon's proven holiday workshop promo.</p>
+    </div>
+
+    <!-- SAMPLE AD + AUDIENCE -->
+    <div class="section-header">
+      <span class="section-icon">📱</span>
+      <h3>Sample Ad + Audience Profile</h3>
+    </div>
+
+    <div class="ad-layout">
+      <!-- Instagram Embed -->
+      <div class="ig-embed-wrap">
+        <blockquote class="instagram-media"
+          data-instgrm-captioned
+          data-instgrm-permalink="https://www.instagram.com/reel/DVYm8AVD1jE/"
+          data-instgrm-version="14"
+          style="background:#FFF; border:0; border-radius:12px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin:0; padding:0; width:100%;">
+        </blockquote>
+        <script async src="//www.instagram.com/embed.js"></script>
+      </div>
+
+      <!-- Audience Card -->
+      <div class="audience-card">
+        <h4>📍 Target Audience Profile</h4>
+        <div class="audience-row">
+          <span class="audience-icon">🎯</span>
+          <div>
+            <div class="audience-label">Method</div>
+            <div class="audience-val">People you choose through targeting</div>
+          </div>
+        </div>
+        <div class="audience-row">
+          <span class="audience-icon">👥</span>
+          <div>
+            <div class="audience-label">Gender & Age</div>
+            <div class="audience-val">Men and women, ages 30–60</div>
+          </div>
+        </div>
+        <div class="audience-row">
+          <span class="audience-icon">📍</span>
+          <div>
+            <div class="audience-label">Location</div>
+            <div class="audience-val">Singapore</div>
+          </div>
+        </div>
+        <div class="audience-row">
+          <span class="audience-icon">🔍</span>
+          <div>
+            <div class="audience-label">Interests</div>
+            <div class="audience-val">Chinese language, Motherhood (children and parenting), or Primary education (primary and secondary education)</div>
+          </div>
+        </div>
+        <div class="callout-tip" style="margin-top:16px;margin-bottom:0;">
+          <span class="ci">💡</span>
+          <span>This audience self-selects. The right parents lean in. The wrong ones scroll past. Both are correct outcomes.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AD FRAMEWORK ELEMENTS -->
+    <div class="section-header">
+      <span class="section-icon">🧱</span>
+      <h3>The 9-Element IG Ad Framework</h3>
+    </div>
+
+    <div class="framework-grid">
+      <div class="framework-card">
+        <div class="framework-card-num">Element 01</div>
+        <h4>Season Hook (Banner)</h4>
+        <p>Anchor urgency to a specific holiday window — creates a natural deadline without manufactured pressure.</p>
+        <div class="example">"June Holiday Crash Course"</div>
+      </div>
+      <div class="framework-card">
+        <div class="framework-card-num">Element 02</div>
+        <h4>Course Name (Bilingual)</h4>
+        <p>Chinese + English signals exactly who this is for. Chinese-speaking SG parents self-identify immediately.</p>
+      </div>
+      <div class="framework-card">
+        <div class="framework-card-num">Element 03</div>
+        <h4>Format + Level</h4>
+        <p>Online/In-person + grade level filters the right audience immediately. State clearly what will be taught.</p>
+        <div class="example">"P5 & P6 · Online via Zoom"</div>
+      </div>
+      <div class="framework-card">
+        <div class="framework-card-num">Element 04</div>
+        <h4>Dates + Time</h4>
+        <p>Specific days and hours remove ambiguity and create commitment clarity. Cold traffic has no patience for vague schedules.</p>
+        <div class="example">"3, 5, 7 June · 10am–12.30pm"</div>
+      </div>
+      <div class="framework-card">
+        <div class="framework-card-num">Element 05</div>
+        <h4>Video with Overlay Text</h4>
+        <p>Teacher on camera + text callout mid-video. The emotional hook lands while they're still scrolling.</p>
+        <div class="example">Teacher speaking + "AND HELP THEM" overlay</div>
+      </div>
+      <div class="framework-card">
+        <div class="framework-card-num">Element 06</div>
+        <h4>Contact CTA</h4>
+        <p>WhatsApp number + teacher name. Personal, low-friction. One tap to reach you — no forms, no email.</p>
+      </div>
+      <div class="framework-card">
+        <div class="framework-card-num">Element 07</div>
+        <h4>Hard CTA</h4>
+        <p>One clear instruction. Not "find out more." Not "learn more." Direct close — no ambiguity.</p>
+        <div class="example">"SIGN UP NOW!"</div>
+      </div>
+      <div class="framework-card">
+        <div class="framework-card-num">Element 08</div>
+        <h4>Goal Statement</h4>
+        <p>One sentence: what students will gain. Outcome-focused reassurance for parents who need a reason to trust.</p>
+        <div class="example">"Your child will learn techniques + build confidence for PSLE"</div>
+      </div>
+      <div class="framework-card">
+        <div class="framework-card-num">Element 09</div>
+        <h4>Pain Point Caption</h4>
+        <p>Opens the loop for parents who self-identify. "Struggling with [topic]..." makes the right parent stop and read.</p>
+        <div class="example">"Is your child struggling with Chinese composition?"</div>
+      </div>
+    </div>
+
+    <!-- FORMULA -->
+    <div class="formula-banner">
+      <h4>The Core Formula</h4>
+      <div class="formula-steps">
+        <span class="formula-step">Holiday urgency</span>
+        <span class="formula-arrow">→</span>
+        <span class="formula-step">Who it's for</span>
+        <span class="formula-arrow">→</span>
+        <span class="formula-step">When</span>
+        <span class="formula-arrow">→</span>
+        <span class="formula-step">Emotional hook</span>
+        <span class="formula-arrow">→</span>
+        <span class="formula-step">Easy contact</span>
+        <span class="formula-arrow">→</span>
+        <span class="formula-step">Outcome promise</span>
+        <span class="formula-arrow">→</span>
+        <span class="formula-step">Pain point echo</span>
+      </div>
+    </div>
+
+    <!-- COLD TRAFFIC FRAMEWORK -->
+    <div class="section-header">
+      <span class="section-icon">❄️</span>
+      <h3>Cold Traffic Offer Framework</h3>
+    </div>
+
+    <div class="callout-tip">
+      <span class="ci">⚡</span>
+      <span>Cold traffic doesn't know you, trust you, or follow you. This framework earns attention and action from complete strangers — using precision, not popularity.</span>
+    </div>
+
+    <div class="steps-list">
+
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Name the Enemy With Surgical Precision</h4>
+          <p>Not a general problem — the <em>specific wrong thing</em> they are doing right now. Named so precisely that the parent thinks: <strong>"How did she know that?"</strong></p>
+          <blockquote>That precision IS the credibility. No followers needed. No track record needed. Just name it more specifically than anyone else has.</blockquote>
+          <span class="step-tag">Precision = Trust</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Name the Exact Consequence</h4>
+          <p>Not "may struggle." The specific moment it breaks down.</p>
+          <blockquote>"They freeze at the paper. They copy whole paragraphs. They run out of time."</blockquote>
+          <p style="margin-top:8px;">Make it visual. Make it inevitable.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Position Your Method as the Opposite</h4>
+          <p>Not "I teach Chinese." The contrast does the selling.</p>
+          <blockquote>"I teach the technique that replaces the one they have been using since kindergarten."</blockquote>
+          <p style="margin-top:8px;">State clearly what will be taught in the workshop — the specific course content.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Surgical Student Profile</h4>
+          <p>Name the exact child. Grade. Specific struggle. Specific situation.</p>
+          <blockquote>"P6 students who need a breakthrough before PSLE."</blockquote>
+          <p style="margin-top:8px;">Cold parents self-select immediately. Wrong parents opt out. Right parents lean in.</p>
+          <span class="step-tag">Filter, don't broadcast</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Airtight Logistics</h4>
+          <p>Every question answered before they ask it.</p>
+          <ul style="margin-top:8px;padding-left:18px;">
+            <li style="font-size:14px;color:var(--text-muted);line-height:1.8;">Dates and times</li>
+            <li style="font-size:14px;color:var(--text-muted);line-height:1.8;">Format (online / in-person)</li>
+            <li style="font-size:14px;color:var(--text-muted);line-height:1.8;">Price signal</li>
+            <li style="font-size:14px;color:var(--text-muted);line-height:1.8;">What they get (notes, replay)</li>
+            <li style="font-size:14px;color:var(--text-muted);line-height:1.8;">How to sign up</li>
+          </ul>
+          <blockquote style="margin-top:10px;">Cold traffic has no patience for follow-up questions. Every unanswered question is a lost sale.</blockquote>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>One Action Only</h4>
+          <p>One number. One instruction. DM or WhatsApp — not both.</p>
+          <blockquote>The moment you give two options, you halve your conversions. Make the next step so obvious there is no decision to make.</blockquote>
+          <span class="step-tag">One CTA = more clicks</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>
