@@ -32,6 +32,13 @@
     .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
     .swift-tab.active .swift-letter { color: var(--gold); }
     .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group:hover .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
 
     /* MOBILE NAV */
     .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
@@ -121,7 +128,8 @@
       <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
       <a class="swift-dropdown-item active" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
       <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
-      <a class="swift-dropdown-item" href="other-resources.html"><span class="item-letter">✦</span>Other Resources</a>
+      <a class="swift-dropdown-item" href="other-resources.html"><span class="item-letter">✦</span>Parties for Kids</a>
+      <a class="swift-dropdown-item" href="holiday-workshops.html"><span class="item-letter">✦</span>Holiday Workshops</a>
     </div>
   </div>
 

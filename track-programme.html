@@ -40,6 +40,13 @@
     .swift-tab:not(.active) .swift-letter { color: rgba(255,255,255,0.3); }
     .swift-tab.active .swift-letter { color: var(--gold); }
     .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group:hover .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
     .swift-done { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--step-done); background: rgba(10,191,188,0.12); border-radius: 4px; padding: 2px 6px; }
 
     .tab-nav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
@@ -241,7 +248,7 @@
       <span class="swift-letter" style="color:rgba(255,255,255,0.5);">📅</span>
       <span class="swift-word">30-Day Plan</span>
     </a>
-    <a class="swift-tab" href="other-resources.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">✦</span><span class="swift-word">Other Resources</span></a>
+    <div class="swift-tab-group"><span class="swift-tab" style="cursor:default;"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">✦</span><span class="swift-word">Other Resources ▾</span></span><div class="swift-sub-menu"><a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a><a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a></div></div>
   </nav>
   <!-- MOBILE SWIFT DROPDOWN -->
   <div class="swift-nav-mobile" id="swiftMobileNav">
