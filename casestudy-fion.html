@@ -136,6 +136,24 @@
     .case-hero h2 em { font-style: italic; color: var(--gold-light); }
     .case-hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; }
 
+    /* YOUTUBE EMBED */
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0,45,106,0.18);
+    }
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+      border-radius: 12px;
+    }
+
     /* RESULT BANNER */
     .result-banner {
       background: linear-gradient(135deg, #0ABFBC 0%, #4A8FE7 100%);
@@ -454,6 +472,15 @@
       <div class="case-hero-tag">Real Student · Real Results</div>
       <h2>From 10 Students to <em>76 Students</em> —<br>Now Fully Booked</h2>
       <p>Built entirely through referrals. Zero paid ads. Fion grew from 10 students to 50+, then to 76 — and is now fully booked with a waitlist forming.</p>
+    </div>
+
+    <div class="video-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/uZ3n1Prli3c?si=lueDluOcPwomitT7"
+        title="Fion Case Study"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
     </div>
 
     <div class="result-banner">
