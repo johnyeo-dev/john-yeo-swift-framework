@@ -70,58 +70,50 @@
     .main { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
 
     /* CALCULATOR */
-    .calc-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 18px; overflow: hidden; margin-bottom: 40px; box-shadow: 0 4px 20px rgba(0,45,106,0.07); }
+    .calc-wrap { background: var(--white); border: 1.5px solid var(--border); border-radius: 18px; overflow: hidden; margin-bottom: 28px; box-shadow: 0 4px 20px rgba(0,45,106,0.07); }
     .calc-header { background: var(--navy); padding: 22px 28px; }
     .calc-header h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: white; margin-bottom: 4px; }
     .calc-header p { font-size: 13px; color: rgba(255,255,255,0.55); }
 
-    /* Format + Hours bar */
-    .calc-top-bar { padding: 16px 28px; background: var(--cream); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-    .calc-top-label { font-size: 12px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-    .format-pills { display: flex; gap: 6px; flex-wrap: wrap; }
-    .format-pill { padding: 6px 13px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; background: white; transition: all 0.15s; white-space: nowrap; }
-    .format-pill:hover { border-color: var(--gold); color: var(--navy); }
-    .format-pill.active { border-color: var(--gold); color: var(--gold); background: rgba(10,191,188,0.08); }
-    .hours-field { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-    .hours-field label { font-size: 12px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-    .hours-input { width: 72px; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; font-weight: 700; color: var(--navy); text-align: center; background: white; }
-    .hours-input:focus { outline: none; border-color: var(--gold); }
-    .hours-unit { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    /* Desired revenue */
+    .calc-desired-section { padding: 20px 28px; background: linear-gradient(135deg, rgba(10,191,188,0.06) 0%, rgba(74,143,231,0.06) 100%); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .calc-desired-label { font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .calc-desired-label span { display: block; font-size: 11px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+    .calc-desired-input-wrap { display: flex; align-items: center; gap: 4px; }
+    .calc-desired-dollar { font-size: 20px; font-weight: 700; color: var(--navy); }
+    .calc-desired-input { width: 140px; padding: 10px 12px; border: 2px solid var(--gold); border-radius: 10px; font-size: 22px; font-weight: 700; color: var(--navy); background: white; font-family: 'DM Serif Display', serif; }
+    .calc-desired-input:focus { outline: none; border-color: var(--gold-light); }
+    .calc-desired-input::placeholder { color: var(--border); font-size: 18px; }
 
-    /* Calc tabs */
-    .calc-tabs { display: flex; border-bottom: 1px solid var(--border); }
-    .calc-tab-btn { flex: 1; padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
-    .calc-tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+    /* Calc sections */
+    .calc-section { padding: 20px 28px; border-bottom: 1px solid var(--border); }
+    .calc-section:last-child { border-bottom: none; }
+    .calc-section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .calc-section-num { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: 'DM Serif Display', serif; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .calc-section-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .calc-section-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .calc-section-subtotal { margin-left: auto; text-align: right; flex-shrink: 0; }
+    .calc-section-subtotal-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); display: block; }
+    .calc-section-subtotal-val { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
 
-    /* Calc panels */
-    .calc-panel { padding: 24px 28px; display: none; }
-    .calc-panel.active { display: block; }
-    .calc-panel-hint { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; padding: 10px 14px; background: var(--cream); border-radius: 8px; line-height: 1.5; }
+    /* Format row */
+    .calc-format-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+    .calc-field { display: flex; flex-direction: column; gap: 5px; }
+    .calc-field-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+    .calc-num-input { width: 90px; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 20px; font-weight: 700; color: var(--navy); text-align: center; background: white; font-family: 'DM Serif Display', serif; }
+    .calc-num-input:focus { outline: none; border-color: var(--gold); }
+    .calc-field-sep { font-size: 20px; font-weight: 300; color: var(--text-muted); padding-bottom: 8px; }
+    .calc-total-hrs-display { padding: 10px 16px; background: var(--cream); border-radius: 10px; border: 1.5px solid var(--border); }
+    .calc-total-hrs-val { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .calc-total-hrs-unit { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
 
-    /* Input rows */
-    .calc-row { display: grid; grid-template-columns: 1fr 90px auto 90px auto; align-items: center; gap: 10px; padding: 16px 18px; background: var(--cream); border-radius: 12px; margin-bottom: 10px; }
-    .calc-row-label { }
-    .calc-row-label strong { font-size: 14px; font-weight: 600; color: var(--navy); display: block; }
-    .calc-row-label span { font-size: 11px; color: var(--text-muted); }
-    .calc-qty { width: 90px; padding: 9px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; font-weight: 700; color: var(--navy); text-align: center; background: white; }
-    .calc-qty:focus { outline: none; border-color: var(--gold); }
-    .calc-rate { width: 90px; padding: 9px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; font-weight: 700; color: var(--navy); text-align: center; background: white; }
-    .calc-rate:focus { outline: none; border-color: var(--gold); }
-    .calc-rate-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
-    .calc-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
-    .badge-free { background: #dcfce7; color: #166534; }
-    .badge-half { background: #fef9c3; color: #854d0e; }
-    .badge-full { background: rgba(10,191,188,0.1); color: #007876; }
-
-    /* Free row layout (no rate input) */
-    .calc-row-free { display: grid; grid-template-columns: 1fr 90px auto; align-items: center; gap: 10px; padding: 16px 18px; background: var(--cream); border-radius: 12px; margin-bottom: 10px; }
-
-    .calc-row-rev { text-align: right; font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); white-space: nowrap; }
-    .calc-row-rev.muted { color: var(--text-muted); font-size: 16px; }
-
-    .calc-subtotal { margin-top: 14px; padding: 14px 18px; background: rgba(10,191,188,0.07); border: 1.5px solid rgba(10,191,188,0.25); border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .calc-subtotal-label { font-size: 13px; font-weight: 600; color: var(--navy); }
-    .calc-subtotal-val { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--navy); }
+    /* Input row (students) */
+    .calc-input-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+    .calc-input-prefix { display: flex; align-items: center; gap: 2px; }
+    .prefix-dollar { font-size: 18px; font-weight: 700; color: var(--text-muted); padding-bottom: 2px; }
+    .calc-num-input.with-prefix { width: 80px; }
+    .prefix-unit { font-size: 12px; color: var(--text-muted); padding-bottom: 8px; white-space: nowrap; }
+    .calc-hrs-ref { padding: 10px 14px; background: var(--cream); border-radius: 10px; border: 1.5px solid var(--border); font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--text-muted); white-space: nowrap; }
 
     /* Revenue summary */
     .rev-summary { background: var(--navy); border-radius: 18px; padding: 28px 32px; margin-bottom: 40px; }
@@ -132,9 +124,12 @@
     .rev-card-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
     .rev-card-val { font-family: 'DM Serif Display', serif; font-size: 30px; color: white; line-height: 1; }
     .rev-card.highlight .rev-card-val { color: var(--gold); }
-    .rev-diff-bar { padding: 14px 18px; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .rev-goal-bar { padding: 16px 18px; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; flex-direction: column; gap: 10px; }
+    .rev-goal-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .rev-goal-label { font-size: 13px; color: rgba(255,255,255,0.55); }
+    .rev-goal-val { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.7); }
     .rev-diff-label { font-size: 13px; color: rgba(255,255,255,0.55); }
-    .rev-diff-val { font-size: 15px; font-weight: 700; color: var(--gold-light); }
+    .rev-diff-val { font-size: 16px; font-weight: 700; }
 
     /* Sections below */
     .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; margin-top: 8px; }
@@ -178,14 +173,12 @@
       .header { padding: 20px 16px; }
       .main { padding: 24px 16px 60px; }
       .calc-header { padding: 18px 20px; }
-      .calc-top-bar { padding: 14px 20px; gap: 12px; }
-      .calc-panel { padding: 16px 20px; }
-      .calc-row { grid-template-columns: 1fr; gap: 8px; }
-      .calc-row-free { grid-template-columns: 1fr auto auto; }
+      .calc-section { padding: 16px 20px; }
+      .calc-desired-section { padding: 16px 20px; }
+      .calc-format-row { gap: 8px; }
+      .calc-input-row { gap: 8px; }
       .rev-grid { grid-template-columns: 1fr; }
-      .info-grid { grid-template-columns: 1fr; }
       .upsell-grid { grid-template-columns: 1fr; }
-      .hours-field { margin-left: 0; }
     }
   </style>
 </head>
@@ -283,94 +276,118 @@
     <div class="calc-wrap">
       <div class="calc-header">
         <h3>🧮 Revenue Calculator</h3>
-        <p>Set your format and student mix — see your total revenue update live.</p>
+        <p>Fill in each section — your revenue summary updates live as you type.</p>
       </div>
 
-      <!-- Format + Hours bar -->
-      <div class="calc-top-bar">
-        <span class="calc-top-label">Format</span>
-        <div class="format-pills">
-          <button class="format-pill" onclick="setFormat(this, 5)">2-day · 5hrs</button>
-          <button class="format-pill active" onclick="setFormat(this, 7.5)">3-day · 7.5hrs</button>
-          <button class="format-pill" onclick="setFormat(this, 10)">4-day · 10hrs</button>
-          <button class="format-pill" onclick="setFormat(this, 10)">5-day · 10hrs</button>
+      <!-- Desired Revenue -->
+      <div class="calc-desired-section">
+        <div class="calc-desired-label">
+          🎯 How much do you want to make?
+          <span>Set your revenue goal — see how close you are at the bottom</span>
         </div>
-        <div class="hours-field">
-          <label for="totalHours">Total Hours</label>
-          <input class="hours-input" type="number" id="totalHours" value="7.5" min="0.5" step="0.5" oninput="calcRevenue()">
-          <span class="hours-unit">hrs</span>
+        <div class="calc-desired-input-wrap">
+          <span class="calc-desired-dollar">$</span>
+          <input class="calc-desired-input" type="number" id="desiredRev" min="0" placeholder="2000" oninput="calcRevenue()">
         </div>
       </div>
 
-      <!-- Tab buttons -->
-      <div class="calc-tabs">
-        <button class="calc-tab-btn active" onclick="switchCalcTab('existing', this)">My Students</button>
-        <button class="calc-tab-btn" onclick="switchCalcTab('new', this)">New Students</button>
-      </div>
-
-      <!-- Panel: My Students -->
-      <div class="calc-panel active" id="panel-existing">
-        <p class="calc-panel-hint">Annual package students join <strong>free</strong> as a bonus. Term students join at your chosen rate — typically half of what you'd charge a new student.</p>
-
-        <!-- Annual students -->
-        <div class="calc-row-free">
-          <div class="calc-row-label">
-            <strong>Annual package students</strong>
-            <span>Included as bonus — no charge</span>
+      <!-- Section 1: Format -->
+      <div class="calc-section">
+        <div class="calc-section-head">
+          <div class="calc-section-num">1</div>
+          <div>
+            <div class="calc-section-title">Workshop Format</div>
+            <div class="calc-section-sub">Days × hours per day = total hours</div>
           </div>
-          <input class="calc-qty" type="number" id="annualQty" value="0" min="0" oninput="calcRevenue()" placeholder="0">
-          <span class="calc-badge badge-free">FREE</span>
         </div>
-
-        <!-- Term students -->
-        <div class="calc-row">
-          <div class="calc-row-label">
-            <strong>Term students</strong>
-            <span>Your rate per hour</span>
+        <div class="calc-format-row">
+          <div class="calc-field">
+            <div class="calc-field-label">Number of Days</div>
+            <input class="calc-num-input" type="number" id="numDays" value="3" min="1" max="14" oninput="calcRevenue()">
           </div>
-          <input class="calc-qty" type="number" id="termQty" value="0" min="0" oninput="calcRevenue()" placeholder="0">
-          <span class="calc-rate-label">@ $</span>
-          <input class="calc-rate" type="number" id="termRate" value="30" min="0" oninput="calcRevenue()">
-          <span class="calc-rate-label">/hr</span>
-        </div>
-
-        <div class="calc-subtotal">
-          <span class="calc-subtotal-label">My Students Subtotal</span>
-          <span class="calc-subtotal-val" id="subtotalExisting">$0</span>
+          <div class="calc-field-sep">×</div>
+          <div class="calc-field">
+            <div class="calc-field-label">Hours per Day</div>
+            <input class="calc-num-input" type="number" id="hrsDay" value="2.5" min="0.5" step="0.5" oninput="calcRevenue()">
+          </div>
+          <div class="calc-field-sep">=</div>
+          <div class="calc-field">
+            <div class="calc-field-label">Total Hours</div>
+            <div class="calc-total-hrs-display">
+              <div class="calc-total-hrs-val" id="totalHrsDisplay">7.5</div>
+              <div class="calc-total-hrs-unit">hrs total</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Panel: New Students -->
-      <div class="calc-panel" id="panel-new">
-        <p class="calc-panel-hint">Set different rates for online (Zoom) and on-site students. On-site typically commands a premium.</p>
-
-        <!-- Online -->
-        <div class="calc-row">
-          <div class="calc-row-label">
-            <strong>Online students</strong>
-            <span>Zoom / remote</span>
+      <!-- Section 2: My Students -->
+      <div class="calc-section">
+        <div class="calc-section-head">
+          <div class="calc-section-num">2</div>
+          <div>
+            <div class="calc-section-title">My Students</div>
+            <div class="calc-section-sub">Your existing students joining this workshop</div>
           </div>
-          <input class="calc-qty" type="number" id="onlineQty" value="0" min="0" oninput="calcRevenue()" placeholder="0">
-          <span class="calc-rate-label">@ $</span>
-          <input class="calc-rate" type="number" id="onlineRate" value="35" min="0" oninput="calcRevenue()">
-          <span class="calc-rate-label">/hr</span>
-        </div>
-
-        <!-- On-site -->
-        <div class="calc-row">
-          <div class="calc-row-label">
-            <strong>On-site students</strong>
-            <span>Physical / in-person</span>
+          <div class="calc-section-subtotal">
+            <span class="calc-section-subtotal-label">Subtotal</span>
+            <span class="calc-section-subtotal-val" id="subtotalExisting">$0</span>
           </div>
-          <input class="calc-qty" type="number" id="onsiteQty" value="0" min="0" oninput="calcRevenue()" placeholder="0">
-          <span class="calc-rate-label">@ $</span>
-          <input class="calc-rate" type="number" id="onsiteRate" value="45" min="0" oninput="calcRevenue()">
-          <span class="calc-rate-label">/hr</span>
         </div>
+        <div class="calc-input-row">
+          <div class="calc-field">
+            <div class="calc-field-label">Rate per Hour</div>
+            <div class="calc-input-prefix">
+              <span class="prefix-dollar">$</span>
+              <input class="calc-num-input with-prefix" type="number" id="myRate" value="30" min="0" oninput="calcRevenue()">
+              <span class="prefix-unit">/hr</span>
+            </div>
+          </div>
+          <div class="calc-field-sep">×</div>
+          <div class="calc-field">
+            <div class="calc-field-label">No. of Students</div>
+            <input class="calc-num-input" type="number" id="myQty" value="0" min="0" placeholder="0" oninput="calcRevenue()">
+          </div>
+          <div class="calc-field-sep">×</div>
+          <div class="calc-field">
+            <div class="calc-field-label">Total Hours</div>
+            <div class="calc-hrs-ref" id="myHrsRef">7.5 hrs</div>
+          </div>
+        </div>
+      </div>
 
-        <div class="calc-subtotal">
-          <span class="calc-subtotal-label">New Students Subtotal</span>
-          <span class="calc-subtotal-val" id="subtotalNew">$0</span>
+      <!-- Section 3: New Students -->
+      <div class="calc-section">
+        <div class="calc-section-head">
+          <div class="calc-section-num">3</div>
+          <div>
+            <div class="calc-section-title">New Students</div>
+            <div class="calc-section-sub">Public / new students joining this workshop</div>
+          </div>
+          <div class="calc-section-subtotal">
+            <span class="calc-section-subtotal-label">Subtotal</span>
+            <span class="calc-section-subtotal-val" id="subtotalNew">$0</span>
+          </div>
+        </div>
+        <div class="calc-input-row">
+          <div class="calc-field">
+            <div class="calc-field-label">Rate per Hour</div>
+            <div class="calc-input-prefix">
+              <span class="prefix-dollar">$</span>
+              <input class="calc-num-input with-prefix" type="number" id="newRate" value="45" min="0" oninput="calcRevenue()">
+              <span class="prefix-unit">/hr</span>
+            </div>
+          </div>
+          <div class="calc-field-sep">×</div>
+          <div class="calc-field">
+            <div class="calc-field-label">No. of Students</div>
+            <input class="calc-num-input" type="number" id="newQty" value="0" min="0" placeholder="0" oninput="calcRevenue()">
+          </div>
+          <div class="calc-field-sep">×</div>
+          <div class="calc-field">
+            <div class="calc-field-label">Total Hours</div>
+            <div class="calc-hrs-ref" id="newHrsRef">7.5 hrs</div>
+          </div>
         </div>
       </div>
     </div>
@@ -392,50 +409,16 @@
           <div class="rev-card-val" id="revTotal">$0</div>
         </div>
       </div>
-      <div class="rev-diff-bar">
-        <span class="rev-diff-label">New vs existing student contribution</span>
-        <span class="rev-diff-val" id="revDiff">Add students above to see breakdown</span>
-      </div>
-    </div>
-
-    <!-- FORMATS & PRICING REFERENCE -->
-    <div class="section-header">
-      <span class="section-icon">📋</span>
-      <h3>Pricing Reference</h3>
-    </div>
-
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="info-card-head"><h4>Primary · Online / Zoom</h4></div>
-        <div class="info-card-body">
-          <table class="pricing-table">
-            <thead><tr><th>Group Size</th><th>Rate / hr</th><th>3-Day (7.5hrs)</th></tr></thead>
-            <tbody>
-              <tr><td>3–5 pax</td><td class="amt">$50–$60</td><td class="amt">$375–$450</td></tr>
-              <tr><td>6–8 pax</td><td class="amt">$35–$45</td><td class="amt">$263–$338</td></tr>
-              <tr><td>9–12 pax</td><td class="amt">$25–$35</td><td class="amt">$188–$263</td></tr>
-            </tbody>
-          </table>
+      <div class="rev-goal-bar">
+        <div class="rev-goal-row">
+          <span class="rev-goal-label">Desired Revenue</span>
+          <span class="rev-goal-val" id="revDesiredDisplay">— (set above)</span>
+        </div>
+        <div class="rev-goal-row" id="revDiffRow" style="display:none;">
+          <span class="rev-diff-label">Difference vs Target</span>
+          <span class="rev-diff-val" id="revDiff"></span>
         </div>
       </div>
-      <div class="info-card">
-        <div class="info-card-head"><h4>Secondary · Online / Zoom</h4></div>
-        <div class="info-card-body">
-          <table class="pricing-table">
-            <thead><tr><th>Group Size</th><th>Rate / hr</th><th>3-Day (7.5hrs)</th></tr></thead>
-            <tbody>
-              <tr><td>3–5 pax</td><td class="amt">$55–$65</td><td class="amt">$413–$488</td></tr>
-              <tr><td>6–8 pax</td><td class="amt">$40–$50</td><td class="amt">$300–$375</td></tr>
-              <tr><td>9–12 pax</td><td class="amt">$30–$40</td><td class="amt">$225–$300</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div class="callout-tip" style="margin-bottom:40px;">
-      <span class="ci">💡</span>
-      <span><strong>Recommendation:</strong> Start with 3-day. Bundle all days — don't let parents pick individual days. Less admin, more revenue.</span>
     </div>
 
     <!-- UPSELLS -->
@@ -554,62 +537,63 @@
   </main>
 
   <script>
-    function setFormat(el, hours) {
-      document.querySelectorAll('.format-pill').forEach(p => p.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('totalHours').value = hours;
-      calcRevenue();
-    }
-
-    function switchCalcTab(tab, btn) {
-      document.querySelectorAll('.calc-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('panel-' + tab).classList.add('active');
-    }
-
     function fmt(n) {
       return '$' + Math.round(n).toLocaleString();
     }
 
     function calcRevenue() {
-      var hours = parseFloat(document.getElementById('totalHours').value) || 0;
+      var days    = parseFloat(document.getElementById('numDays').value)  || 0;
+      var hrsDay  = parseFloat(document.getElementById('hrsDay').value)   || 0;
+      var hours   = days * hrsDay;
 
-      var annualQty = parseInt(document.getElementById('annualQty').value) || 0;
-      var termQty   = parseInt(document.getElementById('termQty').value)   || 0;
-      var termRate  = parseFloat(document.getElementById('termRate').value) || 0;
-      var revExisting = termQty * termRate * hours;
+      // Update total hours display
+      var hrsStr = (hours % 1 === 0 ? hours.toFixed(0) : hours.toFixed(1)) + ' hrs';
+      document.getElementById('totalHrsDisplay').textContent = hours % 1 === 0 ? hours.toFixed(0) : hours.toFixed(1);
+      document.getElementById('myHrsRef').textContent  = hrsStr;
+      document.getElementById('newHrsRef').textContent = hrsStr;
 
-      var onlineQty  = parseInt(document.getElementById('onlineQty').value)  || 0;
-      var onlineRate = parseFloat(document.getElementById('onlineRate').value) || 0;
-      var onsiteQty  = parseInt(document.getElementById('onsiteQty').value)   || 0;
-      var onsiteRate = parseFloat(document.getElementById('onsiteRate').value) || 0;
-      var revNew = (onlineQty * onlineRate + onsiteQty * onsiteRate) * hours;
+      var myRate  = parseFloat(document.getElementById('myRate').value)  || 0;
+      var myQty   = parseInt(document.getElementById('myQty').value)     || 0;
+      var revMy   = myRate * myQty * hours;
 
-      var revTotal = revExisting + revNew;
+      var newRate = parseFloat(document.getElementById('newRate').value) || 0;
+      var newQty  = parseInt(document.getElementById('newQty').value)    || 0;
+      var revNew  = newRate * newQty * hours;
 
-      document.getElementById('subtotalExisting').textContent = fmt(revExisting);
+      var revTotal = revMy + revNew;
+
+      document.getElementById('subtotalExisting').textContent = fmt(revMy);
       document.getElementById('subtotalNew').textContent      = fmt(revNew);
-      document.getElementById('revExisting').textContent      = fmt(revExisting);
+      document.getElementById('revExisting').textContent      = fmt(revMy);
       document.getElementById('revNew').textContent           = fmt(revNew);
       document.getElementById('revTotal').textContent         = fmt(revTotal);
 
-      var diffEl = document.getElementById('revDiff');
-      var total  = termQty + onlineQty + onsiteQty;
-      if (total === 0) {
-        diffEl.textContent = 'Add students above to see breakdown';
-        diffEl.style.color = 'rgba(255,255,255,0.4)';
-      } else if (revNew > revExisting) {
-        var extra = revNew - revExisting;
-        diffEl.textContent = 'New students bring ' + fmt(extra) + ' more than existing';
-        diffEl.style.color = '#0ABFBC';
-      } else if (revExisting > revNew) {
-        var extra = revExisting - revNew;
-        diffEl.textContent = 'Existing students bring ' + fmt(extra) + ' more than new';
-        diffEl.style.color = '#4A8FE7';
+      // Desired revenue vs actual
+      var desiredRaw = document.getElementById('desiredRev').value;
+      var desired    = parseFloat(desiredRaw) || 0;
+      var desiredDisplay = document.getElementById('revDesiredDisplay');
+      var diffRow    = document.getElementById('revDiffRow');
+      var diffEl     = document.getElementById('revDiff');
+
+      if (desiredRaw === '' || desired === 0) {
+        desiredDisplay.textContent = '— (set above)';
+        desiredDisplay.style.color = 'rgba(255,255,255,0.4)';
+        diffRow.style.display = 'none';
       } else {
-        diffEl.textContent = 'Even split between existing and new students';
-        diffEl.style.color = 'rgba(255,255,255,0.6)';
+        desiredDisplay.textContent = fmt(desired);
+        desiredDisplay.style.color = 'rgba(255,255,255,0.85)';
+        diffRow.style.display = 'flex';
+        var diff = revTotal - desired;
+        if (diff > 0) {
+          diffEl.textContent = '+' + fmt(diff) + ' above target 🎉';
+          diffEl.style.color = '#0ABFBC';
+        } else if (diff < 0) {
+          diffEl.textContent = fmt(Math.abs(diff)) + ' below target';
+          diffEl.style.color = '#F59E0B';
+        } else {
+          diffEl.textContent = 'Exactly on target 🎯';
+          diffEl.style.color = '#0ABFBC';
+        }
       }
     }
 
