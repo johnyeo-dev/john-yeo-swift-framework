@@ -739,15 +739,19 @@ POST-WORKSHOP — Non-converter follow-up:
 
   <!-- USER MANAGER MODAL -->
   <div id="userManagerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; align-items:center; justify-content:center;">
-    <div style="background:white; border-radius:16px; width:min(480px,92vw); max-height:80vh; overflow:hidden; display:flex; flex-direction:column;">
+    <div style="background:white; border-radius:16px; width:min(500px,94vw); max-height:85vh; overflow:hidden; display:flex; flex-direction:column;">
       <div style="background:#002D6A; padding:20px 24px; display:flex; align-items:center; justify-content:space-between;">
         <h3 style="font-family:'DM Serif Display',serif; color:white; font-size:20px;">Manage Users</h3>
         <button onclick="document.getElementById('userManagerModal').style.display='none'" style="background:rgba(255,255,255,0.1);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;">&#215;</button>
       </div>
       <div style="padding:24px; overflow-y:auto; flex:1;">
-        <div id="userList" style="margin-bottom:24px;"></div>
+        <!-- Pending requests -->
+        <div id="pendingList" style="margin-bottom:20px;"></div>
+        <!-- Approved users -->
+        <div id="userList" style="margin-bottom:20px;"></div>
+        <!-- Add user manually -->
         <div style="border-top:1px solid #E8EDF5; padding-top:20px;">
-          <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:12px;">Add New User</p>
+          <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:12px;">Add User Manually</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <input id="newUsername" placeholder="Username" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
             <input id="newPassword" placeholder="Password" type="text" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
@@ -757,6 +761,7 @@ POST-WORKSHOP — Non-converter follow-up:
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <script>
@@ -770,6 +775,7 @@ POST-WORKSHOP — Non-converter follow-up:
     });
     function openUserManager() {
       document.getElementById('userManagerModal').style.display = 'flex';
+      renderPending();
       renderUserList();
       document.getElementById('userMenu').classList.remove('open');
     }
@@ -786,22 +792,65 @@ POST-WORKSHOP — Non-converter follow-up:
     })();
 
     /* USER MANAGER JS */
-    function getUsers() { try { return JSON.parse(localStorage.getItem('pac-swift-users') || '{}'); } catch(e) { return {}; } }
+    function getUsers()   { try { return JSON.parse(localStorage.getItem('pac-swift-users')   || '{}'); } catch(e) { return {}; } }
     function saveUsers(u) { localStorage.setItem('pac-swift-users', JSON.stringify(u)); }
+    function getPending()   { try { return JSON.parse(localStorage.getItem('pac-swift-pending')   || '{}'); } catch(e) { return {}; } }
+    function savePending(p) { localStorage.setItem('pac-swift-pending', JSON.stringify(p)); }
+
+    function renderPending() {
+      var pending = getPending();
+      var keys = Object.keys(pending);
+      var el = document.getElementById('pendingList');
+      if (!el) return;
+      if (!keys.length) { el.innerHTML = ''; return; }
+      el.innerHTML = '<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F59E0B;margin-bottom:10px;">⏳ Pending Requests (' + keys.length + ')</p>' +
+        keys.map(function(k) {
+          var d = pending[k].requestedAt ? new Date(pending[k].requestedAt).toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}) : '';
+          return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;margin-bottom:8px;gap:8px;">' +
+            '<div><div style="font-size:13px;font-weight:700;color:#92400E;">' + k + '</div>' +
+            (d ? '<div style="font-size:11px;color:#B45309;margin-top:2px;">Requested ' + d + '</div>' : '') + '</div>' +
+            '<div style="display:flex;gap:6px;flex-shrink:0;">' +
+            '<button onclick="approvePending('' + k + '')" style="background:#16a34a;color:white;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Approve</button>' +
+            '<button onclick="rejectPending('' + k + '')" style="background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Reject</button>' +
+            '</div></div>';
+        }).join('');
+    }
+
+    function approvePending(u) {
+      var pending = getPending();
+      var users   = getUsers();
+      if (!pending[u]) return;
+      users[u] = { password: pending[u].password, role: 'user' };
+      saveUsers(users);
+      delete pending[u];
+      savePending(pending);
+      renderPending();
+      renderUserList();
+    }
+
+    function rejectPending(u) {
+      if (!confirm('Reject request from "' + u + '"?')) return;
+      var pending = getPending();
+      delete pending[u];
+      savePending(pending);
+      renderPending();
+    }
+
     function renderUserList() {
       var users = getUsers();
       var keys = Object.keys(users);
       var el = document.getElementById('userList');
       if (!el) return;
-      if (!keys.length) { el.innerHTML = '<p style="font-size:13px;color:#6B7A96;">No users yet. Add one below.</p>'; return; }
-      el.innerHTML = '<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:10px;">Current Users</p>' +
+      if (!keys.length) { el.innerHTML = '<p style="font-size:13px;color:#6B7A96;">No approved users yet.</p>'; return; }
+      el.innerHTML = '<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:10px;">✅ Approved Users</p>' +
         keys.map(function(k) {
           return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#F4F7FB;border-radius:8px;margin-bottom:6px;">' +
             '<span style="font-size:13px;font-weight:600;color:#0A0F1C;">' + k + '</span>' +
-            '<button onclick="removeUser(\'' + k + '\')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button>' +
+            '<button onclick="removeUser('' + k + '')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button>' +
             '</div>';
         }).join('');
     }
+
     function addUser() {
       var u = document.getElementById('newUsername').value.trim();
       var p = document.getElementById('newPassword').value.trim();
@@ -814,6 +863,7 @@ POST-WORKSHOP — Non-converter follow-up:
       setTimeout(function(){ msg.style.display='none'; }, 3000);
       renderUserList();
     }
+
     function removeUser(u) {
       if (!confirm('Remove user "' + u + '"?')) return;
       var users = getUsers(); delete users[u]; saveUsers(users); renderUserList();

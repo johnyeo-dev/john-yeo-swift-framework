@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Access | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --white: #FFFFFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--navy-light); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .wrap { width: 100%; max-width: 420px; }
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo .badge { display: inline-flex; flex-direction: column; align-items: center; background: rgba(10,191,188,0.12); border: 1px solid var(--gold); border-radius: 12px; padding: 14px 24px; margin-bottom: 16px; }
+    .logo .badge .s { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; }
+    .logo .badge .lbl { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 4px; font-weight: 600; }
+    .logo h1 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); line-height: 1.2; }
+    .logo h1 em { font-style: italic; color: var(--gold-light); }
+    .card { background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; }
+    .card h2 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); margin-bottom: 6px; }
+    .card .sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 28px; line-height: 1.5; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+    .form-group input { width: 100%; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--white); outline: none; transition: border-color 0.2s; }
+    .form-group input::placeholder { color: rgba(255,255,255,0.2); }
+    .form-group input:focus { border-color: var(--gold); background: rgba(10,191,188,0.05); }
+    .msg { border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .msg.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+    .msg.success { background: rgba(10,191,188,0.1); border: 1px solid rgba(10,191,188,0.3); color: #5eead4; }
+    .btn { width: 100%; background: var(--gold); color: var(--navy); border: none; border-radius: 10px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+    .btn:hover { background: #08a8a5; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(10,191,188,0.35); }
+    .footer { margin-top: 20px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); }
+    .footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    .footer a:hover { color: var(--gold); }
+    .success-state { display: none; text-align: center; padding: 8px 0; }
+    .success-icon { font-size: 48px; margin-bottom: 16px; }
+    .success-state h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); margin-bottom: 10px; }
+    .success-state p { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.6; margin-bottom: 20px; }
+    .btn-back { display: inline-block; color: var(--gold); font-size: 14px; font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">
+      <div class="badge">
+        <div class="s">SWIFT</div>
+        <div class="lbl">PAC Framework</div>
+      </div>
+      <h1>SWIFT Framework — <em>Pace of Love</em></h1>
+    </div>
+
+    <div class="card">
+      <!-- FORM STATE -->
+      <div id="formState">
+        <h2>Request Access</h2>
+        <p class="sub">Choose your username and password. John will review and approve your account.</p>
+
+        <div class="msg error" id="errMsg"></div>
+
+        <div class="form-group">
+          <label>Your Name / Username</label>
+          <input type="text" id="signupUser" placeholder="e.g. sherina" autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label>Choose a Password</label>
+          <input type="password" id="signupPass" placeholder="Choose a password" autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" id="signupPass2" placeholder="Repeat your password" autocomplete="new-password" />
+        </div>
+
+        <button class="btn" onclick="submitRequest()">Send Request</button>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">✅</div>
+        <h3>Request Sent!</h3>
+        <p>Your request has been submitted. John will review and approve your account. Once approved, you can log in with the username and password you chose.</p>
+        <a class="btn-back" href="login.html">← Back to Login</a>
+      </div>
+
+      <p class="footer" id="formFooter"><a href="login.html">← Back to login</a></p>
+    </div>
+  </div>
+
+  <script>
+    function getPending() { try { return JSON.parse(localStorage.getItem('pac-swift-pending') || '{}'); } catch(e) { return {}; } }
+    function getUsers()   { try { return JSON.parse(localStorage.getItem('pac-swift-users')   || '{}'); } catch(e) { return {}; } }
+
+    function submitRequest() {
+      var u  = document.getElementById('signupUser').value.trim();
+      var p  = document.getElementById('signupPass').value;
+      var p2 = document.getElementById('signupPass2').value;
+      var err = document.getElementById('errMsg');
+      err.style.display = 'none';
+
+      if (!u || !p || !p2) { showErr('Please fill in all fields.'); return; }
+      if (u === 'johnyeo')  { showErr('That username is not available.'); return; }
+      if (p !== p2)         { showErr('Passwords do not match.'); return; }
+      if (p.length < 4)     { showErr('Password must be at least 4 characters.'); return; }
+
+      var users   = getUsers();
+      var pending = getPending();
+
+      if (users[u])   { showErr('Username already exists. Try a different one.'); return; }
+      if (pending[u]) { showErr('A request for that username is already pending.'); return; }
+
+      pending[u] = { password: p, requestedAt: new Date().toISOString() };
+      localStorage.setItem('pac-swift-pending', JSON.stringify(pending));
+
+      document.getElementById('formState').style.display = 'none';
+      document.getElementById('formFooter').style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+    }
+
+    function showErr(msg) {
+      var el = document.getElementById('errMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') submitRequest();
+    });
+  </script>
+</body>
+</html>
