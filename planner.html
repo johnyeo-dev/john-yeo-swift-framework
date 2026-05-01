@@ -36,9 +36,9 @@
     .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
 
     /* SWIFT NAV */
-    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .swift-nav::-webkit-scrollbar { display: none; }
-    .swift-tab { padding: 12px 16px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
     .swift-tab:hover { color: rgba(255,255,255,0.75); }
     .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
     .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
@@ -64,6 +64,7 @@
     .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
     .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
     .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
     @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
 
     /* MAIN */
@@ -147,6 +148,7 @@
     .empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 8px; }
     .empty-state p { font-size: 14px; line-height: 1.6; }
 
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
     @media (max-width: 768px) {
       .header { padding: 20px 16px; }
       .main { padding: 20px 12px 60px; }

@@ -94,7 +94,7 @@
     /* SWIFT TOP NAV */
     .swift-nav {
       background: var(--navy-light);
-      padding: 0 40px;
+      padding: 0 16px;
       display: flex;
       gap: 0;
       overflow-x: auto;
@@ -571,6 +571,7 @@
     .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
     .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
     .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
     @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
   
     /* USER PILL */
