@@ -584,7 +584,7 @@
       const name = document.getElementById('nameInput').value.trim();
       if (name.length < 2) return;
       currentUser = name;
-      localStorage.setItem('pac-track-current-user', name);
+      localStorage.setItem('pac-swift-user', name);
       loadUserProgress(name);
       document.getElementById('nameModal').classList.add('hidden');
       updateUserChip(name);
@@ -608,7 +608,7 @@
 
     function switchUser() {
       if (!confirm('Switch to a different user? Your progress is saved.')) return;
-      localStorage.removeItem('pac-track-current-user');
+      localStorage.removeItem('pac-swift-user');
       currentUser = '';
       checkedSteps = new Set();
       document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
@@ -618,7 +618,7 @@
       document.getElementById('nameModal').classList.remove('hidden');
     }
 
-    const returning = localStorage.getItem('pac-track-current-user');
+    const returning = localStorage.getItem('pac-swift-user');
     if (returning) {
       currentUser = returning;
       loadUserProgress(returning);

@@ -475,7 +475,7 @@ Just wanted to check in — was there anything that stood out for you, or any qu
       const name = document.getElementById('nameInput').value.trim();
       if (name.length < 2) return;
       currentUser = name;
-      localStorage.setItem('pac-inv-current-user', name);
+      localStorage.setItem('pac-swift-user', name);
       loadUserProgress(name);
       document.getElementById('nameModal').classList.add('hidden');
       updateUserChip(name);
@@ -499,7 +499,7 @@ Just wanted to check in — was there anything that stood out for you, or any qu
 
     function switchUser() {
       if (!confirm('Switch to a different user? Your progress is saved.')) return;
-      localStorage.removeItem('pac-inv-current-user');
+      localStorage.removeItem('pac-swift-user');
       currentUser = '';
       checkedSteps = new Set();
       document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
@@ -509,7 +509,7 @@ Just wanted to check in — was there anything that stood out for you, or any qu
       document.getElementById('nameModal').classList.remove('hidden');
     }
 
-    const returning = localStorage.getItem('pac-inv-current-user');
+    const returning = localStorage.getItem('pac-swift-user');
     if (returning) {
       currentUser = returning;
       loadUserProgress(returning);

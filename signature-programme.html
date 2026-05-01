@@ -1191,7 +1191,7 @@ Also answer these questions based on my testimonials:
       const name = document.getElementById('nameInput').value.trim();
       if (name.length < 2) return;
       currentUser = name;
-      localStorage.setItem('pac-sig-current-user', name);
+      localStorage.setItem('pac-swift-user', name);
       loadUserProgress(name);
       document.getElementById('nameModal').classList.add('hidden');
       updateUserChip(name);
@@ -1217,7 +1217,7 @@ Also answer these questions based on my testimonials:
 
     function switchUser() {
       if (!confirm('Switch to a different user? Your progress is saved.')) return;
-      localStorage.removeItem('pac-sig-current-user');
+      localStorage.removeItem('pac-swift-user');
       currentUser = '';
       checkedSteps = new Set();
       document.querySelectorAll('.step-card').forEach(c => c.classList.remove('checked'));
@@ -1228,7 +1228,7 @@ Also answer these questions based on my testimonials:
     }
 
     // ── INIT ─────────────────────────────────────────
-    const returning = localStorage.getItem('pac-sig-current-user');
+    const returning = localStorage.getItem('pac-swift-user');
     if (returning) {
       currentUser = returning;
       loadUserProgress(returning);
