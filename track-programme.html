@@ -43,6 +43,7 @@
     .swift-tab-group { position: relative; display: flex; align-items: stretch; }
     .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
     .swift-tab-group:hover .swift-sub-menu { display: block; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
     .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
     .swift-sub-item:last-child { border-bottom: none; }
     .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
@@ -894,6 +895,21 @@
       update();
       [300,800,1500].forEach(function(t){ setTimeout(update, t); });
     })();
+  </script>
+  <script>
+    // Dropdown click toggle (works on touch + desktop)
+    document.querySelectorAll('.swift-tab-group > button').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var group = this.closest('.swift-tab-group');
+        var isOpen = group.classList.contains('open');
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+    });
   </script>
 </body>
 </html>
