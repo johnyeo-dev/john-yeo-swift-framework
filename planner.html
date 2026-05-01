@@ -681,20 +681,24 @@
         try { planData = JSON.parse(saved); } catch(e) { planData = {}; }
       }
       const startInput = document.getElementById('startDateInput');
-      if (planData.startDate) {
-        startInput.value = planData.startDate;
-        renderCalendar(planData.startDate);
-      } else {
-        // default to today
-        const today = new Date();
-        startInput.value = toISODate(today);
+      if (!planData.startDate) {
+        // Default to today and render immediately
+        planData.startDate = toISODate(new Date());
+        planData.days = planData.days || {};
+        save();
       }
-      startInput.addEventListener('change', function() {
+      startInput.value = planData.startDate;
+      renderCalendar(planData.startDate);
+
+      function onDateChange() {
+        if (!this.value) return;
         planData.startDate = this.value;
         planData.days = planData.days || {};
         save();
         renderCalendar(this.value);
-      });
+      }
+      startInput.addEventListener('change', onDateChange);
+      startInput.addEventListener('input', onDateChange);
     }
 
     function toISODate(d) {
