@@ -202,6 +202,118 @@
     .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
     @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
     @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+
+    /* ══════════════ REVENUE CALCULATOR ══════════════ */
+    .calc-goal-card { background: linear-gradient(135deg, var(--navy), #003d8f); border-radius: 16px; padding: 24px 28px; display: flex; align-items: center; gap: 20px; margin-bottom: 32px; box-shadow: 0 4px 20px rgba(0,45,106,0.2); }
+    .calc-goal-icon { font-size: 32px; flex-shrink: 0; }
+    .calc-goal-body { flex: 1; }
+    .calc-goal-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .calc-goal-input-row { display: flex; align-items: center; gap: 8px; }
+    .calc-currency { font-family: 'DM Serif Display', serif; font-size: 28px; color: white; }
+    .calc-goal-input { background: rgba(255,255,255,0.12); border: 2px solid rgba(10,191,188,0.4); border-radius: 10px; padding: 10px 16px; font-size: 26px; font-weight: 700; color: white; font-family: 'DM Serif Display', serif; width: 180px; outline: none; transition: border-color 0.2s; }
+    .calc-goal-input:focus { border-color: var(--gold); }
+    .calc-goal-input::placeholder { color: rgba(255,255,255,0.25); }
+    .calc-goal-suffix { font-size: 16px; color: rgba(255,255,255,0.5); font-weight: 500; }
+
+    .calc-section-header { margin-bottom: 18px; }
+    .calc-section-badge { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; border-radius: 5px; padding: 4px 10px; margin-bottom: 10px; }
+    .badge-now { background: rgba(74,143,231,0.15); color: #4A8FE7; border: 1px solid rgba(74,143,231,0.3); }
+    .badge-target { background: rgba(10,191,188,0.12); color: var(--gold); border: 1px solid rgba(10,191,188,0.3); }
+    .calc-section-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 6px; }
+    .calc-section-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* WEEK GRID */
+    .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 20px; }
+    .day-col { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; min-height: 120px; }
+    .day-col.has-slots { border-color: #4A8FE7; }
+    .day-header { background: var(--navy); padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; }
+    .day-name { font-size: 11px; font-weight: 700; color: white; letter-spacing: 1px; text-transform: uppercase; }
+    .day-add-btn { background: rgba(10,191,188,0.3); border: none; color: var(--gold); font-size: 16px; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.15s; padding: 0; }
+    .day-add-btn:hover { background: rgba(10,191,188,0.6); }
+    .day-slots { padding: 6px 8px; display: flex; flex-direction: column; gap: 5px; }
+    .slot-card { border-radius: 7px; padding: 6px 8px; position: relative; }
+    .slot-card.type-1to1 { background: rgba(74,143,231,0.12); border: 1px solid rgba(74,143,231,0.3); }
+    .slot-card.type-group { background: rgba(10,191,188,0.1); border: 1px solid rgba(10,191,188,0.3); }
+    .slot-card-time { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 2px; }
+    .slot-card-label { font-size: 11px; font-weight: 600; color: var(--navy); line-height: 1.3; }
+    .slot-card-rev { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .slot-card-del { position: absolute; top: 4px; right: 5px; background: none; border: none; color: rgba(0,0,0,0.2); font-size: 12px; cursor: pointer; padding: 0; line-height: 1; transition: color 0.15s; }
+    .slot-card-del:hover { color: #ef4444; }
+    .day-empty { padding: 12px 8px; text-align: center; font-size: 11px; color: var(--border); }
+    .day-hrs-bar { padding: 6px 8px 8px; }
+    .day-hrs-track { height: 3px; background: var(--cream-dark); border-radius: 99px; overflow: hidden; }
+    .day-hrs-fill { height: 100%; background: linear-gradient(90deg, #4A8FE7, var(--gold)); border-radius: 99px; transition: width 0.3s; }
+
+    /* CURRENT SUMMARY */
+    .calc-current-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+    .csum-item { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 18px; text-align: center; }
+    .csum-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .csum-value { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+    .csum-value.accent { color: var(--gold); }
+
+    /* MODULES */
+    .calc-module { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 22px; margin-bottom: 12px; transition: border-color 0.2s; }
+    .calc-module:hover { border-color: var(--gold-light); }
+    .calc-module-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .calc-module-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dot-one { background: #4A8FE7; }
+    .dot-group { background: var(--gold); }
+    .calc-module-title { font-size: 15px; font-weight: 700; color: var(--navy); flex: 1; }
+    .calc-module-rev { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--gold); }
+    .calc-inputs { display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; }
+    .calc-input-group { display: flex; flex-direction: column; gap: 5px; min-width: 70px; }
+    .calc-input-group label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .calc-input-group input { background: var(--cream); border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 15px; font-weight: 600; color: var(--navy); font-family: 'DM Sans', sans-serif; width: 100%; outline: none; transition: border-color 0.2s; }
+    .calc-input-group input:focus { border-color: var(--gold); background: white; }
+    .calc-input-sep { font-size: 18px; font-weight: 700; color: var(--text-muted); padding-bottom: 10px; flex-shrink: 0; }
+    .calc-formula-bar { margin-top: 12px; font-size: 12px; color: var(--text-muted); background: var(--cream); border-radius: 6px; padding: 8px 12px; font-family: 'DM Mono', monospace; }
+
+    /* RESULTS */
+    .calc-results { background: var(--navy-light); border-radius: 16px; padding: 28px 28px 24px; margin-top: 24px; }
+    .results-header { font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .results-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+    .results-label { font-size: 14px; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 8px; }
+    .results-val { font-family: 'DM Serif Display', serif; font-size: 22px; color: white; }
+    .results-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 4px 0; }
+    .goal-row .results-val { color: var(--gold); font-size: 26px; }
+    .gap-row .results-val { font-size: 24px; }
+    .gap-row.on-track .results-val { color: #34D399; }
+    .gap-row.off-track .results-val { color: #F87171; }
+    .results-tag { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; }
+    .tag-now { background: rgba(74,143,231,0.25); color: #93C5FD; }
+    .tag-plan { background: rgba(10,191,188,0.2); color: #5EEAD4; }
+    .results-insight { margin-top: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 18px; font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.7; }
+    .results-insight strong { color: white; display: block; margin-bottom: 4px; font-size: 14px; }
+    .insight-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .insight-chip { background: rgba(10,191,188,0.15); border: 1px solid rgba(10,191,188,0.3); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 600; color: #5EEAD4; }
+
+    /* SLOT MODAL */
+    .slot-modal { position: fixed; inset: 0; background: rgba(10,15,28,0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .slot-modal.hidden { display: none; }
+    .slot-modal-box { background: var(--white); border-radius: 16px; padding: 28px 28px 24px; max-width: 500px; width: 100%; box-shadow: 0 24px 60px rgba(0,0,0,0.4); animation: modalIn 0.25s ease; }
+    .slot-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+    .slot-modal-header span { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); }
+    .slot-modal-close { background: var(--cream); border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 14px; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+    .slot-modal-close:hover { background: #fee2e2; color: #ef4444; }
+    .slot-form { display: flex; flex-direction: column; gap: 14px; }
+    .slot-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .slot-form-group { display: flex; flex-direction: column; gap: 5px; }
+    .slot-form-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .slot-form-group input, .slot-form-group select { background: var(--cream); border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--navy); font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; }
+    .slot-form-group input:focus, .slot-form-group select:focus { border-color: var(--gold); background: white; }
+    .slot-save-btn { background: var(--navy); color: white; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; margin-top: 4px; }
+    .slot-save-btn:hover { background: #003d8f; }
+
+    @media (max-width: 600px) {
+      .week-grid { grid-template-columns: repeat(4, 1fr); }
+      .calc-current-summary { grid-template-columns: 1fr 1fr; }
+      .calc-inputs { gap: 6px; }
+      .calc-input-group { min-width: 60px; }
+      .calc-goal-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .calc-goal-input { font-size: 22px; width: 140px; }
+      .results-val { font-size: 18px; }
+      .slot-form-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -364,6 +476,9 @@
     </button>
     <button class="tab-btn" onclick="switchTab(2)">
       <span class="tab-num"><span>3</span></span> Your Plan
+    </button>
+    <button class="tab-btn" onclick="switchTab(3)">
+      <span class="tab-num"><span>4</span></span> Revenue Calculator
     </button>
   </nav>
 
@@ -695,6 +810,215 @@ POST-WORKSHOP — Non-converter follow-up:
       </div>
     </div>
 
+
+    <!-- ═══════════════════════════════════════════
+         TAB 4: REVENUE CALCULATOR
+    ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-3">
+      <div class="panel-header">
+        <div class="panel-step">Revenue Clarity · Fill Group Class</div>
+        <h2 class="panel-title">From <em>Where You Are</em> to Where You Want to Be</h2>
+        <p class="panel-desc">Map every current class, see exactly what you earn now, then build your target mix. The calculator tells you the gap — and how many more students you need to close it.</p>
+      </div>
+
+      <!-- GOAL INPUT -->
+      <div class="calc-goal-card">
+        <div class="calc-goal-icon">🎯</div>
+        <div class="calc-goal-body">
+          <div class="calc-goal-label">Your Monthly Revenue Goal</div>
+          <div class="calc-goal-input-row">
+            <span class="calc-currency">$</span>
+            <input type="number" id="goalInput" class="calc-goal-input" placeholder="5000" min="0" oninput="recalcAll()" />
+            <span class="calc-goal-suffix">/month</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION A: CURRENT CLASSES -->
+      <div class="calc-section-header">
+        <div class="calc-section-badge badge-now">WHERE YOU ARE NOW</div>
+        <h3 class="calc-section-title">Your Current Weekly Schedule</h3>
+        <p class="calc-section-desc">Tap <strong>+</strong> on any day to add an existing class slot. The calculator uses this to show your current income and how much of your week is already filled.</p>
+      </div>
+
+      <div class="week-grid" id="weekGrid"></div>
+
+      <div class="calc-current-summary">
+        <div class="csum-item">
+          <div class="csum-label">Current Monthly Revenue</div>
+          <div class="csum-value" id="currentRevDisplay">$0</div>
+        </div>
+        <div class="csum-item">
+          <div class="csum-label">Hours Booked / Week</div>
+          <div class="csum-value" id="currentHrsDisplay">0 hrs</div>
+        </div>
+        <div class="csum-item">
+          <div class="csum-label">Free Hours / Week</div>
+          <div class="csum-value accent" id="availHrsDisplay">—</div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- SECTION B: TARGET -->
+      <div class="calc-section-header">
+        <div class="calc-section-badge badge-target">WHERE YOU WANT TO BE</div>
+        <h3 class="calc-section-title">Build Your Target Revenue Mix</h3>
+        <p class="calc-section-desc">Enter your ideal combination of 1-to-1 and group classes. This is the revenue you're working towards.</p>
+      </div>
+
+      <div class="calc-module">
+        <div class="calc-module-header">
+          <div class="calc-module-dot dot-one"></div>
+          <span class="calc-module-title">1-to-1 Students</span>
+          <span class="calc-module-rev" id="oneRevDisplay">$0/mo</span>
+        </div>
+        <div class="calc-inputs">
+          <div class="calc-input-group">
+            <label>Students</label>
+            <input type="number" id="oneStudents" min="0" placeholder="3" oninput="recalcAll()" />
+          </div>
+          <div class="calc-input-sep">×</div>
+          <div class="calc-input-group">
+            <label>Hrs/week</label>
+            <input type="number" id="oneHrs" min="0" step="0.5" placeholder="2" oninput="recalcAll()" />
+          </div>
+          <div class="calc-input-sep">× 4 ×</div>
+          <div class="calc-input-group">
+            <label>Rate ($/hr)</label>
+            <input type="number" id="oneRate" min="0" placeholder="80" oninput="recalcAll()" />
+          </div>
+        </div>
+        <div class="calc-formula-bar" id="oneFormula">Enter values above to see the breakdown</div>
+      </div>
+
+      <div class="calc-module">
+        <div class="calc-module-header">
+          <div class="calc-module-dot dot-group"></div>
+          <span class="calc-module-title">Group Tuition</span>
+          <span class="calc-module-rev" id="groupRevDisplay">$0/mo</span>
+        </div>
+        <div class="calc-inputs">
+          <div class="calc-input-group">
+            <label>Groups</label>
+            <input type="number" id="groupCount" min="0" placeholder="2" oninput="recalcAll()" />
+          </div>
+          <div class="calc-input-sep">×</div>
+          <div class="calc-input-group">
+            <label>Students/group</label>
+            <input type="number" id="groupStudents" min="0" placeholder="4" oninput="recalcAll()" />
+          </div>
+          <div class="calc-input-sep">×</div>
+          <div class="calc-input-group">
+            <label>Hrs/week</label>
+            <input type="number" id="groupHrs" min="0" step="0.5" placeholder="1.5" oninput="recalcAll()" />
+          </div>
+          <div class="calc-input-sep">× 4 ×</div>
+          <div class="calc-input-group">
+            <label>$/hr per student</label>
+            <input type="number" id="groupRate" min="0" placeholder="30" oninput="recalcAll()" />
+          </div>
+        </div>
+        <div class="calc-formula-bar" id="groupFormula">Enter values above to see the breakdown</div>
+      </div>
+
+      <!-- RESULTS DASHBOARD -->
+      <div class="calc-results" id="calcResults">
+        <div class="results-header">📊 The Numbers</div>
+        <div class="results-row goal-row">
+          <span class="results-label">Your Goal</span>
+          <span class="results-val" id="goalDisplay">Set your goal above ↑</span>
+        </div>
+        <div class="results-divider"></div>
+        <div class="results-row">
+          <span class="results-label">Currently Earning <span class="results-tag tag-now">Now</span></span>
+          <span class="results-val" id="nowDisplay">$0 /mo</span>
+        </div>
+        <div class="results-row">
+          <span class="results-label">Planned Revenue <span class="results-tag tag-plan">Target</span></span>
+          <span class="results-val" id="planDisplay">$0 /mo</span>
+        </div>
+        <div class="results-divider"></div>
+        <div class="results-row gap-row" id="gapRow">
+          <span class="results-label">Gap to Close</span>
+          <span class="results-val" id="gapDisplay">—</span>
+        </div>
+        <div class="results-insight" id="resultsInsight">
+          <strong>Fill in your numbers above to see your personalised breakdown.</strong>
+          Add your current classes, set your goal, and build your target mix — the calculator will tell you exactly what needs to change.
+        </div>
+      </div>
+
+      <!-- SLOT ADD MODAL -->
+      <div id="slotModal" class="slot-modal hidden">
+        <div class="slot-modal-box">
+          <div class="slot-modal-header">
+            <span>Add Class Slot</span>
+            <button onclick="closeSlotModal()" class="slot-modal-close">✕</button>
+          </div>
+          <div class="slot-form">
+            <div class="slot-form-row">
+              <div class="slot-form-group">
+                <label>Day</label>
+                <select id="slotDay"></select>
+              </div>
+              <div class="slot-form-group">
+                <label>Start Time</label>
+                <select id="slotTime"></select>
+              </div>
+            </div>
+            <div class="slot-form-row">
+              <div class="slot-form-group">
+                <label>Duration (hrs)</label>
+                <select id="slotDuration">
+                  <option value="0.5">0.5 hr</option>
+                  <option value="1">1 hr</option>
+                  <option value="1.5">1.5 hrs</option>
+                  <option value="2" selected>2 hrs</option>
+                  <option value="2.5">2.5 hrs</option>
+                  <option value="3">3 hrs</option>
+                  <option value="4">4 hrs</option>
+                </select>
+              </div>
+              <div class="slot-form-group">
+                <label>Class Type</label>
+                <select id="slotType" onchange="toggleGroupFields()">
+                  <option value="1to1">1-to-1</option>
+                  <option value="group">Group</option>
+                </select>
+              </div>
+            </div>
+            <div id="groupFieldsRow" class="slot-form-row" style="display:none;">
+              <div class="slot-form-group">
+                <label>Number of Students</label>
+                <input type="number" id="slotStudents" min="2" max="20" placeholder="4" />
+              </div>
+              <div class="slot-form-group" style="justify-content:flex-end;padding-bottom:0;">
+                <label style="color:transparent;">x</label>
+                <div style="font-size:12px;color:var(--text-muted);padding:11px 0;">students in group</div>
+              </div>
+            </div>
+            <div class="slot-form-row">
+              <div class="slot-form-group">
+                <label>Rate per student ($/hr)</label>
+                <input type="number" id="slotRate" min="0" placeholder="80" />
+              </div>
+              <div class="slot-form-group">
+                <label>Label (optional)</label>
+                <input type="text" id="slotLabel" placeholder="e.g. Sec 3 Maths" maxlength="30" />
+              </div>
+            </div>
+            <button class="slot-save-btn" onclick="saveSlot()">+ Add to Schedule</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <div></div>
+        <button class="btn btn-primary" onclick="switchTab(0)">Fill Methods →</button>
+      </div>
+    </div>
+
   </main>
 
   <script>
@@ -771,7 +1095,7 @@ POST-WORKSHOP — Non-converter follow-up:
       const pct = Math.min(100, Math.round((count / TOTAL_STEPS) * 100));
       document.getElementById('progressFill').style.width = pct + '%';
       document.getElementById('progressCount').textContent = count + ' / ' + TOTAL_STEPS + ' done';
-      const tabStepMap = [7, 7, 1];
+      const tabStepMap = [7, 7, 1, 0];
       const tabs = document.querySelectorAll('.tab-btn');
       tabStepMap.forEach((c, i) => {
         const ids = Array.from({length: c}, (_, j) => `step-${i}-${j}`);
@@ -779,6 +1103,322 @@ POST-WORKSHOP — Non-converter follow-up:
         if (allDone && i !== currentTab) { tabs[i].classList.add('completed'); } else { tabs[i].classList.remove('completed'); }
       });
     }
+
+
+    // ═══════════════ REVENUE CALCULATOR ═══════════════
+    const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const DAY_FULL = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+    const MAX_HRS_PER_DAY = 12; // teachable hours per day
+    let slots = [];
+    const CALC_KEY = 'pac-fill-calc';
+
+    function loadCalcData() {
+      try {
+        const s = localStorage.getItem(CALC_KEY);
+        if (s) {
+          const d = JSON.parse(s);
+          slots = d.slots || [];
+          if (d.goal) document.getElementById('goalInput').value = d.goal;
+          if (d.oneStudents) document.getElementById('oneStudents').value = d.oneStudents;
+          if (d.oneHrs) document.getElementById('oneHrs').value = d.oneHrs;
+          if (d.oneRate) document.getElementById('oneRate').value = d.oneRate;
+          if (d.groupCount) document.getElementById('groupCount').value = d.groupCount;
+          if (d.groupStudents) document.getElementById('groupStudents').value = d.groupStudents;
+          if (d.groupHrs) document.getElementById('groupHrs').value = d.groupHrs;
+          if (d.groupRate) document.getElementById('groupRate').value = d.groupRate;
+        }
+      } catch(e) {}
+    }
+
+    function saveCalcData() {
+      const d = {
+        slots,
+        goal: document.getElementById('goalInput').value,
+        oneStudents: document.getElementById('oneStudents').value,
+        oneHrs: document.getElementById('oneHrs').value,
+        oneRate: document.getElementById('oneRate').value,
+        groupCount: document.getElementById('groupCount').value,
+        groupStudents: document.getElementById('groupStudents').value,
+        groupHrs: document.getElementById('groupHrs').value,
+        groupRate: document.getElementById('groupRate').value,
+      };
+      localStorage.setItem(CALC_KEY, JSON.stringify(d));
+    }
+
+    function buildWeekGrid() {
+      const grid = document.getElementById('weekGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      DAYS.forEach((day, di) => {
+        const daySlots = slots.filter(s => s.day === day);
+        const hasSlots = daySlots.length > 0;
+        const bookedHrs = daySlots.reduce((sum, s) => sum + parseFloat(s.duration), 0);
+        const pct = Math.min(100, Math.round((bookedHrs / MAX_HRS_PER_DAY) * 100));
+
+        let slotsHtml = '';
+        daySlots.forEach(s => {
+          const isGroup = s.type === 'group';
+          const students = isGroup ? parseInt(s.students) : 1;
+          const monthlyRev = students * parseFloat(s.rate) * parseFloat(s.duration) * 4;
+          slotsHtml += `
+            <div class="slot-card type-${s.type}">
+              <button class="slot-card-del" onclick="deleteSlot('${s.id}',event)" title="Remove">✕</button>
+              <div class="slot-card-time">${s.time} · ${s.duration}h</div>
+              <div class="slot-card-label">${s.label || (isGroup ? 'Group ×'+students : '1-to-1')}</div>
+              <div class="slot-card-rev">$${fmtRev(monthlyRev)}/mo</div>
+            </div>`;
+        });
+
+        const col = document.createElement('div');
+        col.className = 'day-col' + (hasSlots ? ' has-slots' : '');
+        col.innerHTML = `
+          <div class="day-header">
+            <span class="day-name">${day}</span>
+            <button class="day-add-btn" onclick="openSlotModal('${day}')" title="Add slot">+</button>
+          </div>
+          <div class="day-slots">${slotsHtml || '<div class="day-empty">—</div>'}</div>
+          <div class="day-hrs-bar" title="${bookedHrs} hrs booked of ${MAX_HRS_PER_DAY} teachable hrs">
+            <div class="day-hrs-track"><div class="day-hrs-fill" style="width:${pct}%"></div></div>
+          </div>`;
+        grid.appendChild(col);
+      });
+    }
+
+    function fmtRev(n) {
+      if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/, '') + 'k';
+      return Math.round(n).toString();
+    }
+    function fmt$(n) {
+      return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+    }
+
+    function recalcAll() {
+      saveCalcData();
+
+      // Current revenue from schedule
+      let currentRev = 0, currentHrs = 0;
+      slots.forEach(s => {
+        const students = s.type === 'group' ? parseInt(s.students) : 1;
+        const dur = parseFloat(s.duration);
+        const rate = parseFloat(s.rate);
+        currentRev += students * rate * dur * 4;
+        currentHrs += dur;
+      });
+
+      // Target revenue from modules
+      const oS = parseFloat(document.getElementById('oneStudents').value) || 0;
+      const oH = parseFloat(document.getElementById('oneHrs').value) || 0;
+      const oR = parseFloat(document.getElementById('oneRate').value) || 0;
+      const oneRev = oS * oH * 4 * oR;
+
+      const gC = parseFloat(document.getElementById('groupCount').value) || 0;
+      const gSt = parseFloat(document.getElementById('groupStudents').value) || 0;
+      const gH = parseFloat(document.getElementById('groupHrs').value) || 0;
+      const gR = parseFloat(document.getElementById('groupRate').value) || 0;
+      const groupRev = gC * gSt * gH * 4 * gR;
+
+      const plannedRev = oneRev + groupRev;
+
+      // Goal
+      const goal = parseFloat(document.getElementById('goalInput').value) || 0;
+
+      // Update current summary
+      document.getElementById('currentRevDisplay').textContent = fmt$(currentRev);
+      document.getElementById('currentHrsDisplay').textContent = currentHrs.toFixed(1).replace(/\.0$/, '') + ' hrs';
+      const freeHrs = Math.max(0, (MAX_HRS_PER_DAY * 7) - currentHrs);
+      document.getElementById('availHrsDisplay').textContent = freeHrs.toFixed(1).replace(/\.0$/, '') + ' hrs free';
+
+      // Update module displays
+      document.getElementById('oneRevDisplay').textContent = fmt$(oneRev) + '/mo';
+      if (oS && oH && oR) {
+        document.getElementById('oneFormula').textContent = oS + ' students × ' + oH + ' hrs × 4 weeks × $' + oR + '/hr = ' + fmt$(oneRev) + '/month';
+      } else {
+        document.getElementById('oneFormula').textContent = 'Enter values above to see the breakdown';
+      }
+
+      document.getElementById('groupRevDisplay').textContent = fmt$(groupRev) + '/mo';
+      if (gC && gSt && gH && gR) {
+        document.getElementById('groupFormula').textContent = gC + ' groups × ' + gSt + ' students × ' + gH + ' hrs × 4 weeks × $' + gR + '/hr per student = ' + fmt$(groupRev) + '/month';
+      } else {
+        document.getElementById('groupFormula').textContent = 'Enter values above to see the breakdown';
+      }
+
+      // Results dashboard
+      if (goal > 0) {
+        document.getElementById('goalDisplay').textContent = fmt$(goal) + ' /mo';
+      } else {
+        document.getElementById('goalDisplay').textContent = 'Set your goal above ↑';
+      }
+      document.getElementById('nowDisplay').textContent = fmt$(currentRev) + ' /mo';
+      document.getElementById('planDisplay').textContent = fmt$(plannedRev) + ' /mo';
+
+      const gap = goal - plannedRev;
+      const gapRow = document.getElementById('gapRow');
+      const gapDisplay = document.getElementById('gapDisplay');
+
+      if (goal > 0) {
+        if (gap <= 0) {
+          gapDisplay.textContent = '🎉 Goal met! +' + fmt$(Math.abs(gap));
+          gapRow.className = 'results-row gap-row on-track';
+        } else {
+          gapDisplay.textContent = '−' + fmt$(gap) + ' /mo';
+          gapRow.className = 'results-row gap-row off-track';
+        }
+      } else {
+        gapDisplay.textContent = '—';
+        gapRow.className = 'results-row gap-row';
+      }
+
+      // Insight
+      buildInsight(currentRev, plannedRev, goal, gap, currentHrs, freeHrs, gC, gSt, gH, gR, oS, oH, oR);
+    }
+
+    function buildInsight(currentRev, plannedRev, goal, gap, usedHrs, freeHrs, gC, gSt, gH, gR, oS, oH, oR) {
+      const el = document.getElementById('resultsInsight');
+      const hasGoal = goal > 0;
+      const hasCurrent = currentRev > 0;
+      const hasTarget = plannedRev > 0;
+
+      if (!hasCurrent && !hasTarget && !hasGoal) {
+        el.innerHTML = '<strong>Fill in your numbers above to see your personalised breakdown.</strong>Add your current classes, set your goal, and build your target mix — the calculator will tell you exactly what needs to change.';
+        return;
+      }
+
+      let html = '';
+
+      if (hasCurrent && hasGoal) {
+        const currentGap = goal - currentRev;
+        if (currentGap > 0) {
+          html += `<strong>Right now you're ${fmt$(currentGap)}/mo away from your goal.</strong>`;
+        } else {
+          html += `<strong>🎉 Your current classes already exceed your goal by ${fmt$(Math.abs(currentGap))}/mo.</strong>`;
+        }
+      }
+
+      if (hasCurrent) {
+        const oneSlots = slots.filter(s => s.type === '1to1');
+        const groupSlots = slots.filter(s => s.type === 'group');
+        const oneCount = oneSlots.length;
+        const groupClasses = groupSlots.length;
+        const totalGroupStudents = groupSlots.reduce((sum, s) => sum + parseInt(s.students || 1), 0);
+
+        html += `<br>You currently have <strong>${oneCount} 1-to-1 slot${oneCount !== 1 ? 's' : ''}</strong>`;
+        if (groupClasses > 0) html += ` and <strong>${groupClasses} group class${groupClasses !== 1 ? 'es' : ''} (${totalGroupStudents} students total)</strong>`;
+        html += ', bringing in <strong>' + fmt$(currentRev) + '/mo</strong>. ';
+
+        if (freeHrs > 0) {
+          html += `You have <strong>${freeHrs.toFixed(0)} free teachable hours/week</strong> — that's the capacity you can build on. `;
+        }
+      }
+
+      if (hasTarget && hasGoal && gap > 0 && gR > 0 && gH > 0) {
+        const moreGroupStudentsNeeded = Math.ceil(gap / (gH * 4 * gR));
+        const moreGroupsNeeded = gSt > 0 ? Math.ceil(moreGroupStudentsNeeded / gSt) : '—';
+        html += `<br><br>To close the ${fmt$(gap)}/mo gap with group classes at your rates: you need approximately <strong>${moreGroupStudentsNeeded} more group student-slots</strong>`;
+        if (gSt > 0) html += ` — that's <strong>${moreGroupsNeeded} more group${moreGroupsNeeded > 1 ? 's' : ''} of ${gSt} students</strong>`;
+        html += ` running ${gH} hr${gH > 1 ? 's' : ''}/week.`;
+      }
+
+      if (hasGoal && hasTarget && gap <= 0 && plannedRev > 0) {
+        html += '<br><br>✅ <strong>Your target plan covers your goal.</strong> The next step is execution — start filling those group slots.';
+      }
+
+      // Available day chips
+      if (slots.length > 0) {
+        const dayHrs = {};
+        DAYS.forEach(d => dayHrs[d] = 0);
+        slots.forEach(s => { dayHrs[s.day] = (dayHrs[s.day] || 0) + parseFloat(s.duration); });
+        const freeDays = DAYS.filter(d => (MAX_HRS_PER_DAY - (dayHrs[d] || 0)) >= 1);
+        if (freeDays.length > 0) {
+          html += '<div class="insight-chips">';
+          freeDays.forEach(d => {
+            const free = MAX_HRS_PER_DAY - (dayHrs[d] || 0);
+            html += `<span class="insight-chip">${d}: ${free.toFixed(0)} hrs free</span>`;
+          });
+          html += '</div>';
+        }
+      }
+
+      if (!html) {
+        html = '<strong>Keep filling in the numbers above.</strong> Your personalised breakdown will appear here once you add your current classes and target mix.';
+      }
+
+      el.innerHTML = html;
+    }
+
+    // SLOT MODAL
+    function openSlotModal(presetDay) {
+      const modal = document.getElementById('slotModal');
+      modal.classList.remove('hidden');
+
+      // Build day select
+      const daySelect = document.getElementById('slotDay');
+      daySelect.innerHTML = DAY_FULL.map((d, i) => `<option value="${DAYS[i]}"${DAYS[i] === presetDay ? ' selected' : ''}>${d}</option>`).join('');
+
+      // Build time select
+      const timeSelect = document.getElementById('slotTime');
+      timeSelect.innerHTML = '';
+      for (let h = 7; h <= 21; h++) {
+        ['00', '30'].forEach(m => {
+          const label = (h > 12 ? h - 12 : h) + ':' + m + (h >= 12 ? 'pm' : 'am');
+          const val = (h < 10 ? '0' : '') + h + ':' + m;
+          timeSelect.innerHTML += `<option value="${val}">${label}</option>`;
+        });
+      }
+      // Default to 3pm
+      timeSelect.value = '15:00';
+
+      toggleGroupFields();
+    }
+
+    function closeSlotModal() {
+      document.getElementById('slotModal').classList.add('hidden');
+      document.getElementById('slotStudents').value = '';
+      document.getElementById('slotRate').value = '';
+      document.getElementById('slotLabel').value = '';
+    }
+
+    function toggleGroupFields() {
+      const isGroup = document.getElementById('slotType').value === 'group';
+      document.getElementById('groupFieldsRow').style.display = isGroup ? 'grid' : 'none';
+    }
+
+    function saveSlot() {
+      const day = document.getElementById('slotDay').value;
+      const time = document.getElementById('slotTime');
+      const timeVal = time.value;
+      const timeLabel = time.options[time.selectedIndex].text;
+      const duration = document.getElementById('slotDuration').value;
+      const type = document.getElementById('slotType').value;
+      const students = document.getElementById('slotStudents').value || '1';
+      const rate = document.getElementById('slotRate').value;
+      const label = document.getElementById('slotLabel').value.trim();
+
+      if (!rate) { alert('Please enter a rate per hour.'); return; }
+
+      slots.push({
+        id: Date.now().toString(),
+        day, time: timeLabel, timeVal, duration, type, students, rate, label
+      });
+
+      buildWeekGrid();
+      recalcAll();
+      closeSlotModal();
+    }
+
+    function deleteSlot(id, e) {
+      e.stopPropagation();
+      slots = slots.filter(s => s.id !== id);
+      buildWeekGrid();
+      recalcAll();
+    }
+
+    // Init calculator
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCalcData();
+      buildWeekGrid();
+      recalcAll();
+    });
 
     function copyScript(boxId, btn) {
       const text = document.getElementById(boxId).querySelector('.prompt-text').innerText;
