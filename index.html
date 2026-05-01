@@ -2,10 +2,330 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=signature-programme.html" />
-  <title>SWIFT Framework</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+      --s: #0ABFBC; --w: #4A8FE7; --i: #8B5CF6; --f: #F59E0B; --t: #10B981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    /* SWIFT NAV */
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 12px 16px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-size: 12px; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group:hover .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    /* MOBILE NAV */
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
+    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
+    .swift-dropdown-menu.open { display: block; }
+    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-dropdown-item:last-child { border-bottom: none; }
+    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
+
+    /* MAIN */
+    .main { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* HERO */
+    .hero { text-align: center; margin-bottom: 52px; }
+    .hero-tag { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 4vw, 42px); color: var(--navy); line-height: 1.2; margin-bottom: 14px; }
+    .hero h2 em { font-style: italic; color: var(--gold-light); }
+    .hero-sub { font-size: 16px; color: var(--text-muted); max-width: 560px; margin: 0 auto 24px; line-height: 1.7; }
+    .pace-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(10,191,188,0.08); border: 1px solid rgba(10,191,188,0.25); border-radius: 99px; padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--navy); }
+    .pace-badge span { color: var(--gold); font-size: 16px; }
+
+    /* SWIFT STEPS */
+    .steps-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .steps { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
+    .step-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 24px 28px; display: grid; grid-template-columns: 56px 1fr; gap: 20px; align-items: start; transition: box-shadow 0.2s; }
+    .step-card:hover { box-shadow: 0 6px 24px rgba(0,45,106,0.08); }
+    .step-letter-wrap { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-letter { font-family: 'DM Serif Display', serif; font-size: 30px; color: white; line-height: 1; }
+    .step-body { }
+    .step-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 6px; }
+    .step-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+    .step-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .step-pill { display: flex; align-items: center; gap: 7px; background: var(--cream); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: var(--text); }
+    .step-pill strong { font-weight: 700; color: var(--navy); }
+    .step-pill-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; }
+
+    .s-card .step-letter-wrap { background: var(--s); }
+    .w-card .step-letter-wrap { background: var(--w); }
+    .i-card .step-letter-wrap { background: var(--i); }
+    .f-card .step-letter-wrap { background: var(--f); }
+    .t-card .step-letter-wrap { background: var(--t); }
+    .s-card { border-left: 4px solid var(--s); }
+    .w-card { border-left: 4px solid var(--w); }
+    .i-card { border-left: 4px solid var(--i); }
+    .f-card { border-left: 4px solid var(--f); }
+    .t-card { border-left: 4px solid var(--t); }
+
+    /* QUOTE */
+    .quote-block { background: var(--navy); border-radius: 16px; padding: 36px 40px; text-align: center; margin-bottom: 48px; }
+    .quote-text { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.5vw, 24px); color: var(--white); line-height: 1.5; margin-bottom: 14px; font-style: italic; }
+    .quote-attr { font-size: 13px; color: rgba(255,255,255,0.55); letter-spacing: 1px; font-weight: 500; }
+    .quote-attr strong { color: var(--gold); }
+
+    /* ALIGNMENT TABLE */
+    .section-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); margin-bottom: 6px; }
+    .section-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; max-width: 600px; }
+    .align-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 14px; overflow: hidden; border: 1.5px solid var(--border); margin-bottom: 24px; font-size: 13px; }
+    .align-table thead tr { background: var(--navy); }
+    .align-table thead th { padding: 14px 16px; color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-align: left; }
+    .align-table tbody tr { border-bottom: 1px solid var(--border); }
+    .align-table tbody tr:last-child { border-bottom: none; }
+    .align-table tbody td { padding: 14px 16px; vertical-align: top; line-height: 1.55; color: var(--text); }
+    .align-table tbody td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .align-table tbody td:nth-child(2) { color: var(--text-muted); font-size: 12px; }
+    .align-table .pillar-badge { display: inline-block; background: var(--cream); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .align-table .arrow { color: var(--gold); font-weight: 700; }
+
+    /* KEY INSIGHT */
+    .insight-box { background: linear-gradient(135deg, rgba(10,191,188,0.08), rgba(74,143,231,0.08)); border: 1.5px solid rgba(10,191,188,0.3); border-radius: 14px; padding: 24px 28px; margin-bottom: 48px; }
+    .insight-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .insight-text { font-size: 14px; color: var(--navy); line-height: 1.7; font-weight: 500; }
+
+    /* FOOTER */
+    .home-footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 28px 16px 60px; }
+      .step-card { grid-template-columns: 44px 1fr; gap: 14px; padding: 18px 18px; }
+      .step-letter-wrap { width: 44px; height: 44px; border-radius: 10px; }
+      .step-letter { font-size: 22px; }
+      .quote-block { padding: 28px 20px; }
+      .align-table { font-size: 12px; }
+      .align-table thead th, .align-table tbody td { padding: 10px 12px; }
+    }
+  </style>
 </head>
 <body>
-  <script>window.location.href = 'signature-programme.html';</script>
+
+  <header class="header">
+    <div>
+      <div class="header-label">Product Architect Coaching · By John Yeo</div>
+      <h1>SWIFT Framework — <em>Pace of Love</em></h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">⌂</div>
+      <div class="label">Home</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab active" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <a class="swift-tab" href="signature-programme.html"><span class="swift-letter">S</span><span class="swift-word">Signature</span></a>
+    <a class="swift-tab" href="webinar-programme.html"><span class="swift-letter">W</span><span class="swift-word">Webinar</span></a>
+    <a class="swift-tab" href="invite-programme.html"><span class="swift-letter">I</span><span class="swift-word">Invite</span></a>
+    <a class="swift-tab" href="fill-programme.html"><span class="swift-letter">F</span><span class="swift-word">Fill Class</span></a>
+    <a class="swift-tab" href="track-programme.html"><span class="swift-letter">T</span><span class="swift-word">Track</span></a>
+    <a class="swift-tab" href="casestudies.html"><span class="swift-letter" style="color:rgba(255,255,255,0.4);">★</span><span class="swift-word">Case Studies</span></a>
+    <a class="swift-tab" href="planner.html"><span class="swift-letter" style="color:rgba(255,255,255,0.4);">📅</span><span class="swift-word">30-Day Plan</span></a>
+    <div class="swift-tab-group"><a class="swift-tab" href="other-resources.html" style="cursor:pointer;"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">✦</span><span class="swift-word">Other Resources ▾</span></a><div class="swift-sub-menu"><a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a><a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a><a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a><a class="swift-sub-item" href="ig-ads.html">📸 IG Ads</a></div></div>
+  </nav>
+
+  <div class="swift-nav-mobile" id="swiftMobileNav">
+    <button class="swift-dropdown-btn" id="swiftDropdownBtn" onclick="document.getElementById('swiftDropdownMenu').classList.toggle('open'); this.querySelector('span:last-child').textContent = document.getElementById('swiftDropdownMenu').classList.contains('open') ? '▴' : '▾';">
+      <span id="swiftCurrentLabel">⌂ Home</span>
+      <span>▾</span>
+    </button>
+    <div class="swift-dropdown-menu" id="swiftDropdownMenu">
+      <a class="swift-dropdown-item active" href="index.html"><span class="item-letter">⌂</span>Home</a>
+      <a class="swift-dropdown-item" href="signature-programme.html"><span class="item-letter">S</span>Signature</a>
+      <a class="swift-dropdown-item" href="webinar-programme.html"><span class="item-letter">W</span>Webinar</a>
+      <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
+      <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
+      <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
+      <a class="swift-dropdown-item" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
+      <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
+      <a class="swift-dropdown-item" href="other-resources.html"><span class="item-letter">✦</span>Parties for Kids</a>
+      <a class="swift-dropdown-item" href="holiday-workshops.html"><span class="item-letter">✦</span>Holiday Workshops</a>
+      <a class="swift-dropdown-item" href="payment-upgrade.html"><span class="item-letter">✦</span>Monthly → Annual</a>
+      <a class="swift-dropdown-item" href="ig-ads.html"><span class="item-letter">✦</span>IG Ads</a>
+    </div>
+  </div>
+
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-tag">✶ Pace of Love ✶</div>
+      <h2>Your 5-Step System: From Webinar to <em>Thriving Group Classes</em></h2>
+      <p class="hero-sub">A heart-based approach to growing your tutoring business with peace, not pressure.</p>
+      <div class="pace-badge"><span>✶</span> SWIFT doesn't mean fast. It means moving forward — at a pace that is yours.</div>
+    </div>
+
+    <!-- 5 STEPS -->
+    <div class="steps-label">The 5 Steps</div>
+    <div class="steps">
+
+      <div class="step-card s-card">
+        <div class="step-letter-wrap"><span class="step-letter">S</span></div>
+        <div class="step-body">
+          <div class="step-name">Signature Offer</div>
+          <p class="step-desc">Get crystal clear on your niche, your ideal student, and the specific transformation you deliver. This positions you as the go-to expert before you run a single webinar.</p>
+          <div class="step-meta">
+            <div class="step-pill"><div><div class="step-pill-label">Milestone</div>You can confidently say: "I help [who] achieve [what] in [timeframe]."</div></div>
+            <div class="step-pill"><div><div class="step-pill-label">Action</div>Write your one-line signature offer statement.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card w-card">
+        <div class="step-letter-wrap"><span class="step-letter">W</span></div>
+        <div class="step-body">
+          <div class="step-name">Webinar</div>
+          <p class="step-desc">Run a free Heart-Based Webinar to deliver genuine value, build trust, and invite parents or students to take the next step. Focus on WHAT they'll gain, not HOW you teach it.</p>
+          <div class="step-meta">
+            <div class="step-pill"><div><div class="step-pill-label">Milestone</div>Your first webinar goes live — real people show up and engage.</div></div>
+            <div class="step-pill"><div><div class="step-pill-label">Action</div>Set your webinar date and send your first invite.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card i-card">
+        <div class="step-letter-wrap"><span class="step-letter">I</span></div>
+        <div class="step-body">
+          <div class="step-name">Invite &amp; Follow-Up</div>
+          <p class="step-desc">Use heart-based follow-up messages to nurture every lead after the webinar. Your system converts 20–40% of inquiries into enrolled students — no pushy sales, just authentic connection.</p>
+          <div class="step-meta">
+            <div class="step-pill"><div><div class="step-pill-label">Milestone</div>First replies and enquiries come in from interested families.</div></div>
+            <div class="step-pill"><div><div class="step-pill-label">Action</div>Send your follow-up sequence within 24 hours of the webinar.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card f-card">
+        <div class="step-letter-wrap"><span class="step-letter">F</span></div>
+        <div class="step-body">
+          <div class="step-name">Fill Group Class</div>
+          <p class="step-desc">Transition from exhausting 1-on-1 lessons to a profitable online group class with 4–6+ paying students within 30–90 days — even if you're starting from zero.</p>
+          <div class="step-meta">
+            <div class="step-pill"><div><div class="step-pill-label">Milestone</div>First students enrolled and first group class runs successfully.</div></div>
+            <div class="step-pill"><div><div class="step-pill-label">Action</div>Confirm your first cohort and schedule your launch date.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card t-card">
+        <div class="step-letter-wrap"><span class="step-letter">T</span></div>
+        <div class="step-body">
+          <div class="step-name">Track &amp; Relaunch</div>
+          <p class="step-desc">Collect testimonials, review what worked, and systematise your process. Use your clients' wins as social proof to fill your next round — bigger, faster, and with more confidence.</p>
+          <div class="step-meta">
+            <div class="step-pill"><div><div class="step-pill-label">Milestone</div>Second round is planned and filling up.</div></div>
+            <div class="step-pill"><div><div class="step-pill-label">Action</div>Request testimonials and set a date for Round 2.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- QUOTE -->
+    <div class="quote-block">
+      <div class="quote-text">"The new currency is not money. The new currency is trust."</div>
+      <div class="quote-attr">— <strong>John Yeo</strong>, Product Architect Coaching</div>
+    </div>
+
+    <!-- ALIGNMENT TABLE -->
+    <div class="section-title">SWIFT meets the Product Architect Blueprint</div>
+    <p class="section-sub">SWIFT is the client journey. The Blueprint is the full system. Here is how they align.</p>
+    <blockquote style="font-family:'DM Serif Display',serif; font-size:15px; color:var(--text-muted); font-style:italic; margin-bottom:24px; padding-left:16px; border-left:3px solid var(--gold);">"The Product Architect Blueprint is the full map. SWIFT is how you walk it — one step at a time, at your own pace."</blockquote>
+
+    <table class="align-table">
+      <thead>
+        <tr>
+          <th>SWIFT Step</th>
+          <th>What it does</th>
+          <th>Blueprint Pillar</th>
+          <th>Blueprint Element</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--s);">S — Signature Offer</td>
+          <td>Define your niche &amp; transformation</td>
+          <td><span class="pillar-badge">Pillar 1 · ALIGN</span></td>
+          <td>Signature Offer — 1 micro niche, more qualified prospects come to you</td>
+        </tr>
+        <tr>
+          <td style="color:var(--s);">↓ Fill the Webinar</td>
+          <td>Paid ads / organic / survey / referrals — pick what works</td>
+          <td><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
+          <td>AI Authentic Content — attracts prospects already looking for people like you</td>
+        </tr>
+        <tr>
+          <td style="color:var(--w);">W — Webinar</td>
+          <td>Free Heart-Based Webinar to build trust</td>
+          <td><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
+          <td>Get Buy-In — connect &amp; convert with authenticity, predictable monthly income</td>
+        </tr>
+        <tr>
+          <td style="color:var(--i);">I — Invite &amp; Follow-Up</td>
+          <td>Heart-based follow-up, converts 20–40% of leads</td>
+          <td><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
+          <td>Get Buy-In — no pushy sales, just authentic connection</td>
+        </tr>
+        <tr>
+          <td style="color:var(--f);">F — Fill Group Class</td>
+          <td>4–6+ paying students within 30–90 days</td>
+          <td><span class="pillar-badge">Pillar 3 · ASCEND</span></td>
+          <td>Small Big Group — 3–10 or 10–50 students, more revenue, more time freedom</td>
+        </tr>
+        <tr>
+          <td style="color:var(--t);">T — Track &amp; Relaunch</td>
+          <td>Collect testimonials, systematise &amp; repeat</td>
+          <td><span class="pillar-badge">Pillar 3 · ASCEND</span></td>
+          <td>Private Consult + Group — sustain, grow &amp; earn more, towards $10K–30K/month</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- KEY INSIGHT -->
+    <div class="insight-box">
+      <div class="insight-label">Key Insight</div>
+      <p class="insight-text">Everything before the Webinar — paid ads, organic content, surveys, books, referrals — has ONE job: fill the webinar. Don't get overwhelmed by marketing choices. Pick what works for you and move at your own pace.</p>
+    </div>
+
+  </main>
+
+  <footer class="home-footer">Product Architect Coaching &nbsp;|&nbsp; Peace Over Profit &nbsp;|&nbsp; Pace of Love &nbsp;|&nbsp; © John Yeo</footer>
+
 </body>
 </html>
