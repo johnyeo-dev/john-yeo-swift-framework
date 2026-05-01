@@ -383,6 +383,16 @@
     .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
     .swift-dropdown-item.active .item-letter { color: var(--gold); }
     @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
+
+    /* CASE STUDY SUB-NAV */
+    .cs-subnav { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .cs-subnav::-webkit-scrollbar { display: none; }
+    .cs-subnav-back { font-size: 12px; color: var(--text-muted); text-decoration: none; padding: 14px 16px 14px 0; border-right: 1px solid var(--border); margin-right: 4px; white-space: nowrap; transition: color 0.2s; }
+    .cs-subnav-back:hover { color: var(--navy); }
+    .cs-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    .cs-subnav-tab:hover { color: var(--navy); }
+    .cs-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+    @media (max-width: 600px) { .cs-subnav { padding: 0 16px; } .cs-subnav-back { padding: 12px 12px 12px 0; } .cs-subnav-tab { padding: 12px 14px; } }
   </style>
 </head>
 <body>
@@ -421,10 +431,7 @@
       <span class="swift-letter">T</span>
       <span class="swift-word">Track</span>
     </button>
-    <button class="swift-tab active">
-      <span class="swift-letter" style="color:var(--gold);">★</span>
-      <span class="swift-word">Case Study 1 - Paid Ads</span>
-    </button>
+    <a class="swift-tab active" href="casestudies.html"><span class="swift-letter" style="color:var(--gold);">★</span><span class="swift-word">Case Studies</span></a>
     <button class="swift-tab" onclick="window.location.href='casestudy-fion.html'">
       <span class="swift-letter" style="color:var(--gold);">★</span>
       <span class="swift-word">Case Study 2 - Referral</span>
@@ -446,8 +453,7 @@
       <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
       <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
       <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
-      <a class="swift-dropdown-item" href="casestudy-feon.html"><span class="item-letter">★</span>Case Study 1 – Paid Ads</a>
-      <a class="swift-dropdown-item" href="casestudy-fion.html"><span class="item-letter">★</span>Case Study 2 – Referral</a>
+      <a class="swift-dropdown-item active" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
     </div>
   </div>
   <script>
@@ -460,8 +466,9 @@
         'invite-programme.html': 'I · Invite',
         'fill-programme.html': 'F · Fill Class',
         'track-programme.html': 'T · Track',
-        'casestudy-feon.html': '★ Case Study 1 – Paid Ads',
-        'casestudy-fion.html': '★ Case Study 2 – Referral',
+        'casestudies.html': '★ Case Studies',
+        'casestudy-feon.html': '★ Case Studies',
+        'casestudy-fion.html': '★ Case Studies',
       };
       var el = document.getElementById('swiftCurrentLabel');
       if (el) el.textContent = map[page] || 'Menu';
@@ -480,10 +487,15 @@
     });
   </script>
 
+  <!-- CASE STUDY SUB-NAV -->
+  <nav class="cs-subnav">
+    <a class="cs-subnav-back" href="casestudies.html">← All Case Studies</a>
+    <a class="cs-subnav-tab active" href="casestudy-feon.html">Case Study 1 — Paid Ads</a>
+    <a class="cs-subnav-tab" href="casestudy-fion.html">Case Study 2 — Referral</a>
+  </nav>
+
   <!-- MAIN -->
   <main class="main">
-
-    <a href="javascript:history.back()" class="back-link">← Back</a>
 
     <!-- HERO -->
     <div class="case-hero">

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Studies | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    .swift-nav { background: var(--navy-light); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.4); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.75); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; }
+
+    /* MOBILE NAV */
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
+    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
+    .swift-dropdown-menu.open { display: block; }
+    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-dropdown-item:last-child { border-bottom: none; }
+    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .swift-dropdown-item.active .item-letter { color: var(--gold); }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .swift-nav-mobile { display: block; } }
+
+    /* MAIN */
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    .page-intro { margin-bottom: 36px; }
+    .page-intro h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--navy); margin-bottom: 8px; }
+    .page-intro p { font-size: 15px; color: var(--text-muted); line-height: 1.6; max-width: 560px; }
+
+    /* CASE STUDY CARDS */
+    .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 600px) { .cs-grid { grid-template-columns: 1fr; } }
+
+    .cs-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; text-decoration: none; transition: box-shadow 0.2s, transform 0.2s; display: flex; flex-direction: column; }
+    .cs-card:hover { box-shadow: 0 8px 32px rgba(0,45,106,0.12); transform: translateY(-3px); }
+
+    .cs-card-top { background: var(--navy); padding: 28px 24px 20px; }
+    .cs-num { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .cs-card-top h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--white); line-height: 1.3; margin-bottom: 6px; }
+    .cs-card-top .cs-tag { font-size: 12px; color: rgba(255,255,255,0.55); }
+
+    .cs-card-body { padding: 20px 24px; flex: 1; }
+    .cs-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .cs-metric { background: var(--cream); border-radius: 8px; padding: 10px 12px; text-align: center; }
+    .cs-metric-val { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); line-height: 1.1; }
+    .cs-metric-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; font-weight: 600; }
+    .cs-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    .cs-card-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .cs-cta { font-size: 13px; font-weight: 600; color: var(--gold); }
+    .cs-arrow { font-size: 18px; color: var(--gold); transition: transform 0.2s; }
+    .cs-card:hover .cs-arrow { transform: translateX(4px); }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px 16px; }
+      .main { padding: 24px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1><em>Real Results</em> — Case Studies</h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">★</div>
+      <div class="label">Case Studies</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="signature-programme.html"><span class="swift-letter">S</span><span class="swift-word">Signature</span></a>
+    <a class="swift-tab" href="webinar-programme.html"><span class="swift-letter">W</span><span class="swift-word">Webinar</span></a>
+    <a class="swift-tab" href="invite-programme.html"><span class="swift-letter">I</span><span class="swift-word">Invite</span></a>
+    <a class="swift-tab" href="fill-programme.html"><span class="swift-letter">F</span><span class="swift-word">Fill Class</span></a>
+    <a class="swift-tab" href="track-programme.html"><span class="swift-letter">T</span><span class="swift-word">Track</span></a>
+    <a class="swift-tab active" href="casestudies.html"><span class="swift-letter" style="color:var(--gold);">★</span><span class="swift-word">Case Studies</span></a>
+    <a class="swift-tab" href="planner.html"><span class="swift-letter" style="color:rgba(255,255,255,0.3);">📅</span><span class="swift-word">30-Day Plan</span></a>
+  </nav>
+
+  <!-- MOBILE DROPDOWN -->
+  <div class="swift-nav-mobile" id="swiftMobileNav">
+    <button class="swift-dropdown-btn" id="swiftDropdownBtn" onclick="toggleSwiftDropdown()">
+      <span id="swiftCurrentLabel">★ Case Studies</span>
+      <span>▾</span>
+    </button>
+    <div class="swift-dropdown-menu" id="swiftDropdownMenu">
+      <a class="swift-dropdown-item" href="signature-programme.html"><span class="item-letter">S</span>Signature</a>
+      <a class="swift-dropdown-item" href="webinar-programme.html"><span class="item-letter">W</span>Webinar</a>
+      <a class="swift-dropdown-item" href="invite-programme.html"><span class="item-letter">I</span>Invite</a>
+      <a class="swift-dropdown-item" href="fill-programme.html"><span class="item-letter">F</span>Fill Class</a>
+      <a class="swift-dropdown-item" href="track-programme.html"><span class="item-letter">T</span>Track</a>
+      <a class="swift-dropdown-item active" href="casestudies.html"><span class="item-letter">★</span>Case Studies</a>
+      <a class="swift-dropdown-item" href="planner.html"><span class="item-letter">📅</span>30-Day Plan</a>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="page-intro">
+      <h2>Real Educators. Real Results.</h2>
+      <p>These are students who went through the SWIFT framework and got measurable outcomes. Read their stories and replicate what worked.</p>
+    </div>
+
+    <div class="cs-grid">
+      <!-- Case Study 1 -->
+      <a class="cs-card" href="casestudy-feon.html">
+        <div class="cs-card-top">
+          <div class="cs-num">Case Study 01</div>
+          <h3>Teacher Feon</h3>
+          <div class="cs-tag">Paid Ads Strategy</div>
+        </div>
+        <div class="cs-card-body">
+          <div class="cs-metrics">
+            <div class="cs-metric"><div class="cs-metric-val">17</div><div class="cs-metric-lbl">Students</div></div>
+            <div class="cs-metric"><div class="cs-metric-val">8.88×</div><div class="cs-metric-lbl">ROI</div></div>
+            <div class="cs-metric"><div class="cs-metric-val">$2,145</div><div class="cs-metric-lbl">Net Profit</div></div>
+            <div class="cs-metric"><div class="cs-metric-val">$180</div><div class="cs-metric-lbl">Ad Spend</div></div>
+          </div>
+          <p class="cs-desc">First group programme launch using paid Facebook ads and the SWIFT webinar system. Went from 0 ad knowledge to $2,145 net profit in one round.</p>
+        </div>
+        <div class="cs-card-footer">
+          <span class="cs-cta">Read case study</span>
+          <span class="cs-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- Case Study 2 -->
+      <a class="cs-card" href="casestudy-fion.html">
+        <div class="cs-card-top">
+          <div class="cs-num">Case Study 02</div>
+          <h3>Fion</h3>
+          <div class="cs-tag">Referral Strategy</div>
+        </div>
+        <div class="cs-card-body">
+          <div class="cs-metrics">
+            <div class="cs-metric"><div class="cs-metric-val">76</div><div class="cs-metric-lbl">Students</div></div>
+            <div class="cs-metric"><div class="cs-metric-val">$0</div><div class="cs-metric-lbl">Ad Spend</div></div>
+            <div class="cs-metric"><div class="cs-metric-val">10→76</div><div class="cs-metric-lbl">Growth</div></div>
+            <div class="cs-metric"><div class="cs-metric-val">Waitlist</div><div class="cs-metric-lbl">Status</div></div>
+          </div>
+          <p class="cs-desc">Grew from 10 to 76 students using zero paid ads — purely through a structured referral and community system. Now fully booked with a waitlist.</p>
+        </div>
+        <div class="cs-card-footer">
+          <span class="cs-cta">Read case study</span>
+          <span class="cs-arrow">→</span>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <script>
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#swiftMobileNav')) {
+        var m = document.getElementById('swiftDropdownMenu');
+        if (m) m.classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>
