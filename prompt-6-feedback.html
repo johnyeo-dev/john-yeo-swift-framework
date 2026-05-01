@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompts 4 & 5: Google Forms | SWIFT Framework</title>
+  <title>Prompt 6: Feedback Form | SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root{--navy:#002D6A;--navy-light:#0A0F1C;--gold:#0ABFBC;--gold-light:#4A8FE7;--cream:#F4F7FB;--cream-dark:#E8EDF5;--text:#0A0F1C;--text-muted:#6B7A96;--white:#FFFFFF;--border:#B8C4D4;}
@@ -14,7 +14,7 @@
     .header h1{font-family:'DM Serif Display',serif;font-size:clamp(24px,4vw,36px);color:var(--white);line-height:1.1;}
     .header h1 em{font-style:italic;color:var(--gold-light);}
     .swift-badge{margin-left:auto;background:rgba(10,191,188,0.15);border:1px solid var(--gold);border-radius:6px;padding:8px 16px;text-align:center;flex-shrink:0;}
-    .swift-badge .s{font-family:'DM Serif Display',serif;font-size:16px;color:var(--gold);line-height:1;}
+    .swift-badge .s{font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold);line-height:1;}
     .swift-badge .label{font-size:11px;letter-spacing:2px;color:var(--white);text-transform:uppercase;margin-top:2px;font-weight:600;}
     .swift-nav{background:var(--navy-light);position:sticky;top:0;z-index:100;padding:0 16px;display:flex;gap:0;overflow:visible;border-bottom:1px solid rgba(255,255,255,0.08);}
     .swift-tab{padding:14px 20px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,0.65);border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:10px;text-decoration:none;}
@@ -43,20 +43,11 @@
     .mobile-menu-letter{font-family:'DM Serif Display',serif;font-size:18px;width:24px;text-align:center;flex-shrink:0;}
     @media(max-width:768px){.swift-nav{display:none!important;}.mobile-menu-bar{display:block;}}
     @media(min-width:769px){.mobile-menu-bar{display:none!important;}}
-
     .main{max-width:800px;margin:0 auto;padding:40px 24px 80px;}
-    .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:24px;font-size:13px;color:var(--text-muted);}
+    .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:28px;font-size:13px;color:var(--text-muted);}
     .breadcrumb a{color:var(--gold);text-decoration:none;font-weight:600;}
     .breadcrumb span{color:var(--border);}
-
-    /* VIDEO */
-    .video-section{margin-bottom:32px;}
-    .video-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
-    .video-wrap{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;}
-    .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
-
-    /* PROMPT CARDS */
-    .prompt-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,45,106,0.06);margin-bottom:24px;}
+    .prompt-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,45,106,0.06);}
     .prompt-card-header{background:var(--navy);padding:22px 28px;display:flex;align-items:center;gap:16px;}
     .prompt-number{background:var(--gold);color:var(--navy);font-family:'DM Serif Display',serif;font-size:18px;font-weight:700;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
     .prompt-card-header-text{flex:1;}
@@ -66,19 +57,15 @@
     .prompt-card-body{padding:28px;}
     .section-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
     .instructions-intro{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:20px;}
-
-    /* FIELDS LIST */
     .fields-list{background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:24px;}
     .fields-list-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;}
     .field-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--cream-dark);font-size:13px;color:var(--text);}
     .field-item:last-child{border-bottom:none;}
     .field-num{background:var(--navy);color:white;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-
     .callout{background:linear-gradient(135deg,rgba(10,191,188,0.07) 0%,rgba(74,143,231,0.07) 100%);border:1.5px solid rgba(10,191,188,0.3);border-radius:14px;padding:18px 20px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start;}
     .callout .icon{font-size:22px;flex-shrink:0;margin-top:1px;}
     .callout-text strong{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;}
     .callout-text p{font-size:13px;color:var(--text-muted);line-height:1.6;}
-
     .divider{border:none;border-top:1.5px solid var(--cream-dark);margin:26px 0;}
     .prompt-box{background:#0A0F1C;border-radius:14px;overflow:hidden;}
     .prompt-box-top{padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
@@ -90,7 +77,6 @@
     .prompt-text::-webkit-scrollbar{width:4px;}
     .prompt-text::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);}
     .prompt-text::-webkit-scrollbar-thumb{background:rgba(10,191,188,0.4);border-radius:99px;}
-
     @media(max-width:600px){.header{padding:20px 16px;}.main{padding:28px 16px 60px;}.prompt-card-body{padding:18px 16px;}.prompt-card-header{padding:18px 18px;}.prompt-text{font-size:12px;max-height:340px;}}
   </style>
 </head>
@@ -99,10 +85,10 @@
   <header class="header">
     <div>
       <div class="header-label">PAC · 6 Prompts</div>
-      <h1>Prompts 4 &amp; 5 — <em>Google Forms</em></h1>
+      <h1>Prompt 6 — <em>Feedback Form</em></h1>
     </div>
     <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
-      <div class="swift-badge" style="margin-left:0;"><div class="s">4 + 5</div><div class="label">of 6</div></div>
+      <div class="swift-badge" style="margin-left:0;"><div class="s">6</div><div class="label">of 6</div></div>
       <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
     </div>
   </header>
@@ -140,8 +126,8 @@
         <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
         <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
         <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
-        <a class="swift-sub-item active" href="prompt-4-5-forms.html">✦ Google Forms</a>
-        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Google Forms</a>
+        <a class="swift-sub-item active" href="prompt-6-feedback.html">✦ Feedback Form</a>
       </div>
     </div>
   </nav>
@@ -175,115 +161,50 @@
     <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
     <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
     <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
-    <a class="mobile-menu-item active" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Google Forms</a>
-    <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Google Forms</a>
+    <a class="mobile-menu-item active" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
   </div>
   <div class="mobile-menu-bar">
     <button class="mobile-menu-btn" onclick="openMobileMenu()"><span>☰ &nbsp;Menu</span><span style="font-size:11px;opacity:0.5;">▾</span></button>
   </div>
 
   <main class="main">
-    <div class="breadcrumb"><a href="6-prompts.html">← 6 Prompts</a><span>/</span><span>Google Forms</span></div>
+    <div class="breadcrumb"><a href="6-prompts.html">← 6 Prompts</a><span>/</span><span>Feedback Form</span></div>
 
-    <!-- VIDEO -->
-    <div class="video-section">
-      <div class="video-label">Watch First — How to set up Google Forms with Apps Script</div>
-      <div class="video-wrap">
-        <iframe src="https://www.youtube.com/embed/YKGa8ZpYpdQ" title="How to Build a Google Form in 2 Minutes Using Claude + Apps Script" allowfullscreen loading="lazy"></iframe>
-      </div>
-    </div>
-
-    <!-- ══ PROMPT 4 ══ -->
     <div class="prompt-card">
       <div class="prompt-card-header">
-        <div class="prompt-number">4</div>
+        <div class="prompt-number">6</div>
         <div class="prompt-card-header-text">
-          <div class="prompt-category">Prompt 4 of 6</div>
-          <h3>Leads Collection <em>Enquiry Form</em></h3>
-        </div>
-      </div>
-      <div class="prompt-card-body">
-        <div class="section-label">What This Creates</div>
-        <p class="instructions-intro">A Google Form built automatically via Apps Script that captures warm leads from parents interested in your programme. Copy the prompt, paste into Claude, and you'll get a ready-to-run script — no coding needed.</p>
-
-        <div class="fields-list">
-          <div class="fields-list-title">Form Fields</div>
-          <div class="field-item"><div class="field-num">1</div>Parent's name</div>
-          <div class="field-item"><div class="field-num">2</div>Child's education level</div>
-          <div class="field-item"><div class="field-num">3</div>Contact number</div>
-          <div class="field-item"><div class="field-num">4</div>Email address</div>
-          <div class="field-item"><div class="field-num">5</div>Biggest challenge your child is facing right now</div>
-        </div>
-
-        <div class="callout">
-          <div class="icon">⚙️</div>
-          <div class="callout-text">
-            <strong>How to use the Apps Script Claude generates</strong>
-            <p>Go to <strong>script.google.com</strong> → New Project → paste the script → click Run. The form is created instantly in your Google Drive. Watch the video above for a step-by-step walkthrough.</p>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="prompt-box">
-          <div class="prompt-box-top">
-            <div class="prompt-box-label">📋 Prompt 4 — Copy &amp; Paste into Claude</div>
-            <button class="copy-btn" id="copyBtn4" onclick="copyPrompt('promptContent4','copyBtn4')">Copy</button>
-          </div>
-          <div class="prompt-text" id="promptContent4">Please write a complete Google Apps Script that automatically creates a Google Form for collecting leads from parents interested in my tutoring or coaching programme.
-
-The form should collect the following fields:
-1. Parent's name (short answer, required)
-2. Child's education level (multiple choice — required)
-   Options: Primary 1, Primary 2, Primary 3, Primary 4, Primary 5, Primary 6, Secondary 1, Secondary 2, Secondary 3, Secondary 4, Secondary 5, JC 1, JC 2, Other
-3. Contact number (short answer, required)
-4. Email address (short answer, required)
-5. What is the biggest challenge your child is facing right now? (paragraph, required)
-
-Script requirements:
-- Create the entire form programmatically using Google Apps Script
-- Set the form title to: "Tell Me About Your Child"
-- Set the form description to: "I'd love to learn more about your child and how I can help. This takes about 2 minutes to fill in."
-- Make all questions required
-- Set the confirmation message (shown after submission) to: "Thank you! I'll be in touch within 24 hours."
-- Link the form to a new Google Sheet to collect responses automatically
-- Name the Google Sheet: "Leads"
-
-After the script, please also give me:
-1. Step-by-step instructions: how to open Google Apps Script, paste the code, and run it
-2. How to find the form link once the script has run
-3. How to view responses in the connected Google Sheet
-4. A short message I can send to parents (WhatsApp or Instagram DM) asking them to fill in the form</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ PROMPT 5 ══ -->
-    <div class="prompt-card">
-      <div class="prompt-card-header">
-        <div class="prompt-number">5</div>
-        <div class="prompt-card-header-text">
-          <div class="prompt-category">Prompt 5 of 6</div>
+          <div class="prompt-category">Prompt 6 of 6</div>
           <h3>Student &amp; Parent <em>Feedback Form</em></h3>
         </div>
       </div>
       <div class="prompt-card-body">
+
         <div class="section-label">What This Creates</div>
-        <p class="instructions-intro">A feedback form that helps you understand how your students and parents feel about your programme — and surfaces testimonials, referrals, and improvement areas automatically.</p>
+        <p class="instructions-intro">A feedback form built via Google Apps Script that captures how your students and parents feel about your programme — surfacing testimonials, referral intent, and improvement ideas automatically every term.</p>
 
         <div class="fields-list">
           <div class="fields-list-title">Form Fields</div>
-          <div class="field-item"><div class="field-num">1</div>How likely are you to recommend us to a friend? (1–10 scale)</div>
-          <div class="field-item"><div class="field-num">2</div>One area where we could improve</div>
-          <div class="field-item"><div class="field-num">3</div>What have we done well?</div>
-          <div class="field-item"><div class="field-num">4</div>What other support would be helpful for your child?</div>
+          <div class="field-item"><div class="field-num">1</div>How likely are you to tell your friends about us? (1–10 rating)</div>
+          <div class="field-item"><div class="field-num">2</div>One area of improvement</div>
+          <div class="field-item"><div class="field-num">3</div>What did we do well?</div>
+          <div class="field-item"><div class="field-num">4</div>What other support do you need?</div>
         </div>
 
         <div class="callout">
           <div class="icon">💡</div>
           <div class="callout-text">
             <strong>Send this at the end of every term or programme</strong>
-            <p>Responses with a score of 9–10 are your best candidates to ask for a public testimonial. The improvement field often surfaces the next programme idea.</p>
+            <p>Anyone who scores 9 or 10 is your warmest testimonial candidate. The "other support" field regularly surfaces your next programme idea.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:-10px;">
+          <div class="icon">⚙️</div>
+          <div class="callout-text">
+            <strong>How to run the Apps Script</strong>
+            <p>Go to <strong>script.google.com</strong> → New Project → paste the script Claude gives you → click Run. The form is created instantly in your Google Drive. Need a walkthrough? See the <a href="prompt-4-5-forms.html" style="color:var(--gold);text-decoration:none;font-weight:600;">Google Forms page ↗</a> for the tutorial video.</p>
           </div>
         </div>
 
@@ -291,35 +212,35 @@ After the script, please also give me:
 
         <div class="prompt-box">
           <div class="prompt-box-top">
-            <div class="prompt-box-label">📋 Prompt 5 — Copy &amp; Paste into Claude</div>
-            <button class="copy-btn" id="copyBtn5" onclick="copyPrompt('promptContent5','copyBtn5')">Copy</button>
+            <div class="prompt-box-label">📋 Your Claude Prompt — Copy Everything Below</div>
+            <button class="copy-btn" id="copyBtn6" onclick="copyPrompt('promptContent6','copyBtn6')">Copy</button>
           </div>
-          <div class="prompt-text" id="promptContent5">Please write a complete Google Apps Script that automatically creates a feedback form for parents and students currently in my tutoring or coaching programme.
+          <div class="prompt-text" id="promptContent6">Please write a complete Google Apps Script that automatically creates a feedback form for parents and students currently in my tutoring or coaching programme.
 
 The form should collect the following:
-1. How likely are you to recommend us to a friend or family member? (linear scale 1–10, required)
-   Label 1 as "Not likely at all" and 10 as "Extremely likely"
+1. How likely are you to tell your friends about us? (linear scale 1–10, required)
+   Label 1 as "Not likely" and 10 as "Extremely likely"
 2. One area where we could improve (paragraph, required)
-3. What have we done well? (paragraph, required)
-4. What other support would be helpful for your child? (paragraph, optional)
+3. What did we do well? (paragraph, required)
+4. What other support do you need? (paragraph, optional)
 5. Your name (short answer, optional — label it "Your name (optional)")
 
 Script requirements:
 - Create the entire form programmatically using Google Apps Script
 - Set the form title to: "Share Your Feedback"
-- Set the form description to: "Your feedback means a lot to us and helps us improve. This takes less than 2 minutes."
-- Set the confirmation message to: "Thank you so much for taking the time — we really appreciate it!"
+- Set the form description to: "Your feedback helps us improve. This takes less than 2 minutes and means a lot to us."
+- Set the confirmation message to: "Thank you so much — we really appreciate you taking the time!"
 - Link the form to a new Google Sheet to collect responses automatically
 - Name the Google Sheet: "Feedback"
 
 After the script, please also give me:
 1. Step-by-step instructions: how to open Google Apps Script, paste the code, and run it
-2. How to view the responses in the connected Google Sheet
-3. A warm WhatsApp message I can send to parents and students asking them to fill in the feedback form (keep it short, friendly, not corporate)</div>
+2. How to view responses in the connected Google Sheet
+3. A short, warm WhatsApp message I can send to parents asking them to fill in the feedback form (keep it friendly, not corporate)</div>
         </div>
+
       </div>
     </div>
-
   </main>
 
   <div id="nameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,20,0.75);z-index:9999;align-items:center;justify-content:center;">
