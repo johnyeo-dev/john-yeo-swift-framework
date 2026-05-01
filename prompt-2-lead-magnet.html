@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>6 Prompts | SWIFT Framework</title>
+  <title>Prompt 2: Lead Magnet | SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -28,9 +28,8 @@
     .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .swift-tab:hover { color: rgba(255,255,255,0.85); }
     .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
-    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
-    .swift-tab.active .swift-letter { color: var(--gold); }
     .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
     .swift-tab-group { position: relative; display: flex; align-items: stretch; }
     .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
     .swift-tab-group.open .swift-sub-menu { display: block; }
@@ -54,43 +53,65 @@
     @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
     @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
 
-    /* ── MAIN ── */
-    .main { max-width: 800px; margin: 0 auto; padding: 50px 24px 80px; }
+    .main { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
 
-    .page-intro { margin-bottom: 36px; }
-    .page-intro .overline { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .page-intro h2 { font-family: 'DM Serif Display', serif; font-size: clamp(26px, 4vw, 38px); color: var(--navy); line-height: 1.15; margin-bottom: 14px; }
-    .page-intro h2 em { font-style: italic; color: var(--gold-light); }
-    .page-intro p { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 580px; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; font-size: 13px; color: var(--text-muted); }
+    .breadcrumb a { color: var(--gold); text-decoration: none; font-weight: 600; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { color: var(--border); }
 
-    /* ── PROMPT GRID ── */
-    .prompt-grid { display: flex; flex-direction: column; gap: 12px; }
+    .prompt-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,45,106,0.06); }
+    .prompt-card-header { background: var(--navy); padding: 22px 28px; display: flex; align-items: center; gap: 16px; }
+    .prompt-number { background: var(--gold); color: var(--navy); font-family: 'DM Serif Display', serif; font-size: 18px; font-weight: 700; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .prompt-card-header-text { flex: 1; }
+    .prompt-card-header-text .prompt-category { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+    .prompt-card-header-text h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--white); line-height: 1.2; }
+    .prompt-card-header-text h3 em { font-style: italic; color: #88d8d7; }
+    .prompt-card-body { padding: 28px; }
 
-    .prompt-hub-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px 22px; display: flex; align-items: center; gap: 18px; text-decoration: none; color: var(--text); transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s; box-shadow: 0 1px 6px rgba(0,45,106,0.05); }
-    .prompt-hub-card:hover { border-color: var(--gold); box-shadow: 0 4px 20px rgba(10,191,188,0.12); transform: translateY(-1px); }
-    .prompt-hub-soon { opacity: 0.55; cursor: default; pointer-events: none; background: var(--cream); }
-    .prompt-hub-soon:hover { transform: none; box-shadow: none; border-color: var(--border); }
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+    .instructions-intro { font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 20px; }
 
-    .phc-num { background: var(--navy); color: var(--white); font-family: 'DM Serif Display', serif; font-size: 18px; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .phc-num-soon { background: var(--cream-dark); color: var(--text-muted); }
+    .steps-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .step-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: var(--cream); border: 1.5px solid var(--border); border-radius: 12px; }
+    .step-num { background: var(--navy); color: var(--white); font-size: 12px; font-weight: 700; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-content { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+    .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .step-action { display: inline-block; margin-top: 7px; font-size: 12px; font-weight: 600; color: var(--gold); background: rgba(10,191,188,0.08); border: 1px solid rgba(10,191,188,0.25); border-radius: 6px; padding: 4px 10px; }
 
-    .phc-body { flex: 1; }
-    .phc-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
-    .phc-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 4px; }
-    .prompt-hub-soon .phc-title { color: var(--text-muted); }
-    .phc-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .callout { background: linear-gradient(135deg, rgba(10,191,188,0.07) 0%, rgba(74,143,231,0.07) 100%); border: 1.5px solid rgba(10,191,188,0.3); border-radius: 14px; padding: 20px 22px; margin-bottom: 28px; display: flex; gap: 14px; align-items: flex-start; }
+    .callout .icon { font-size: 26px; flex-shrink: 0; margin-top: 1px; }
+    .callout-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .callout-text p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
-    .phc-arrow { font-size: 18px; color: var(--gold); flex-shrink: 0; transition: transform 0.2s; }
-    .prompt-hub-card:hover .phc-arrow { transform: translateX(4px); }
+    .divider { border: none; border-top: 1.5px solid var(--cream-dark); margin: 26px 0; }
 
-    .phc-soon-badge { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--text-muted); background: var(--cream-dark); border-radius: 20px; padding: 4px 12px; flex-shrink: 0; }
+    .prompt-box { background: #0A0F1C; border-radius: 14px; overflow: hidden; }
+    .prompt-box-top { padding: 14px 18px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .prompt-box-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+    .copy-btn { background: rgba(10,191,188,0.15); border: 1px solid rgba(10,191,188,0.4); color: var(--gold); border-radius: 6px; padding: 6px 14px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
+    .copy-btn:hover { background: rgba(10,191,188,0.25); }
+    .copy-btn.copied { background: var(--gold); border-color: var(--gold); color: #002D6A; }
+    .prompt-text { padding: 20px 22px; font-family: 'DM Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.75; color: #CBD5E1; white-space: pre-wrap; word-break: break-word; max-height: 480px; overflow-y: auto; }
+    .prompt-text::-webkit-scrollbar { width: 4px; }
+    .prompt-text::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .prompt-text::-webkit-scrollbar-thumb { background: rgba(10,191,188,0.4); border-radius: 99px; }
+
+    .outcome-section { margin-top: 28px; padding-top: 24px; border-top: 1.5px solid var(--cream-dark); }
+    .outcome-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .outcome-item { background: var(--cream); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px 15px; display: flex; gap: 10px; align-items: flex-start; }
+    .outcome-item .o-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .outcome-item .o-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .outcome-item .o-text strong { display: block; font-weight: 600; color: var(--navy); margin-bottom: 2px; font-size: 13px; }
 
     @media (max-width: 600px) {
       .header { padding: 20px 16px; }
-      .main { padding: 32px 16px 60px; }
-      .prompt-hub-card { padding: 16px 16px; gap: 14px; }
-      .phc-num { width: 34px; height: 34px; font-size: 15px; }
-      .phc-title { font-size: 16px; }
+      .main { padding: 28px 16px 60px; }
+      .prompt-card-body { padding: 20px 18px; }
+      .prompt-card-header { padding: 18px 20px; }
+      .outcome-grid { grid-template-columns: 1fr; }
+      .prompt-text { font-size: 12px; max-height: 360px; }
     }
   </style>
 </head>
@@ -98,13 +119,13 @@
 
   <header class="header">
     <div>
-      <div class="header-label">PAC · SWIFT Framework</div>
-      <h1><em>6 Prompts</em></h1>
+      <div class="header-label">PAC · 6 Prompts</div>
+      <h1>Prompt 2 — <em>Lead Magnet</em></h1>
     </div>
     <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
       <div class="swift-badge" style="margin-left:0;">
-        <div class="s">6</div>
-        <div class="label">Prompts</div>
+        <div class="s">2</div>
+        <div class="label">of 6</div>
       </div>
       <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
     </div>
@@ -141,7 +162,7 @@
       <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;border-bottom:3px solid var(--gold);color:white;"><span class="swift-word">6 Prompts ▾</span></button>
       <div class="swift-sub-menu">
         <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
-        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item active" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
         <a class="swift-sub-item" style="opacity:0.4;pointer-events:none;" href="#">✦ Sales Message <span style="font-size:10px;margin-left:6px;background:rgba(255,255,255,0.1);border-radius:4px;padding:2px 6px;">Soon</span></a>
         <a class="swift-sub-item" style="opacity:0.4;pointer-events:none;" href="#">✦ Content Plan <span style="font-size:10px;margin-left:6px;background:rgba(255,255,255,0.1);border-radius:4px;padding:2px 6px;">Soon</span></a>
         <a class="swift-sub-item" style="opacity:0.4;pointer-events:none;" href="#">✦ Referral System <span style="font-size:10px;margin-left:6px;background:rgba(255,255,255,0.1);border-radius:4px;padding:2px 6px;">Soon</span></a>
@@ -176,9 +197,9 @@
     <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
     <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
     <div class="mobile-menu-section">Quick Access</div>
-    <a class="mobile-menu-item active" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>6 Prompts</a>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>6 Prompts</a>
     <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:40px;font-size:13px;">✦ Signature Programme</a>
-    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:40px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item active" href="prompt-2-lead-magnet.html" style="padding-left:40px;font-size:13px;">✦ Lead Magnet</a>
     <a class="mobile-menu-item" href="#" style="padding-left:40px;font-size:13px;opacity:0.4;pointer-events:none;">✦ Sales Message <span style="font-size:10px;margin-left:4px;opacity:0.7;">Soon</span></a>
     <a class="mobile-menu-item" href="#" style="padding-left:40px;font-size:13px;opacity:0.4;pointer-events:none;">✦ Content Plan <span style="font-size:10px;margin-left:4px;opacity:0.7;">Soon</span></a>
     <a class="mobile-menu-item" href="#" style="padding-left:40px;font-size:13px;opacity:0.4;pointer-events:none;">✦ Referral System <span style="font-size:10px;margin-left:4px;opacity:0.7;">Soon</span></a>
@@ -193,74 +214,140 @@
 
   <main class="main">
 
-    <div class="page-intro">
-      <div class="overline">AI Prompts for Educators</div>
-      <h2>6 Prompts to Build Your<br><em>Education Business</em></h2>
-      <p>Each prompt is crafted to help you create the core pillars of your teaching business. Tap a prompt, copy it into Claude, and let the AI do the heavy lifting.</p>
+    <div class="breadcrumb">
+      <a href="6-prompts.html">← 6 Prompts</a>
+      <span>/</span>
+      <span>Lead Magnet</span>
     </div>
 
-    <div class="prompt-grid">
-
-      <a class="prompt-hub-card" href="prompt-1-signature.html">
-        <div class="phc-num">1</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 1</div>
-          <div class="phc-title">Signature Programme</div>
-          <div class="phc-desc">Create your named, structured teaching framework using your real student testimonials.</div>
+    <div class="prompt-card">
+      <div class="prompt-card-header">
+        <div class="prompt-number">2</div>
+        <div class="prompt-card-header-text">
+          <div class="prompt-category">Prompt 2 of 6</div>
+          <h3>Create Your <em>Lead Magnet PDF</em></h3>
         </div>
-        <div class="phc-arrow">→</div>
-      </a>
-
-      <a class="prompt-hub-card" href="prompt-2-lead-magnet.html">
-        <div class="phc-num">2</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 2</div>
-          <div class="phc-title">Lead Magnet</div>
-          <div class="phc-desc">Build a 7-page lead magnet PDF written in your voice using your Fathom call transcript.</div>
-        </div>
-        <div class="phc-arrow">→</div>
-      </a>
-
-      <div class="prompt-hub-card prompt-hub-soon">
-        <div class="phc-num phc-num-soon">3</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 3</div>
-          <div class="phc-title">Sales Message</div>
-          <div class="phc-desc">Write a warm, non-pushy sales message to convert enquiries into enrolments.</div>
-        </div>
-        <div class="phc-soon-badge">Soon</div>
       </div>
 
-      <div class="prompt-hub-card prompt-hub-soon">
-        <div class="phc-num phc-num-soon">4</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 4</div>
-          <div class="phc-title">Content Plan</div>
-          <div class="phc-desc">Generate a month of social media content ideas tailored to your niche and audience.</div>
-        </div>
-        <div class="phc-soon-badge">Soon</div>
-      </div>
+      <div class="prompt-card-body">
 
-      <div class="prompt-hub-card prompt-hub-soon">
-        <div class="phc-num phc-num-soon">5</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 5</div>
-          <div class="phc-title">Referral System</div>
-          <div class="phc-desc">Design a simple referral programme that turns happy parents into your best marketers.</div>
-        </div>
-        <div class="phc-soon-badge">Soon</div>
-      </div>
+        <div class="section-label">Instructions</div>
+        <p class="instructions-intro">A lead magnet is a free PDF that attracts your ideal clients and builds your email list or WhatsApp audience. This prompt uses your Fathom call transcript — or your own notes — to write a warm, human 7-page lead magnet entirely in your voice.</p>
 
-      <div class="prompt-hub-card prompt-hub-soon">
-        <div class="phc-num phc-num-soon">6</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 6</div>
-          <div class="phc-title">Upsell Offer</div>
-          <div class="phc-desc">Create a premium upsell offer that deepens the relationship with your existing students.</div>
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">Record your next discovery call with Fathom</div>
+              <div class="step-desc">Fathom records and transcribes your Zoom or Google Meet calls automatically. After the call, Fathom generates a full transcript you can download. If you haven't set it up yet, grab a free account first.</div>
+              <span class="step-action">→ <a href="https://fathom.video/invite/jpxdSA" target="_blank" style="color:var(--gold);text-decoration:none;">Get Fathom free ↗</a></span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">Download the transcript from Fathom</div>
+              <div class="step-desc">Open your Fathom dashboard → select the call → click <strong>Transcript</strong> → copy the full text or export it as a document. This becomes the source material Claude uses to write in your authentic voice.</div>
+              <span class="step-action">→ Copy or download the full call transcript</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">Open Claude and upload the transcript</div>
+              <div class="step-desc">Go to <strong>claude.ai</strong> → start a new chat → click the paperclip icon → upload your transcript file (or paste the text directly). Claude will use it to understand how you speak, what you teach, and who you help.</div>
+              <span class="step-action">→ <a href="https://claude.ai" target="_blank" style="color:var(--gold);text-decoration:none;">Open Claude ↗</a></span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <div class="step-title">Fill in your details, paste the prompt, hit enter</div>
+              <div class="step-desc">Copy the full prompt below. Fill in the bracketed sections with your own details — name, niche, client results, booking link. Then paste everything into Claude and send. Claude will produce a complete 7-page lead magnet draft ready to design.</div>
+            </div>
+          </div>
         </div>
-        <div class="phc-soon-badge">Soon</div>
-      </div>
 
+        <div class="callout">
+          <div class="icon">🎙️</div>
+          <div class="callout-text">
+            <strong>No Fathom transcript yet? You can still use this prompt</strong>
+            <p>Just fill in all the bracketed sections with your own words and skip the transcript upload. The more detail you give Claude, the better your lead magnet will sound like you. The transcript just makes it even more natural.</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="prompt-box">
+          <div class="prompt-box-top">
+            <div class="prompt-box-label">📋 Your Claude Prompt — Copy Everything Below</div>
+            <button class="copy-btn" id="copyBtn2" onclick="copyPrompt('promptContent2','copyBtn2')">Copy</button>
+          </div>
+          <div class="prompt-text" id="promptContent2">I want to create a 7-page lead magnet PDF to attract my ideal clients and grow my coaching or tutoring business.
+
+Here is some context about me:
+- My name: [YOUR NAME]
+- What I teach or coach: [YOUR SUBJECT / NICHE]
+- Who I help: [YOUR IDEAL CLIENT e.g. "tutors who want to scale", "parents of P6 students"]
+- My signature programme name (if you have one): [PROGRAMME NAME]
+- My backstory in a few sentences: [SHARE YOUR STORY — how you got here, what you went through, what changed]
+- 1-2 client results or transformations: [PASTE TESTIMONIALS OR DESCRIBE RESULTS]
+- My discovery call / booking link: [YOUR LINK]
+
+Please create a 7-page lead magnet with this structure:
+
+Page 1 — Cover page
+A compelling title that speaks directly to my ideal client's biggest desire or pain point. Include my name and a one-line promise.
+
+Page 2 — My backstory
+Write this in first person, warm and personal. Share the struggle I went through before I found my approach. Make it relatable to my ideal client. End with the turning point that changed everything for me.
+
+Page 3 — The problem my ideal client faces
+Name the exact trap or frustration my ideal client is stuck in. Make them feel deeply seen. Use simple, conversational language — no jargon.
+
+Page 4 — My framework or approach
+Introduce my signature framework or teaching method simply. One idea per point. This should feel like a "finally, someone gets it" moment for my reader.
+
+Page 5 — What this looks like in practice
+Give 2-3 short, real examples of what transformation looks like when someone follows this approach. Keep it tangible and specific.
+
+Page 6 — A client story
+Write one transformation story based on the client result I shared above. Focus on where they started, what shifted, and where they are now. Do not make it sound like a formal testimonial.
+
+Page 7 — Call to action
+Warm, personal close in my voice. One clear next step: book a discovery call. Include my booking link. No hard sell — write it like I am inviting a friend to a conversation.
+
+Formatting notes:
+- Write in a warm, conversational tone — like a real person talking to a friend
+- Short paragraphs, short sentences, room to breathe
+- Each page should feel complete on its own but flow naturally into the next
+- Avoid corporate language, buzzwords, or anything that sounds like marketing copy
+- The whole document should feel honest, human, and helpful</div>
+        </div>
+
+        <div class="outcome-section">
+          <div class="section-label">What You'll Get From Claude</div>
+          <div class="outcome-grid">
+            <div class="outcome-item">
+              <div class="o-icon">📄</div>
+              <div class="o-text"><strong>7-Page Lead Magnet</strong>Complete draft ready to drop into Canva or Google Docs</div>
+            </div>
+            <div class="outcome-item">
+              <div class="o-icon">✍️</div>
+              <div class="o-text"><strong>Written in Your Voice</strong>Warm, personal — nothing like generic marketing copy</div>
+            </div>
+            <div class="outcome-item">
+              <div class="o-icon">🎯</div>
+              <div class="o-text"><strong>Speaks to Your Ideal Client</strong>Every page written to their exact pain points &amp; desires</div>
+            </div>
+            <div class="outcome-item">
+              <div class="o-icon">📞</div>
+              <div class="o-text"><strong>Built-in Call to Action</strong>Warm invite to book a discovery call on the final page</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
   </main>
@@ -306,6 +393,25 @@
     })();
     function openMobileMenu() { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
     function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
+    function copyPrompt(contentId, btnId) {
+      var el = document.getElementById(contentId);
+      var btn = document.getElementById(btnId);
+      if (!el || !btn) return;
+      var text = el.innerText || el.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function(){
+          btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+          setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500);
+        }).catch(function(){ fallbackCopy(text, btn); });
+      } else { fallbackCopy(text, btn); }
+    }
+    function fallbackCopy(text, btn) {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); btn.textContent = '✓ Copied!'; btn.classList.add('copied'); setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500); } catch(e) {}
+      document.body.removeChild(ta);
+    }
   </script>
 </body>
 </html>
