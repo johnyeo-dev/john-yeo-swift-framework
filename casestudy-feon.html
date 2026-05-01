@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Study: Teacher Feon | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A;
+      --navy-light: #0A0F1C;
+      --gold: #0ABFBC;
+      --gold-light: #4A8FE7;
+      --cream: #F4F7FB;
+      --cream-dark: #E8EDF5;
+      --text: #0A0F1C;
+      --text-muted: #6B7A96;
+      --white: #FFFFFF;
+      --step-done: #0ABFBC;
+      --border: #B8C4D4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--navy);
+      padding: 28px 40px 24px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .header-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(24px, 4vw, 36px);
+      color: var(--white);
+      line-height: 1.1;
+    }
+    .header h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .swift-badge {
+      margin-left: auto;
+      background: rgba(10,191,188,0.15);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 8px 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; letter-spacing: 2px; }
+    .swift-badge .label { font-size: 9px; letter-spacing: 2px; color: var(--gold-light); text-transform: uppercase; margin-top: 2px; }
+
+    /* SWIFT TOP NAV */
+    .swift-nav {
+      background: var(--navy-light);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .swift-nav::-webkit-scrollbar { display: none; }
+    .swift-tab {
+      padding: 14px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.4);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+    .swift-tab:hover:not(:disabled) { color: rgba(255,255,255,0.75); }
+    .swift-tab.active {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+    .swift-tab:disabled { cursor: not-allowed; opacity: 0.35; }
+    .swift-letter {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .swift-tab:not(.active) .swift-letter { color: rgba(255,255,255,0.3); }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; }
+
+    /* MAIN CONTENT */
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* HERO INTRO */
+    .case-hero {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 36px 40px;
+      margin-bottom: 36px;
+      color: var(--white);
+    }
+    .case-hero-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .case-hero h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(22px, 3vw, 32px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .case-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .case-hero p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+    }
+
+    /* YOUTUBE EMBED */
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 32px rgba(0,45,106,0.18);
+    }
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+      border-radius: 12px;
+    }
+
+    /* SECTION HEADER */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-head .icon {
+      width: 36px; height: 36px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .section-head h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--navy);
+    }
+
+    /* METRICS GRID */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .metric-card {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+      color: var(--white);
+    }
+    .metric-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: var(--gold);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .metric-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* STARTING POINT CARD */
+    .start-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold-light);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 36px;
+    }
+    .start-card h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .start-card p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+    .start-card p:last-child { margin-bottom: 0; }
+
+    /* STEP CARDS */
+    .steps-section { margin-bottom: 40px; }
+    .step-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .step-num {
+      width: 36px; height: 36px;
+      background: var(--cream-dark);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      color: var(--navy);
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+    .step-body h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .step-body p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .step-body p strong { color: var(--text); }
+
+    /* DIFFERENTLY CARDS */
+    .diff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 600px) { .diff-grid { grid-template-columns: 1fr; } }
+    .diff-card {
+      background: var(--cream-dark);
+      border-radius: 10px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--gold);
+    }
+    .diff-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .diff-card p {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .diff-card strong { color: var(--navy); }
+
+    /* QUOTE BLOCK */
+    .quote-block {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .quote-block .quote-mark {
+      font-family: 'DM Serif Display', serif;
+      font-size: 64px;
+      color: var(--gold);
+      line-height: 0.6;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .quote-block blockquote {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(18px, 2.5vw, 24px);
+      color: var(--white);
+      line-height: 1.5;
+      font-style: italic;
+      max-width: 600px;
+      margin: 0 auto 16px;
+    }
+    .quote-block cite {
+      font-size: 13px;
+      color: var(--gold-light);
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* CALLOUT */
+    .callout-tip {
+      background: #E8F8F7;
+      border: 1px solid #0ABFBC;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 14px;
+      color: #005F5E;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .callout-tip .ci { flex-shrink: 0; font-size: 18px; margin-top: 1px; }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      margin-bottom: 28px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .back-link:hover { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .header { padding: 20px; }
+      .main { padding: 24px 16px 60px; }
+      .case-hero { padding: 24px 20px; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="header-label">PAC · SWIFT Framework</div>
+      <h1>Case Study: <em>Teacher Feon</em></h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">★</div>
+      <div class="label">Real Results</div>
+    </div>
+  </header>
+
+  <!-- SWIFT TOP NAV -->
+  <nav class="swift-nav">
+    <button class="swift-tab" onclick="window.location.href='signature-programme.html'">
+      <span class="swift-letter">S</span>
+      <span class="swift-word">Signature</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='webinar-programme.html'">
+      <span class="swift-letter">W</span>
+      <span class="swift-word">Webinar</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='invite-programme.html'">
+      <span class="swift-letter">I</span>
+      <span class="swift-word">Invite</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='fill-programme.html'">
+      <span class="swift-letter">F</span>
+      <span class="swift-word">Fill Class</span>
+    </button>
+    <button class="swift-tab" onclick="window.location.href='track-programme.html'">
+      <span class="swift-letter">T</span>
+      <span class="swift-word">Track</span>
+    </button>
+    <button class="swift-tab active">
+      <span class="swift-letter" style="color:var(--gold);">★</span>
+      <span class="swift-word">Case Studies</span>
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <a href="javascript:history.back()" class="back-link">← Back</a>
+
+    <!-- HERO -->
+    <div class="case-hero">
+      <div class="case-hero-tag">Real Student · Real Results</div>
+      <h2>From Quiet Side Hustle<br>to <em>8.88× ROI</em> in One Launch</h2>
+      <p>Teacher Feon teaches primary school enrichment. She used the full SWIFT system for her first group programme launch — from $0 ad spend knowledge to $2,145 net profit with just 17 students.</p>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="video-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/cCivXbng0bI?si=GiTpm56GdEdMI8t3"
+        title="Teacher Feon Case Study"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- RESULTS METRICS -->
+    <div class="section-head">
+      <div class="icon">📊</div>
+      <h3>The Results</h3>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value">17</div>
+        <div class="metric-label">Students</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">$2,145</div>
+        <div class="metric-label">Net Profit</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">8.88×</div>
+        <div class="metric-label">ROI</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">$180</div>
+        <div class="metric-label">Ad Spend</div>
+      </div>
+    </div>
+
+    <!-- STARTING POINT -->
+    <div class="section-head">
+      <div class="icon">🏁</div>
+      <h3>Where She Started</h3>
+    </div>
+    <div class="start-card">
+      <h4>The Situation Before SWIFT</h4>
+      <p>Teacher Feon had been running 1-to-1 tuition for years. She tried transitioning to group classes but found her income dipped — she couldn't sustain enough students, and the referral-only model had a low ceiling.</p>
+      <p>She had fewer than 10 students in her group classes and no system for filling them consistently. She wasn't sure how to position herself, run a webinar, or follow up with parents after an event.</p>
+    </div>
+
+    <!-- 12 STEPS -->
+    <div class="section-head">
+      <div class="icon">🪜</div>
+      <h3>The 12 Steps She Took</h3>
+    </div>
+    <div class="steps-section">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Clarified Her Why</h4>
+          <p>She wrote out why she started teaching and what transformation she really gives students — not just "better grades" but <strong>confidence and clarity in learning</strong>.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Built Her Signature Programme Structure</h4>
+          <p>She packaged her teaching into a clear 8-week group programme with defined outcomes, instead of open-ended tuition sessions.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Collected Testimonials First</h4>
+          <p>Before launching, she reached out to past parents for written and voice testimonials. She got 6 testimonials — <strong>3 in text, 3 in voice notes</strong> — that she used throughout the launch.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Set Up a Simple Webinar</h4>
+          <p>She ran a free 60-minute parent webinar titled <em>"How to Help Your Child Enjoy Learning (Not Just Exam-Drill)"</em> on Zoom. No fancy slides — just a Google Doc script and her webcam.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Ran $180 of Targeted Facebook Ads</h4>
+          <p>She boosted a simple post to parents in her area targeting primary school age children. She spent $180 over 10 days and got <strong>41 registrations</strong>.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Used the Permission-Share Method in the Webinar</h4>
+          <p>At the 45-minute mark, she asked: <em>"I have something that might help — can I share it?"</em> Then presented her programme naturally as the next step, not a hard sell.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <h4>Sent the 10-Step WhatsApp Follow-Up Sequence</h4>
+          <p>She messaged every attendee individually over the next 5 days. She didn't blast a group — she sent <strong>personal DMs</strong> following the SWIFT follow-up sequence.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">8</div>
+        <div class="step-body">
+          <h4>Handled Objections With the "3 Concerns" Framework</h4>
+          <p>When parents said "I'll think about it" or "maybe next round," she used the 3-concern reframe: <em>time, cost, and trust</em> — addressing each one directly and gently.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">9</div>
+        <div class="step-body">
+          <h4>Offered a 48-Hour Early Bird Slot</h4>
+          <p>She created a soft deadline: the first 5 slots had an early bird price. This moved 4 parents off the fence within the first 2 days after the webinar.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">10</div>
+        <div class="step-body">
+          <h4>Used Referrals to Fill the Last Spots</h4>
+          <p>Once she had 10 confirmed students, she messaged them: <em>"I have 3 spots left — if you know anyone, here's a referral discount for them."</em> She filled 4 more spots this way.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">11</div>
+        <div class="step-body">
+          <h4>Ran the Programme and Collected Ongoing Proof</h4>
+          <p>She documented student wins throughout: photos of worksheets, voice notes from parents mid-programme, short video updates. This became her <strong>next launch's testimonial bank</strong>.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">12</div>
+        <div class="step-body">
+          <h4>Planned Round 2 Before Round 1 Ended</h4>
+          <p>In Week 6 of the programme, she announced Round 2 to current parents with a priority re-enrolment window. <strong>9 of 17 students re-enrolled</strong> before she even ran another webinar.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT SHE'D DO DIFFERENTLY -->
+    <div class="section-head">
+      <div class="icon">🔁</div>
+      <h3>What She'd Do Differently</h3>
+    </div>
+    <div class="diff-grid">
+      <div class="diff-card">
+        <div class="diff-num">01</div>
+        <p><strong>Start collecting testimonials earlier.</strong> She waited until right before the launch. In hindsight, she had years of past students she could have reached out to months before.</p>
+      </div>
+      <div class="diff-card">
+        <div class="diff-num">02</div>
+        <p><strong>Run the webinar twice.</strong> She only did one webinar date. Many parents said they wanted to attend but couldn't make the time. A second date would have doubled registrations.</p>
+      </div>
+      <div class="diff-card">
+        <div class="diff-num">03</div>
+        <p><strong>Set up the WhatsApp broadcast list first.</strong> She manually typed individual messages for the first 2 days before creating a broadcast. That would have saved 3–4 hours.</p>
+      </div>
+      <div class="diff-card">
+        <div class="diff-num">04</div>
+        <p><strong>Price with more confidence.</strong> She priced slightly below what she'd intended. After seeing the demand, she realised she could have priced 20% higher and still filled the class.</p>
+      </div>
+    </div>
+
+    <!-- QUOTE -->
+    <div class="quote-block">
+      <span class="quote-mark">"</span>
+      <blockquote>You don't need to be perfect. You need to be consistent, follow the system, and trust that parents can feel when a teacher genuinely cares.</blockquote>
+      <cite>— Teacher Feon</cite>
+    </div>
+
+    <div class="callout-tip">
+      <span class="ci">💡</span>
+      <span>Teacher Feon's result wasn't luck — it was the SWIFT system applied step by step. The same framework is what you're building through these modules. Keep going.</span>
+    </div>
+
+  </main>
+
+</body>
+</html>
