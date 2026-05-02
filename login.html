@@ -220,6 +220,14 @@
       try { return JSON.parse(localStorage.getItem('pac-swift-users') || '{}'); } catch(e) { return {}; }
     }
 
+    // ── BUILT-IN USERS ────────────────────────────────────────────────────────
+    // These work on every domain (Vercel, localhost, any device).
+    // Admin can override passwords via Settings or admin-seed.html.
+    var BUILTIN_USERS = {
+      'feliciayap': { password: '1234',   name: 'Felicia Yap', role: 'user' },
+      'shuling':    { password: 'swift1', name: 'Shu Ling',    role: 'user' }
+    };
+
     function doLogin() {
       var username = document.getElementById('loginUsername').value.trim();
       var password = document.getElementById('loginPassword').value;
@@ -244,21 +252,30 @@
         }
       }
 
-      // Check stored users
+      // Check localStorage users first (Settings / admin-seed overrides take priority)
       var users = getUsers();
-      if (users[username] && users[username].password === password) {
+      var storedUser = users[username];
+
+      // Fall back to built-in users if not found in localStorage
+      if (!storedUser && BUILTIN_USERS[username]) {
+        // Auto-save to localStorage so future logins are instant
+        users[username] = BUILTIN_USERS[username];
+        localStorage.setItem('pac-swift-users', JSON.stringify(users));
+        storedUser = users[username];
+      }
+
+      if (storedUser && storedUser.password === password) {
         // Check trial expiry
-        var usr = users[username];
-        if (usr.trialStart && usr.trialDays) {
-          var trialStart = new Date(usr.trialStart + 'T00:00:00');
+        if (storedUser.trialStart && storedUser.trialDays) {
+          var trialStart = new Date(storedUser.trialStart + 'T00:00:00');
           var elapsed = Math.floor((Date.now() - trialStart) / 86400000);
-          if (elapsed >= usr.trialDays) {
-            errorEl.textContent = 'Your ' + usr.trialDays + '-day trial has ended. Please contact your coach.';
+          if (elapsed >= storedUser.trialDays) {
+            errorEl.textContent = 'Your ' + storedUser.trialDays + '-day trial has ended. Please contact your coach.';
             errorEl.style.display = 'block';
             return;
           }
         }
-        localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: usr.role || 'user' }));
+        localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: storedUser.role || 'user' }));
         localStorage.setItem('pac-swift-user', username);
         trackLogin(username);
         window.location.href = 'index.html';
