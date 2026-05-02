@@ -773,8 +773,35 @@
   function getSession() {
     try { return JSON.parse(localStorage.getItem('pac-swift-session') || 'null'); } catch(e) { return null; }
   }
+  // Mirror of login.html BUILTIN_USERS — keep in sync when adding/changing users
+  var BUILTIN_USERS = {
+    'feliciayap':  { password: 'fy1234',    name: 'Felicia Yap',   role: 'user' },
+    'shuling':     { password: 's2345',     name: 'Shu Ling',      role: 'user' },
+    'joannelim':   { password: 'jo9876',    name: 'Joanne Lim',    role: 'user' },
+    'sarahthomas': { password: 'st246',     name: 'Sarah Thomas',  role: 'user' },
+    'daize':       { password: 'dz147',     name: 'Daize',         role: 'user' },
+    'yongching':   { password: 'yc1982',    name: 'Yong Ching',    role: 'user' },
+    'elaine':      { password: 'elaine135', name: 'Elaine',        role: 'user' },
+    'feontang':    { password: 'ft678',     name: 'Feon Tang',     role: 'user' },
+    'adam':        { password: 'adam246',   name: 'Adam',          role: 'user' },
+    'carlyn':      { password: 'ca9876',    name: 'Carlyn',        role: 'user' },
+    'vanessa':     { password: 'van8888',   name: 'Vanessa',       role: 'user' }
+  };
+
   function getUsers() {
     try { return JSON.parse(localStorage.getItem('pac-swift-users') || '{}'); } catch(e) { return {}; }
+  }
+  // Returns merged view: BUILTIN_USERS + localStorage (localStorage overrides metadata but not passwords for built-ins)
+  function getAllUsers() {
+    var stored = getUsers();
+    var merged = {};
+    Object.keys(BUILTIN_USERS).forEach(function(u) {
+      merged[u] = Object.assign({}, BUILTIN_USERS[u], stored[u] || {}, { password: BUILTIN_USERS[u].password });
+    });
+    Object.keys(stored).forEach(function(u) {
+      if (!merged[u]) merged[u] = stored[u];
+    });
+    return merged;
   }
   function saveUsers(u) {
     localStorage.setItem('pac-swift-users', JSON.stringify(u));
@@ -1012,7 +1039,7 @@
   }
 
   function renderUserTable() {
-    var users = getUsers();
+    var users = getAllUsers();
     var keys = Object.keys(users);
     var tbody = document.getElementById('userTableBody');
     if (!keys.length) {
@@ -1466,7 +1493,7 @@
   }
 
   function renderAnalytics() {
-    var users = getUsers();
+    var users = getAllUsers();
     var allUsers = Object.keys(users);
     // Always include johnyeo
     if (allUsers.indexOf('johnyeo') === -1) allUsers.unshift('johnyeo');
