@@ -94,6 +94,11 @@
   </div>
 
   <div class="mv-section">
+    <h3>🗂️ Pages Visited</h3>
+    <div id="mvPageVisits"><div class="mv-empty">No page visits recorded yet.</div></div>
+  </div>
+
+  <div class="mv-section">
     <h3>🚀 SWIFT Steps Progress</h3>
     <div id="mvSteps"></div>
   </div>
@@ -191,6 +196,34 @@
             }).join('')
           + '</div>';
       }).join('');
+    }
+
+    // Page visits
+    var pvEl = document.getElementById('mvPageVisits');
+    var visits = analytics.pageVisits || [];
+    if (!visits.length) {
+      pvEl.innerHTML = '<div class="mv-empty">No page visits recorded yet.</div>';
+    } else {
+      // Deduplicate: count visits per page and show last visited time
+      var pageSummary = {};
+      visits.forEach(function(v) {
+        var key = v.t || v.p;
+        if (!pageSummary[key]) pageSummary[key] = { title: v.t || v.p, page: v.p, count: 0, last: 0 };
+        pageSummary[key].count++;
+        if (v.ts > pageSummary[key].last) pageSummary[key].last = v.ts;
+      });
+      var pages = Object.values(pageSummary).sort(function(a, b) { return b.last - a.last; });
+      pvEl.innerHTML = '<div style="display:flex;flex-direction:column;gap:6px;">'
+        + pages.map(function(p) {
+            var lastStr = p.last ? new Date(p.last).toLocaleDateString('en-SG', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
+            return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--cream);border-radius:8px;gap:12px;">'
+              + '<div style="font-size:13px;font-weight:600;color:var(--text);">📄 ' + p.title + '</div>'
+              + '<div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">'
+              + '<span style="font-size:11px;font-weight:700;background:rgba(10,191,188,0.12);color:#0ABFBC;border:1px solid rgba(10,191,188,0.25);padding:2px 8px;border-radius:99px;">' + p.count + 'x</span>'
+              + '<span style="font-size:11px;color:var(--muted);">' + lastStr + '</span>'
+              + '</div></div>';
+          }).join('')
+        + '</div>';
     }
 
     // SWIFT steps
