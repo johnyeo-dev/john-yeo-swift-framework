@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member View | PAC SWIFT</title>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})()</script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy:#002D6A; --teal:#0ABFBC; --cream:#F4F7FB; --text:#0A0F1C; --muted:#6B7A96; --border:#E8EDF5; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:#F4F7FB; min-height:100vh; }
+    .mv-header { background:linear-gradient(135deg,#0A0F1C,#111827); padding:20px 28px; display:flex; align-items:center; gap:16px; }
+    .mv-header h1 { font-family:'DM Serif Display',serif; font-size:22px; color:white; }
+    .mv-header p { font-size:13px; color:rgba(255,255,255,0.5); margin-top:2px; }
+    .mv-back { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.7); border-radius:8px; padding:6px 14px; font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; text-decoration:none; transition:all 0.15s; }
+    .mv-back:hover { background:rgba(255,255,255,0.18); color:white; }
+    .mv-content { max-width:900px; margin:0 auto; padding:28px 20px; }
+    .mv-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+    @media(max-width:600px) { .mv-grid { grid-template-columns:1fr; } }
+    .mv-card { background:white; border:1px solid var(--border); border-radius:16px; padding:20px 22px; }
+    .mv-card h3 { font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+    .mv-stat { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); }
+    .mv-stat:last-child { border-bottom:none; }
+    .mv-stat-label { font-size:13px; color:var(--muted); }
+    .mv-stat-val { font-size:15px; font-weight:700; color:var(--navy); }
+    .mv-big-pts { font-family:'DM Serif Display',serif; font-size:48px; color:var(--teal); line-height:1; }
+    .mv-rank-pill { display:inline-flex; align-items:center; gap:6px; border-radius:99px; padding:4px 14px; font-size:13px; font-weight:700; border:1.5px solid; margin-top:8px; }
+    .mv-bar-track { height:10px; background:#E8EDF5; border-radius:99px; overflow:hidden; margin:12px 0 6px; }
+    .mv-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#0ABFBC,#4A8FE7); transition:width 0.8s ease; }
+    .mv-bar-label { font-size:12px; color:var(--muted); }
+    .mv-section { background:white; border:1px solid var(--border); border-radius:16px; padding:20px 22px; margin-bottom:20px; }
+    .mv-section h3 { font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+    .mv-task { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; border:1.5px solid var(--border); background:#F9FAFB; margin-bottom:6px; }
+    .mv-task.done { background:rgba(16,185,129,0.04); border-color:rgba(16,185,129,0.2); }
+    .mv-task-check { width:20px; height:20px; border-radius:5px; border:2px solid #B8C4D4; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; }
+    .mv-task.done .mv-task-check { background:#10B981; border-color:#10B981; color:white; }
+    .mv-task-text { flex:1; font-size:13px; color:var(--navy); }
+    .mv-task.done .mv-task-text { text-decoration:line-through; color:var(--muted); }
+    .mv-task-date { font-size:11px; color:var(--muted); white-space:nowrap; }
+    .mv-task-pts { font-size:11px; font-weight:800; color:#0ABFBC; white-space:nowrap; }
+    .mv-task.done .mv-task-pts { color:#10B981; }
+    .mv-step { display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:10px; border:1.5px solid var(--border); background:#F9FAFB; margin-bottom:6px; }
+    .mv-step.has-done { background:rgba(16,185,129,0.04); border-color:rgba(16,185,129,0.2); }
+    .mv-step-icon { width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0; }
+    .mv-step-label { flex:1; font-size:13px; font-weight:600; color:var(--navy); }
+    .mv-step-badges { display:flex; gap:4px; }
+    .mv-badge { font-size:10px; font-weight:700; border-radius:5px; padding:2px 7px; opacity:0.4; }
+    .mv-badge.active { opacity:1; }
+    .mv-badge-a { background:rgba(99,102,241,0.12); color:#6366F1; }
+    .mv-badge-d { background:rgba(16,185,129,0.12); color:#059669; }
+    .mv-badge-r { background:rgba(245,158,11,0.12); color:#D97706; }
+    .mv-empty { text-align:center; padding:24px; color:var(--muted); font-size:13px; }
+    .mv-admin-note { background:rgba(10,191,188,0.06); border:1px solid rgba(10,191,188,0.2); border-radius:10px; padding:10px 16px; font-size:12px; color:var(--muted); margin-bottom:20px; }
+    .mv-admin-note strong { color:var(--teal); }
+    .mv-date-group { margin-bottom:16px; }
+    .mv-date-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:6px 0; border-bottom:1px solid var(--border); margin-bottom:8px; }
+  </style>
+</head>
+<body>
+
+<div class="mv-header">
+  <div style="flex:1;">
+    <h1 id="mvTitle">Member View</h1>
+    <p id="mvSubtitle">Admin view — read only</p>
+  </div>
+  <a href="settings.html" class="mv-back">← Settings</a>
+</div>
+
+<div class="mv-content">
+  <div class="mv-admin-note">👁 <strong>Admin view.</strong> You are viewing <strong id="mvAdminNote">…</strong>'s data. This is read-only.</div>
+
+  <div class="mv-grid">
+    <div class="mv-card">
+      <h3>Points &amp; Rank</h3>
+      <div class="mv-big-pts" id="mvPts">—</div>
+      <div id="mvRankPill" class="mv-rank-pill" style="border-color:#ccc;color:#999;">—</div>
+      <div class="mv-bar-track"><div class="mv-bar-fill" id="mvBar" style="width:0%"></div></div>
+      <div class="mv-bar-label" id="mvBarLabel">— of 11 steps complete</div>
+    </div>
+    <div class="mv-card">
+      <h3>Summary</h3>
+      <div class="mv-stat"><span class="mv-stat-label">Steps completed</span><span class="mv-stat-val" id="mvDone">—</span></div>
+      <div class="mv-stat"><span class="mv-stat-label">Tasks added</span><span class="mv-stat-val" id="mvTaskCount">—</span></div>
+      <div class="mv-stat"><span class="mv-stat-label">Tasks done</span><span class="mv-stat-val" id="mvTaskDone">—</span></div>
+      <div class="mv-stat"><span class="mv-stat-label">Login count</span><span class="mv-stat-val" id="mvLogins">—</span></div>
+      <div class="mv-stat"><span class="mv-stat-label">Last login</span><span class="mv-stat-val" id="mvLastLogin">—</span></div>
+    </div>
+  </div>
+
+  <div class="mv-section">
+    <h3>📋 Tasks</h3>
+    <div id="mvTasks"><div class="mv-empty">No tasks yet.</div></div>
+  </div>
+
+  <div class="mv-section">
+    <h3>🚀 SWIFT Steps Progress</h3>
+    <div id="mvSteps"></div>
+  </div>
+</div>
+
+<script>
+  var STEPS = [
+    { id:'sig',   label:'Signature Programme',  short:'S',  color:'#0ABFBC', pts:{action:25,done:75,result:150} },
+    { id:'web',   label:'Webinar',               short:'W',  color:'#4A8FE7', pts:{action:25,done:75,result:150} },
+    { id:'inv',   label:'Invite / Referral',      short:'I',  color:'#8B5CF6', pts:{action:25,done:75,result:150} },
+    { id:'fill',  label:'Fill Class',             short:'F',  color:'#F59E0B', pts:{action:25,done:75,result:150} },
+    { id:'track', label:'Track',                  short:'T',  color:'#10B981', pts:{action:25,done:75,result:150} },
+    { id:'p1',    label:'Prompt 1 · Signature',   short:'✦1', color:'#0ABFBC', pts:{action:10,done:40,result:75} },
+    { id:'p2',    label:'Prompt 2 · Lead Magnet', short:'✦2', color:'#4A8FE7', pts:{action:10,done:40,result:75} },
+    { id:'p3',    label:'Prompt 3 · Teach-Pitch', short:'✦3', color:'#8B5CF6', pts:{action:10,done:40,result:75} },
+    { id:'p4',    label:'Prompt 4 · Content',     short:'✦4', color:'#F59E0B', pts:{action:10,done:40,result:75} },
+    { id:'p5',    label:'Prompt 5 · Form',        short:'✦5', color:'#10B981', pts:{action:10,done:40,result:75} },
+    { id:'p6',    label:'Prompt 6 · Feedback',    short:'✦6', color:'#EC4899', pts:{action:10,done:40,result:75} },
+  ];
+  var RANKS = [
+    { min:0,    name:'Starter',      emoji:'🌱', color:'#9CA3AF' },
+    { min:25,   name:'Planner',      emoji:'📋', color:'#10B981' },
+    { min:80,   name:'Action Taker', emoji:'⚡', color:'#0ABFBC' },
+    { min:200,  name:'Go-Getter',    emoji:'🎯', color:'#4A8FE7' },
+    { min:500,  name:'Builder',      emoji:'🔨', color:'#8B5CF6' },
+    { min:1000, name:'Momentum',     emoji:'🚀', color:'#F59E0B' },
+    { min:2000, name:'Closer',       emoji:'💎', color:'#EC4899' },
+    { min:4000, name:'PAC Champion', emoji:'🏆', color:'#F59E0B' },
+    { min:8000, name:'SWIFT Master', emoji:'👑', color:'#0ABFBC' },
+  ];
+  function getRank(pts) { var r=RANKS[0]; for(var i=0;i<RANKS.length;i++){if(pts>=RANKS[i].min)r=RANKS[i];else break;} return r; }
+  function getSession() { try{return JSON.parse(localStorage.getItem('pac-swift-session')||'null');}catch(e){return null;} }
+
+  (function init() {
+    var session = getSession();
+    if (!session || session.role !== 'admin') {
+      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:DM Sans,sans-serif;color:#6B7A96;">Admin access only.</div>';
+      return;
+    }
+
+    var params = new URLSearchParams(window.location.search);
+    var u = params.get('u');
+    if (!u) { document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:DM Sans,sans-serif;">No user specified. <a href="settings.html">Back to Settings</a></div>'; return; }
+
+    document.getElementById('mvTitle').textContent = u + ' — Member View';
+    document.getElementById('mvSubtitle').textContent = 'Viewing ' + u + ' · Admin only';
+    document.getElementById('mvAdminNote').textContent = u;
+
+    var prog  = JSON.parse(localStorage.getItem('pac-swift-progress-'+u)||'{}');
+    var acts  = JSON.parse(localStorage.getItem('pac-swift-actions-'+u)||'{}');
+    var ress  = JSON.parse(localStorage.getItem('pac-swift-results-'+u)||'{}');
+    var tasks = JSON.parse(localStorage.getItem('pac-swift-tasks-'+u)||'[]');
+    var analytics = JSON.parse(localStorage.getItem('pac-swift-analytics-'+u)||'{}');
+
+    // Compute points
+    var stepPts = 0;
+    STEPS.forEach(function(s){
+      if(acts[s.id]) stepPts+=s.pts.action;
+      if(prog[s.id]) stepPts+=s.pts.done;
+      if(ress[s.id]) stepPts+=s.pts.result;
+    });
+    var taskPts = tasks.reduce(function(sum,t){return sum+5+(t.done?20:0);},0);
+    var pts = stepPts + taskPts;
+    var done = STEPS.filter(function(s){return prog[s.id];}).length;
+    var pct = Math.round(done/STEPS.length*100);
+    var rank = getRank(pts);
+
+    // Fill top stats
+    document.getElementById('mvPts').textContent = pts.toLocaleString();
+    var pill = document.getElementById('mvRankPill');
+    pill.textContent = rank.emoji + ' ' + rank.name;
+    pill.style.color = rank.color; pill.style.borderColor = rank.color + '44'; pill.style.background = rank.color + '14';
+    document.getElementById('mvBar').style.width = pct + '%';
+    document.getElementById('mvBarLabel').textContent = done + ' of ' + STEPS.length + ' steps complete (' + pct + '%)';
+    document.getElementById('mvDone').textContent = done + ' / ' + STEPS.length;
+    var taskDone = tasks.filter(function(t){return t.done;}).length;
+    document.getElementById('mvTaskCount').textContent = tasks.length;
+    document.getElementById('mvTaskDone').textContent = taskDone;
+    document.getElementById('mvLogins').textContent = analytics.loginCount || 0;
+    document.getElementById('mvLastLogin').textContent = analytics.lastLogin ? new Date(analytics.lastLogin).toLocaleDateString('en-SG') : 'Never';
+
+    // Tasks grouped by date
+    var tasksEl = document.getElementById('mvTasks');
+    if (!tasks.length) {
+      tasksEl.innerHTML = '<div class="mv-empty">No tasks added yet.</div>';
+    } else {
+      var map = {};
+      tasks.forEach(function(t){ if(!map[t.date])map[t.date]=[]; map[t.date].push(t); });
+      var dates = Object.keys(map).sort();
+      tasksEl.innerHTML = dates.map(function(d){
+        var label = new Date(d+'T00:00:00').toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+        return '<div class="mv-date-group"><div class="mv-date-label">'+label+'</div>'
+          + map[d].map(function(t){
+              return '<div class="mv-task'+(t.done?' done':'')+'"><div class="mv-task-check">'+(t.done?'✓':'')+'</div><div class="mv-task-text">'+t.text+'</div><span class="mv-task-pts">+'+(5+(t.done?20:0))+' pts</span></div>';
+            }).join('')
+          + '</div>';
+      }).join('');
+    }
+
+    // SWIFT steps
+    var stepsEl = document.getElementById('mvSteps');
+    stepsEl.innerHTML = STEPS.map(function(s){
+      var isA=!!acts[s.id], isD=!!prog[s.id], isR=!!ress[s.id];
+      return '<div class="mv-step'+(isD?' has-done':'')+'"><div class="mv-step-icon" style="background:'+s.color+';">'+s.short+'</div><span class="mv-step-label">'+s.label+'</span><div class="mv-step-badges"><span class="mv-badge mv-badge-a'+(isA?' active':'')+'">Action</span><span class="mv-badge mv-badge-d'+(isD?' active':'')+'">Done</span><span class="mv-badge mv-badge-r'+(isR?' active':'')+'">Result</span></div></div>';
+    }).join('');
+  })();
+</script>
+</body>
+</html>

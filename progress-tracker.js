@@ -123,18 +123,35 @@
   // ── CSS ──────────────────────────────────────────────────────────────────
   var CSS = `
     /* ── PROGRESS STRIP ── */
-    .pac-ps { background:linear-gradient(180deg,#0d1520 0%,#0f1c2e 100%); border-bottom:2px solid rgba(10,191,188,0.35); padding:10px 28px 12px; display:flex; flex-direction:column; gap:9px; position:sticky; top:44px; z-index:89; flex-shrink:0; }
-    .pac-ps-row { display:flex; align-items:center; gap:12px; }
-    .pac-ps-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.4); white-space:nowrap; flex-shrink:0; min-width:52px; }
-    .pac-ps-bar-wrap { flex:0 0 180px; height:10px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; flex-shrink:0; }
-    .pac-ps-bar { height:100%; border-radius:99px; background:linear-gradient(90deg,#0ABFBC,#4A8FE7); transition:width 0.6s ease; box-shadow:0 0 10px rgba(10,191,188,0.55); }
-    .pac-ps-count { font-size:12px; font-weight:700; color:rgba(255,255,255,0.55); white-space:nowrap; flex-shrink:0; }
-    .pac-ps-pts { font-size:15px; font-weight:800; color:#0ABFBC; white-space:nowrap; flex-shrink:0; letter-spacing:0.3px; text-shadow:0 0 12px rgba(10,191,188,0.6); }
-    .pac-ps-btn { background:rgba(10,191,188,0.18); border:1.5px solid rgba(10,191,188,0.45); color:#0ABFBC; border-radius:8px; padding:5px 13px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s; }
-    .pac-ps-btn:hover { background:rgba(10,191,188,0.3); box-shadow:0 0 10px rgba(10,191,188,0.3); }
-    .pac-ps-btn-task { background:rgba(245,158,11,0.15); border:1.5px solid rgba(245,158,11,0.4); color:#F59E0B; }
-    .pac-ps-btn-task:hover { background:rgba(245,158,11,0.28); box-shadow:0 0 10px rgba(245,158,11,0.3); }
-    .pac-ps-rank { display:inline-flex; align-items:center; gap:4px; border-radius:99px; padding:3px 10px; font-size:11px; font-weight:700; white-space:nowrap; flex-shrink:0; border:1.5px solid; }
+    .pac-ps { background:linear-gradient(180deg,#0d1520 0%,#0f1c2e 100%); border-bottom:1.5px solid rgba(10,191,188,0.25); padding:0 20px; position:sticky; top:44px; z-index:89; flex-shrink:0; }
+    .pac-ps-main { display:flex; align-items:center; gap:10px; height:46px; min-width:0; }
+    .pac-ps-identity { display:flex; align-items:center; gap:7px; flex-shrink:0; }
+    .pac-ps-av { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:white; flex-shrink:0; }
+    .pac-ps-name { font-size:12px; font-weight:700; color:rgba(255,255,255,0.85); white-space:nowrap; max-width:80px; overflow:hidden; text-overflow:ellipsis; }
+    .pac-ps-rank { display:inline-flex; align-items:center; gap:3px; border-radius:99px; padding:2px 8px; font-size:10px; font-weight:700; white-space:nowrap; flex-shrink:0; border:1px solid; margin-top:2px; }
+    .pac-ps-divider { width:1px; height:24px; background:rgba(255,255,255,0.1); flex-shrink:0; }
+    .pac-ps-progress { display:flex; align-items:center; gap:7px; flex:1; min-width:0; max-width:220px; }
+    .pac-ps-bar-wrap { flex:1; height:6px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; }
+    .pac-ps-bar { height:100%; border-radius:99px; background:linear-gradient(90deg,#0ABFBC,#4A8FE7); transition:width 0.6s ease; box-shadow:0 0 8px rgba(10,191,188,0.5); }
+    .pac-ps-count { font-size:11px; font-weight:600; color:rgba(255,255,255,0.45); white-space:nowrap; flex-shrink:0; }
+    .pac-ps-pts { font-size:16px; font-weight:800; color:#0ABFBC; white-space:nowrap; flex-shrink:0; letter-spacing:0.3px; text-shadow:0 0 10px rgba(10,191,188,0.5); }
+    .pac-ps-actions { display:flex; gap:6px; flex-shrink:0; margin-left:auto; }
+    .pac-ps-btn { background:rgba(10,191,188,0.15); border:1px solid rgba(10,191,188,0.35); color:#0ABFBC; border-radius:7px; padding:5px 11px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; transition:all 0.15s; }
+    .pac-ps-btn:hover { background:rgba(10,191,188,0.28); }
+    .pac-ps-btn-task { background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); color:#F59E0B; }
+    .pac-ps-btn-task:hover { background:rgba(245,158,11,0.25); }
+    /* Cohort row */
+    .pac-ps-cohort-row { display:flex; align-items:center; gap:8px; padding:4px 0 6px; border-top:1px solid rgba(255,255,255,0.06); overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .pac-ps-cohort-row::-webkit-scrollbar { display:none; }
+    .pac-ps-cohort-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.3); white-space:nowrap; flex-shrink:0; }
+    .pac-ps-member { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+    .pac-ps-member-av { width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:8px; font-weight:700; color:white; flex-shrink:0; }
+    .pac-ps-member-name { font-size:10px; font-weight:600; color:rgba(255,255,255,0.55); white-space:nowrap; }
+    .pac-ps-member-track { width:50px; height:4px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; flex-shrink:0; }
+    .pac-ps-member-fill { height:100%; border-radius:99px; transition:width 0.6s ease; }
+    .pac-ps-member-pts-label { font-size:10px; font-weight:700; white-space:nowrap; flex-shrink:0; }
+    @media(max-width:768px) { .pac-ps { top:0; padding:0 12px; } .pac-ps-main { height:42px; gap:8px; } .pac-ps-name { max-width:60px; } .pac-ps-progress { max-width:none; flex:1; } .pac-ps-divider { display:none; } }
+    @media(max-width:480px) { .pac-ps-count { display:none; } .pac-ps-name { display:none; } }
     /* rank panel in modal */
     .pac-pm-rank-panel { background:#F4F7FB; border:1.5px solid #E8EDF5; border-radius:12px; padding:14px 18px; margin:0 28px 0; }
     .pac-pm-rank-current { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
@@ -283,8 +300,8 @@
       return '<div class="pac-ps-member">'
         + '<div class="pac-ps-member-av" style="background:' + color + ';">' + ou.charAt(0).toUpperCase() + '</div>'
         + '<span class="pac-ps-member-name">' + dname + '</span>'
-        + '<div class="pac-ps-member-track"><div class="pac-ps-member-fill" style="width:' + pctW + '%;background:' + color + ';box-shadow:0 0 6px ' + color + '88;"></div></div>'
-        + '<span class="pac-ps-member-pts-label" style="color:' + color + ';">' + pts + ' pts</span>'
+        + '<div class="pac-ps-member-track"><div class="pac-ps-member-fill" style="width:' + pctW + '%;background:' + color + ';"></div></div>'
+        + '<span class="pac-ps-member-pts-label" style="color:' + color + ';">' + pts + '</span>'
         + '</div>';
     }).join('');
   }
@@ -294,31 +311,40 @@
     var u = session ? session.u : null;
     if (!u) return;
     var done = getDone(u), pct = getPct(u), pts = getTotalPoints(u);
+    var myRank = getRank(pts);
+    var avColor = getAvatarColor(u);
+    var dname = getDisplayName(u);
     var cohortHtml = buildCohortHtml(u);
 
     var strip = document.createElement('div');
     strip.className = 'pac-ps';
     strip.id = 'pacProgressStrip';
 
-    var myRank = getRank(pts);
-    var rankBadge = '<span class="pac-ps-rank" id="pacPsRank" style="color:' + myRank.color + ';border-color:' + myRank.color + '33;background:' + myRank.color + '18;">'
+    var rankBadge = '<span class="pac-ps-rank" id="pacPsRank" style="color:' + myRank.color + ';border-color:' + myRank.color + '22;background:' + myRank.color + '14;">'
       + myRank.emoji + ' ' + myRank.name + '</span>';
 
-    var row1 = '<div class="pac-ps-row">'
-      + '<span class="pac-ps-label">You</span>'
+    var mainRow = '<div class="pac-ps-main">'
+      + '<div class="pac-ps-identity">'
+      + '<div class="pac-ps-av" style="background:' + avColor + ';">' + u.charAt(0).toUpperCase() + '</div>'
+      + '<div><div class="pac-ps-name">' + dname + '</div>' + rankBadge + '</div>'
+      + '</div>'
+      + '<div class="pac-ps-divider"></div>'
+      + '<div class="pac-ps-progress">'
       + '<div class="pac-ps-bar-wrap"><div class="pac-ps-bar" id="pacPsBar" style="width:' + pct + '%"></div></div>'
       + '<span class="pac-ps-count" id="pacPsCount">' + done + '/' + STEPS.length + '</span>'
+      + '</div>'
       + '<span class="pac-ps-pts" id="pacPsPts">' + fmtPts(pts) + '</span>'
-      + rankBadge
-      + '<button class="pac-ps-btn" onclick="window.__pacOpenModal()">My Progress</button>'
+      + '<div class="pac-ps-actions">'
+      + '<button class="pac-ps-btn" onclick="window.__pacOpenModal()">📊 Progress</button>'
       + '<button class="pac-ps-btn pac-ps-btn-task" onclick="window.__pacOpenTaskModal()">📋 Tasks</button>'
+      + '</div>'
       + '</div>';
 
-    var row2 = cohortHtml
-      ? '<div class="pac-ps-row"><span class="pac-ps-label">Cohort</span><div class="pac-ps-cohort" id="pacPsCohort">' + cohortHtml + '</div></div>'
+    var cohortRow = cohortHtml
+      ? '<div class="pac-ps-cohort-row"><span class="pac-ps-cohort-label">Cohort</span>' + cohortHtml + '</div>'
       : '';
 
-    strip.innerHTML = row1 + row2;
+    strip.innerHTML = mainRow + cohortRow;
 
     var insertAfter = document.querySelector('.mobile-menu-bar') || document.querySelector('.swift-nav');
     if (insertAfter && insertAfter.parentNode) {
@@ -657,9 +683,6 @@
     var countEl=document.getElementById('pacPsCount'); if(countEl) countEl.textContent=done+'/'+STEPS.length;
     var ptsEl=document.getElementById('pacPsPts'); if(ptsEl) ptsEl.textContent=fmtPts(pts);
 
-    // Strip row 2
-    var cohortEl=document.getElementById('pacPsCohort'); if(cohortEl) cohortEl.innerHTML=buildCohortHtml(u);
-
     // Modal hero
     var pmPts=document.getElementById('pacPmPts'); if(pmPts) pmPts.textContent=pts;
     var pmBar=document.getElementById('pacPmBar'); if(pmBar) pmBar.style.width=pct+'%';
@@ -713,6 +736,13 @@
   function init() {
     var session=getSession();
     if (!session||!session.u) return;
+    // Auto-set pac-swift-user from login session so name modal never shows
+    if (!localStorage.getItem('pac-swift-user')) {
+      localStorage.setItem('pac-swift-user', session.u);
+    }
+    // Hide name modal if somehow shown
+    var nm = document.getElementById('nameModal');
+    if (nm) nm.style.display = 'none';
     renderStrip(session);
     renderModal(session);
     renderTaskModal();

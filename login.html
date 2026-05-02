@@ -234,6 +234,7 @@
         var adminPw = localStorage.getItem('pac-swift-admin-pw') || '2706';
         if (password === adminPw) {
           localStorage.setItem('pac-swift-session', JSON.stringify({ u: 'johnyeo', role: 'admin' }));
+          localStorage.setItem('pac-swift-user', username);
           trackLogin('johnyeo');
           window.location.href = 'index.html';
           return;
@@ -255,6 +256,7 @@
           }
         }
         localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: usr.role || 'user' }));
+        localStorage.setItem('pac-swift-user', username);
         trackLogin(username);
         window.location.href = 'index.html';
         return;
