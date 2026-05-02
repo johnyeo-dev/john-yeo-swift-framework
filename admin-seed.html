@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Seed | PAC SWIFT</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #0A0F1C; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .card { background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 32px; max-width: 480px; width: 100%; }
+    h1 { font-size: 22px; margin-bottom: 6px; }
+    p { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+    .user-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+    .user-info strong { display: block; font-size: 15px; }
+    .user-info small { font-size: 12px; color: rgba(255,255,255,0.4); }
+    .status { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+    .status.ok { background: rgba(16,185,129,0.15); color: #34d399; }
+    .status.new { background: rgba(10,191,188,0.15); color: #0ABFBC; }
+    .btn { width: 100%; background: #0ABFBC; color: #002D6A; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 16px; }
+    .btn:hover { background: #08a8a5; }
+    .msg { margin-top: 16px; padding: 12px 16px; border-radius: 8px; font-size: 14px; display: none; }
+    .msg.success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #34d399; }
+    .msg.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+    .back { display: block; text-align: center; margin-top: 20px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; }
+    .back:hover { color: rgba(255,255,255,0.7); }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>🔧 Admin User Seed</h1>
+  <p>Adds the users below to this domain's storage. Only works when visited by admin (johnyeo).</p>
+
+  <div id="userList"></div>
+
+  <button class="btn" onclick="seedUsers()">Add / Update Users</button>
+  <div class="msg" id="msg"></div>
+  <a href="settings.html" class="back">← Back to Settings</a>
+</div>
+
+<script>
+  // Users to seed — add more entries here as needed
+  var SEED_USERS = [
+    { username: 'feliciayap', password: '1234', name: 'Felicia Yap', role: 'user' }
+  ];
+
+  function isAdmin() {
+    try {
+      var s = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
+      return s && s.role === 'admin';
+    } catch(e) { return false; }
+  }
+
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem('pac-swift-users') || '{}'); } catch(e) { return {}; }
+  }
+
+  function renderList() {
+    var users = getUsers();
+    var html = '';
+    SEED_USERS.forEach(function(u) {
+      var exists = !!users[u.username];
+      html += '<div class="user-row">'
+        + '<div class="user-info"><strong>' + u.username + '</strong><small>pw: ' + u.password + ' · ' + u.role + '</small></div>'
+        + '<span class="status ' + (exists ? 'ok' : 'new') + '">' + (exists ? '✓ exists' : '+ new') + '</span>'
+        + '</div>';
+    });
+    document.getElementById('userList').innerHTML = html;
+  }
+
+  function seedUsers() {
+    if (!isAdmin()) {
+      showMsg('error', 'You must be logged in as admin (johnyeo) to use this tool.');
+      return;
+    }
+    var users = getUsers();
+    var added = 0, updated = 0;
+    SEED_USERS.forEach(function(u) {
+      var isNew = !users[u.username];
+      users[u.username] = { password: u.password, role: u.role, name: u.name, created: users[u.username] && users[u.username].created || new Date().toISOString() };
+      if (isNew) added++; else updated++;
+    });
+    localStorage.setItem('pac-swift-users', JSON.stringify(users));
+    renderList();
+    showMsg('success', 'Done! ' + added + ' added, ' + updated + ' updated. Users can now log in on this domain.');
+  }
+
+  function showMsg(type, text) {
+    var el = document.getElementById('msg');
+    el.className = 'msg ' + type;
+    el.textContent = text;
+    el.style.display = 'block';
+  }
+
+  // Check admin on load
+  if (!isAdmin()) {
+    document.querySelector('.btn').disabled = true;
+    document.querySelector('.btn').textContent = 'Sign in as admin first';
+    document.querySelector('.btn').style.opacity = '0.4';
+    document.querySelector('.btn').style.cursor = 'not-allowed';
+    showMsg('error', 'Not signed in as admin. Go to login.html first.');
+    document.getElementById('msg').style.display = 'block';
+  }
+
+  renderList();
+</script>
+</body>
+</html>
