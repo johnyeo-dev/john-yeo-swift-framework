@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+      --s: #0ABFBC; --w: #4A8FE7; --i: #8B5CF6; --f: #F59E0B; --t: #10B981;
+      --danger: #EF4444; --danger-light: rgba(239,68,68,0.1);
+      --success: #10B981; --success-light: rgba(16,185,129,0.1);
+      --warn: #F59E0B; --warn-light: rgba(245,158,11,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    /* ── HEADER ── */
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3.5vw, 32px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .header-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .header-badge .icon { font-size: 20px; line-height: 1; }
+    .header-badge .lbl { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    /* ── TOP NAV ── */
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-size: 12px; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
+
+    /* ── MOBILE NAV ── */
+    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
+    .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
+    .mobile-menu-panel { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #111827; z-index: 501; overflow-y: auto; padding: 0 0 40px; transform: translateX(-100%); transition: transform 0.25s ease; pointer-events: none; }
+    .mobile-menu-panel.open { transform: translateX(0); pointer-events: auto; }
+    .mobile-menu-overlay.open { display: block; }
+    .mobile-menu-header { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 22px; cursor: pointer; }
+    .mobile-menu-section { padding: 16px 16px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .mobile-menu-section:hover { color: rgba(255,255,255,0.6); }
+    .ms-chevron { font-size: 14px; opacity: 0.45; flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
+    .mobile-section-items { overflow: hidden; max-height: 600px; transition: max-height 0.25s ease; }
+    .mobile-section-items.ms-collapsed { max-height: 0; }
+    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; }
+    .mobile-menu-item:hover, .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
+    @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+
+    /* ── MAIN LAYOUT ── */
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── PAGE TITLE ── */
+    .page-title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+    .page-icon { width: 48px; height: 48px; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .page-title-row h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px,3vw,28px); color: var(--navy); line-height: 1.2; }
+    .page-title-row p { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ── SECTION TABS ── */
+    .settings-tabs { display: flex; gap: 4px; background: var(--cream-dark); border-radius: 10px; padding: 4px; margin-bottom: 28px; }
+    .stab { flex: 1; padding: 10px 12px; border: none; background: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .stab.active { background: var(--white); color: var(--navy); box-shadow: 0 1px 6px rgba(0,45,106,0.1); }
+    .stab-panel { display: none; }
+    .stab-panel.active { display: block; }
+    .admin-tab-wrap { display: none; }
+
+    /* ── SETTINGS CARD ── */
+    .scard { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
+    .scard-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--cream-dark); display: flex; align-items: center; gap: 12px; }
+    .scard-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .scard-icon.blue { background: rgba(10,191,188,0.12); }
+    .scard-icon.purple { background: rgba(139,92,246,0.12); }
+    .scard-icon.red { background: rgba(239,68,68,0.12); }
+    .scard-icon.gold { background: rgba(245,158,11,0.1); }
+    .scard-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+    .scard-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .scard-body { padding: 24px; }
+
+    /* ── FORM ── */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 16px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .form-group input { width: 100%; background: var(--cream); border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; }
+    .form-group input:focus { border-color: var(--gold); background: rgba(10,191,188,0.04); }
+    .form-group input:disabled { opacity: 0.5; cursor: not-allowed; background: var(--cream-dark); }
+    .form-group .field-hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+
+    /* ── BUTTONS ── */
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 20px; border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: var(--gold); color: var(--navy); }
+    .btn-primary:hover { background: #08a8a5; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(10,191,188,0.35); }
+    .btn-ghost { background: var(--cream-dark); color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--border); color: var(--text); }
+    .btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(239,68,68,0.25); }
+    .btn-danger:hover { background: rgba(239,68,68,0.18); }
+    .btn-sm { padding: 7px 13px; font-size: 12px; }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; align-items: center; }
+
+    /* ── ALERTS ── */
+    .alert { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .alert.show { display: flex; align-items: flex-start; gap: 9px; }
+    .alert-success { background: var(--success-light); border: 1px solid rgba(16,185,129,0.3); color: #065f46; }
+    .alert-error { background: var(--danger-light); border: 1px solid rgba(239,68,68,0.3); color: #991b1b; }
+    .alert-info { background: rgba(74,143,231,0.1); border: 1px solid rgba(74,143,231,0.3); color: #1e3a5f; }
+
+    /* ── USER INFO ROW ── */
+    .user-info-row { display: flex; align-items: center; gap: 16px; padding: 0 0 20px; border-bottom: 1px solid var(--cream-dark); margin-bottom: 24px; }
+    .user-big-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: white; font-weight: 700; font-size: 26px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; flex-shrink: 0; }
+    .user-info-text .uname { font-size: 20px; font-weight: 700; color: var(--navy); font-family: 'DM Serif Display', serif; }
+    .user-info-text .role-badge { display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .role-admin { background: rgba(10,191,188,0.15); color: #065f46; border: 1px solid rgba(10,191,188,0.3); }
+    .role-user { background: rgba(74,143,231,0.12); color: #1e3a5f; border: 1px solid rgba(74,143,231,0.3); }
+
+    /* ── ADMIN: PENDING REQUESTS ── */
+    .pending-list { display: flex; flex-direction: column; gap: 10px; }
+    .pending-item { background: var(--cream); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; }
+    .pending-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--warn); color: white; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pending-info { flex: 1; min-width: 0; }
+    .pending-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .pending-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .pending-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* ── ADMIN: USER LIST ── */
+    .users-table { width: 100%; border-collapse: collapse; }
+    .users-table th { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); padding: 10px 14px; text-align: left; border-bottom: 1.5px solid var(--border); }
+    .users-table td { padding: 14px 14px; border-bottom: 1px solid var(--cream-dark); vertical-align: middle; }
+    .users-table tr:last-child td { border-bottom: none; }
+    .users-table .urow-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; flex-shrink: 0; }
+    .users-table .urow-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .users-table .urow-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .urow-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* ── RESET PASSWORD MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 800; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--white); border-radius: 16px; padding: 28px; width: 100%; max-width: 400px; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
+    .modal h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 6px; }
+    .modal p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+    .modal .btn-row { justify-content: flex-end; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+    .empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-text { font-size: 14px; }
+
+    /* ── DANGER ZONE ── */
+    .danger-zone { border-color: rgba(239,68,68,0.3); }
+    .danger-zone .scard-header { background: rgba(239,68,68,0.04); border-bottom-color: rgba(239,68,68,0.15); }
+    .danger-text { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+
+    /* DIVIDER */
+    .divider { height: 1px; background: var(--cream-dark); margin: 20px 0; }
+
+    @media (max-width: 600px) {
+      .main { padding: 24px 16px 60px; }
+      .header { padding: 20px 16px; }
+      .scard-body { padding: 18px; }
+      .pending-item { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="header-label">Product Architect Coaching · By John Yeo</div>
+      <h1>SWIFT Framework — <em>Pace of Love</em></h1>
+    </div>
+    <div class="header-badge" style="margin-left:auto;">
+      <div class="icon">⚙️</div>
+      <div class="lbl">Settings</div>
+    </div>
+  </header>
+
+  <!-- DESKTOP NAV -->
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+        <a class="swift-sub-item" href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="6-prompts.html">All Prompts</a>
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
+        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
+        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+      </div>
+    </div>
+    <a class="swift-tab active" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
+  </nav>
+
+  <!-- MOBILE OVERLAY + PANEL -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item" href="prompt-3-teach-to-pitch.html" style="padding-left:36px;font-size:13px;">✦ Teach to Pitch</a>
+    <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Lead Collection Form</a>
+    <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
+    <div class="mobile-menu-section">Account</div>
+    <a class="mobile-menu-item active" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="page-title-row">
+      <div class="page-icon">⚙️</div>
+      <div>
+        <h2>Account Settings</h2>
+        <p>Manage your profile, password, and preferences</p>
+      </div>
+    </div>
+
+    <!-- SETTINGS TABS -->
+    <div class="settings-tabs">
+      <button class="stab active" onclick="switchStab(0)" id="stab-0">👤 My Account</button>
+      <button class="stab" onclick="switchStab(1)" id="stab-1" id="adminTabBtn" style="display:none;">🛡️ Manage Users <span id="pendingBadge" style="background:#EF4444;color:white;font-size:10px;padding:2px 6px;border-radius:99px;margin-left:4px;display:none;"></span></button>
+    </div>
+
+    <!-- TAB 0: MY ACCOUNT -->
+    <div class="stab-panel active" id="panel-0">
+
+      <!-- PROFILE INFO -->
+      <div class="scard">
+        <div class="scard-header">
+          <div class="scard-icon blue">👤</div>
+          <div>
+            <div class="scard-title">Profile</div>
+            <div class="scard-sub">Your account information</div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="user-info-row">
+            <div class="user-big-avatar" id="profileAvatar">J</div>
+            <div class="user-info-text">
+              <div class="uname" id="profileName">–</div>
+              <div>
+                <span class="role-badge" id="profileRoleBadge">–</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="profileUsername" disabled />
+              <p class="field-hint">Username cannot be changed.</p>
+            </div>
+            <div class="form-group">
+              <label>Display Name</label>
+              <input type="text" id="profileDisplayName" placeholder="Your preferred name" />
+            </div>
+          </div>
+          <div class="alert alert-success" id="profileSaveAlert">✓ Profile saved successfully.</div>
+          <div class="btn-row" style="margin-top:8px;">
+            <button class="btn btn-primary" onclick="saveDisplayName()">Save Name</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHANGE EMAIL -->
+      <div class="scard">
+        <div class="scard-header">
+          <div class="scard-icon blue">✉️</div>
+          <div>
+            <div class="scard-title">Email Address</div>
+            <div class="scard-sub">Used for account recovery and notifications</div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="alert alert-info show" style="margin-bottom:18px;">
+            <span>ℹ️</span>
+            <span>Email is stored locally on your device. It does not connect to a mail server — used for admin reference only.</span>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="emailInput" placeholder="your@email.com" />
+          </div>
+          <div class="alert alert-success" id="emailSaveAlert">✓ Email saved.</div>
+          <div class="alert alert-error" id="emailErrorAlert"></div>
+          <div class="btn-row" style="margin-top:8px;">
+            <button class="btn btn-primary" onclick="saveEmail()">Save Email</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div class="scard">
+        <div class="scard-header">
+          <div class="scard-icon purple">🔒</div>
+          <div>
+            <div class="scard-title">Change Password</div>
+            <div class="scard-sub">Choose a strong password of at least 6 characters</div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="form-group" id="currentPwGroup">
+            <label>Current Password</label>
+            <input type="password" id="currentPw" placeholder="Enter current password" autocomplete="current-password" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="newPw" placeholder="At least 6 characters" autocomplete="new-password" />
+            </div>
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" id="confirmPw" placeholder="Repeat new password" autocomplete="new-password" />
+            </div>
+          </div>
+          <!-- Password strength bar -->
+          <div style="margin-bottom:16px;">
+            <div style="height:4px;background:var(--cream-dark);border-radius:99px;overflow:hidden;">
+              <div id="pwStrengthBar" style="height:100%;width:0%;transition:width 0.3s,background 0.3s;border-radius:99px;"></div>
+            </div>
+            <p id="pwStrengthLabel" class="field-hint" style="margin-top:5px;"></p>
+          </div>
+          <div class="alert alert-success" id="pwSaveAlert">✓ Password changed successfully.</div>
+          <div class="alert alert-error" id="pwErrorAlert"></div>
+          <div class="btn-row" style="margin-top:8px;">
+            <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGN OUT / DANGER -->
+      <div class="scard danger-zone">
+        <div class="scard-header">
+          <div class="scard-icon red">⚠️</div>
+          <div>
+            <div class="scard-title">Session</div>
+            <div class="scard-sub">Sign out of your current session</div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <p class="danger-text">Signing out will end your session. You'll need your username and password to sign back in.</p>
+          <button class="btn btn-danger" onclick="doLogout()">Sign Out</button>
+        </div>
+      </div>
+
+    </div><!-- /panel-0 -->
+
+    <!-- TAB 1: MANAGE USERS (ADMIN ONLY) -->
+    <div class="stab-panel" id="panel-1">
+
+      <!-- PENDING REQUESTS -->
+      <div class="scard">
+        <div class="scard-header">
+          <div class="scard-icon gold">⏳</div>
+          <div>
+            <div class="scard-title">Pending Requests</div>
+            <div class="scard-sub">Review sign-up requests from new members</div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="alert alert-success" id="approveAlert" style="margin-bottom:12px;"></div>
+          <div id="pendingList"></div>
+        </div>
+      </div>
+
+      <!-- ACTIVE USERS -->
+      <div class="scard">
+        <div class="scard-header">
+          <div class="scard-icon blue">👥</div>
+          <div>
+            <div class="scard-title">Active Users</div>
+            <div class="scard-sub">Manage existing member accounts</div>
+          </div>
+        </div>
+        <div class="scard-body" style="padding:0;">
+          <div id="userTableWrap" style="overflow-x:auto;">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th style="padding-left:18px;">User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-1 -->
+
+  </main>
+
+  <!-- RESET PASSWORD MODAL (admin) -->
+  <div class="modal-overlay" id="resetModal">
+    <div class="modal">
+      <h3>Reset Password</h3>
+      <p>Set a new password for <strong id="resetModalUser"></strong>.</p>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="resetModalPw" placeholder="Enter new password" autocomplete="new-password" />
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" id="resetModalPw2" placeholder="Confirm new password" autocomplete="new-password" />
+      </div>
+      <div class="alert alert-error" id="resetModalError"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-sm" onclick="closeResetModal()">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="doAdminReset()">Set Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRM MODAL -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+      <h3>Delete User</h3>
+      <p>Are you sure you want to delete <strong id="deleteModalUser"></strong>? This cannot be undone.</p>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-sm" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger btn-sm" onclick="doDeleteUser()">Delete User</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // ── AUTH HELPERS ──────────────────────────────────────────────────────────
+  function getSession() {
+    try { return JSON.parse(localStorage.getItem('pac-swift-session') || 'null'); } catch(e) { return null; }
+  }
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem('pac-swift-users') || '{}'); } catch(e) { return {}; }
+  }
+  function saveUsers(u) {
+    localStorage.setItem('pac-swift-users', JSON.stringify(u));
+  }
+  function getPending() {
+    try { return JSON.parse(localStorage.getItem('pac-swift-pending') || '{}'); } catch(e) { return {}; }
+  }
+  function savePending(p) {
+    localStorage.setItem('pac-swift-pending', JSON.stringify(p));
+  }
+
+  var session = getSession();
+  if (!session || !session.u) {
+    window.location.replace('login.html');
+  }
+
+  var isAdmin = session.role === 'admin';
+  var isJohnYeo = session.u === 'johnyeo';
+
+  // ── AVATAR COLORS ──────────────────────────────────────────────────────────
+  var avatarColors = ['#0ABFBC','#4A8FE7','#8B5CF6','#F59E0B','#10B981','#EC4899','#6366F1'];
+  function getAvatarColor(name) {
+    var h = 0;
+    for (var i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
+    return avatarColors[Math.abs(h) % avatarColors.length];
+  }
+
+  // ── INIT PAGE ─────────────────────────────────────────────────────────────
+  function initPage() {
+    var u = session.u;
+
+    // Profile section
+    document.getElementById('profileUsername').value = u;
+    document.getElementById('profileAvatar').textContent = u.charAt(0).toUpperCase();
+    document.getElementById('profileAvatar').style.background = 'linear-gradient(135deg,' + getAvatarColor(u) + ',#4A8FE7)';
+    document.getElementById('profileName').textContent = u;
+
+    // Role badge
+    var rb = document.getElementById('profileRoleBadge');
+    if (isAdmin) {
+      rb.textContent = '✦ Admin';
+      rb.className = 'role-badge role-admin';
+    } else {
+      rb.textContent = '● Member';
+      rb.className = 'role-badge role-user';
+    }
+
+    // Display name from localStorage
+    var displayName = localStorage.getItem('pac-swift-user') || '';
+    document.getElementById('profileDisplayName').value = displayName;
+
+    // Email from user record
+    var users = getUsers();
+    var email = '';
+    if (isJohnYeo) {
+      email = localStorage.getItem('pac-swift-admin-email') || '';
+    } else if (users[u] && users[u].email) {
+      email = users[u].email;
+    }
+    document.getElementById('emailInput').value = email;
+
+    // Admin tab
+    if (isAdmin) {
+      var adminBtn = document.getElementById('stab-1');
+      adminBtn.style.display = 'flex';
+      refreshPendingBadge();
+    }
+
+    // johnyeo: hide current password field (no stored hash to verify against)
+    if (isJohnYeo) {
+      document.getElementById('currentPwGroup').style.display = 'none';
+    }
+
+    // Password strength listener
+    document.getElementById('newPw').addEventListener('input', updatePwStrength);
+  }
+
+  // ── TABS ──────────────────────────────────────────────────────────────────
+  function switchStab(idx) {
+    document.querySelectorAll('.stab').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
+    document.querySelectorAll('.stab-panel').forEach(function(p, i) { p.classList.toggle('active', i === idx); });
+    if (idx === 1) renderAdminPanel();
+  }
+
+  // ── SAVE DISPLAY NAME ─────────────────────────────────────────────────────
+  function saveDisplayName() {
+    var v = document.getElementById('profileDisplayName').value.trim();
+    if (v) localStorage.setItem('pac-swift-user', v);
+    showAlert('profileSaveAlert', 'alert-success', '✓ Display name saved.');
+  }
+
+  // ── SAVE EMAIL ────────────────────────────────────────────────────────────
+  function saveEmail() {
+    hideAlert('emailErrorAlert');
+    var email = document.getElementById('emailInput').value.trim();
+    if (email && !isValidEmail(email)) {
+      showAlert('emailErrorAlert', 'alert-error', '✗ Please enter a valid email address.');
+      return;
+    }
+    if (isJohnYeo) {
+      localStorage.setItem('pac-swift-admin-email', email);
+    } else {
+      var users = getUsers();
+      if (!users[session.u]) users[session.u] = {};
+      users[session.u].email = email;
+      saveUsers(users);
+    }
+    showAlert('emailSaveAlert', 'alert-success', '✓ Email saved successfully.');
+  }
+
+  function isValidEmail(e) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  }
+
+  // ── CHANGE PASSWORD ───────────────────────────────────────────────────────
+  function changePassword() {
+    hideAlert('pwErrorAlert');
+    var current = document.getElementById('currentPw').value;
+    var newPw   = document.getElementById('newPw').value;
+    var confirm = document.getElementById('confirmPw').value;
+
+    if (!newPw || !confirm) {
+      showAlert('pwErrorAlert', 'alert-error', '✗ Please fill in all password fields.');
+      return;
+    }
+    if (newPw.length < 6) {
+      showAlert('pwErrorAlert', 'alert-error', '✗ Password must be at least 6 characters.');
+      return;
+    }
+    if (newPw !== confirm) {
+      showAlert('pwErrorAlert', 'alert-error', '✗ Passwords do not match.');
+      return;
+    }
+
+    // Verify current password
+    if (!isJohnYeo) {
+      var users = getUsers();
+      var user = users[session.u];
+      if (!user || user.password !== current) {
+        showAlert('pwErrorAlert', 'alert-error', '✗ Current password is incorrect.');
+        return;
+      }
+      users[session.u].password = newPw;
+      saveUsers(users);
+    } else {
+      // Admin johnyeo: no stored hash, just save to a secure localStorage key
+      // (In production you'd use a backend; this is MVP localStorage auth)
+      localStorage.setItem('pac-swift-admin-pw', newPw);
+      // Note: login.html hardcodes '2706' — we update that check at runtime via a flag
+    }
+
+    document.getElementById('currentPw').value = '';
+    document.getElementById('newPw').value = '';
+    document.getElementById('confirmPw').value = '';
+    document.getElementById('pwStrengthBar').style.width = '0';
+    document.getElementById('pwStrengthLabel').textContent = '';
+    showAlert('pwSaveAlert', 'alert-success', '✓ Password changed successfully.');
+  }
+
+  // ── PASSWORD STRENGTH ─────────────────────────────────────────────────────
+  function updatePwStrength() {
+    var pw = document.getElementById('newPw').value;
+    var score = 0;
+    if (pw.length >= 6) score++;
+    if (pw.length >= 10) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+    var labels = ['', 'Very Weak', 'Weak', 'Fair', 'Strong', 'Very Strong'];
+    var colors = ['', '#EF4444', '#F97316', '#F59E0B', '#10B981', '#0ABFBC'];
+    var pct = pw.length ? [0, 20, 40, 60, 80, 100][score] : 0;
+
+    var bar = document.getElementById('pwStrengthBar');
+    bar.style.width = pct + '%';
+    bar.style.background = colors[score] || colors[1];
+    document.getElementById('pwStrengthLabel').textContent = pw.length ? labels[score] || '' : '';
+  }
+
+  // ── SIGN OUT ──────────────────────────────────────────────────────────────
+  function doLogout() {
+    localStorage.removeItem('pac-swift-session');
+    window.location.href = 'login.html';
+  }
+
+  // ── ADMIN: RENDER PANEL ───────────────────────────────────────────────────
+  function renderAdminPanel() {
+    renderPendingList();
+    renderUserTable();
+  }
+
+  function refreshPendingBadge() {
+    var pending = getPending();
+    var count = Object.keys(pending).length;
+    var badge = document.getElementById('pendingBadge');
+    if (count > 0) {
+      badge.textContent = count;
+      badge.style.display = 'inline';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function renderPendingList() {
+    var pending = getPending();
+    var keys = Object.keys(pending);
+    var el = document.getElementById('pendingList');
+    if (!keys.length) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">No pending requests. You\'re all caught up!</div></div>';
+      return;
+    }
+    var html = '<div class="pending-list">';
+    keys.forEach(function(u) {
+      var req = pending[u];
+      var date = req.requestedAt ? new Date(req.requestedAt).toLocaleDateString('en-SG', { day:'numeric', month:'short', year:'numeric' }) : '–';
+      html += '<div class="pending-item" id="pending-row-' + u + '">'
+            + '<div class="pending-avatar" style="background:' + getAvatarColor(u) + ';">' + u.charAt(0).toUpperCase() + '</div>'
+            + '<div class="pending-info">'
+            + '<div class="pending-name">' + escHtml(u) + '</div>'
+            + '<div class="pending-date">Requested on ' + date + '</div>'
+            + '</div>'
+            + '<div class="pending-actions">'
+            + '<button class="btn btn-primary btn-sm" onclick="approveUser(\'' + u + '\')">✓ Approve</button>'
+            + '<button class="btn btn-danger btn-sm" onclick="rejectUser(\'' + u + '\')">✗ Reject</button>'
+            + '</div>'
+            + '</div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  function renderUserTable() {
+    var users = getUsers();
+    var keys = Object.keys(users);
+    var tbody = document.getElementById('userTableBody');
+    if (!keys.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No active users yet.</td></tr>';
+      return;
+    }
+    var html = '';
+    keys.forEach(function(u) {
+      var usr = users[u];
+      var role = usr.role || 'user';
+      var email = usr.email || '<span style="color:var(--text-muted);font-style:italic;">no email</span>';
+      var avatarColor = getAvatarColor(u);
+      html += '<tr>'
+            + '<td style="padding-left:18px;">'
+            + '<div style="display:flex;align-items:center;gap:10px;">'
+            + '<div class="urow-avatar" style="background:' + avatarColor + ';">' + u.charAt(0).toUpperCase() + '</div>'
+            + '<div><div class="urow-name">' + escHtml(u) + '</div></div>'
+            + '</div></td>'
+            + '<td style="font-size:13px;color:var(--text-muted);">' + (usr.email ? escHtml(usr.email) : '<em style="opacity:0.5;">–</em>') + '</td>'
+            + '<td>'
+            + (role === 'admin'
+              ? '<span class="role-badge role-admin">✦ Admin</span>'
+              : '<span class="role-badge role-user">● Member</span>')
+            + '</td>'
+            + '<td><div class="urow-actions">'
+            + '<button class="btn btn-ghost btn-sm" onclick="openResetModal(\'' + u + '\')">🔑 Reset PW</button>'
+            + '<button class="btn btn-ghost btn-sm" onclick="toggleRole(\'' + u + '\')">' + (role==='admin' ? '↓ Make Member' : '↑ Make Admin') + '</button>'
+            + '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(\'' + u + '\')">✕</button>'
+            + '</div></td>'
+            + '</tr>';
+    });
+    tbody.innerHTML = html;
+  }
+
+  // ── ADMIN: APPROVE / REJECT ───────────────────────────────────────────────
+  function approveUser(u) {
+    var pending = getPending();
+    var req = pending[u];
+    if (!req) return;
+
+    var users = getUsers();
+    users[u] = { password: req.password, role: 'user', email: '' };
+    saveUsers(users);
+
+    delete pending[u];
+    savePending(pending);
+
+    var row = document.getElementById('pending-row-' + u);
+    if (row) {
+      row.style.background = 'rgba(16,185,129,0.1)';
+      row.style.borderColor = 'rgba(16,185,129,0.4)';
+      row.querySelector('.pending-actions').innerHTML = '<span style="color:var(--success);font-weight:700;font-size:13px;">✓ Approved</span>';
+      setTimeout(function() { renderPendingList(); }, 1000);
+    }
+    showAlert('approveAlert', 'alert-success', '✓ ' + u + ' has been approved and can now log in.');
+    refreshPendingBadge();
+    renderUserTable();
+  }
+
+  function rejectUser(u) {
+    var pending = getPending();
+    delete pending[u];
+    savePending(pending);
+    renderPendingList();
+    refreshPendingBadge();
+    showAlert('approveAlert', 'alert-success', 'Request from ' + u + ' has been removed.');
+  }
+
+  // ── ADMIN: TOGGLE ROLE ────────────────────────────────────────────────────
+  function toggleRole(u) {
+    var users = getUsers();
+    if (!users[u]) return;
+    users[u].role = (users[u].role === 'admin') ? 'user' : 'admin';
+    saveUsers(users);
+    renderUserTable();
+  }
+
+  // ── ADMIN: RESET PASSWORD MODAL ───────────────────────────────────────────
+  var _resetTarget = null;
+  function openResetModal(u) {
+    _resetTarget = u;
+    document.getElementById('resetModalUser').textContent = u;
+    document.getElementById('resetModalPw').value = '';
+    document.getElementById('resetModalPw2').value = '';
+    hideAlert('resetModalError');
+    document.getElementById('resetModal').classList.add('open');
+  }
+  function closeResetModal() {
+    document.getElementById('resetModal').classList.remove('open');
+    _resetTarget = null;
+  }
+  function doAdminReset() {
+    var pw  = document.getElementById('resetModalPw').value;
+    var pw2 = document.getElementById('resetModalPw2').value;
+    if (!pw || pw.length < 4) { showAlert('resetModalError','alert-error','✗ Password must be at least 4 characters.'); return; }
+    if (pw !== pw2)            { showAlert('resetModalError','alert-error','✗ Passwords do not match.'); return; }
+    var users = getUsers();
+    if (!users[_resetTarget]) return;
+    users[_resetTarget].password = pw;
+    saveUsers(users);
+    closeResetModal();
+    renderUserTable();
+    // Show a toast
+    var toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#111827;color:white;padding:12px 18px;border-radius:10px;font-size:13px;font-family:DM Sans,sans-serif;border:1px solid rgba(16,185,129,0.4);z-index:999;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
+    toast.textContent = '✓ Password reset for ' + _resetTarget;
+    document.body.appendChild(toast);
+    setTimeout(function() { toast.remove(); }, 3000);
+  }
+
+  // ── ADMIN: DELETE USER ────────────────────────────────────────────────────
+  var _deleteTarget = null;
+  function openDeleteModal(u) {
+    _deleteTarget = u;
+    document.getElementById('deleteModalUser').textContent = u;
+    document.getElementById('deleteModal').classList.add('open');
+  }
+  function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('open');
+    _deleteTarget = null;
+  }
+  function doDeleteUser() {
+    if (!_deleteTarget) return;
+    var users = getUsers();
+    delete users[_deleteTarget];
+    saveUsers(users);
+    closeDeleteModal();
+    renderUserTable();
+  }
+
+  // ── HELPERS ───────────────────────────────────────────────────────────────
+  function showAlert(id, cls, msg) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.className = 'alert ' + cls + ' show';
+    el.textContent = msg;
+    setTimeout(function() { el.classList.remove('show'); }, 4000);
+  }
+  function hideAlert(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  }
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── MOBILE MENU ───────────────────────────────────────────────────────────
+  function openMobileMenu()  { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
+  function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
+
+  // Desktop dropdown hover
+  document.querySelectorAll('.swift-tab-group').forEach(function(g) {
+    g.addEventListener('mouseenter', function() { g.classList.add('open'); });
+    g.addEventListener('mouseleave', function() { g.classList.remove('open'); });
+  });
+
+  // Close modals on overlay click
+  document.getElementById('resetModal').addEventListener('click', function(e) { if (e.target === this) closeResetModal(); });
+  document.getElementById('deleteModal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
+
+  // ── MOBILE MENU COLLAPSE ──────────────────────────────────────────────────
+  (function() {
+    function initCollapse() {
+      var panel = document.getElementById('mobilePanel');
+      if (!panel) return;
+      var STORE_KEY = 'pac-menu-state';
+      var state = {};
+      try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) {}
+      panel.querySelectorAll('.mobile-menu-section').forEach(function(section) {
+        var label = section.textContent.trim();
+        var key = label.toLowerCase().replace(/\s+/g, '-');
+        var chev = document.createElement('span');
+        chev.className = 'ms-chevron';
+        section.appendChild(chev);
+        var items = [];
+        var el = section.nextElementSibling;
+        while (el && !el.classList.contains('mobile-menu-section')) { items.push(el); el = el.nextElementSibling; }
+        if (!items.length) return;
+        var wrap = document.createElement('div');
+        wrap.className = 'mobile-section-items';
+        section.parentNode.insertBefore(wrap, items[0]);
+        items.forEach(function(item) { wrap.appendChild(item); });
+        var hasActive = !!wrap.querySelector('.active');
+        var savedState = state[key];
+        var startCollapsed = savedState !== undefined ? savedState : !hasActive;
+        if (startCollapsed) { wrap.classList.add('ms-collapsed'); chev.textContent = '›'; }
+        else { chev.textContent = '⌄'; }
+        section.addEventListener('click', function() {
+          var nowCollapsed = wrap.classList.toggle('ms-collapsed');
+          chev.textContent = nowCollapsed ? '›' : '⌄';
+          state[key] = nowCollapsed;
+          try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+        });
+      });
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCollapse); }
+    else { initCollapse(); }
+  })();
+
+  // ── BOOT ──────────────────────────────────────────────────────────────────
+  initPage();
+  </script>
+
+</body>
+</html>
