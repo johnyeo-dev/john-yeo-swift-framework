@@ -282,28 +282,49 @@
   styleEl.textContent = CSS;
   document.head.appendChild(styleEl);
 
-  // ── COHORT HTML (strip row 2) ─────────────────────────────────────────────
-  function buildCohortHtml(excludeUser) {
+  // ── COHORT RANK HTML (strip row 2) ───────────────────────────────────────
+  function buildCohortHtml(currentUser) {
     var users = getUsers();
-    var members = Object.keys(users).filter(function(ou){ return ou !== excludeUser && ou !== 'johnyeo'; });
-    members = members.slice(0, 8);
-    if (!members.length) return '';
-    // Use highest pts among cohort + current user as 100% reference
-    var allPts = members.map(function(ou){ return getTotalPoints(ou); });
-    allPts.push(getTotalPoints(excludeUser));
-    var maxPts = Math.max.apply(null, allPts.concat([1]));
-    return members.map(function(ou) {
-      var pts   = getTotalPoints(ou);
-      var pctW  = Math.round(pts / maxPts * 100);
-      var color = getAvatarColor(ou);
-      var dname = getDisplayName(ou);
-      return '<div class="pac-ps-member">'
-        + '<div class="pac-ps-member-av" style="background:' + color + ';">' + ou.charAt(0).toUpperCase() + '</div>'
-        + '<span class="pac-ps-member-name">' + dname + '</span>'
-        + '<div class="pac-ps-member-track"><div class="pac-ps-member-fill" style="width:' + pctW + '%;background:' + color + ';"></div></div>'
-        + '<span class="pac-ps-member-pts-label" style="color:' + color + ';">' + pts + '</span>'
-        + '</div>';
-    }).join('');
+    // Build sorted leaderboard: all users except admin
+    var allUsers = Object.keys(users).filter(function(ou){ return ou !== 'johnyeo'; });
+    // Always include current user even if not in pac-swift-users
+    if (allUsers.indexOf(currentUser) === -1) allUsers.push(currentUser);
+    if (allUsers.length < 2) return ''; // no cohort to rank against
+
+    var ranked = allUsers.map(function(ou){
+      return { u: ou, pts: getTotalPoints(ou) };
+    }).sort(function(a,b){ return b.pts - a.pts; });
+
+    var myPos = ranked.findIndex(function(r){ return r.u === currentUser; }) + 1;
+    var total = ranked.length;
+    var myPts = getTotalPoints(currentUser);
+
+    // Medal emoji for top 3
+    var medals = ['🥇','🥈','🥉'];
+    var medal = myPos <= 3 ? medals[myPos-1] : '#' + myPos;
+
+    // Context: pts gap to user above and below
+    var above = myPos > 1 ? ranked[myPos-2] : null;
+    var below = myPos < total ? ranked[myPos] : null;
+
+    var context = '';
+    if (above) {
+      var gap = above.pts - myPts;
+      context = gap === 0
+        ? '<span style="color:rgba(255,255,255,0.4);font-size:11px;">Tied with ' + getDisplayName(above.u) + '</span>'
+        : '<span style="color:rgba(255,255,255,0.4);font-size:11px;">▲ ' + gap + ' pts to ' + getDisplayName(above.u) + '</span>';
+    } else if (below) {
+      var lead = myPts - below.pts;
+      context = lead === 0
+        ? '<span style="color:rgba(255,255,255,0.4);font-size:11px;">Tied for lead</span>'
+        : '<span style="color:rgba(255,255,255,0.4);font-size:11px;">🏆 Leading by ' + lead + ' pts</span>';
+    }
+
+    return '<span style="font-size:18px;line-height:1;flex-shrink:0;">' + medal + '</span>'
+      + '<span style="font-size:13px;font-weight:800;color:white;white-space:nowrap;flex-shrink:0;">'
+      + (myPos <= 3 ? '' : '') + myPos + ' of ' + total + '</span>'
+      + (context ? '<span style="color:rgba(255,255,255,0.15);flex-shrink:0;">·</span>' + context : '')
+      + '<a href="leaderboard.html" style="margin-left:auto;font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);text-decoration:none;white-space:nowrap;flex-shrink:0;">View all →</a>';
   }
 
   // ── RENDER STRIP ─────────────────────────────────────────────────────────
@@ -341,7 +362,7 @@
       + '</div>';
 
     var cohortRow = cohortHtml
-      ? '<div class="pac-ps-cohort-row"><span class="pac-ps-cohort-label">Cohort</span>' + cohortHtml + '</div>'
+      ? '<div class="pac-ps-cohort-row" style="gap:10px;"><span class="pac-ps-cohort-label">Rank</span>' + cohortHtml + '</div>'
       : '';
 
     strip.innerHTML = mainRow + cohortRow;
