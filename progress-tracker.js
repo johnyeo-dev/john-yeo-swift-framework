@@ -66,20 +66,25 @@
 
   // ── CSS ──────────────────────────────────────────────────────────────────
   var CSS = `
-    .pac-ps { background:linear-gradient(90deg,#0d1520,#111827); border-bottom:2px solid rgba(10,191,188,0.3); padding:0 24px; display:flex; align-items:center; justify-content:center; gap:14px; position:sticky; top:44px; z-index:89; height:52px; overflow:hidden; flex-shrink:0; }
-    .pac-ps-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.45); white-space:nowrap; flex-shrink:0; }
-    .pac-ps-bar-wrap { flex:0 0 200px; height:10px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; flex-shrink:0; box-shadow:0 0 10px rgba(10,191,188,0.15); }
-    .pac-ps-bar { height:100%; border-radius:99px; background:linear-gradient(90deg,#0ABFBC,#4A8FE7); transition:width 0.6s ease; box-shadow:0 0 8px rgba(10,191,188,0.5); }
-    .pac-ps-pct { font-size:14px; font-weight:800; color:#0ABFBC; white-space:nowrap; flex-shrink:0; letter-spacing:0.3px; }
-    .pac-ps-social { display:flex; align-items:center; gap:4px; margin-left:2px; flex-shrink:0; }
-    .pac-ps-social-label { font-size:10px; color:rgba(255,255,255,0.3); white-space:nowrap; }
-    .pac-ps-avatar { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white; border:1.5px solid #111827; margin-left:-6px; cursor:pointer; position:relative; flex-shrink:0; }
-    .pac-ps-avatar:first-child { margin-left:0; }
-    .pac-ps-avatar-tip { display:none; position:absolute; bottom:calc(100%+6px); left:50%; transform:translateX(-50%); background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:6px 10px; white-space:nowrap; font-size:11px; color:white; z-index:200; }
-    .pac-ps-avatar:hover .pac-ps-avatar-tip { display:block; }
-    .pac-ps-btn { background:rgba(10,191,188,0.18); border:1.5px solid rgba(10,191,188,0.45); color:#0ABFBC; border-radius:8px; padding:6px 14px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s; letter-spacing:0.2px; }
-    .pac-ps-btn:hover { background:rgba(10,191,188,0.3); box-shadow:0 0 10px rgba(10,191,188,0.25); }
-    @media(max-width:768px) { .pac-ps { top:0; gap:10px; padding:0 14px; justify-content:flex-start; } .pac-ps-social { display:none; } .pac-ps-bar-wrap { flex:1; min-width:0; } }
+    /* ── PROGRESS STRIP ── */
+    .pac-ps { background:linear-gradient(180deg,#0d1520 0%,#0f1c2e 100%); border-bottom:2px solid rgba(10,191,188,0.35); padding:10px 28px 12px; display:flex; flex-direction:column; gap:9px; position:sticky; top:44px; z-index:89; flex-shrink:0; }
+    .pac-ps-row { display:flex; align-items:center; gap:12px; }
+    .pac-ps-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.4); white-space:nowrap; flex-shrink:0; min-width:52px; }
+    .pac-ps-bar-wrap { flex:0 0 220px; height:10px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; flex-shrink:0; }
+    .pac-ps-bar { height:100%; border-radius:99px; background:linear-gradient(90deg,#0ABFBC,#4A8FE7); transition:width 0.6s ease; box-shadow:0 0 10px rgba(10,191,188,0.55); }
+    .pac-ps-pct { font-size:14px; font-weight:800; color:#0ABFBC; white-space:nowrap; flex-shrink:0; letter-spacing:0.3px; min-width:34px; }
+    .pac-ps-btn { background:rgba(10,191,188,0.18); border:1.5px solid rgba(10,191,188,0.45); color:#0ABFBC; border-radius:8px; padding:5px 13px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s; }
+    .pac-ps-btn:hover { background:rgba(10,191,188,0.3); box-shadow:0 0 10px rgba(10,191,188,0.3); }
+    /* cohort row */
+    .pac-ps-cohort { display:flex; align-items:center; gap:18px; flex:1; overflow:hidden; }
+    .pac-ps-member { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+    .pac-ps-member-av { width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:white; flex-shrink:0; }
+    .pac-ps-member-name { font-size:11px; font-weight:600; color:rgba(255,255,255,0.65); white-space:nowrap; }
+    .pac-ps-member-track { width:80px; height:6px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; flex-shrink:0; }
+    .pac-ps-member-fill { height:100%; border-radius:99px; transition:width 0.6s ease; }
+    .pac-ps-member-pct-label { font-size:11px; font-weight:700; white-space:nowrap; flex-shrink:0; }
+    @media(max-width:900px) { .pac-ps-member-track { width:50px; } }
+    @media(max-width:768px) { .pac-ps { top:0; padding:8px 14px 10px; } .pac-ps-bar-wrap { flex:1 1 auto; min-width:0; } .pac-ps-cohort { gap:12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; } .pac-ps-cohort::-webkit-scrollbar { display:none; } }
 
     /* PROGRESS MODAL */
     .pac-pm-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:900; display:none; align-items:flex-start; justify-content:center; padding:20px; overflow-y:auto; }
@@ -141,42 +146,57 @@
   document.head.appendChild(styleEl);
 
   // ── RENDER PROGRESS STRIP ────────────────────────────────────────────────
+  function buildCohortHtml(excludeUser) {
+    var users = getUsers();
+    var members = Object.keys(users).filter(function(ou){ return ou !== excludeUser; });
+    if (excludeUser !== 'johnyeo') members = ['johnyeo'].concat(members);
+    else members = Object.keys(users);
+    members = members.slice(0, 8);
+    if (!members.length) return '';
+    return members.map(function(ou) {
+      var opct = getPct(ou);
+      var color = getAvatarColor(ou);
+      var displayName = (function(){
+        try { var udata = JSON.parse(localStorage.getItem('pac-swift-users')||'{}'); return (udata[ou] && udata[ou].displayName) || ou; } catch(e){ return ou; }
+      })();
+      return '<div class="pac-ps-member" id="pacMember-' + ou + '">'
+        + '<div class="pac-ps-member-av" style="background:' + color + ';">' + ou.charAt(0).toUpperCase() + '</div>'
+        + '<span class="pac-ps-member-name">' + displayName + '</span>'
+        + '<div class="pac-ps-member-track"><div class="pac-ps-member-fill" style="width:' + opct + '%;background:' + color + ';box-shadow:0 0 6px ' + color + '88;"></div></div>'
+        + '<span class="pac-ps-member-pct-label" style="color:' + color + ';">' + opct + '%</span>'
+        + '</div>';
+    }).join('');
+  }
+
   function renderStrip(session) {
     var u = session ? session.u : null;
     if (!u) return;
     var done = getDone(u);
     var pct  = getPct(u);
 
-    // Social proof avatars
-    var users = getUsers();
-    var others = Object.keys(users).filter(function(ou){ return ou !== u; });
-    if (u !== 'johnyeo') others = ['johnyeo'].concat(others);
-    else others = Object.keys(users);
-    others = others.slice(0, 5);
-    var socialHtml = '';
-    if (others.length) {
-      socialHtml = '<div class="pac-ps-social">'
-        + '<span class="pac-ps-social-label">also:</span>';
-      others.forEach(function(ou) {
-        var opct = getPct(ou);
-        var color = getAvatarColor(ou);
-        socialHtml += '<div class="pac-ps-avatar" style="background:' + color + ';">'
-          + ou.charAt(0).toUpperCase()
-          + '<div class="pac-ps-avatar-tip">' + ou + ' · ' + opct + '% done</div>'
-          + '</div>';
-      });
-      socialHtml += '</div>';
-    }
+    var cohortHtml = buildCohortHtml(u);
 
     var strip = document.createElement('div');
     strip.className = 'pac-ps';
     strip.id = 'pacProgressStrip';
-    strip.innerHTML =
-      '<span class="pac-ps-label">Progress</span>'
+
+    // Row 1: my progress
+    var row1 = '<div class="pac-ps-row">'
+      + '<span class="pac-ps-label">You</span>'
       + '<div class="pac-ps-bar-wrap"><div class="pac-ps-bar" id="pacPsBar" style="width:' + pct + '%"></div></div>'
       + '<span class="pac-ps-pct" id="pacPsPct">' + done + '/' + STEPS.length + '</span>'
       + '<button class="pac-ps-btn" onclick="window.__pacOpenModal()">My Progress</button>'
-      + socialHtml;
+      + '</div>';
+
+    // Row 2: cohort (only if there are members)
+    var row2 = cohortHtml
+      ? '<div class="pac-ps-row">'
+        + '<span class="pac-ps-label">Cohort</span>'
+        + '<div class="pac-ps-cohort" id="pacPsCohort">' + cohortHtml + '</div>'
+        + '</div>'
+      : '';
+
+    strip.innerHTML = row1 + row2;
 
     // Insert after mobile-menu-bar or after swift-nav — before main content
     var insertAfter = document.querySelector('.mobile-menu-bar') || document.querySelector('.swift-nav');
@@ -311,11 +331,15 @@
     var done = getDone(u);
     var pct  = getPct(u);
 
-    // Update strip
+    // Update strip — my bar
     var bar = document.getElementById('pacPsBar');
     if (bar) bar.style.width = pct + '%';
     var pctEl = document.getElementById('pacPsPct');
     if (pctEl) pctEl.textContent = done + '/' + STEPS.length;
+
+    // Update strip — cohort bars (re-render cohort section)
+    var cohortEl = document.getElementById('pacPsCohort');
+    if (cohortEl) cohortEl.innerHTML = buildCohortHtml(u);
 
     // Update modal if open
     var pmBar  = document.getElementById('pacPmBar');
