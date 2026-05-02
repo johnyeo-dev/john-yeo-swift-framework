@@ -679,33 +679,6 @@
 
   </main>
 
-  <!-- RESET PASSWORD MODAL (admin) -->
-  <div class="modal-overlay" id="resetModal">
-    <div class="modal">
-      <h3>Reset Password</h3>
-      <p>Set a new password for <strong id="resetModalUser"></strong>.</p>
-      <div class="form-group">
-        <label>New Password</label>
-        <div style="position:relative;">
-          <input type="password" id="resetModalPw" placeholder="Enter new password" autocomplete="new-password" style="padding-right:46px;width:100%;" />
-          <button type="button" onclick="toggleResetPw('resetModalPw','resetModalPwBtn')" id="resetModalPwBtn" style="position:absolute;right:0;top:0;bottom:0;width:44px;background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:16px;display:flex;align-items:center;justify-content:center;transition:color 0.15s;" title="Show password">👁</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Confirm Password</label>
-        <div style="position:relative;">
-          <input type="password" id="resetModalPw2" placeholder="Confirm new password" autocomplete="new-password" style="padding-right:46px;width:100%;" />
-          <button type="button" onclick="toggleResetPw('resetModalPw2','resetModalPw2Btn')" id="resetModalPw2Btn" style="position:absolute;right:0;top:0;bottom:0;width:44px;background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:16px;display:flex;align-items:center;justify-content:center;transition:color 0.15s;" title="Show password">👁</button>
-        </div>
-      </div>
-      <div class="alert alert-error" id="resetModalError"></div>
-      <div class="btn-row">
-        <button class="btn btn-ghost btn-sm" onclick="closeResetModal()">Cancel</button>
-        <button class="btn btn-primary btn-sm" onclick="doAdminReset()">Set Password</button>
-      </div>
-    </div>
-  </div>
-
   <!-- EDIT USER MODAL -->
   <div class="modal-overlay" id="editModal">
     <div class="modal" style="max-width:460px;">
@@ -1081,7 +1054,6 @@
             + '<td><div class="urow-actions">'
             + '<button onclick="viewMember(\'' + u + '\')" style="background:rgba(74,143,231,0.15);border:1px solid rgba(74,143,231,0.3);color:#4A8FE7;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif;">👁 View</button>'
             + '<button class="btn btn-primary btn-sm" onclick="openEditModal(\''  + u + '\')")>✏️ Edit</button>'
-            + '<button class="btn btn-ghost btn-sm" onclick="openResetModal(\'' + u + '\')">🔑 Reset PW</button>'
             + '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(\'' + u + '\')">✕</button>'
             + '</div></td>'
             + '</tr>';
@@ -1262,48 +1234,6 @@
     setTimeout(function() { closeEditModal(); renderUserTable(); }, 800);
   }
 
-  // ── ADMIN: RESET PASSWORD MODAL ───────────────────────────────────────────
-  var _resetTarget = null;
-  function openResetModal(u) {
-    _resetTarget = u;
-    document.getElementById('resetModalUser').textContent = u;
-    document.getElementById('resetModalPw').value = '';
-    document.getElementById('resetModalPw2').value = '';
-    hideAlert('resetModalError');
-    document.getElementById('resetModal').classList.add('open');
-  }
-  function toggleResetPw(inputId, btnId) {
-    var inp = document.getElementById(inputId);
-    var btn = document.getElementById(btnId);
-    if (!inp) return;
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-    if (btn) btn.style.color = inp.type === 'text' ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.3)';
-  }
-
-  function closeResetModal() {
-    document.getElementById('resetModal').classList.remove('open');
-    _resetTarget = null;
-  }
-  function doAdminReset() {
-    var pw  = document.getElementById('resetModalPw').value;
-    var pw2 = document.getElementById('resetModalPw2').value;
-    if (!pw || pw.length < 4) { showAlert('resetModalError','alert-error','✗ Password must be at least 4 characters.'); return; }
-    if (pw !== pw2)            { showAlert('resetModalError','alert-error','✗ Passwords do not match.'); return; }
-    var users = getUsers();
-    if (!users[_resetTarget]) {
-      users[_resetTarget] = { name: _resetTarget, role: 'user', created: new Date().toISOString() };
-    }
-    users[_resetTarget].password = pw;
-    saveUsers(users);
-    closeResetModal();
-    renderUserTable();
-    // Show a toast
-    var toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#111827;color:white;padding:12px 18px;border-radius:10px;font-size:13px;font-family:DM Sans,sans-serif;border:1px solid rgba(16,185,129,0.4);z-index:999;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
-    toast.textContent = '✓ Password reset for ' + _resetTarget;
-    document.body.appendChild(toast);
-    setTimeout(function() { toast.remove(); }, 3000);
-  }
 
   // ── ADMIN: DELETE USER ────────────────────────────────────────────────────
   var _deleteTarget = null;
@@ -1352,8 +1282,7 @@
   });
 
   // Close modals on overlay click
-  document.getElementById('resetModal').addEventListener('click', function(e) { if (e.target === this) closeResetModal(); });
-  document.getElementById('deleteModal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
+document.getElementById('deleteModal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
   document.getElementById('editModal').addEventListener('click', function(e) { if (e.target === this) closeEditModal(); });
 
   // ── MOBILE MENU COLLAPSE ──────────────────────────────────────────────────
