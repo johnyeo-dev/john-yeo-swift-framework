@@ -442,8 +442,8 @@
         </div>
       </div>
 
-      <!-- CHANGE PASSWORD -->
-      <div class="scard">
+      <!-- CHANGE PASSWORD (admin only — password changes don't sync cross-device for regular users) -->
+      <div id="changePwSection" style="display:none;"><div class="scard">
         <div class="scard-header">
           <div class="scard-icon purple">🔒</div>
           <div>
@@ -479,7 +479,7 @@
             <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
           </div>
         </div>
-      </div>
+      </div></div>
 
       <!-- SIGN OUT / DANGER -->
       <div class="scard danger-zone">
@@ -843,6 +843,10 @@
       refreshPendingBadge();
     }
 
+    // Only show Change Password section for admin (regular users' changes don't sync cross-device)
+    if (isAdmin) {
+      document.getElementById('changePwSection').style.display = 'block';
+    }
     // johnyeo: hide current password field (no stored hash to verify against)
     if (isJohnYeo) {
       document.getElementById('currentPwGroup').style.display = 'none';
