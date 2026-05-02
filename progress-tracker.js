@@ -282,14 +282,14 @@
   styleEl.textContent = CSS;
   document.head.appendChild(styleEl);
 
-  // ── COHORT RANK HTML (strip row 2) ───────────────────────────────────────
+  // ── RANK BADGE (inline in strip main row) ────────────────────────────────
   function buildCohortHtml(currentUser) {
+    // Admin is not ranked
+    if (currentUser === 'johnyeo') return '';
     var users = getUsers();
-    // Build sorted leaderboard: all users except admin
     var allUsers = Object.keys(users).filter(function(ou){ return ou !== 'johnyeo'; });
-    // Always include current user even if not in pac-swift-users
     if (allUsers.indexOf(currentUser) === -1) allUsers.push(currentUser);
-    if (allUsers.length < 2) return ''; // no cohort to rank against
+    if (allUsers.length < 2) return '';
 
     var ranked = allUsers.map(function(ou){
       return { u: ou, pts: getTotalPoints(ou) };
@@ -298,33 +298,24 @@
     var myPos = ranked.findIndex(function(r){ return r.u === currentUser; }) + 1;
     var total = ranked.length;
     var myPts = getTotalPoints(currentUser);
-
-    // Medal emoji for top 3
     var medals = ['🥇','🥈','🥉'];
     var medal = myPos <= 3 ? medals[myPos-1] : '#' + myPos;
 
-    // Context: pts gap to user above and below
     var above = myPos > 1 ? ranked[myPos-2] : null;
     var below = myPos < total ? ranked[myPos] : null;
-
     var context = '';
     if (above) {
       var gap = above.pts - myPts;
-      context = gap === 0
-        ? '<span style="color:rgba(255,255,255,0.4);font-size:11px;">Tied with ' + getDisplayName(above.u) + '</span>'
-        : '<span style="color:rgba(255,255,255,0.4);font-size:11px;">▲ ' + gap + ' pts to ' + getDisplayName(above.u) + '</span>';
+      context = gap === 0 ? ' · tied' : ' · ▲' + gap + ' pts';
     } else if (below) {
       var lead = myPts - below.pts;
-      context = lead === 0
-        ? '<span style="color:rgba(255,255,255,0.4);font-size:11px;">Tied for lead</span>'
-        : '<span style="color:rgba(255,255,255,0.4);font-size:11px;">🏆 Leading by ' + lead + ' pts</span>';
+      context = lead === 0 ? ' · tied' : ' · +' + lead + ' lead';
     }
 
-    return '<span style="font-size:18px;line-height:1;flex-shrink:0;">' + medal + '</span>'
-      + '<span style="font-size:13px;font-weight:800;color:white;white-space:nowrap;flex-shrink:0;">'
-      + (myPos <= 3 ? '' : '') + myPos + ' of ' + total + '</span>'
-      + (context ? '<span style="color:rgba(255,255,255,0.15);flex-shrink:0;">·</span>' + context : '')
-      + '<a href="leaderboard.html" style="margin-left:auto;font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);text-decoration:none;white-space:nowrap;flex-shrink:0;">View all →</a>';
+    return '<span id="pacPsRankPos" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);white-space:nowrap;flex-shrink:0;">'
+      + medal + ' ' + myPos + '/' + total
+      + (context ? '<span style="font-weight:400;color:rgba(255,255,255,0.35);">' + context + '</span>' : '')
+      + '</span>';
   }
 
   // ── RENDER STRIP ─────────────────────────────────────────────────────────
@@ -353,6 +344,7 @@
       + '<div class="pac-ps-progress">'
       + '<div class="pac-ps-bar-wrap"><div class="pac-ps-bar" id="pacPsBar" style="width:' + pct + '%"></div></div>'
       + '<span class="pac-ps-count" id="pacPsCount">' + done + '/' + STEPS.length + '</span>'
+      + (cohortHtml ? cohortHtml : '')
       + '</div>'
       + '<span class="pac-ps-pts" id="pacPsPts">' + fmtPts(pts) + '</span>'
       + '<div class="pac-ps-actions">'
@@ -361,11 +353,7 @@
       + '</div>'
       + '</div>';
 
-    var cohortRow = cohortHtml
-      ? '<div class="pac-ps-cohort-row" style="gap:10px;"><span class="pac-ps-cohort-label">Rank</span>' + cohortHtml + '</div>'
-      : '';
-
-    strip.innerHTML = mainRow + cohortRow;
+    strip.innerHTML = mainRow;
 
     var insertAfter = document.querySelector('.mobile-menu-bar') || document.querySelector('.swift-nav');
     if (insertAfter && insertAfter.parentNode) {

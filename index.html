@@ -134,6 +134,14 @@
       .align-table { font-size: 12px; }
       .align-table thead th, .align-table tbody td { padding: 10px 12px; }
     }
+    @media (max-width: 600px) {
+      .align-table { min-width: 0 !important; border: none; border-radius: 0; background: transparent; }
+      .align-table thead { display: none; }
+      .align-table tbody tr { display: block; background: white; border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 14px; overflow: hidden; }
+      .align-table tbody td { display: block; padding: 9px 14px; border-bottom: 1px solid var(--border); font-size: 13px; }
+      .align-table tbody td:last-child { border-bottom: none; }
+      .align-table tbody td::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6B7A96; margin-bottom: 3px; }
+    }
   
     /* USER PILL */
     .user-pill { position: relative; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 99px; padding: 6px 12px 6px 6px; cursor: pointer; flex-shrink: 0; }
@@ -263,12 +271,12 @@
       </div>
     </div>
       <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+    <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
     <div class="nav-search" id="navSearch">
       <span class="nav-search-icon">🔍</span>
       <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
       <div class="nav-search-results" id="navSearchResults"></div>
-    </div>
-    <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a><button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
+    </div><button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
   </nav>
   <!-- MOBILE NAV -->
   <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
@@ -424,7 +432,7 @@
     <p class="section-sub">SWIFT is the client journey. The Blueprint is the full system. Here is how they align.</p>
     <blockquote style="font-family:'DM Serif Display',serif; font-size:15px; color:var(--text-muted); font-style:italic; margin-bottom:24px; padding-left:16px; border-left:3px solid var(--gold);">"The Product Architect Blueprint is the full map. SWIFT is how you walk it — one step at a time, at your own pace."</blockquote>
 
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;margin-bottom:24px;">
+    <div class="align-table-wrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;margin-bottom:24px;">
     <table class="align-table" style="margin-bottom:0;min-width:600px;">
       <thead>
         <tr>
@@ -436,40 +444,40 @@
       </thead>
       <tbody>
         <tr>
-          <td style="color:var(--s);">S — Signature Offer</td>
-          <td>Define your niche &amp; transformation</td>
-          <td><span class="pillar-badge">Pillar 1 · ALIGN</span></td>
-          <td>Signature Offer — 1 micro niche, more qualified prospects come to you</td>
+          <td data-label="SWIFT Step" style="color:var(--s);">S — Signature Offer</td>
+          <td data-label="What It Does">Define your niche &amp; transformation</td>
+          <td data-label="Blueprint Pillar"><span class="pillar-badge">Pillar 1 · ALIGN</span></td>
+          <td data-label="Blueprint Element">Signature Offer — 1 micro niche, more qualified prospects come to you</td>
         </tr>
         <tr>
-          <td style="color:var(--s);">↓ Fill the Webinar</td>
-          <td>Paid ads / organic / survey / referrals — pick what works</td>
-          <td><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
-          <td>AI Authentic Content — attracts prospects already looking for people like you</td>
+          <td data-label="SWIFT Step" style="color:var(--s);">↓ Fill the Webinar</td>
+          <td data-label="What It Does">Paid ads / organic / survey / referrals — pick what works</td>
+          <td data-label="Blueprint Pillar"><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
+          <td data-label="Blueprint Element">AI Authentic Content — attracts prospects already looking for people like you</td>
         </tr>
         <tr>
-          <td style="color:var(--w);">W — Webinar</td>
-          <td>Free Heart-Based Webinar to build trust</td>
-          <td><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
-          <td>Get Buy-In — connect &amp; convert with authenticity, predictable monthly income</td>
+          <td data-label="SWIFT Step" style="color:var(--w);">W — Webinar</td>
+          <td data-label="What It Does">Free Heart-Based Webinar to build trust</td>
+          <td data-label="Blueprint Pillar"><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
+          <td data-label="Blueprint Element">Get Buy-In — connect &amp; convert with authenticity, predictable monthly income</td>
         </tr>
         <tr>
-          <td style="color:var(--i);">I — Invite &amp; Follow-Up</td>
-          <td>Heart-based follow-up, converts 20–40% of leads</td>
-          <td><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
-          <td>Get Buy-In — no pushy sales, just authentic connection</td>
+          <td data-label="SWIFT Step" style="color:var(--i);">I — Invite &amp; Follow-Up</td>
+          <td data-label="What It Does">Heart-based follow-up, converts 20–40% of leads</td>
+          <td data-label="Blueprint Pillar"><span class="pillar-badge">Pillar 2 · ACCESS</span></td>
+          <td data-label="Blueprint Element">Get Buy-In — no pushy sales, just authentic connection</td>
         </tr>
         <tr>
-          <td style="color:var(--f);">F — Fill Group Class</td>
-          <td>4–6+ paying students within 30–90 days</td>
-          <td><span class="pillar-badge">Pillar 3 · ASCEND</span></td>
-          <td>Small Big Group — 3–10 or 10–50 students, more revenue, more time freedom</td>
+          <td data-label="SWIFT Step" style="color:var(--f);">F — Fill Group Class</td>
+          <td data-label="What It Does">4–6+ paying students within 30–90 days</td>
+          <td data-label="Blueprint Pillar"><span class="pillar-badge">Pillar 3 · ASCEND</span></td>
+          <td data-label="Blueprint Element">Small Big Group — 3–10 or 10–50 students, more revenue, more time freedom</td>
         </tr>
         <tr>
-          <td style="color:var(--t);">T — Track &amp; Relaunch</td>
-          <td>Collect testimonials, systematise &amp; repeat</td>
-          <td><span class="pillar-badge">Pillar 3 · ASCEND</span></td>
-          <td>Private Consult + Group — sustain, grow &amp; earn more, towards $10K–30K/month</td>
+          <td data-label="SWIFT Step" style="color:var(--t);">T — Track &amp; Relaunch</td>
+          <td data-label="What It Does">Collect testimonials, systematise &amp; repeat</td>
+          <td data-label="Blueprint Pillar"><span class="pillar-badge">Pillar 3 · ASCEND</span></td>
+          <td data-label="Blueprint Element">Private Consult + Group — sustain, grow &amp; earn more, towards $10K–30K/month</td>
         </tr>
       </tbody>
     </table>
