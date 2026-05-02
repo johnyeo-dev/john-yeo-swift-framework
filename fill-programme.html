@@ -1459,11 +1459,24 @@ POST-WORKSHOP — Non-converter follow-up:
       recalcAll();
     }
 
+    function trackCalcUsage() {
+      try {
+        var sess = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
+        if (!sess || !sess.u) return;
+        var key = 'pac-swift-analytics-' + sess.u;
+        var a = JSON.parse(localStorage.getItem(key) || '{}');
+        a.calcUsed = (a.calcUsed || 0) + 1;
+        a.calcLastUsed = new Date().toISOString();
+        localStorage.setItem(key, JSON.stringify(a));
+      } catch(e) {}
+    }
+
     // Init calculator
     document.addEventListener('DOMContentLoaded', function() {
       loadCalcData();
       buildWeekGrid();
       recalcAll();
+      trackCalcUsage();
     });
 
     function copyScript(boxId, btn) {
@@ -1819,6 +1832,25 @@ POST-WORKSHOP — Non-converter follow-up:
       if (!this.value.trim()) { res.innerHTML = ''; return; }
       res.innerHTML = buildResultHTML(results, true);
     });
+  })();
+  </script>
+
+
+  <script>
+  // ── PAC ANALYTICS TRACKER ─────────────────────────────────────────────
+  (function() {
+    try {
+      var sess = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
+      if (!sess || !sess.u) return;
+      var u = sess.u;
+      var key = 'pac-swift-analytics-' + u;
+      var a = JSON.parse(localStorage.getItem(key) || '{}');
+      if (!a.pageVisits) a.pageVisits = [];
+      // Push visit (keep last 200)
+      a.pageVisits.unshift({ p: 'fill-programme.html', t: 'Fill Class', ts: Date.now() });
+      if (a.pageVisits.length > 200) a.pageVisits = a.pageVisits.slice(0, 200);
+      localStorage.setItem(key, JSON.stringify(a));
+    } catch(e) {}
   })();
   </script>
 

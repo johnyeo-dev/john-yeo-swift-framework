@@ -174,6 +174,33 @@
     /* DIVIDER */
     .divider { height: 1px; background: var(--cream-dark); margin: 20px 0; }
 
+    /* ── ANALYTICS ── */
+    .analytics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .analytics-card { background: var(--cream); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; transition: box-shadow 0.2s; }
+    .analytics-card:hover { box-shadow: 0 4px 16px rgba(0,45,106,0.08); }
+    .ac-header { padding: 16px 18px 12px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); background: var(--white); }
+    .ac-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; color: white; flex-shrink: 0; }
+    .ac-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .ac-role { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .ac-body { padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; }
+    .ac-stat { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+    .ac-stat-label { color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .ac-stat-val { font-weight: 700; color: var(--navy); }
+    .ac-stat-val.highlight { color: var(--gold); }
+    .ac-visits { margin-top: 6px; border-top: 1px solid var(--cream-dark); padding-top: 10px; }
+    .ac-visits-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .ac-visit-item { display: flex; align-items: center; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px solid var(--cream-dark); color: var(--text); }
+    .ac-visit-item:last-child { border-bottom: none; }
+    .ac-visit-time { color: var(--text-muted); font-size: 11px; flex-shrink: 0; margin-left: 8px; }
+    .ac-show-more { font-size: 12px; color: var(--gold); background: none; border: none; cursor: pointer; padding: 6px 0 0; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+    .ac-no-data { text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px; }
+    .ac-no-data .nd-icon { font-size: 28px; margin-bottom: 8px; opacity: 0.4; }
+    .analytics-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .as-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .as-val { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--navy); line-height: 1; }
+    .as-label { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-weight: 600; letter-spacing: 0.5px; }
+    @media (max-width: 560px) { .analytics-summary { grid-template-columns: repeat(2, 1fr); } }
+
     @media (max-width: 600px) {
       .main { padding: 24px 16px 60px; }
       .header { padding: 20px 16px; }
@@ -341,7 +368,8 @@
     <!-- SETTINGS TABS -->
     <div class="settings-tabs">
       <button class="stab active" onclick="switchStab(0)" id="stab-0">👤 My Account</button>
-      <button class="stab" onclick="switchStab(1)" id="stab-1" id="adminTabBtn" style="display:none;">🛡️ Manage Users <span id="pendingBadge" style="background:#EF4444;color:white;font-size:10px;padding:2px 6px;border-radius:99px;margin-left:4px;display:none;"></span></button>
+      <button class="stab" onclick="switchStab(1)" id="stab-1" style="display:none;">🛡️ Manage Users <span id="pendingBadge" style="background:#EF4444;color:white;font-size:10px;padding:2px 6px;border-radius:99px;margin-left:4px;display:none;"></span></button>
+      <button class="stab" onclick="switchStab(2)" id="stab-2" style="display:none;">📊 Analytics</button>
     </div>
 
     <!-- TAB 0: MY ACCOUNT -->
@@ -580,6 +608,28 @@
 
     </div><!-- /panel-1 -->
 
+    <!-- TAB 2: ANALYTICS (ADMIN ONLY) -->
+    <div class="stab-panel" id="panel-2">
+
+      <div class="scard">
+        <div class="scard-header">
+          <div class="scard-icon" style="background:rgba(139,92,246,0.12);">📊</div>
+          <div>
+            <div class="scard-title">User Analytics</div>
+            <div class="scard-sub">Login activity, page visits and feature usage per member</div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="alert alert-info show" style="margin-bottom:20px;">
+            <span>ℹ️</span>
+            <span>Analytics are stored per device. Data appears once a user has logged in from this browser.</span>
+          </div>
+          <div id="analyticsGrid"></div>
+        </div>
+      </div>
+
+    </div><!-- /panel-2 -->
+
   </main>
 
   <!-- RESET PASSWORD MODAL (admin) -->
@@ -683,10 +733,10 @@
     }
     document.getElementById('emailInput').value = email;
 
-    // Admin tab
+    // Admin tabs
     if (isAdmin) {
-      var adminBtn = document.getElementById('stab-1');
-      adminBtn.style.display = 'flex';
+      document.getElementById('stab-1').style.display = 'flex';
+      document.getElementById('stab-2').style.display = 'flex';
       refreshPendingBadge();
     }
 
@@ -704,6 +754,7 @@
     document.querySelectorAll('.stab').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
     document.querySelectorAll('.stab-panel').forEach(function(p, i) { p.classList.toggle('active', i === idx); });
     if (idx === 1) renderAdminPanel();
+    if (idx === 2) renderAnalytics();
   }
 
   // ── SAVE DISPLAY NAME ─────────────────────────────────────────────────────
@@ -896,8 +947,17 @@
     if (!req) return;
 
     var users = getUsers();
-    users[u] = { password: req.password, role: 'user', email: '' };
+    var signupDate = req.requestedAt || new Date().toISOString();
+    users[u] = { password: req.password, role: 'user', email: '', approvedAt: new Date().toISOString() };
     saveUsers(users);
+    // Seed analytics with signup date
+    try {
+      var aKey = 'pac-swift-analytics-' + u;
+      var aData = JSON.parse(localStorage.getItem(aKey) || '{}');
+      aData.signupDate = signupDate;
+      aData.approvedDate = new Date().toISOString();
+      localStorage.setItem(aKey, JSON.stringify(aData));
+    } catch(e) {}
 
     delete pending[u];
     savePending(pending);
@@ -1122,6 +1182,134 @@
     });
   }
 
+  // ── ANALYTICS ─────────────────────────────────────────────────────────────
+  function getAnalytics(u) {
+    try { return JSON.parse(localStorage.getItem('pac-swift-analytics-' + u) || '{}'); } catch(e) { return {}; }
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '–';
+    var d = new Date(iso);
+    return d.toLocaleDateString('en-SG', { day:'numeric', month:'short', year:'numeric' });
+  }
+  function fmtDateTime(iso) {
+    if (!iso) return '–';
+    var d = new Date(iso);
+    return d.toLocaleDateString('en-SG', { day:'numeric', month:'short' }) + ' ' +
+           d.toLocaleTimeString('en-SG', { hour:'2-digit', minute:'2-digit' });
+  }
+  function timeAgo(iso) {
+    if (!iso) return '–';
+    var diff = Date.now() - new Date(iso).getTime();
+    var mins = Math.floor(diff / 60000);
+    if (mins < 1)   return 'just now';
+    if (mins < 60)  return mins + 'm ago';
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24)   return hrs + 'h ago';
+    var days = Math.floor(hrs / 24);
+    if (days < 30)  return days + 'd ago';
+    return fmtDate(iso);
+  }
+
+  function renderAnalytics() {
+    var users = getUsers();
+    var allUsers = Object.keys(users);
+    // Always include johnyeo
+    if (allUsers.indexOf('johnyeo') === -1) allUsers.unshift('johnyeo');
+
+    var grid = document.getElementById('analyticsGrid');
+
+    // Summary row
+    var totalLogins = 0, totalVisits = 0, calcUsers = 0, activeUsers = 0;
+    allUsers.forEach(function(u) {
+      var a = getAnalytics(u);
+      totalLogins += a.loginCount || 0;
+      totalVisits += (a.pageVisits || []).length;
+      if (a.calcUsed) calcUsers++;
+      if (a.lastLogin) activeUsers++;
+    });
+
+    var summaryHtml = '<div class="analytics-summary">'
+      + '<div class="as-card"><div class="as-val">' + allUsers.length + '</div><div class="as-label">Total Members</div></div>'
+      + '<div class="as-card"><div class="as-val">' + activeUsers + '</div><div class="as-label">Have Logged In</div></div>'
+      + '<div class="as-card"><div class="as-val">' + totalLogins + '</div><div class="as-label">Total Logins</div></div>'
+      + '<div class="as-card"><div class="as-val">' + calcUsers + '</div><div class="as-label">Used Calculator</div></div>'
+      + '</div>';
+
+    // User cards
+    var cardsHtml = '<div class="analytics-grid">';
+    allUsers.forEach(function(u) {
+      var a = getAnalytics(u);
+      var users2 = getUsers();
+      var role = (u === 'johnyeo') ? 'admin' : (users2[u] ? users2[u].role || 'user' : 'user');
+      var color = getAvatarColor(u);
+      var visits = a.pageVisits || [];
+      var recentVisits = visits.slice(0, 5);
+      var hasData = a.loginCount || visits.length;
+
+      var visitsHtml = '';
+      if (recentVisits.length) {
+        visitsHtml = '<div class="ac-visits"><div class="ac-visits-title">Recent Pages</div>';
+        recentVisits.forEach(function(v) {
+          visitsHtml += '<div class="ac-visit-item"><span>' + escHtml(v.t || v.p) + '</span><span class="ac-visit-time">' + timeAgo(new Date(v.ts).toISOString()) + '</span></div>';
+        });
+        if (visits.length > 5) {
+          visitsHtml += '<button class="ac-show-more" onclick="showAllVisits(\'' + u + '\')">Show all ' + visits.length + ' visits →</button>';
+        }
+        visitsHtml += '</div>';
+      }
+
+      cardsHtml += '<div class="analytics-card">'
+        + '<div class="ac-header">'
+        + '<div class="ac-avatar" style="background:' + color + ';">' + u.charAt(0).toUpperCase() + '</div>'
+        + '<div><div class="ac-name">' + escHtml(u) + '</div><div class="ac-role">' + (role === 'admin' ? '✦ Admin' : '● Member') + '</div></div>'
+        + '</div>'
+        + '<div class="ac-body">';
+
+      if (!hasData) {
+        cardsHtml += '<div class="ac-no-data"><div class="nd-icon">💤</div>No activity yet on this device</div>';
+      } else {
+        cardsHtml += '<div class="ac-stat"><span class="ac-stat-label">🔑 Total logins</span><span class="ac-stat-val highlight">' + (a.loginCount || 0) + '</span></div>'
+          + '<div class="ac-stat"><span class="ac-stat-label">🕐 Last login</span><span class="ac-stat-val">' + timeAgo(a.lastLogin) + '</span></div>'
+          + '<div class="ac-stat"><span class="ac-stat-label">📅 Signed up</span><span class="ac-stat-val">' + fmtDate(a.signupDate || a.firstLogin) + '</span></div>'
+          + '<div class="ac-stat"><span class="ac-stat-label">📄 Pages visited</span><span class="ac-stat-val">' + visits.length + '</span></div>'
+          + '<div class="ac-stat"><span class="ac-stat-label">🧮 Calculator uses</span><span class="ac-stat-val ' + (a.calcUsed ? 'highlight' : '') + '">' + (a.calcUsed || 0) + '</span></div>';
+        if (a.calcLastUsed) {
+          cardsHtml += '<div class="ac-stat"><span class="ac-stat-label">⏱ Calc last used</span><span class="ac-stat-val">' + timeAgo(a.calcLastUsed) + '</span></div>';
+        }
+        cardsHtml += visitsHtml;
+      }
+
+      cardsHtml += '</div></div>';
+    });
+    cardsHtml += '</div>';
+
+    grid.innerHTML = summaryHtml + cardsHtml;
+  }
+
+  function showAllVisits(u) {
+    var a = getAnalytics(u);
+    var visits = a.pageVisits || [];
+    var html = '<div style="max-height:400px;overflow-y:auto;">';
+    visits.forEach(function(v) {
+      html += '<div class="ac-visit-item" style="padding:6px 0;">'
+            + '<span>' + escHtml(v.t || v.p) + '</span>'
+            + '<span class="ac-visit-time">' + fmtDateTime(new Date(v.ts).toISOString()) + '</span>'
+            + '</div>';
+    });
+    html += '</div>';
+    // Show in a modal-like overlay
+    var m = document.createElement('div');
+    m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;';
+    m.innerHTML = '<div style="background:white;border-radius:16px;padding:24px;max-width:480px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.2);">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">'
+      + '<strong style="font-size:16px;color:var(--navy);">All visits — ' + escHtml(u) + '</strong>'
+      + '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);">✕</button>'
+      + '</div>' + html + '</div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', function(e) { if (e.target === m) m.remove(); });
+  }
+
   // ── BOOT ──────────────────────────────────────────────────────────────────
   initPage();
 
@@ -1227,6 +1415,25 @@
       if (!this.value.trim()) { res.innerHTML = ''; return; }
       res.innerHTML = buildResultHTML(results, true);
     });
+  })();
+  </script>
+
+
+  <script>
+  // ── PAC ANALYTICS TRACKER ─────────────────────────────────────────────
+  (function() {
+    try {
+      var sess = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
+      if (!sess || !sess.u) return;
+      var u = sess.u;
+      var key = 'pac-swift-analytics-' + u;
+      var a = JSON.parse(localStorage.getItem(key) || '{}');
+      if (!a.pageVisits) a.pageVisits = [];
+      // Push visit (keep last 200)
+      a.pageVisits.unshift({ p: 'settings.html', t: 'Settings', ts: Date.now() });
+      if (a.pageVisits.length > 200) a.pageVisits = a.pageVisits.slice(0, 200);
+      localStorage.setItem(key, JSON.stringify(a));
+    } catch(e) {}
   })();
   </script>
 

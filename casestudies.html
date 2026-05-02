@@ -710,5 +710,24 @@
   })();
   </script>
 
+
+  <script>
+  // ── PAC ANALYTICS TRACKER ─────────────────────────────────────────────
+  (function() {
+    try {
+      var sess = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
+      if (!sess || !sess.u) return;
+      var u = sess.u;
+      var key = 'pac-swift-analytics-' + u;
+      var a = JSON.parse(localStorage.getItem(key) || '{}');
+      if (!a.pageVisits) a.pageVisits = [];
+      // Push visit (keep last 200)
+      a.pageVisits.unshift({ p: 'casestudies.html', t: 'Case Studies', ts: Date.now() });
+      if (a.pageVisits.length > 200) a.pageVisits = a.pageVisits.slice(0, 200);
+      localStorage.setItem(key, JSON.stringify(a));
+    } catch(e) {}
+  })();
+  </script>
+
 </body>
 </html>

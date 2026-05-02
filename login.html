@@ -234,6 +234,7 @@
         var adminPw = localStorage.getItem('pac-swift-admin-pw') || '2706';
         if (password === adminPw) {
           localStorage.setItem('pac-swift-session', JSON.stringify({ u: 'johnyeo', role: 'admin' }));
+          trackLogin('johnyeo');
           window.location.href = 'index.html';
           return;
         }
@@ -243,11 +244,23 @@
       var users = getUsers();
       if (users[username] && users[username].password === password) {
         localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: users[username].role || 'user' }));
+        trackLogin(username);
         window.location.href = 'index.html';
         return;
       }
 
       errorEl.style.display = 'block';
+    }
+
+    function trackLogin(u) {
+      try {
+        var key = 'pac-swift-analytics-' + u;
+        var a = JSON.parse(localStorage.getItem(key) || '{}');
+        a.loginCount = (a.loginCount || 0) + 1;
+        a.lastLogin = new Date().toISOString();
+        if (!a.firstLogin) a.firstLogin = a.lastLogin;
+        localStorage.setItem(key, JSON.stringify(a));
+      } catch(e) {}
     }
 
     // Allow Enter key to submit
