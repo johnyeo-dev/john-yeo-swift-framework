@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>30-Day Planner | SWIFT Framework</title>
+  <title>Calendar Plan | SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -109,6 +109,10 @@
     .day-note-icon { font-size: 10px; color: var(--text-muted); }
     .day-num-row { display: flex; align-items: center; gap: 4px; }
     .day-index { font-size: 10px; color: rgba(0,0,0,0.25); font-weight: 400; }
+    .day-month { font-size: 9px; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; margin-left: 1px; }
+    .day-task { font-size: 9.5px; color: #1e3a5f; background: rgba(74,143,231,0.1); border-left: 2px solid #4A8FE7; border-radius: 2px; padding: 1px 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .day-task.day-task-done { color: #065f46; background: rgba(16,185,129,0.1); border-left-color: #10B981; text-decoration: line-through; opacity: 0.75; }
+    .day-task-more { font-size: 9px; color: var(--text-muted); font-style: italic; }
 
     /* EDIT PANEL */
     .panel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; }
@@ -250,7 +254,7 @@
   <header class="header">
     <div>
       <div class="header-label">PAC · SWIFT Framework</div>
-      <h1>Your <em>30-Day</em> Action Plan</h1>
+      <h1>Your <em>Calendar</em> Action Plan</h1>
     </div>
     <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
 <div class="swift-badge" style="margin-left:0;">
@@ -279,7 +283,7 @@
       <div class="swift-sub-menu">
         <a class="swift-sub-item " href="casestudies.html">★ Case Studies</a>
         <a class="swift-sub-item " href="daily-5.html">✦ The Daily 5</a>
-        <a class="swift-sub-item active" href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item active" href="planner.html">📅 Calendar Plan</a>
         <a class="swift-sub-item " href="other-resources.html">🎉 Parties for Kids</a>
         <a class="swift-sub-item " href="holiday-workshops.html">🗓️ Holiday Workshops</a>
         <a class="swift-sub-item " href="payment-upgrade.html">💳 Monthly → Annual</a>
@@ -333,7 +337,7 @@
     <div class="mobile-menu-section">Resources</div>
     <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
     <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">✦</span>The Daily 5</a>
-    <a class="mobile-menu-item active" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item active" href="planner.html"><span class="mobile-menu-letter">📅</span>Calendar Plan</a>
     <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
     <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
     <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
@@ -367,12 +371,14 @@
   <main class="main">
     <div class="planner-top">
       <div>
-        <h2 id="greeting">Your 30-Day Plan</h2>
-        <p id="subtext">Pick your start date and assign tasks to each day.</p>
+        <h2 id="greeting">Your Calendar Plan</h2>
+        <p id="subtext">Pick your start date, plan ahead — no day limit.</p>
       </div>
       <div class="date-controls">
         <label>Start date</label>
         <input type="date" id="startDateInput" />
+        <label style="margin-left:6px;">Days</label>
+        <input type="number" id="daysInput" min="7" max="365" value="90" style="width:64px;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;" onchange="onDaysChange()" />
         <button class="btn-reset" onclick="resetPlan()">Reset Plan</button>
         <button class="btn-print" onclick="printCalendar()">&#128424;&#65039; Print / Save PDF</button>
       </div>
@@ -717,7 +723,7 @@
       userName = localStorage.getItem('pac-swift-user') || '';
       if (userName) {
         document.getElementById('greeting').textContent = `${userName}'s 30-Day Plan`;
-        document.getElementById('subtext').textContent = 'Pick a start date and assign SWIFT tasks to each day.';
+        document.getElementById('subtext').textContent = 'Pick a start date and plan ahead — no day limit.';
       }
       storageKey = 'pac-planner-' + (userName || 'guest');
       const saved = localStorage.getItem(storageKey);
@@ -767,24 +773,40 @@
     }
 
     // --- RENDER CALENDAR ---
+    function getTotalDays() {
+      const v = parseInt(document.getElementById('daysInput').value, 10);
+      return (v >= 7 && v <= 365) ? v : 90;
+    }
+
+    function getUserTasks() {
+      const s = getSession();
+      if (!s) return {};
+      try {
+        const arr = JSON.parse(localStorage.getItem('pac-swift-tasks-' + s.u) || '[]');
+        const map = {};
+        arr.forEach(function(t) { if (!map[t.date]) map[t.date] = []; map[t.date].push(t); });
+        return map;
+      } catch(e) { return {}; }
+    }
+
     function renderCalendar(startDateStr) {
       if (!startDateStr) return;
       const wrap = document.getElementById('calWrap');
       const startDate = parseDate(startDateStr);
       const today = new Date(); today.setHours(0,0,0,0);
+      const totalDays = getTotalDays();
 
-      // Build 30 active dates
+      // Build active dates
       const dates = [];
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < totalDays; i++) {
         const d = new Date(startDate);
         d.setDate(d.getDate() + i);
         dates.push(toISODate(d));
       }
+      const taskMap = getUserTasks();
 
       // Figure out day-of-week offset for start
       const startDow = startDate.getDay(); // 0=Sun
-      const totalCells = startDow + 30;
-      const rows = Math.ceil(totalCells / 7);
 
       let html = '<div class="cal-header">';
       DAY_LABELS.forEach(d => { html += `<div class="cal-header-cell">${d}</div>`; });
@@ -799,33 +821,46 @@
       dates.forEach((dateStr, idx) => {
         const d = parseDate(dateStr);
         const dayNum = d.getDate();
+        const monthLabel = d.toLocaleDateString('en-SG',{month:'short'});
         const isToday = toISODate(d) === toISODate(today);
         const isPast = d < today;
         const entry = (planData.days || {})[dateStr];
+        const dayTasks = taskMap[dateStr] || [];
 
         let classes = 'cal-cell active-day';
         if (isToday) classes += ' today';
         if (isPast && !isToday) classes += ' past';
 
         html += `<div class="${classes}" onclick="openPanel('${dateStr}', ${idx+1})">`;
-        html += `<div class="day-num-row"><div class="day-num">${dayNum}</div><span class="day-index">D${idx+1}</span></div>`;
+        // Show month label on 1st of each month
+        const showMonth = dayNum === 1 || idx === 0;
+        html += `<div class="day-num-row"><div class="day-num">${dayNum}${showMonth?'<span class="day-month"> '+monthLabel+'</span>':''}</div></div>`;
 
         if (entry && entry.phase) {
           const color = PHASE_COLORS[entry.phase];
           const phaseSteps = STEPS[entry.phase] || [];
           const stepTitle = entry.stepIndex != null ? phaseSteps[entry.stepIndex] : '';
-          const truncated = stepTitle.length > 22 ? stepTitle.slice(0,22)+'…' : stepTitle;
+          const truncated = stepTitle.length > 18 ? stepTitle.slice(0,18)+'…' : stepTitle;
           const pillLabels = { PK:'🎉', HW:'🗓️', MA:'💳', IG:'📸', P1:'✦1', P2:'✦2', P3:'✦3', P4:'✦4', P5:'✦5', P6:'✦6' };
           const prefix = pillLabels[entry.phase] || entry.phase;
-          html += `<div class="day-pill" style="background:${color}">${prefix} · ${truncated}</div>`;
-          if (entry.notes) html += `<div class="day-note-icon">📝 note</div>`;
+          html += `<div class="day-pill" style="background:${color}">${prefix}${truncated?' · '+truncated:''}</div>`;
+          if (entry.notes) html += `<div class="day-note-icon">📝</div>`;
+        }
+
+        // Show daily tasks from task modal
+        if (dayTasks.length > 0) {
+          dayTasks.slice(0, 3).forEach(function(t) {
+            const done = t.done;
+            html += `<div class="day-task${done?' day-task-done':''}" title="${t.text.replace(/"/g,'&quot;')}">${done?'✓ ':''}${t.text.replace(/</g,'&lt;').replace(/>/g,'&gt;').slice(0,20)}${t.text.length>20?'…':''}</div>`;
+          });
+          if (dayTasks.length > 3) html += `<div class="day-task-more">+${dayTasks.length-3} more</div>`;
         }
 
         html += '</div>';
       });
 
       // Fill remaining cells
-      const filled = startDow + 30;
+      const filled = startDow + totalDays;
       const remainder = (7 - (filled % 7)) % 7;
       for (let i = 0; i < remainder; i++) {
         html += '<div class="cal-cell empty"></div>';
@@ -848,10 +883,15 @@
     function updateProgress() {
       const days = planData.days || {};
       const filled = Object.values(days).filter(d => d && d.phase).length;
-      const pct = Math.round((filled / 30) * 100);
+      const total = getTotalDays();
+      const pct = Math.round((filled / total) * 100);
       document.getElementById('progressFill').style.width = pct + '%';
-      document.getElementById('progressCount').textContent = filled + ' / 30 days planned';
+      document.getElementById('progressCount').textContent = filled + ' / ' + total + ' days planned';
       document.getElementById('progressWrap').style.display = filled > 0 ? 'flex' : 'none';
+    }
+
+    function onDaysChange() {
+      renderCalendar(planData.startDate);
     }
 
     // --- PANEL ---
@@ -954,7 +994,7 @@
     }
 
     function resetPlan() {
-      if (!confirm('Reset your entire 30-day plan? This will clear all assigned tasks.')) return;
+      if (!confirm('Reset your entire calendar plan? This will clear all assigned tasks.')) return;
       planData.days = {};
       save();
       renderCalendar(planData.startDate);
@@ -1117,7 +1157,7 @@
     <div style="background:white;border-radius:20px;padding:40px 32px;width:min(380px,90vw);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
       <div style="font-size:36px;margin-bottom:16px;">👋</div>
       <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:#002D6A;margin-bottom:8px;">What's your name?</h3>
-      <p style="font-size:14px;color:#6B7A96;margin-bottom:24px;line-height:1.6;">Your 30-day plan and progress will be saved under your name.</p>
+      <p style="font-size:14px;color:#6B7A96;margin-bottom:24px;line-height:1.6;">Your calendar plan and progress will be saved under your name.</p>
       <input id="nameModalInput" type="text" placeholder="e.g. Sherina" autocomplete="given-name" style="width:100%;border:1.5px solid #B8C4D4;border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#0A0F1C;outline:none;margin-bottom:16px;box-sizing:border-box;" />
       <button onclick="saveNameAndClose()" style="width:100%;background:#0ABFBC;color:#002D6A;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;">Get Started →</button>
       <button onclick="skipNameAndClose()" style="width:100%;background:none;color:#6B7A96;border:none;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;padding:6px;">Skip for now</button>
@@ -1273,7 +1313,7 @@
     { title:'Fill Class',              sub:'F · Revenue calculator & scheduling',   url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator schedule students f swift' },
     { title:'Track Programme',         sub:'T · Track your progress',               url:'track-programme.html',        icon:'T',  tags:'track progress t swift' },
     { title:'Case Studies',            sub:'Success stories from members',          url:'casestudies.html',            icon:'★',  tags:'case studies success stories members results' },
-    { title:'30-Day Planner',          sub:'Plan your next 30 days',                url:'planner.html',                icon:'📅', tags:'planner 30 day plan calendar tasks prompts' },
+    { title:'Calendar Plan',          sub:'Calendar & daily tasks planner',                url:'planner.html',                icon:'📅', tags:'planner calendar plan daily tasks' },
     { title:'Parties for Kids',        sub:'Birthday & holiday party resources',    url:'other-resources.html',        icon:'🎉', tags:'parties kids birthday holiday resources' },
     { title:'Holiday Workshops',       sub:'Holiday workshop resources',            url:'holiday-workshops.html',      icon:'🗓️', tags:'holiday workshop resources' },
     { title:'Monthly → Annual',        sub:'Upgrade payment plan',                  url:'payment-upgrade.html',        icon:'💳', tags:'payment upgrade monthly annual billing' },

@@ -219,11 +219,15 @@
     .pac-tm-pts-info { background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:10px 20px; margin:0 20px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
     .pac-tm-pts-rule { font-size:12px; font-weight:700; color:#92400E; text-align:center; }
     .pac-tm-pts-rule span { display:block; font-size:18px; color:#D97706; font-family:'DM Serif Display',serif; }
-    .pac-tm-input-row { display:flex; gap:8px; padding:16px 20px 12px; }
-    .pac-tm-input { flex:1; border:1.5px solid #E8EDF5; border-radius:10px; padding:10px 14px; font-family:'DM Sans',sans-serif; font-size:14px; color:#002D6A; outline:none; background:#F4F7FB; }
+    .pac-tm-input-row { display:flex; gap:8px; padding:16px 20px 12px; flex-wrap:wrap; }
+    .pac-tm-input { flex:1; min-width:120px; border:1.5px solid #E8EDF5; border-radius:10px; padding:10px 14px; font-family:'DM Sans',sans-serif; font-size:14px; color:#002D6A; outline:none; background:#F4F7FB; }
     .pac-tm-input:focus { border-color:#F59E0B; background:rgba(245,158,11,0.04); }
+    .pac-tm-date-input { border:1.5px solid #E8EDF5; border-radius:10px; padding:10px 10px; font-family:'DM Sans',sans-serif; font-size:13px; color:#002D6A; outline:none; background:#F4F7FB; cursor:pointer; }
+    .pac-tm-date-input:focus { border-color:#F59E0B; }
     .pac-tm-add-btn { background:#F59E0B; color:white; border:none; border-radius:10px; padding:10px 16px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; transition:all 0.15s; }
     .pac-tm-add-btn:hover { background:#D97706; transform:translateY(-1px); }
+    .pac-tm-print-btn { background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.8); border:1px solid rgba(255,255,255,0.25); border-radius:8px; padding:6px 12px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all 0.15s; }
+    .pac-tm-print-btn:hover { background:rgba(255,255,255,0.22); color:white; }
     .pac-tm-list { max-height:360px; overflow-y:auto; padding:0 20px 4px; }
     .pac-tm-date-group { margin-bottom:16px; }
     .pac-tm-date-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#6B7A96; padding:8px 0 6px; border-bottom:1px solid #E8EDF5; margin-bottom:8px; }
@@ -451,7 +455,10 @@
     inner.innerHTML =
       '<div class="pac-tm-head">'
       + '<div><h2>📋 Daily Tasks</h2><p>Set tasks, take action, earn points — no limits!</p></div>'
+      + '<div style="display:flex;gap:8px;align-items:center;">'
+      + '<button class="pac-tm-print-btn" onclick="window.__pacPrintTasks()" title="Print / Save as PDF">🖨️ Print PDF</button>'
       + '<button class="pac-tm-close" onclick="window.__pacCloseTaskModal()">✕</button>'
+      + '</div>'
       + '</div>'
       + '<div class="pac-tm-pts-info">'
       + '<div class="pac-tm-pts-rule"><span>+' + TASK_PTS_ADD + '</span>per task set</div>'
@@ -459,8 +466,9 @@
       + '<div class="pac-tm-pts-rule"><span>=' + (TASK_PTS_ADD+TASK_PTS_DONE) + '</span>per completed task</div>'
       + '</div>'
       + '<div class="pac-tm-input-row">'
-      + '<input class="pac-tm-input" id="pacTaskInput" type="text" placeholder="Add a task for today…" maxlength="120" />'
-      + '<button class="pac-tm-add-btn" onclick="window.__pacAddTask()">+ Add task</button>'
+      + '<input class="pac-tm-input" id="pacTaskInput" type="text" placeholder="Add a task…" maxlength="120" />'
+      + '<input class="pac-tm-date-input" id="pacTaskDate" type="date" value="' + today + '" title="Task date" />'
+      + '<button class="pac-tm-add-btn" onclick="window.__pacAddTask()">+ Add</button>'
       + '</div>'
       + '<div class="pac-tm-list">' + listHtml + '</div>'
       + '<div class="pac-tm-footer">'
@@ -568,12 +576,49 @@
     var session=getSession(); var u=session?session.u:null; if(!u) return;
     var inp=document.getElementById('pacTaskInput'); if(!inp) return;
     var text=inp.value.trim(); if(!text) return;
+    var dateInp=document.getElementById('pacTaskDate');
+    var taskDate = (dateInp && dateInp.value) ? dateInp.value : todayStr();
     var tasks=getTasks(u);
-    tasks.unshift({ id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), text:text, date:todayStr(), created:Date.now(), done:false, doneAt:null });
+    tasks.unshift({ id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), text:text, date:taskDate, created:Date.now(), done:false, doneAt:null });
     saveTasks(u,tasks);
     inp.value='';
     refreshUI(u);
     refreshTaskModal(u);
+  };
+
+  window.__pacPrintTasks = function() {
+    var session=getSession(); var u=session?session.u:null; if(!u) return;
+    var tasks=getTasks(u);
+    if (!tasks.length) { alert('No tasks to print yet!'); return; }
+    // Group by date
+    var map={};
+    tasks.forEach(function(t){ if(!map[t.date]) map[t.date]=[]; map[t.date].push(t); });
+    var dates=Object.keys(map).sort();
+    var rows='';
+    dates.forEach(function(d){
+      var label=fmtDateLabel(d);
+      rows+='<tr><td colspan="3" style="background:#002D6A;color:white;padding:8px 12px;font-weight:700;font-size:13px;">'+label+'</td></tr>';
+      map[d].forEach(function(t,i){
+        var pts=5+(t.done?20:0);
+        rows+='<tr>'
+          +'<td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:13px;'+(t.done?'text-decoration:line-through;color:#6B7A96;':'color:#0A0F1C;')+'">'+(i+1)+'. '+t.text.replace(/</g,'&lt;')+'</td>'
+          +'<td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:12px;color:#6B7A96;white-space:nowrap;">'+(t.done?'✅ Done':'⬜ To do')+'</td>'
+          +'<td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:12px;color:#0ABFBC;text-align:right;font-weight:700;">+'+pts+' pts</td>'
+          +'</tr>';
+      });
+    });
+    var totalPts=tasks.reduce(function(s,t){return s+5+(t.done?20:0);},0);
+    var win=window.open('','_blank');
+    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Daily Tasks — '+u+'</title>'
+      +'<style>body{font-family:\'DM Sans\',Arial,sans-serif;margin:32px;color:#0A0F1C;}h1{font-size:22px;margin-bottom:4px;}p{color:#6B7A96;font-size:13px;margin-bottom:24px;}table{width:100%;border-collapse:collapse;}@media print{button{display:none;}}</style>'
+      +'</head><body>'
+      +'<h1>📋 Daily Tasks — '+u+'</h1>'
+      +'<p>Printed on '+new Date().toLocaleDateString('en-SG',{weekday:\'long\',year:\'numeric\',month:\'long\',day:\'numeric\'})+'</p>'
+      +'<button onclick="window.print()" style="background:#0ABFBC;color:#002D6A;border:none;padding:8px 18px;border-radius:8px;font-weight:700;cursor:pointer;margin-bottom:20px;font-size:13px;">🖨️ Print</button>'
+      +'<table>'+rows+'</table>'
+      +'<p style="margin-top:20px;font-weight:700;font-size:14px;">Total: '+totalPts+' pts</p>'
+      +'</body></html>');
+    win.document.close();
   };
   window.__pacToggleTask = function(taskId) {
     var session=getSession(); var u=session?session.u:null; if(!u) return;
