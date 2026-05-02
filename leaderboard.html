@@ -96,14 +96,20 @@
     .lb-stat-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; font-weight: 500; }
 
     /* POINTS LEGEND */
-    .pts-legend { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 32px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .pts-legend-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); flex: 0 0 100%; margin-bottom: 4px; }
-    .pts-pill { display: flex; align-items: center; gap: 7px; border-radius: 99px; padding: 6px 14px; font-size: 12px; font-weight: 700; }
-    .pts-pill-action { background: rgba(99,102,241,0.1); color: #6366F1; border: 1.5px solid rgba(99,102,241,0.3); }
-    .pts-pill-done   { background: rgba(16,185,129,0.1); color: #059669; border: 1.5px solid rgba(16,185,129,0.3); }
-    .pts-pill-result { background: rgba(245,158,11,0.1); color: #D97706; border: 1.5px solid rgba(245,158,11,0.3); }
-    .pts-pill-max    { background: rgba(10,191,188,0.1); color: #0ABFBC; border: 1.5px solid rgba(10,191,188,0.3); margin-left: auto; }
-    @media(max-width:600px) { .pts-pill-max { margin-left:0; } }
+    .pts-legend { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 22px 24px; margin-bottom: 32px; }
+    .pts-legend-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+    .pts-legend-grid { display: flex; flex-direction: column; gap: 20px; }
+    .pts-legend-section { }
+    .pts-legend-section-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .pts-legend-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; flex-wrap: wrap; }
+    .pts-legend-desc { font-size: 13px; color: var(--text-muted); }
+    .pts-legend-highlight { background: rgba(245,158,11,0.08); border: 1.5px solid rgba(245,158,11,0.25); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #92400E; margin-top: 4px; }
+    .pts-pill { display: inline-flex; align-items: center; gap: 4px; border-radius: 99px; padding: 4px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+    .pts-pill-action   { background: rgba(99,102,241,0.1); color: #6366F1; border: 1.5px solid rgba(99,102,241,0.3); }
+    .pts-pill-done     { background: rgba(16,185,129,0.1); color: #059669; border: 1.5px solid rgba(16,185,129,0.3); }
+    .pts-pill-result   { background: rgba(245,158,11,0.1); color: #D97706; border: 1.5px solid rgba(245,158,11,0.3); }
+    .pts-pill-task-add  { background: rgba(236,72,153,0.1); color: #BE185D; border: 1.5px solid rgba(236,72,153,0.3); }
+    .pts-pill-task-done { background: rgba(16,185,129,0.1); color: #059669; border: 1.5px solid rgba(16,185,129,0.3); }
 
     /* PODIUM */
     .podium-wrap { display: flex; align-items: flex-end; justify-content: center; gap: 12px; margin-bottom: 36px; }
@@ -148,9 +154,11 @@
     .lb-pts-breakdown { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
     .lb-badges-cell { }
     .lb-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 700; margin-right: 4px; margin-bottom: 2px; }
-    .lb-badge-a { background: rgba(99,102,241,0.1); color: #6366F1; }
-    .lb-badge-d { background: rgba(16,185,129,0.1); color: #059669; }
-    .lb-badge-r { background: rgba(245,158,11,0.1); color: #D97706; }
+    .lb-badge-a  { background: rgba(99,102,241,0.1); color: #6366F1; }
+    .lb-badge-d  { background: rgba(16,185,129,0.1); color: #059669; }
+    .lb-badge-r  { background: rgba(245,158,11,0.1); color: #D97706; }
+    .lb-badge-t  { background: rgba(236,72,153,0.1); color: #BE185D; }
+    .lb-badge-tc { background: rgba(16,185,129,0.1); color: #059669; }
 
     /* EMPTY STATE */
     .lb-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
@@ -302,16 +310,18 @@
       { id:'p5',    label:'Prompt 5',   cat:'AI',    pts:{action:10,done:40,result:75} },
       { id:'p6',    label:'Prompt 6',   cat:'AI',    pts:{action:10,done:40,result:75} },
     ];
-    var MAX_PTS = STEPS.reduce(function(s,x){ return s+x.pts.action+x.pts.done+x.pts.result; }, 0);
+    var TASK_PTS_ADD  = 5;
+    var TASK_PTS_DONE = 20;
 
     function getSession()  { try { return JSON.parse(localStorage.getItem('pac-swift-session')||'null'); } catch(e){return null;} }
     function getUsers()    { try { return JSON.parse(localStorage.getItem('pac-swift-users')||'{}'); } catch(e){return {};} }
     function getProgress(u){ try { return JSON.parse(localStorage.getItem('pac-swift-progress-'+u)||'{}'); } catch(e){return{};} }
     function getActions(u) { try { return JSON.parse(localStorage.getItem('pac-swift-actions-'+u)||'{}'); } catch(e){return{};} }
     function getResults(u) { try { return JSON.parse(localStorage.getItem('pac-swift-results-'+u)||'{}'); } catch(e){return{};} }
+    function getTasks(u)   { try { return JSON.parse(localStorage.getItem('pac-swift-tasks-'+u)||'[]'); } catch(e){return[];} }
     function getDisplayName(u) { try { var d=JSON.parse(localStorage.getItem('pac-swift-users')||'{}'); return (d[u]&&d[u].displayName)||u; } catch(e){return u;} }
 
-    function getTotalPoints(u) {
+    function getStepPoints(u) {
       var prog=getProgress(u), acts=getActions(u), ress=getResults(u), total=0;
       STEPS.forEach(function(s){
         if(acts[s.id]) total+=s.pts.action;
@@ -320,6 +330,13 @@
       });
       return total;
     }
+    function getTaskPoints(u) {
+      var tasks=getTasks(u), pts=0;
+      tasks.forEach(function(t){ pts+=TASK_PTS_ADD; if(t.done) pts+=TASK_PTS_DONE; });
+      return pts;
+    }
+    function getTotalPoints(u) { return getStepPoints(u) + getTaskPoints(u); }
+
     function getBreakdown(u) {
       var prog=getProgress(u), acts=getActions(u), ress=getResults(u);
       var a=0,d=0,r=0;
@@ -328,7 +345,9 @@
         if(prog[s.id]) d+=s.pts.done;
         if(ress[s.id]) r+=s.pts.result;
       });
-      return {action:a, done:d, result:r};
+      var tasks=getTasks(u), tAdd=0, tDone=0;
+      tasks.forEach(function(t){ tAdd+=TASK_PTS_ADD; if(t.done) tDone+=TASK_PTS_DONE; });
+      return { action:a, done:d, result:r, taskAdd:tAdd, taskDone:tDone, taskCount:tasks.length, taskDoneCount:tasks.filter(function(t){return t.done;}).length };
     }
     function getDoneCount(u) {
       var prog=getProgress(u);
@@ -344,7 +363,6 @@
     function buildRanking() {
       var users = getUsers();
       var list  = Object.keys(users).filter(function(u){ return u !== 'johnyeo'; });
-
       return list.map(function(u) {
         return { u:u, pts:getTotalPoints(u), bd:getBreakdown(u), done:getDoneCount(u) };
       }).sort(function(a,b){ return b.pts - a.pts; });
@@ -361,7 +379,7 @@
       var totalPtsAll  = ranking.reduce(function(s,r){ return s+r.pts; }, 0);
       var myEntry      = me ? ranking.find(function(r){ return r.u===me; }) : null;
       var myRank       = myEntry ? ranking.indexOf(myEntry)+1 : null;
-      var pctComplete  = MAX_PTS > 0 && myEntry ? Math.round(myEntry.pts/MAX_PTS*100) : 0;
+      var topPts       = ranking.length ? ranking[0].pts : 1;
 
       var html = '';
 
@@ -369,7 +387,7 @@
       html += '<div class="lb-hero">'
         + '<div class="lb-hero-tag">PAC SWIFT · Points System</div>'
         + '<h2>🏆 <em>Leaderboard</em></h2>'
-        + '<p class="lb-hero-sub">Earn points by committing to actions, completing steps, and achieving real results.<br>Max possible: <strong style="color:var(--gold);">' + MAX_PTS.toLocaleString() + ' pts</strong></p>'
+        + '<p class="lb-hero-sub">No limits — the more you do, the more you earn.<br>Set tasks, take action, get results. Every step counts.</p>'
         + '<div class="lb-hero-stats">'
         + '<div class="lb-stat"><div class="lb-stat-val">' + totalMembers + '</div><div class="lb-stat-label">Members</div></div>'
         + '<div class="lb-stat"><div class="lb-stat-val">' + totalPtsAll.toLocaleString() + '</div><div class="lb-stat-label">Total pts earned</div></div>'
@@ -377,66 +395,72 @@
         + '</div>'
         + '</div>';
 
-      // POINTS LEGEND
+      // POINTS LEGEND — clear breakdown in words
       html += '<div class="pts-legend">'
-        + '<div class="pts-legend-title">How to earn points</div>'
-        + '<span class="pts-pill pts-pill-action">📅 Action (calendar) · SWIFT +25 · AI +10</span>'
-        + '<span class="pts-pill pts-pill-done">✅ Done (completed) · SWIFT +75 · AI +40</span>'
-        + '<span class="pts-pill pts-pill-result">🏆 Result (achieved) · SWIFT +150 · AI +75</span>'
-        + '<span class="pts-pill pts-pill-max">Max total: ' + MAX_PTS + ' pts</span>'
+        + '<div class="pts-legend-title">How to earn points — no maximum, no limits</div>'
+        + '<div class="pts-legend-grid">'
+        + '<div class="pts-legend-section">'
+        + '<div class="pts-legend-section-title">📚 SWIFT Framework Steps (S · W · I · F · T)</div>'
+        + '<div class="pts-legend-row"><span class="pts-pill pts-pill-action">📅 +25 pts</span><span class="pts-legend-desc">Commit to a step — add it to your calendar as an action</span></div>'
+        + '<div class="pts-legend-row"><span class="pts-pill pts-pill-done">✅ +75 pts</span><span class="pts-legend-desc">Mark a step as done — you\'ve actually completed it</span></div>'
+        + '<div class="pts-legend-row"><span class="pts-pill pts-pill-result">🏆 +150 pts</span><span class="pts-legend-desc">Report a real result — you got an outcome from this step</span></div>'
+        + '</div>'
+        + '<div class="pts-legend-section">'
+        + '<div class="pts-legend-section-title">✦ 6 AI Prompts</div>'
+        + '<div class="pts-legend-row"><span class="pts-pill pts-pill-action">📅 +10 pts</span><span class="pts-legend-desc">Commit to running the prompt</span></div>'
+        + '<div class="pts-legend-row"><span class="pts-pill pts-pill-done">✅ +40 pts</span><span class="pts-legend-desc">Run and complete the prompt</span></div>'
+        + '<div class="pts-legend-row"><span class="pts-pill pts-pill-result">🏆 +75 pts</span><span class="pts-legend-desc">Got a result or output you\'re happy with</span></div>'
+        + '</div>'
+        + '<div class="pts-legend-section">'
+        + '<div class="pts-legend-section-title">📋 Daily Tasks — unlimited points!</div>'
+        + '<div class="pts-legend-row"><span class="pts-pill pts-pill-task-add">📋 +5 pts</span><span class="pts-legend-desc">Every task you set for the day earns 5 points immediately</span></div>'
+        + '<div class="pts-legend-row"><span class="pts-pill pts-pill-task-done">✓ +20 pts</span><span class="pts-legend-desc">Check off a task when done — earn 20 more points per task</span></div>'
+        + '<div class="pts-legend-row pts-legend-highlight"><strong>Set 10 tasks and complete them all = 250 bonus points</strong> · no ceiling, no limit!</div>'
+        + '</div>'
+        + '</div>'
         + '</div>';
 
       // MY RANK CARD
       if (myEntry) {
+        var myPctOfTop = topPts > 0 ? Math.round(myEntry.pts/topPts*100) : 0;
         html += '<div class="my-rank-card">'
           + '<div class="my-rank-number">#' + myRank + '</div>'
           + '<div class="my-rank-body">'
           + '<div class="my-rank-label">Your rank</div>'
           + '<div class="my-rank-pts">' + myEntry.pts.toLocaleString() + ' pts</div>'
-          + '<div class="my-rank-sub">' + myEntry.done + '/' + STEPS.length + ' steps done &nbsp;·&nbsp; '
-          + '<span style="color:#6366F1;">📅 ' + myEntry.bd.action + '</span> &nbsp;'
-          + '<span style="color:#059669;">✅ ' + myEntry.bd.done + '</span> &nbsp;'
-          + '<span style="color:#D97706;">🏆 ' + myEntry.bd.result + '</span>'
+          + '<div class="my-rank-sub">'
+          + myEntry.done + '/' + STEPS.length + ' steps &nbsp;·&nbsp; '
+          + (myEntry.bd.taskDoneCount ? myEntry.bd.taskDoneCount + ' tasks done' : '0 tasks done')
           + '</div></div>'
           + '<div class="my-rank-bar-wrap">'
-          + '<div class="my-rank-bar-track"><div class="my-rank-bar-fill" style="width:' + pctComplete + '%"></div></div>'
-          + '<div class="my-rank-bar-label">' + pctComplete + '% of max</div>'
+          + '<div class="my-rank-bar-track"><div class="my-rank-bar-fill" style="width:' + myPctOfTop + '%"></div></div>'
+          + '<div class="my-rank-bar-label">' + (myRank===1?'🏆 Top of the board':'vs #1: ' + myPctOfTop + '%') + '</div>'
           + '</div></div>';
       }
 
       // PODIUM
       if (ranking.length >= 1) {
-        var p1 = ranking[0] || null;
-        var p2 = ranking[1] || null;
-        var p3 = ranking[2] || null;
-
+        var p1=ranking[0]||null, p2=ranking[1]||null, p3=ranking[2]||null;
         function podiumItem(entry, rank, cls) {
           if (!entry) return '<div class="podium-item"><div class="podium-block ' + cls + '"><span class="podium-empty">—</span></div></div>';
-          var color = getAvatarColor(entry.u);
-          var isMe  = me && entry.u === me;
-          var dname = getDisplayName(entry.u);
-          var crown = rank===1?'👑':rank===2?'🥈':'🥉';
-          return '<div class="podium-item' + (isMe?' podium-me':'') + '">'
-            + '<div class="podium-avatar" style="background:'+color+';">'
-            + '<span class="podium-crown">' + crown + '</span>'
-            + dname.charAt(0).toUpperCase()
-            + '</div>'
-            + '<div class="podium-name">' + dname + (isMe?' (You)':'') + '</div>'
-            + '<div class="podium-pts">' + entry.pts + ' pts</div>'
-            + '<div class="podium-block ' + cls + '">' + rank + '</div>'
-            + '</div>';
+          var color=getAvatarColor(entry.u), isMe=me&&entry.u===me, dname=getDisplayName(entry.u);
+          var crown=rank===1?'👑':rank===2?'🥈':'🥉';
+          return '<div class="podium-item'+(isMe?' podium-me':'')+'">'
+            +'<div class="podium-avatar" style="background:'+color+';">'
+            +'<span class="podium-crown">'+crown+'</span>'+dname.charAt(0).toUpperCase()+'</div>'
+            +'<div class="podium-name">'+dname+(isMe?' (You)':'')+'</div>'
+            +'<div class="podium-pts">'+entry.pts.toLocaleString()+' pts</div>'
+            +'<div class="podium-block '+cls+'">'+rank+'</div>'
+            +'</div>';
         }
-
         html += '<div class="podium-wrap">'
-          + podiumItem(p2, 2, 'podium-2')
-          + podiumItem(p1, 1, 'podium-1')
-          + podiumItem(p3, 3, 'podium-3')
+          + podiumItem(p2,2,'podium-2') + podiumItem(p1,1,'podium-1') + podiumItem(p3,3,'podium-3')
           + '</div>';
       }
 
       // FULL TABLE
       if (ranking.length === 0) {
-        html += '<div class="lb-empty"><div class="lb-empty-icon">🏆</div><h3>No entries yet</h3><p>Be the first! Open <strong>My Progress</strong> in the bar above and start ticking off your steps.</p></div>';
+        html += '<div class="lb-empty"><div class="lb-empty-icon">🏆</div><h3>No entries yet</h3><p>Be the first! Open <strong>My Progress</strong> or <strong>📋 Tasks</strong> in the bar above and start earning.</p></div>';
       } else {
         html += '<div class="lb-section-title">Full Rankings</div>';
         html += '<div class="lb-table-wrap"><table class="lb-table"><thead><tr>'
@@ -444,27 +468,26 @@
           + '</tr></thead><tbody>';
 
         ranking.forEach(function(entry, idx) {
-          var rank  = idx + 1;
-          var isMe  = me && entry.u === me;
-          var color = getAvatarColor(entry.u);
-          var dname = getDisplayName(entry.u);
-          var pctW  = MAX_PTS > 0 ? Math.round(entry.pts / MAX_PTS * 100) : 0;
-          var rankCls = rank===1?' top1':rank===2?' top2':rank===3?' top3':'';
-
-          html += '<tr class="' + (isMe?'lb-me':'') + '">'
-            + '<td class="lb-rank' + rankCls + '">' + rank + '</td>'
-            + '<td><div class="lb-user"><div class="lb-av" style="background:'+color+';">' + dname.charAt(0).toUpperCase() + '</div>'
-            + '<div><div class="lb-username">' + dname + (isMe?'<span class="lb-you-tag">You</span>':'') + '</div></div></div></td>'
-            + '<td class="lb-bar-cell"><div class="lb-mini-track"><div class="lb-mini-fill" style="width:'+pctW+'%;background:'+color+';box-shadow:0 0 6px '+color+'88;"></div></div></td>'
-            + '<td class="lb-badges-cell">'
-            + (entry.bd.action ? '<span class="lb-badge lb-badge-a">📅 '+entry.bd.action+'</span>' : '')
-            + (entry.bd.done   ? '<span class="lb-badge lb-badge-d">✅ '+entry.bd.done+'</span>' : '')
-            + (entry.bd.result ? '<span class="lb-badge lb-badge-r">🏆 '+entry.bd.result+'</span>' : '')
-            + ((!entry.bd.action&&!entry.bd.done&&!entry.bd.result) ? '<span style="color:rgba(0,0,0,0.2);font-size:12px;">No points yet</span>' : '')
-            + '</td>'
-            + '<td class="lb-pts-cell"><div class="lb-pts-big">' + entry.pts.toLocaleString() + '</div>'
-            + '<div class="lb-pts-breakdown">' + entry.done + '/' + STEPS.length + ' steps</div></td>'
-            + '</tr>';
+          var rank=idx+1, isMe=me&&entry.u===me, color=getAvatarColor(entry.u), dname=getDisplayName(entry.u);
+          var pctW = topPts > 0 ? Math.round(entry.pts/topPts*100) : 0;
+          var rankCls=rank===1?' top1':rank===2?' top2':rank===3?' top3':'';
+          var hasBd = entry.bd.action||entry.bd.done||entry.bd.result||entry.bd.taskAdd||entry.bd.taskDone;
+          html += '<tr class="'+(isMe?'lb-me':'')+'">'
+            +'<td class="lb-rank'+rankCls+'">'+rank+'</td>'
+            +'<td><div class="lb-user"><div class="lb-av" style="background:'+color+';">'+dname.charAt(0).toUpperCase()+'</div>'
+            +'<div><div class="lb-username">'+dname+(isMe?'<span class="lb-you-tag">You</span>':'')+'</div>'
+            +'<div style="font-size:11px;color:#6B7A96;margin-top:2px;">'+entry.done+'/'+STEPS.length+' steps'+(entry.bd.taskDoneCount?' · '+entry.bd.taskDoneCount+' tasks':'')+'</div></div></div></td>'
+            +'<td class="lb-bar-cell"><div class="lb-mini-track"><div class="lb-mini-fill" style="width:'+pctW+'%;background:'+color+';box-shadow:0 0 6px '+color+'88;"></div></div></td>'
+            +'<td class="lb-badges-cell">'
+            +(entry.bd.action?'<span class="lb-badge lb-badge-a">📅 '+entry.bd.action+'</span>':'')
+            +(entry.bd.done?'<span class="lb-badge lb-badge-d">✅ '+entry.bd.done+'</span>':'')
+            +(entry.bd.result?'<span class="lb-badge lb-badge-r">🏆 '+entry.bd.result+'</span>':'')
+            +(entry.bd.taskAdd?'<span class="lb-badge lb-badge-t">📋 '+entry.bd.taskAdd+'</span>':'')
+            +(entry.bd.taskDone?'<span class="lb-badge lb-badge-tc">✓ '+entry.bd.taskDone+'</span>':'')
+            +(!hasBd?'<span style="color:rgba(0,0,0,0.2);font-size:12px;">No points yet</span>':'')
+            +'</td>'
+            +'<td class="lb-pts-cell"><div class="lb-pts-big">'+entry.pts.toLocaleString()+'</div></td>'
+            +'</tr>';
         });
 
         html += '</tbody></table></div>';
