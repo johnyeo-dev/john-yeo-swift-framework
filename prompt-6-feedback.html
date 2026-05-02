@@ -187,6 +187,7 @@
       <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
       <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
     </div>
+    <button onclick="localStorage.removeItem('pac-swift-session');localStorage.removeItem('pac-swift-user');window.location.href='login.html';" style="width:100%;text-align:left;background:rgba(248,113,113,0.08);border:none;border-bottom:1px solid rgba(248,113,113,0.18);padding:11px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#f87171;display:flex;align-items:center;gap:10px;"><span style="font-size:15px;">⏻</span>Sign Out</button>
     <div class="mobile-search-wrap">
       <div class="mobile-search-icon-wrap">
         <input class="mobile-search-input" id="mobileSearchInput" type="text" placeholder="Search pages…" autocomplete="off" />
@@ -223,7 +224,6 @@
     <a class="mobile-menu-item active" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
     <div class="mobile-menu-section">Account</div>
     <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
-    <button class="mobile-menu-item" onclick="localStorage.removeItem('pac-swift-session');localStorage.removeItem('pac-swift-user');window.location.href='login.html';" style="width:100%;text-align:left;background:none;border:none;border-top:1px solid rgba(248,113,113,0.15);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#f87171;"><span class="mobile-menu-letter" style="color:#f87171;">⏻</span>Sign Out</button>
   </div>
   <div class="mobile-menu-bar">
     <button class="mobile-menu-btn" onclick="openMobileMenu()"><span>☰ &nbsp;Menu</span><span style="font-size:11px;opacity:0.5;">▾</span></button>
