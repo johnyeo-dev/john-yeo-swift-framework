@@ -252,20 +252,29 @@
         }
       }
 
-      // Check localStorage users first (Settings / admin-seed overrides take priority)
       var users = getUsers();
-      var storedUser = users[username];
 
-      // Fall back to built-in users if not found in localStorage
-      if (!storedUser && BUILTIN_USERS[username]) {
-        // Auto-save to localStorage so future logins are instant
-        users[username] = BUILTIN_USERS[username];
-        localStorage.setItem('pac-swift-users', JSON.stringify(users));
-        storedUser = users[username];
+      // Built-in users always take priority — ensures live site always works
+      if (BUILTIN_USERS[username]) {
+        if (BUILTIN_USERS[username].password === password) {
+          // Sync to localStorage so Settings/leaderboard can see them
+          var base = users[username] || {};
+          users[username] = Object.assign({}, BUILTIN_USERS[username], { trialStart: base.trialStart, trialDays: base.trialDays, created: base.created || new Date().toISOString() });
+          localStorage.setItem('pac-swift-users', JSON.stringify(users));
+          localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: BUILTIN_USERS[username].role || 'user' }));
+          localStorage.setItem('pac-swift-user', username);
+          trackLogin(username);
+          window.location.href = 'index.html';
+          return;
+        }
+        // Wrong password for a known built-in user
+        errorEl.style.display = 'block';
+        return;
       }
 
+      // For users NOT in BUILTIN_USERS, check localStorage
+      var storedUser = users[username];
       if (storedUser && storedUser.password === password) {
-        // Check trial expiry
         if (storedUser.trialStart && storedUser.trialDays) {
           var trialStart = new Date(storedUser.trialStart + 'T00:00:00');
           var elapsed = Math.floor((Date.now() - trialStart) / 86400000);
