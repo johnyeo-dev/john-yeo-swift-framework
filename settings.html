@@ -686,11 +686,17 @@
       <p>Set a new password for <strong id="resetModalUser"></strong>.</p>
       <div class="form-group">
         <label>New Password</label>
-        <input type="password" id="resetModalPw" placeholder="Enter new password" autocomplete="new-password" />
+        <div style="position:relative;">
+          <input type="password" id="resetModalPw" placeholder="Enter new password" autocomplete="new-password" style="padding-right:46px;width:100%;" />
+          <button type="button" onclick="toggleResetPw('resetModalPw','resetModalPwBtn')" id="resetModalPwBtn" style="position:absolute;right:0;top:0;bottom:0;width:44px;background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:16px;display:flex;align-items:center;justify-content:center;transition:color 0.15s;" title="Show password">👁</button>
+        </div>
       </div>
       <div class="form-group">
         <label>Confirm Password</label>
-        <input type="password" id="resetModalPw2" placeholder="Confirm new password" autocomplete="new-password" />
+        <div style="position:relative;">
+          <input type="password" id="resetModalPw2" placeholder="Confirm new password" autocomplete="new-password" style="padding-right:46px;width:100%;" />
+          <button type="button" onclick="toggleResetPw('resetModalPw2','resetModalPw2Btn')" id="resetModalPw2Btn" style="position:absolute;right:0;top:0;bottom:0;width:44px;background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:16px;display:flex;align-items:center;justify-content:center;transition:color 0.15s;" title="Show password">👁</button>
+        </div>
       </div>
       <div class="alert alert-error" id="resetModalError"></div>
       <div class="btn-row">
@@ -1235,6 +1241,14 @@
     hideAlert('resetModalError');
     document.getElementById('resetModal').classList.add('open');
   }
+  function toggleResetPw(inputId, btnId) {
+    var inp = document.getElementById(inputId);
+    var btn = document.getElementById(btnId);
+    if (!inp) return;
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    if (btn) btn.style.color = inp.type === 'text' ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.3)';
+  }
+
   function closeResetModal() {
     document.getElementById('resetModal').classList.remove('open');
     _resetTarget = null;
