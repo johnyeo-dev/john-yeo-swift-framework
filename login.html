@@ -254,12 +254,15 @@
 
       var users = getUsers();
 
-      // Built-in users always take priority — ensures live site always works
+      // Built-in users: if admin has reset the password via Settings, localStorage wins.
+      // Otherwise fall back to the hardcoded BUILTIN_USERS password (works on any domain).
       if (BUILTIN_USERS[username]) {
-        if (BUILTIN_USERS[username].password === password) {
+        var storedBuiltin = users[username];
+        var effectivePw = (storedBuiltin && storedBuiltin.password) ? storedBuiltin.password : BUILTIN_USERS[username].password;
+        if (effectivePw === password) {
           // Sync to localStorage so Settings/leaderboard can see them
-          var base = users[username] || {};
-          users[username] = Object.assign({}, BUILTIN_USERS[username], { trialStart: base.trialStart, trialDays: base.trialDays, created: base.created || new Date().toISOString() });
+          var base = storedBuiltin || {};
+          users[username] = Object.assign({}, BUILTIN_USERS[username], { password: effectivePw, trialStart: base.trialStart, trialDays: base.trialDays, created: base.created || new Date().toISOString() });
           localStorage.setItem('pac-swift-users', JSON.stringify(users));
           localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: BUILTIN_USERS[username].role || 'user' }));
           localStorage.setItem('pac-swift-user', username);
