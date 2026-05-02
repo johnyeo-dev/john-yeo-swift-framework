@@ -343,8 +343,7 @@
     // ── BUILD LEADERBOARD DATA ────────────────────────────────────────────────
     function buildRanking() {
       var users = getUsers();
-      var list  = Object.keys(users);
-      if (list.indexOf('johnyeo') === -1) list.unshift('johnyeo');
+      var list  = Object.keys(users).filter(function(u){ return u !== 'johnyeo'; });
 
       return list.map(function(u) {
         return { u:u, pts:getTotalPoints(u), bd:getBreakdown(u), done:getDoneCount(u) };

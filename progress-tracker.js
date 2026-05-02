@@ -181,9 +181,7 @@
   // ── BUILD COHORT HTML (for strip row 2) ──────────────────────────────────
   function buildCohortHtml(excludeUser) {
     var users = getUsers();
-    var members = Object.keys(users).filter(function(ou){ return ou !== excludeUser; });
-    if (excludeUser !== 'johnyeo') members = ['johnyeo'].concat(members);
-    else members = Object.keys(users);
+    var members = Object.keys(users).filter(function(ou){ return ou !== excludeUser && ou !== 'johnyeo'; });
     members = members.slice(0, 8);
     if (!members.length) return '';
     return members.map(function(ou) {
@@ -284,9 +282,7 @@
 
     // Cohort / social proof
     var users = getUsers();
-    var allMembers = Object.keys(users);
-    if (allMembers.indexOf('johnyeo') === -1) allMembers.unshift('johnyeo');
-    allMembers = allMembers.filter(function(ou){ return ou !== u; }).slice(0, 6);
+    var allMembers = Object.keys(users).filter(function(ou){ return ou !== u && ou !== 'johnyeo'; }).slice(0, 6);
 
     var socialHtml = '';
     if (allMembers.length) {
@@ -336,8 +332,7 @@
   // ── RANK CALCULATION ─────────────────────────────────────────────────────
   function getAllUsers(excludeSelf) {
     var users = getUsers();
-    var list  = Object.keys(users);
-    if (list.indexOf('johnyeo') === -1) list.unshift('johnyeo');
+    var list  = Object.keys(users).filter(function(u){ return u !== 'johnyeo'; });
     return list;
   }
 
