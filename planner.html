@@ -79,6 +79,8 @@
     .date-controls input[type="date"]:focus { outline: none; border-color: var(--gold); }
     .btn-reset { background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
     .btn-reset:hover { border-color: #e74c3c; color: #e74c3c; }
+    .btn-launch-cal { background: var(--navy); color: white; border: none; border-radius: 12px; padding: 14px 32px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(0,45,106,0.25); }
+    .btn-launch-cal:hover { background: #001a40; transform: translateY(-1px); box-shadow: 0 6px 28px rgba(0,45,106,0.35); }
 
     /* LEGEND */
     .legend { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
@@ -372,38 +374,56 @@
     <div class="planner-top">
       <div>
         <h2 id="greeting">Your Calendar Plan</h2>
-        <p id="subtext">Pick your start date, plan ahead — no day limit.</p>
+        <p id="subtext">Plan your SWIFT actions and daily tasks — no day limit.</p>
       </div>
-      <div class="date-controls">
+      <div class="date-controls" id="calControls" style="display:none;">
         <label>Start date</label>
         <input type="date" id="startDateInput" />
         <label style="margin-left:6px;">Days</label>
         <input type="number" id="daysInput" min="7" max="365" value="90" style="width:64px;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;" onchange="onDaysChange()" />
-        <button class="btn-reset" onclick="resetPlan()">Reset Plan</button>
-        <button class="btn-print" onclick="printCalendar()">&#128424;&#65039; Print / Save PDF</button>
+        <button class="btn-reset" onclick="resetPlan()">Reset</button>
+        <button class="btn-print" onclick="printCalendar()">&#128424;&#65039; PDF</button>
       </div>
     </div>
 
-    <div class="legend">
-      <div class="legend-pill"><div class="legend-dot" style="background:var(--s)"></div> S · Signature</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:var(--w)"></div> W · Webinar</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:var(--i)"></div> I · Invite</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:var(--f)"></div> F · Fill Class</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:var(--t)"></div> T · Track</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:#EC4899"></div> 🎉 Parties</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:#F97316"></div> 🗓️ Workshops</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:#6366F1"></div> 💳 Monthly→Annual</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:#E11D48"></div> 📸 IG &amp; FB Ads</div>
-      <div class="legend-pill"><div class="legend-dot" style="background:#0ABFBC;border:2px dashed #0ABFBC;background:none;"></div> ✦ 6 Prompts</div>
+    <!-- LAUNCH STATE (shown when calendar is hidden) -->
+    <div id="calLaunchState" style="text-align:center;padding:48px 24px;">
+      <div style="font-size:48px;margin-bottom:16px;">📅</div>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:10px;">Your Calendar Plan</h3>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:28px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7;">Plan your SWIFT actions day by day. Add daily tasks, assign phases, and track your progress — no 30-day limit.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-launch-cal" onclick="launchCalendar()">📅 Launch Calendar</button>
+      </div>
+      <div id="calLaunchStatus" style="margin-top:20px;font-size:13px;color:var(--text-muted);"></div>
     </div>
 
-    <div class="plan-progress" id="progressWrap" style="display:none">
-      <span class="plan-progress-text">Progress</span>
-      <div class="plan-progress-bar-bg"><div class="plan-progress-bar-fill" id="progressFill" style="width:0%"></div></div>
-      <span class="plan-progress-count" id="progressCount">0 / 30</span>
-    </div>
+    <!-- CALENDAR (hidden until launched) -->
+    <div id="calSection" style="display:none;">
+      <div class="legend">
+        <div class="legend-pill"><div class="legend-dot" style="background:var(--s)"></div> S · Signature</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:var(--w)"></div> W · Webinar</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:var(--i)"></div> I · Invite</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:var(--f)"></div> F · Fill Class</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:var(--t)"></div> T · Track</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:#EC4899"></div> 🎉 Parties</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:#F97316"></div> 🗓️ Workshops</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:#6366F1"></div> 💳 Monthly→Annual</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:#E11D48"></div> 📸 IG &amp; FB Ads</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:#0ABFBC;border:2px dashed #0ABFBC;background:none;"></div> ✦ 6 Prompts</div>
+        <div class="legend-pill"><div class="legend-dot" style="background:#4A8FE7"></div> 📋 Daily Tasks</div>
+      </div>
 
-    <div class="cal-wrap" id="calWrap"></div>
+      <div class="plan-progress" id="progressWrap" style="display:none">
+        <span class="plan-progress-text">Progress</span>
+        <div class="plan-progress-bar-bg"><div class="plan-progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+        <span class="plan-progress-count" id="progressCount">0 / 90</span>
+      </div>
+
+      <div class="cal-wrap" id="calWrap"></div>
+      <div style="text-align:center;padding:20px 0 8px;">
+        <button class="btn-reset" style="font-size:12px;opacity:0.6;" onclick="hideCalendar()">▲ Hide Calendar</button>
+      </div>
+    </div>
   </main>
 
   <!-- OVERLAY -->
@@ -483,6 +503,18 @@
 
       <div class="ep-label">Notes</div>
       <textarea class="notes-input" id="notesInput" placeholder="What do you want to accomplish on this day?"></textarea>
+
+      <!-- DAILY TASKS SECTION IN PANEL -->
+      <div class="ep-label" style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;">
+        <span>📋 Daily Tasks</span>
+        <span id="epTaskPts" style="font-size:11px;color:#0ABFBC;font-weight:700;"></span>
+      </div>
+      <div id="epTaskList" style="margin-bottom:8px;"></div>
+      <div style="display:flex;gap:8px;margin-bottom:4px;">
+        <input id="epTaskInput" type="text" placeholder="Add a task for this day…" maxlength="100" style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;" />
+        <button onclick="epAddTask()" style="background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">+ Add</button>
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">+5 pts to add · +20 pts when done</p>
     </div>
     <div class="ep-footer">
       <button class="btn-save" onclick="saveDay()">Save Day</button>
@@ -722,8 +754,8 @@
     function init() {
       userName = localStorage.getItem('pac-swift-user') || '';
       if (userName) {
-        document.getElementById('greeting').textContent = `${userName}'s 30-Day Plan`;
-        document.getElementById('subtext').textContent = 'Pick a start date and plan ahead — no day limit.';
+        document.getElementById('greeting').textContent = userName + "'s Calendar Plan";
+        document.getElementById('subtext').textContent = 'Plan your SWIFT actions and daily tasks \u2014 no day limit.';
       }
       storageKey = 'pac-planner-' + (userName || 'guest');
       const saved = localStorage.getItem(storageKey);
@@ -737,7 +769,19 @@
         save();
       }
       startInput.value = planData.startDate;
-      loadCalendar();
+
+      // Show status in launch state
+      var hasDays = planData.days && Object.keys(planData.days).length > 0;
+      var taskCount = 0;
+      try {
+        var s = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
+        if (s) { var tasks = JSON.parse(localStorage.getItem('pac-swift-tasks-' + s.u) || '[]'); taskCount = tasks.length; }
+      } catch(e) {}
+      var statusParts = [];
+      if (hasDays) statusParts.push(Object.keys(planData.days).filter(function(k){ return planData.days[k] && planData.days[k].phase; }).length + ' days planned');
+      if (taskCount) statusParts.push(taskCount + ' tasks in your list');
+      var statusEl = document.getElementById('calLaunchStatus');
+      if (statusEl && statusParts.length) statusEl.textContent = statusParts.join(' \u00b7 ');
 
       function onDateChange() {
         if (!this.value) return;
@@ -748,6 +792,19 @@
       }
       startInput.addEventListener('change', onDateChange);
       startInput.addEventListener('input', onDateChange);
+    }
+
+    function launchCalendar() {
+      document.getElementById('calLaunchState').style.display = 'none';
+      document.getElementById('calSection').style.display = 'block';
+      document.getElementById('calControls').style.display = 'flex';
+      loadCalendar();
+    }
+
+    function hideCalendar() {
+      document.getElementById('calSection').style.display = 'none';
+      document.getElementById('calLaunchState').style.display = 'block';
+      document.getElementById('calControls').style.display = 'none';
     }
 
     function toISODate(d) {
@@ -895,11 +952,68 @@
     }
 
     // --- PANEL ---
+    function getSessionUser() {
+      try { var s = JSON.parse(localStorage.getItem('pac-swift-session') || 'null'); return s ? s.u : null; } catch(e) { return null; }
+    }
+    function getPlannerTasks(u) {
+      try { return JSON.parse(localStorage.getItem('pac-swift-tasks-' + u) || '[]'); } catch(e) { return []; }
+    }
+    function savePlannerTasks(u, tasks) {
+      localStorage.setItem('pac-swift-tasks-' + u, JSON.stringify(tasks));
+    }
+
+    function renderPanelTasks(dateStr) {
+      var u = getSessionUser(); if (!u) return;
+      var tasks = getPlannerTasks(u).filter(function(t){ return t.date === dateStr; });
+      var list = document.getElementById('epTaskList');
+      var ptsEl = document.getElementById('epTaskPts');
+      if (!list) return;
+      var pts = tasks.reduce(function(s,t){ return s + 5 + (t.done ? 20 : 0); }, 0);
+      if (ptsEl) ptsEl.textContent = pts ? pts + ' pts' : '';
+      if (!tasks.length) { list.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:6px 0;">No tasks for this day yet.</div>'; return; }
+      list.innerHTML = tasks.map(function(t) {
+        return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--cream-dark);">'
+          + '<div onclick="epToggleTask(\'' + t.id + '\',\'' + dateStr + '\')" style="width:20px;height:20px;border-radius:5px;border:2px solid '+(t.done?'#10B981':'var(--border)')+';background:'+(t.done?'#10B981':'transparent')+';cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;color:white;font-weight:700;">'+(t.done?'✓':'')+'</div>'
+          + '<span style="flex:1;font-size:13px;color:var(--text);'+(t.done?'text-decoration:line-through;color:var(--text-muted);':'')+'">'+t.text.replace(/</g,'&lt;')+'</span>'
+          + '<span style="font-size:11px;font-weight:700;color:var(--gold);flex-shrink:0;">' + (5+(t.done?20:0)) + ' pts</span>'
+          + '<button onclick="epDeleteTask(\'' + t.id + '\',\'' + dateStr + '\')" style="background:none;border:none;color:rgba(0,0,0,0.25);font-size:14px;cursor:pointer;flex-shrink:0;padding:0 2px;" title="Remove">✕</button>'
+          + '</div>';
+      }).join('');
+    }
+
+    function epAddTask() {
+      var u = getSessionUser(); if (!u) return;
+      var inp = document.getElementById('epTaskInput'); if (!inp) return;
+      var text = inp.value.trim(); if (!text) return;
+      var tasks = getPlannerTasks(u);
+      tasks.unshift({ id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), text:text, date:currentEditDate, created:Date.now(), done:false, doneAt:null });
+      savePlannerTasks(u, tasks);
+      inp.value = '';
+      renderPanelTasks(currentEditDate);
+      renderCalendar(planData.startDate); // refresh calendar cells
+    }
+
+    function epToggleTask(taskId, dateStr) {
+      var u = getSessionUser(); if (!u) return;
+      var tasks = getPlannerTasks(u).map(function(t){ if(t.id===taskId){ t.done=!t.done; t.doneAt=t.done?Date.now():null; } return t; });
+      savePlannerTasks(u, tasks);
+      renderPanelTasks(dateStr);
+      renderCalendar(planData.startDate);
+    }
+
+    function epDeleteTask(taskId, dateStr) {
+      var u = getSessionUser(); if (!u) return;
+      var tasks = getPlannerTasks(u).filter(function(t){ return t.id !== taskId; });
+      savePlannerTasks(u, tasks);
+      renderPanelTasks(dateStr);
+      renderCalendar(planData.startDate);
+    }
+
     function openPanel(dateStr, dayNum) {
       currentEditDate = dateStr;
       selectedPhase = null;
 
-      document.getElementById('epTitle').textContent = `Day ${dayNum}`;
+      document.getElementById('epTitle').textContent = 'Day ' + dayNum;
       document.getElementById('epDate').textContent = formatDisplay(dateStr);
 
       const entry = (planData.days || {})[dateStr] || {};
@@ -916,6 +1030,10 @@
         clearPhaseUI();
         document.getElementById('stepSelect').innerHTML = '<option value="">— Select a phase first —</option>';
       }
+
+      renderPanelTasks(dateStr);
+      var inp = document.getElementById('epTaskInput');
+      if (inp) { inp.value = ''; inp.onkeydown = function(e){ if(e.key==='Enter') epAddTask(); }; }
 
       document.getElementById('overlay').classList.add('open');
       document.getElementById('editPanel').classList.add('open');

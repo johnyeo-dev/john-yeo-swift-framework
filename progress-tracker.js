@@ -608,16 +608,17 @@
       });
     });
     var totalPts=tasks.reduce(function(s,t){return s+5+(t.done?20:0);},0);
-    var win=window.open('','_blank');
-    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Daily Tasks — '+u+'</title>'
-      +'<style>body{font-family:\'DM Sans\',Arial,sans-serif;margin:32px;color:#0A0F1C;}h1{font-size:22px;margin-bottom:4px;}p{color:#6B7A96;font-size:13px;margin-bottom:24px;}table{width:100%;border-collapse:collapse;}@media print{button{display:none;}}</style>'
-      +'</head><body>'
-      +'<h1>📋 Daily Tasks — '+u+'</h1>'
-      +'<p>Printed on '+new Date().toLocaleDateString('en-SG',{weekday:\'long\',year:\'numeric\',month:\'long\',day:\'numeric\'})+'</p>'
-      +'<button onclick="window.print()" style="background:#0ABFBC;color:#002D6A;border:none;padding:8px 18px;border-radius:8px;font-weight:700;cursor:pointer;margin-bottom:20px;font-size:13px;">🖨️ Print</button>'
-      +'<table>'+rows+'</table>'
-      +'<p style="margin-top:20px;font-weight:700;font-size:14px;">Total: '+totalPts+' pts</p>'
-      +'</body></html>');
+    var dateLabel = new Date().toLocaleDateString('en-SG', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    var win = window.open('', '_blank');
+    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Daily Tasks \u2014 ' + u + '</title>'
+      + '<style>body{font-family:Arial,sans-serif;margin:32px;color:#0A0F1C;}h1{font-size:22px;margin-bottom:4px;}p{color:#6B7A96;font-size:13px;margin-bottom:24px;}table{width:100%;border-collapse:collapse;}@media print{button{display:none;}}</style>'
+      + '</head><body>'
+      + '<h1>\uD83D\uDCCB Daily Tasks \u2014 ' + u + '</h1>'
+      + '<p>Printed on ' + dateLabel + '</p>'
+      + '<button onclick="window.print()" style="background:#0ABFBC;color:#002D6A;border:none;padding:8px 18px;border-radius:8px;font-weight:700;cursor:pointer;margin-bottom:20px;font-size:13px;">Print</button>'
+      + '<table>' + rows + '</table>'
+      + '<p style="margin-top:20px;font-weight:700;font-size:14px;">Total: ' + totalPts + ' pts</p>'
+      + '</body></html>');
     win.document.close();
   };
   window.__pacToggleTask = function(taskId) {

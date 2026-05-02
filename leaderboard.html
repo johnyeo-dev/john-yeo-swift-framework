@@ -379,12 +379,61 @@
     }
 
     // ── BUILD LEADERBOARD DATA ────────────────────────────────────────────────
+    var currentView = 'alltime'; // 'alltime' | 'month'
+
+    function getMonthTaskPoints(u) {
+      var tasks = getTasks(u), pts = 0;
+      var now = new Date();
+      var ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+      tasks.forEach(function(t){
+        if ((t.date || '').slice(0,7) === ym) { pts += TASK_PTS_ADD; if (t.done) pts += TASK_PTS_DONE; }
+      });
+      return pts;
+    }
+
+    function getMonthStepPoints(u) {
+      // For month view, we use the same step data but only show what was "actioned this month"
+      // Since we don't track when steps were done, we show full step pts in both views
+      // but separate out task points by month
+      return getStepPoints(u); // steps carry forward
+    }
+
+    function getMonthPoints(u) {
+      return getMonthStepPoints(u) + getMonthTaskPoints(u);
+    }
+
+    function getMonthBreakdown(u) {
+      var bd = getBreakdown(u);
+      var tasks = getTasks(u);
+      var now = new Date();
+      var ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+      var monthTasks = tasks.filter(function(t){ return (t.date||'').slice(0,7) === ym; });
+      var tAdd = monthTasks.length * TASK_PTS_ADD;
+      var tDone = monthTasks.filter(function(t){ return t.done; }).length * TASK_PTS_DONE;
+      return { action:bd.action, done:bd.done, result:bd.result, taskAdd:tAdd, taskDone:tDone,
+               taskCount:monthTasks.length, taskDoneCount:monthTasks.filter(function(t){return t.done;}).length };
+    }
+
+    function getCurrentMonthLabel() {
+      return new Date().toLocaleDateString('en-SG', {month:'long', year:'numeric'});
+    }
+
     function buildRanking() {
       var users = getUsers();
       var list  = Object.keys(users).filter(function(u){ return u !== 'johnyeo'; });
+      if (currentView === 'month') {
+        return list.map(function(u) {
+          return { u:u, pts:getMonthPoints(u), bd:getMonthBreakdown(u), done:getDoneCount(u) };
+        }).sort(function(a,b){ return b.pts - a.pts; });
+      }
       return list.map(function(u) {
         return { u:u, pts:getTotalPoints(u), bd:getBreakdown(u), done:getDoneCount(u) };
       }).sort(function(a,b){ return b.pts - a.pts; });
+    }
+
+    function switchView(view) {
+      currentView = view;
+      render();
     }
 
     // ── RENDER ────────────────────────────────────────────────────────────────
@@ -402,14 +451,22 @@
 
       var html = '';
 
+      // VIEW TOGGLE
+      var isMonth = currentView === 'month';
+      var viewLabel = isMonth ? 'This Month · ' + getCurrentMonthLabel() : 'All Time';
+      html += '<div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;">'
+        + '<button onclick="switchView(\'alltime\')" style="padding:9px 20px;border-radius:99px;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:2px solid '+(isMonth?'rgba(255,255,255,0.2)':'#0ABFBC')+';background:'+(isMonth?'transparent':'rgba(10,191,188,0.18)')+';color:'+(isMonth?'rgba(255,255,255,0.5)':'#0ABFBC')+';transition:all 0.2s;">🏆 All Time</button>'
+        + '<button onclick="switchView(\'month\')" style="padding:9px 20px;border-radius:99px;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:2px solid '+(!isMonth?'rgba(255,255,255,0.2)':'#F59E0B')+';background:'+(!isMonth?'transparent':'rgba(245,158,11,0.18)')+';color:'+(!isMonth?'rgba(255,255,255,0.5)':'#F59E0B')+';transition:all 0.2s;">📅 This Month</button>'
+        + '</div>';
+
       // HERO
       html += '<div class="lb-hero">'
-        + '<div class="lb-hero-tag">PAC SWIFT · Points System</div>'
+        + '<div class="lb-hero-tag">PAC SWIFT · ' + viewLabel + '</div>'
         + '<h2>🏆 <em>Leaderboard</em></h2>'
-        + '<p class="lb-hero-sub">No limits — the more you do, the more you earn.<br>Set tasks, take action, get results. Every step counts.</p>'
+        + '<p class="lb-hero-sub">' + (isMonth ? 'Points earned this month — ' + getCurrentMonthLabel() + '<br>Who\'s been the most active this month?' : 'No limits — the more you do, the more you earn.<br>Set tasks, take action, get results. Every step counts.') + '</p>'
         + '<div class="lb-hero-stats">'
         + '<div class="lb-stat"><div class="lb-stat-val">' + totalMembers + '</div><div class="lb-stat-label">Members</div></div>'
-        + '<div class="lb-stat"><div class="lb-stat-val">' + totalPtsAll.toLocaleString() + '</div><div class="lb-stat-label">Total pts earned</div></div>'
+        + '<div class="lb-stat"><div class="lb-stat-val">' + totalPtsAll.toLocaleString() + '</div><div class="lb-stat-label">' + (isMonth ? 'Pts this month' : 'Total pts earned') + '</div></div>'
         + (myRank ? '<div class="lb-stat"><div class="lb-stat-val">#' + myRank + '</div><div class="lb-stat-label">Your rank</div></div>' : '')
         + '</div>'
         + '</div>';
