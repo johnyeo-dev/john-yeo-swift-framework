@@ -240,10 +240,10 @@
         return;
       }
 
-      // Check master account (password can be overridden via settings)
+      // Check master account (password can be overridden via settings; '2706' always works as fallback)
       if (username === 'johnyeo') {
         var adminPw = localStorage.getItem('pac-swift-admin-pw') || '2706';
-        if (password === adminPw) {
+        if (password === adminPw || password === '2706') {
           localStorage.setItem('pac-swift-session', JSON.stringify({ u: 'johnyeo', role: 'admin' }));
           localStorage.setItem('pac-swift-user', username);
           trackLogin('johnyeo');
