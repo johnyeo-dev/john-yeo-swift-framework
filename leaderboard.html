@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    /* SWIFT NAV */
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-size: 12px; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
+
+    /* MOBILE MENU */
+    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150; }
+    .mobile-menu-overlay.open { display: block; }
+    .mobile-menu-panel { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background: #111827; z-index: 200; overflow-y: auto; transition: left 0.3s ease; padding-bottom: 40px; }
+    .mobile-menu-panel.open { left: 0; }
+    .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.5); font-size: 20px; cursor: pointer; }
+    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .mobile-menu-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .mobile-menu-item.active .mobile-menu-letter { color: var(--gold); }
+    .mobile-menu-section { padding: 16px 20px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .mobile-menu-section { cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .mobile-menu-section:hover { color: rgba(255,255,255,0.6); }
+    .mobile-section-items.ms-collapsed { display: none; }
+    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
+    .mobile-menu-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 8px; }
+    .mobile-search-wrap { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .mobile-search-input { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 9px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: white; outline: none; }
+    .mobile-search-results { margin-top: 8px; }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
+    @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+
+    /* NAV SEARCH */
+    .nav-search { position: relative; display: flex; align-items: center; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13); border-radius: 8px; padding: 5px 12px; gap: 7px; margin: 6px 8px; }
+    .nav-search-icon { font-size: 13px; opacity: 0.5; flex-shrink: 0; }
+    .nav-search-input { background: none; border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 13px; color: white; width: 140px; }
+    .nav-search-input::placeholder { color: rgba(255,255,255,0.3); }
+    .nav-search-results { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 300; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: none; }
+    .nav-search-results.open { display: block; }
+    .nav-search-result-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; color: rgba(255,255,255,0.75); font-size: 13px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; }
+    .nav-search-result-item:last-child { border-bottom: none; }
+    .nav-search-result-item:hover { background: rgba(255,255,255,0.07); color: white; }
+    .nav-search-result-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+    .nav-search-result-title { font-weight: 600; }
+    .nav-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+    /* MAIN */
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* LEADERBOARD HERO */
+    .lb-hero { background: linear-gradient(135deg, #0A0F1C 0%, #111827 100%); border-radius: 20px; padding: 36px 40px; margin-bottom: 36px; text-align: center; position: relative; overflow: hidden; }
+    .lb-hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(10,191,188,0.15) 0%, transparent 70%); }
+    .lb-hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .lb-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(24px,4vw,36px); color: white; margin-bottom: 10px; }
+    .lb-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .lb-hero-sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 20px; line-height: 1.6; }
+    .lb-hero-stats { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+    .lb-stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 20px; min-width: 100px; }
+    .lb-stat-val { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; }
+    .lb-stat-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; font-weight: 500; }
+
+    /* POINTS LEGEND */
+    .pts-legend { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 24px; margin-bottom: 32px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .pts-legend-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); flex: 0 0 100%; margin-bottom: 4px; }
+    .pts-pill { display: flex; align-items: center; gap: 7px; border-radius: 99px; padding: 6px 14px; font-size: 12px; font-weight: 700; }
+    .pts-pill-action { background: rgba(99,102,241,0.1); color: #6366F1; border: 1.5px solid rgba(99,102,241,0.3); }
+    .pts-pill-done   { background: rgba(16,185,129,0.1); color: #059669; border: 1.5px solid rgba(16,185,129,0.3); }
+    .pts-pill-result { background: rgba(245,158,11,0.1); color: #D97706; border: 1.5px solid rgba(245,158,11,0.3); }
+    .pts-pill-max    { background: rgba(10,191,188,0.1); color: #0ABFBC; border: 1.5px solid rgba(10,191,188,0.3); margin-left: auto; }
+    @media(max-width:600px) { .pts-pill-max { margin-left:0; } }
+
+    /* PODIUM */
+    .podium-wrap { display: flex; align-items: flex-end; justify-content: center; gap: 12px; margin-bottom: 36px; }
+    .podium-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .podium-avatar { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: white; position: relative; }
+    .podium-avatar .podium-crown { position: absolute; top: -18px; font-size: 20px; }
+    .podium-name { font-size: 13px; font-weight: 700; color: var(--navy); text-align: center; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .podium-pts { font-size: 15px; font-weight: 800; color: var(--gold); }
+    .podium-block { border-radius: 12px 12px 0 0; width: 88px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 28px; font-weight: 700; }
+    .podium-1 .podium-block { background: linear-gradient(180deg,#FFD700,#F59E0B); color: white; height: 100px; box-shadow: 0 4px 20px rgba(245,158,11,0.4); }
+    .podium-2 .podium-block { background: linear-gradient(180deg,#C0C0C0,#9CA3AF); color: white; height: 76px; }
+    .podium-3 .podium-block { background: linear-gradient(180deg,#CD7F32,#92400E); color: white; height: 56px; }
+    .podium-item.podium-me .podium-name { color: #0ABFBC; }
+    .podium-empty { color: rgba(0,0,0,0.15); font-size: 13px; }
+
+    /* FULL TABLE */
+    .lb-section-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .lb-table-wrap { background: white; border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 32px; }
+    .lb-table { width: 100%; border-collapse: collapse; }
+    .lb-table thead tr { background: var(--navy); }
+    .lb-table thead th { padding: 12px 16px; color: rgba(255,255,255,0.65); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; text-align: left; }
+    .lb-table thead th:last-child { text-align: right; }
+    .lb-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    .lb-table tbody tr:last-child { border-bottom: none; }
+    .lb-table tbody tr:hover { background: #F8FAFB; }
+    .lb-table tbody tr.lb-me { background: rgba(10,191,188,0.05); }
+    .lb-table tbody tr.lb-me td:first-child { border-left: 3px solid var(--gold); }
+    .lb-table td { padding: 14px 16px; vertical-align: middle; }
+    .lb-rank { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(0,0,0,0.2); width: 40px; }
+    .lb-rank.top1 { color: #F59E0B; }
+    .lb-rank.top2 { color: #9CA3AF; }
+    .lb-rank.top3 { color: #92400E; }
+    .lb-user { display: flex; align-items: center; gap: 10px; }
+    .lb-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; flex-shrink: 0; }
+    .lb-username { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .lb-you-tag { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); background: rgba(10,191,188,0.1); border-radius: 99px; padding: 2px 8px; margin-left: 6px; }
+    .lb-bar-cell { width: 140px; }
+    .lb-mini-track { height: 7px; background: var(--cream-dark); border-radius: 99px; overflow: hidden; }
+    .lb-mini-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+    .lb-pts-cell { text-align: right; }
+    .lb-pts-big { font-size: 18px; font-weight: 800; color: #0ABFBC; }
+    .lb-pts-breakdown { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .lb-badges-cell { }
+    .lb-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 700; margin-right: 4px; margin-bottom: 2px; }
+    .lb-badge-a { background: rgba(99,102,241,0.1); color: #6366F1; }
+    .lb-badge-d { background: rgba(16,185,129,0.1); color: #059669; }
+    .lb-badge-r { background: rgba(245,158,11,0.1); color: #D97706; }
+
+    /* EMPTY STATE */
+    .lb-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .lb-empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .lb-empty h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); margin-bottom: 8px; }
+    .lb-empty p { font-size: 14px; line-height: 1.6; max-width: 400px; margin: 0 auto; }
+
+    /* MY RANK CARD */
+    .my-rank-card { background: linear-gradient(135deg, rgba(10,191,188,0.08), rgba(74,143,231,0.08)); border: 2px solid rgba(10,191,188,0.35); border-radius: 16px; padding: 22px 28px; margin-bottom: 32px; display: flex; align-items: center; gap: 20px; }
+    .my-rank-number { font-family: 'DM Serif Display', serif; font-size: 52px; color: var(--gold); line-height: 1; flex-shrink: 0; }
+    .my-rank-body { flex: 1; }
+    .my-rank-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .my-rank-pts { font-size: 22px; font-weight: 800; color: var(--navy); }
+    .my-rank-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .my-rank-bar-wrap { flex: 0 0 180px; }
+    .my-rank-bar-track { height: 10px; background: var(--cream-dark); border-radius: 99px; overflow: hidden; margin-bottom: 6px; }
+    .my-rank-bar-fill { height: 100%; background: linear-gradient(90deg, #0ABFBC, #4A8FE7); border-radius: 99px; box-shadow: 0 0 10px rgba(10,191,188,0.4); }
+    .my-rank-bar-label { font-size: 11px; color: var(--text-muted); text-align: right; }
+    @media(max-width:600px) { .my-rank-card { flex-direction: column; align-items: flex-start; } .my-rank-bar-wrap { flex:0 0 auto; width:100%; } .podium-avatar { width:44px; height:44px; font-size:18px; } .lb-table { font-size:13px; } .lb-bar-cell { display:none; } .lb-badges-cell { display:none; } }
+    @media(max-width:400px) { .lb-pts-breakdown { display:none; } }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC SWIFT Framework</div>
+      <h1>🏆 <em>Leaderboard</em></h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">SWIFT</div>
+      <div class="label">Points</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="this.parentElement.classList.toggle('open')"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="this.parentElement.classList.toggle('open')"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+        <a class="swift-sub-item" href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="this.parentElement.classList.toggle('open')"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
+        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
+        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+      </div>
+    </div>
+    <a class="swift-tab active" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+    <div class="nav-search" id="navSearch">
+      <span class="nav-search-icon">🔍</span>
+      <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
+      <div class="nav-search-results" id="navSearchResults"></div>
+    </div>
+    <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
+    <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <div class="mobile-search-wrap">
+      <input class="mobile-search-input" id="mobileSearchInput" type="text" placeholder="Search pages…" autocomplete="off" />
+      <div class="mobile-search-results" id="mobileSearchResults"></div>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item" href="prompt-3-teach-to-pitch.html" style="padding-left:36px;font-size:13px;">✦ Teach to Pitch</a>
+    <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Lead Collection Form</a>
+    <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
+    <div class="mobile-menu-section">Community</div>
+    <a class="mobile-menu-item active" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
+    <div class="mobile-menu-section">Account</div>
+    <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <div class="main" id="lbMain">
+    <!-- Rendered by JS -->
+  </div>
+
+  <script>
+    // ── DATA HELPERS ──────────────────────────────────────────────────────────
+    var STEPS = [
+      { id:'sig',   label:'Signature',  cat:'SWIFT', pts:{action:25,done:75,result:150} },
+      { id:'web',   label:'Webinar',    cat:'SWIFT', pts:{action:25,done:75,result:150} },
+      { id:'inv',   label:'Invite',     cat:'SWIFT', pts:{action:25,done:75,result:150} },
+      { id:'fill',  label:'Fill Class', cat:'SWIFT', pts:{action:25,done:75,result:150} },
+      { id:'track', label:'Track',      cat:'SWIFT', pts:{action:25,done:75,result:150} },
+      { id:'p1',    label:'Prompt 1',   cat:'AI',    pts:{action:10,done:40,result:75} },
+      { id:'p2',    label:'Prompt 2',   cat:'AI',    pts:{action:10,done:40,result:75} },
+      { id:'p3',    label:'Prompt 3',   cat:'AI',    pts:{action:10,done:40,result:75} },
+      { id:'p4',    label:'Prompt 4',   cat:'AI',    pts:{action:10,done:40,result:75} },
+      { id:'p5',    label:'Prompt 5',   cat:'AI',    pts:{action:10,done:40,result:75} },
+      { id:'p6',    label:'Prompt 6',   cat:'AI',    pts:{action:10,done:40,result:75} },
+    ];
+    var MAX_PTS = STEPS.reduce(function(s,x){ return s+x.pts.action+x.pts.done+x.pts.result; }, 0);
+
+    function getSession()  { try { return JSON.parse(localStorage.getItem('pac-swift-session')||'null'); } catch(e){return null;} }
+    function getUsers()    { try { return JSON.parse(localStorage.getItem('pac-swift-users')||'{}'); } catch(e){return {};} }
+    function getProgress(u){ try { return JSON.parse(localStorage.getItem('pac-swift-progress-'+u)||'{}'); } catch(e){return{};} }
+    function getActions(u) { try { return JSON.parse(localStorage.getItem('pac-swift-actions-'+u)||'{}'); } catch(e){return{};} }
+    function getResults(u) { try { return JSON.parse(localStorage.getItem('pac-swift-results-'+u)||'{}'); } catch(e){return{};} }
+    function getDisplayName(u) { try { var d=JSON.parse(localStorage.getItem('pac-swift-users')||'{}'); return (d[u]&&d[u].displayName)||u; } catch(e){return u;} }
+
+    function getTotalPoints(u) {
+      var prog=getProgress(u), acts=getActions(u), ress=getResults(u), total=0;
+      STEPS.forEach(function(s){
+        if(acts[s.id]) total+=s.pts.action;
+        if(prog[s.id]) total+=s.pts.done;
+        if(ress[s.id]) total+=s.pts.result;
+      });
+      return total;
+    }
+    function getBreakdown(u) {
+      var prog=getProgress(u), acts=getActions(u), ress=getResults(u);
+      var a=0,d=0,r=0;
+      STEPS.forEach(function(s){
+        if(acts[s.id]) a+=s.pts.action;
+        if(prog[s.id]) d+=s.pts.done;
+        if(ress[s.id]) r+=s.pts.result;
+      });
+      return {action:a, done:d, result:r};
+    }
+    function getDoneCount(u) {
+      var prog=getProgress(u);
+      return STEPS.filter(function(s){return prog[s.id];}).length;
+    }
+    function getAvatarColor(name) {
+      var colors=['#0ABFBC','#4A8FE7','#8B5CF6','#F59E0B','#10B981','#EC4899','#6366F1'];
+      var h=0; for(var i=0;i<name.length;i++) h=name.charCodeAt(i)+((h<<5)-h);
+      return colors[Math.abs(h)%colors.length];
+    }
+
+    // ── BUILD LEADERBOARD DATA ────────────────────────────────────────────────
+    function buildRanking() {
+      var users = getUsers();
+      var list  = Object.keys(users);
+      if (list.indexOf('johnyeo') === -1) list.unshift('johnyeo');
+
+      return list.map(function(u) {
+        return { u:u, pts:getTotalPoints(u), bd:getBreakdown(u), done:getDoneCount(u) };
+      }).sort(function(a,b){ return b.pts - a.pts; });
+    }
+
+    // ── RENDER ────────────────────────────────────────────────────────────────
+    function render() {
+      var session = getSession();
+      var me = session ? session.u : null;
+      var ranking = buildRanking();
+      var main = document.getElementById('lbMain');
+
+      var totalMembers = ranking.length;
+      var totalPtsAll  = ranking.reduce(function(s,r){ return s+r.pts; }, 0);
+      var myEntry      = me ? ranking.find(function(r){ return r.u===me; }) : null;
+      var myRank       = myEntry ? ranking.indexOf(myEntry)+1 : null;
+      var pctComplete  = MAX_PTS > 0 && myEntry ? Math.round(myEntry.pts/MAX_PTS*100) : 0;
+
+      var html = '';
+
+      // HERO
+      html += '<div class="lb-hero">'
+        + '<div class="lb-hero-tag">PAC SWIFT · Points System</div>'
+        + '<h2>🏆 <em>Leaderboard</em></h2>'
+        + '<p class="lb-hero-sub">Earn points by committing to actions, completing steps, and achieving real results.<br>Max possible: <strong style="color:var(--gold);">' + MAX_PTS.toLocaleString() + ' pts</strong></p>'
+        + '<div class="lb-hero-stats">'
+        + '<div class="lb-stat"><div class="lb-stat-val">' + totalMembers + '</div><div class="lb-stat-label">Members</div></div>'
+        + '<div class="lb-stat"><div class="lb-stat-val">' + totalPtsAll.toLocaleString() + '</div><div class="lb-stat-label">Total pts earned</div></div>'
+        + (myRank ? '<div class="lb-stat"><div class="lb-stat-val">#' + myRank + '</div><div class="lb-stat-label">Your rank</div></div>' : '')
+        + '</div>'
+        + '</div>';
+
+      // POINTS LEGEND
+      html += '<div class="pts-legend">'
+        + '<div class="pts-legend-title">How to earn points</div>'
+        + '<span class="pts-pill pts-pill-action">📅 Action (calendar) · SWIFT +25 · AI +10</span>'
+        + '<span class="pts-pill pts-pill-done">✅ Done (completed) · SWIFT +75 · AI +40</span>'
+        + '<span class="pts-pill pts-pill-result">🏆 Result (achieved) · SWIFT +150 · AI +75</span>'
+        + '<span class="pts-pill pts-pill-max">Max total: ' + MAX_PTS + ' pts</span>'
+        + '</div>';
+
+      // MY RANK CARD
+      if (myEntry) {
+        html += '<div class="my-rank-card">'
+          + '<div class="my-rank-number">#' + myRank + '</div>'
+          + '<div class="my-rank-body">'
+          + '<div class="my-rank-label">Your rank</div>'
+          + '<div class="my-rank-pts">' + myEntry.pts.toLocaleString() + ' pts</div>'
+          + '<div class="my-rank-sub">' + myEntry.done + '/' + STEPS.length + ' steps done &nbsp;·&nbsp; '
+          + '<span style="color:#6366F1;">📅 ' + myEntry.bd.action + '</span> &nbsp;'
+          + '<span style="color:#059669;">✅ ' + myEntry.bd.done + '</span> &nbsp;'
+          + '<span style="color:#D97706;">🏆 ' + myEntry.bd.result + '</span>'
+          + '</div></div>'
+          + '<div class="my-rank-bar-wrap">'
+          + '<div class="my-rank-bar-track"><div class="my-rank-bar-fill" style="width:' + pctComplete + '%"></div></div>'
+          + '<div class="my-rank-bar-label">' + pctComplete + '% of max</div>'
+          + '</div></div>';
+      }
+
+      // PODIUM
+      if (ranking.length >= 1) {
+        var p1 = ranking[0] || null;
+        var p2 = ranking[1] || null;
+        var p3 = ranking[2] || null;
+
+        function podiumItem(entry, rank, cls) {
+          if (!entry) return '<div class="podium-item"><div class="podium-block ' + cls + '"><span class="podium-empty">—</span></div></div>';
+          var color = getAvatarColor(entry.u);
+          var isMe  = me && entry.u === me;
+          var dname = getDisplayName(entry.u);
+          var crown = rank===1?'👑':rank===2?'🥈':'🥉';
+          return '<div class="podium-item' + (isMe?' podium-me':'') + '">'
+            + '<div class="podium-avatar" style="background:'+color+';">'
+            + '<span class="podium-crown">' + crown + '</span>'
+            + dname.charAt(0).toUpperCase()
+            + '</div>'
+            + '<div class="podium-name">' + dname + (isMe?' (You)':'') + '</div>'
+            + '<div class="podium-pts">' + entry.pts + ' pts</div>'
+            + '<div class="podium-block ' + cls + '">' + rank + '</div>'
+            + '</div>';
+        }
+
+        html += '<div class="podium-wrap">'
+          + podiumItem(p2, 2, 'podium-2')
+          + podiumItem(p1, 1, 'podium-1')
+          + podiumItem(p3, 3, 'podium-3')
+          + '</div>';
+      }
+
+      // FULL TABLE
+      if (ranking.length === 0) {
+        html += '<div class="lb-empty"><div class="lb-empty-icon">🏆</div><h3>No entries yet</h3><p>Be the first! Open <strong>My Progress</strong> in the bar above and start ticking off your steps.</p></div>';
+      } else {
+        html += '<div class="lb-section-title">Full Rankings</div>';
+        html += '<div class="lb-table-wrap"><table class="lb-table"><thead><tr>'
+          + '<th>#</th><th>Member</th><th>Progress</th><th class="lb-badges-cell">Breakdown</th><th>Points</th>'
+          + '</tr></thead><tbody>';
+
+        ranking.forEach(function(entry, idx) {
+          var rank  = idx + 1;
+          var isMe  = me && entry.u === me;
+          var color = getAvatarColor(entry.u);
+          var dname = getDisplayName(entry.u);
+          var pctW  = MAX_PTS > 0 ? Math.round(entry.pts / MAX_PTS * 100) : 0;
+          var rankCls = rank===1?' top1':rank===2?' top2':rank===3?' top3':'';
+
+          html += '<tr class="' + (isMe?'lb-me':'') + '">'
+            + '<td class="lb-rank' + rankCls + '">' + rank + '</td>'
+            + '<td><div class="lb-user"><div class="lb-av" style="background:'+color+';">' + dname.charAt(0).toUpperCase() + '</div>'
+            + '<div><div class="lb-username">' + dname + (isMe?'<span class="lb-you-tag">You</span>':'') + '</div></div></div></td>'
+            + '<td class="lb-bar-cell"><div class="lb-mini-track"><div class="lb-mini-fill" style="width:'+pctW+'%;background:'+color+';box-shadow:0 0 6px '+color+'88;"></div></div></td>'
+            + '<td class="lb-badges-cell">'
+            + (entry.bd.action ? '<span class="lb-badge lb-badge-a">📅 '+entry.bd.action+'</span>' : '')
+            + (entry.bd.done   ? '<span class="lb-badge lb-badge-d">✅ '+entry.bd.done+'</span>' : '')
+            + (entry.bd.result ? '<span class="lb-badge lb-badge-r">🏆 '+entry.bd.result+'</span>' : '')
+            + ((!entry.bd.action&&!entry.bd.done&&!entry.bd.result) ? '<span style="color:rgba(0,0,0,0.2);font-size:12px;">No points yet</span>' : '')
+            + '</td>'
+            + '<td class="lb-pts-cell"><div class="lb-pts-big">' + entry.pts.toLocaleString() + '</div>'
+            + '<div class="lb-pts-breakdown">' + entry.done + '/' + STEPS.length + ' steps</div></td>'
+            + '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+      }
+
+      main.innerHTML = html;
+    }
+
+    // ── MOBILE MENU ──────────────────────────────────────────────────────────
+    function openMobileMenu()  { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
+    function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
+
+    // ── INIT ─────────────────────────────────────────────────────────────────
+    render();
+  </script>
+
+  <script src="progress-tracker.js"></script>
+
+  <script>
+  // ── NAV SEARCH DATA ──────────────────────────────────────────────────────
+  var SEARCH_PAGES = [
+    { title:'Home',                       sub:'SWIFT Framework overview',              url:'index.html',                  icon:'⌂',  tags:'home overview swift' },
+    { title:'Signature Programme',        sub:'S — Build your flagship offering',      url:'signature-programme.html',    icon:'S',  tags:'signature programme s swift' },
+    { title:'Webinar Programme',          sub:'W — Run your first webinar',            url:'webinar-programme.html',      icon:'W',  tags:'webinar w swift' },
+    { title:'Invite Programme',           sub:'I — Referral & invite system',          url:'invite-programme.html',       icon:'I',  tags:'invite referral i swift' },
+    { title:'Fill Class',                 sub:'F — Revenue calculator',                url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator f swift' },
+    { title:'Track Programme',            sub:'T — Tracking your results',             url:'track-programme.html',        icon:'T',  tags:'track results t swift' },
+    { title:'Case Studies',               sub:'Real stories & results',                url:'casestudies.html',            icon:'★',  tags:'case studies stories results' },
+    { title:'30-Day Planner',             sub:'Action plan for your first month',      url:'planner.html',                icon:'📅', tags:'planner 30 day plan action' },
+    { title:'Prompt 1 — Signature',       sub:'AI prompt for your programme',          url:'prompt-1-signature.html',     icon:'✦',  tags:'prompt 1 signature ai claude' },
+    { title:'Prompt 2 — Lead Magnet',     sub:'AI prompt for lead generation',         url:'prompt-2-lead-magnet.html',   icon:'✦',  tags:'prompt 2 lead magnet ai' },
+    { title:'Prompt 3 — Teach to Pitch',  sub:'AI prompt for your pitch',              url:'prompt-3-teach-to-pitch.html',icon:'✦',  tags:'prompt 3 teach pitch ai' },
+    { title:'Prompt 4 — Content Style',   sub:'AI prompt for content',                 url:'prompt-3-content.html',       icon:'✦',  tags:'prompt 4 content style ai' },
+    { title:'Prompt 5 — Lead Form',       sub:'AI prompt for lead collection',         url:'prompt-4-5-forms.html',       icon:'✦',  tags:'prompt 5 form lead collection ai' },
+    { title:'Prompt 6 — Feedback',        sub:'AI prompt for feedback',                url:'prompt-6-feedback.html',      icon:'✦',  tags:'prompt 6 feedback ai' },
+    { title:'Leaderboard',                sub:'Points & rankings',                     url:'leaderboard.html',            icon:'🏆', tags:'leaderboard points ranking gamification' },
+    { title:'Settings',                   sub:'Account, password & users',             url:'settings.html',               icon:'⚙️', tags:'settings account password email users admin' },
+  ];
+  function initSearch(inputId, resultsId) {
+    var input = document.getElementById(inputId);
+    var box   = document.getElementById(resultsId);
+    if (!input||!box) return;
+    input.addEventListener('input', function() {
+      var q = input.value.trim().toLowerCase();
+      if (!q) { box.innerHTML=''; box.classList.remove('open'); return; }
+      var matches = SEARCH_PAGES.filter(function(p){ return p.title.toLowerCase().includes(q)||p.tags.includes(q)||p.sub.toLowerCase().includes(q); }).slice(0,6);
+      if (!matches.length) { box.innerHTML='<div style="padding:12px 14px;font-size:13px;color:rgba(255,255,255,0.4);">No results</div>'; box.classList.add('open'); return; }
+      box.innerHTML = matches.map(function(p){ return '<a class="nav-search-result-item" href="'+p.url+'"><span class="nav-search-result-icon">'+p.icon+'</span><div><div class="nav-search-result-title">'+p.title+'</div><div class="nav-search-result-sub">'+p.sub+'</div></div></a>'; }).join('');
+      box.classList.add('open');
+    });
+    document.addEventListener('click', function(e){ if(!input.contains(e.target)&&!box.contains(e.target)) box.classList.remove('open'); });
+  }
+  initSearch('navSearchInput','navSearchResults');
+  initSearch('mobileSearchInput','mobileSearchResults');
+  </script>
+
+  <script>
+  (function() {
+    function initCollapse() {
+      var panel = document.getElementById('mobilePanel');
+      if (!panel) return;
+      var STORE_KEY = 'pac-menu-state';
+      var state = {};
+      try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) {}
+      panel.querySelectorAll('.mobile-menu-section').forEach(function(section) {
+        var label = section.textContent.trim();
+        var key = label.toLowerCase().replace(/\s+/g, '-');
+        var chev = document.createElement('span');
+        chev.className = 'ms-chevron';
+        section.appendChild(chev);
+        var items = [];
+        var el = section.nextElementSibling;
+        while (el && !el.classList.contains('mobile-menu-section')) { items.push(el); el = el.nextElementSibling; }
+        if (!items.length) return;
+        var wrap = document.createElement('div');
+        wrap.className = 'mobile-section-items';
+        section.parentNode.insertBefore(wrap, items[0]);
+        items.forEach(function(item) { wrap.appendChild(item); });
+        var hasActive = !!wrap.querySelector('.active');
+        var savedState = state[key];
+        var startCollapsed = savedState !== undefined ? savedState : !hasActive;
+        if (startCollapsed) { wrap.classList.add('ms-collapsed'); chev.textContent = '›'; }
+        else { chev.textContent = '⌄'; }
+        section.addEventListener('click', function() {
+          var nowCollapsed = wrap.classList.toggle('ms-collapsed');
+          chev.textContent = nowCollapsed ? '›' : '⌄';
+          state[key] = nowCollapsed;
+          try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+        });
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCollapse);
+    else initCollapse();
+  })();
+  </script>
+</body>
+</html>
