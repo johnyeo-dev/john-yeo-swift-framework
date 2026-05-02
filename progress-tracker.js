@@ -350,6 +350,7 @@
       + '<div class="pac-ps-actions">'
       + '<button class="pac-ps-btn" onclick="window.__pacOpenModal()">📊 Progress</button>'
       + '<button class="pac-ps-btn pac-ps-btn-task" onclick="window.__pacOpenTaskModal()">📋 Tasks</button>'
+      + (u !== 'johnyeo' ? '<a class="pac-ps-btn" href="leaderboard.html" style="text-decoration:none;">🏆 Board</a>' : '')
       + '</div>'
       + '</div>';
 
