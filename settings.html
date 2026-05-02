@@ -374,7 +374,7 @@
     <!-- SETTINGS TABS -->
     <div class="settings-tabs">
       <button class="stab active" onclick="switchStab(0)" id="stab-0">👤 My Account</button>
-      <button class="stab" onclick="switchStab(1)" id="stab-1" style="display:none;">🛡️ Manage Users <span id="pendingBadge" style="background:#EF4444;color:white;font-size:10px;padding:2px 6px;border-radius:99px;margin-left:4px;display:none;"></span></button>
+      <button class="stab" onclick="switchStab(1)" id="stab-1" style="display:none;">🛡️ Manage Users</button>
       <button class="stab" onclick="switchStab(2)" id="stab-2" style="display:none;">📊 Analytics</button>
     </div>
 
@@ -502,21 +502,6 @@
 
     <!-- TAB 1: MANAGE USERS (ADMIN ONLY) -->
     <div class="stab-panel" id="panel-1">
-
-      <!-- PENDING REQUESTS -->
-      <div class="scard">
-        <div class="scard-header">
-          <div class="scard-icon gold">⏳</div>
-          <div>
-            <div class="scard-title">Pending Requests</div>
-            <div class="scard-sub">Review sign-up requests from new members</div>
-          </div>
-        </div>
-        <div class="scard-body">
-          <div class="alert alert-success" id="approveAlert" style="margin-bottom:12px;"></div>
-          <div id="pendingList"></div>
-        </div>
-      </div>
 
       <!-- ADD USER -->
       <div class="scard">
@@ -842,7 +827,6 @@
     if (isAdmin) {
       document.getElementById('stab-1').style.display = 'flex';
       document.getElementById('stab-2').style.display = 'flex';
-      refreshPendingBadge();
     }
 
     // Only show Change Password section for admin (regular users' changes don't sync cross-device)
@@ -969,48 +953,7 @@
 
   // ── ADMIN: RENDER PANEL ───────────────────────────────────────────────────
   function renderAdminPanel() {
-    renderPendingList();
     renderUserTable();
-  }
-
-  function refreshPendingBadge() {
-    var pending = getPending();
-    var count = Object.keys(pending).length;
-    var badge = document.getElementById('pendingBadge');
-    if (count > 0) {
-      badge.textContent = count;
-      badge.style.display = 'inline';
-    } else {
-      badge.style.display = 'none';
-    }
-  }
-
-  function renderPendingList() {
-    var pending = getPending();
-    var keys = Object.keys(pending);
-    var el = document.getElementById('pendingList');
-    if (!keys.length) {
-      el.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-text">No pending requests. You\'re all caught up!</div></div>';
-      return;
-    }
-    var html = '<div class="pending-list">';
-    keys.forEach(function(u) {
-      var req = pending[u];
-      var date = req.requestedAt ? new Date(req.requestedAt).toLocaleDateString('en-SG', { day:'numeric', month:'short', year:'numeric' }) : '–';
-      html += '<div class="pending-item" id="pending-row-' + u + '">'
-            + '<div class="pending-avatar" style="background:' + getAvatarColor(u) + ';">' + u.charAt(0).toUpperCase() + '</div>'
-            + '<div class="pending-info">'
-            + '<div class="pending-name">' + escHtml(u) + '</div>'
-            + '<div class="pending-date">Requested on ' + date + '</div>'
-            + '</div>'
-            + '<div class="pending-actions">'
-            + '<button class="btn btn-primary btn-sm" onclick="approveUser(\'' + u + '\')">✓ Approve</button>'
-            + '<button class="btn btn-danger btn-sm" onclick="rejectUser(\'' + u + '\')">✗ Reject</button>'
-            + '</div>'
-            + '</div>';
-    });
-    html += '</div>';
-    el.innerHTML = html;
   }
 
   function renderUserTable() {
