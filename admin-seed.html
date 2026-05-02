@@ -3,105 +3,216 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Seed | PAC SWIFT</title>
+  <title>User Setup | PAC SWIFT Admin</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: #0A0F1C; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
-    .card { background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 32px; max-width: 480px; width: 100%; }
-    h1 { font-size: 22px; margin-bottom: 6px; }
-    p { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
-    .user-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
-    .user-info strong { display: block; font-size: 15px; }
-    .user-info small { font-size: 12px; color: rgba(255,255,255,0.4); }
-    .status { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-    .status.ok { background: rgba(16,185,129,0.15); color: #34d399; }
-    .status.new { background: rgba(10,191,188,0.15); color: #0ABFBC; }
-    .btn { width: 100%; background: #0ABFBC; color: #002D6A; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 16px; }
-    .btn:hover { background: #08a8a5; }
-    .msg { margin-top: 16px; padding: 12px 16px; border-radius: 8px; font-size: 14px; display: none; }
+    body { font-family: system-ui, sans-serif; background: #0A0F1C; color: #fff; min-height: 100vh; padding: 24px; }
+    .wrap { max-width: 560px; margin: 0 auto; }
+    h1 { font-size: 22px; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
+    .section-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
+    .user-card { background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+    .user-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .user-card-av { width: 36px; height: 36px; border-radius: 50%; background: #0ABFBC; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #002D6A; flex-shrink: 0; }
+    .user-card-info { flex: 1; }
+    .user-card-info strong { display: block; font-size: 15px; }
+    .user-card-info small { font-size: 12px; color: rgba(255,255,255,0.4); }
+    .status-pill { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; }
+    .status-exists { background: rgba(16,185,129,0.15); color: #34d399; }
+    .status-new { background: rgba(10,191,188,0.15); color: #0ABFBC; }
+    .pw-row { display: flex; gap: 8px; }
+    .pw-input { flex: 1; background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 9px 12px; font-size: 14px; color: #fff; font-family: inherit; outline: none; }
+    .pw-input:focus { border-color: #0ABFBC; background: rgba(10,191,188,0.06); }
+    .pw-toggle { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 9px 12px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 14px; flex-shrink: 0; transition: all 0.15s; }
+    .pw-toggle:hover { background: rgba(255,255,255,0.14); color: white; }
+    .btn-add-user { background: #0ABFBC; color: #002D6A; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.15s; }
+    .btn-add-user:hover { background: #08a8a5; }
+    .btn-add-user.done { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); cursor: default; }
+    .divider { height: 1px; background: rgba(255,255,255,0.08); margin: 24px 0; }
+    .add-new-card { background: rgba(255,255,255,0.03); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .add-new-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: rgba(255,255,255,0.7); }
+    .field { margin-bottom: 10px; }
+    .field label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+    .field input { width: 100%; background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 9px 12px; font-size: 14px; color: #fff; font-family: inherit; outline: none; }
+    .field input:focus { border-color: #0ABFBC; background: rgba(10,191,188,0.06); }
+    .btn-full { width: 100%; background: #0ABFBC; color: #002D6A; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 6px; transition: all 0.15s; }
+    .btn-full:hover { background: #08a8a5; }
+    .msg { padding: 11px 15px; border-radius: 8px; font-size: 13px; margin-top: 12px; display: none; }
     .msg.success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #34d399; }
     .msg.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
-    .back { display: block; text-align: center; margin-top: 20px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; }
-    .back:hover { color: rgba(255,255,255,0.7); }
+    .back { display: block; text-align: center; margin-top: 24px; color: rgba(255,255,255,0.35); text-decoration: none; font-size: 13px; }
+    .back:hover { color: rgba(255,255,255,0.6); }
+    .existing-section { margin-top: 28px; }
+    .existing-row { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: rgba(255,255,255,0.04); border-radius: 8px; margin-bottom: 6px; font-size: 13px; }
+    .existing-row .eu-name { flex: 1; font-weight: 600; }
+    .existing-row .eu-role { font-size: 11px; color: rgba(255,255,255,0.35); }
+    .locked { filter: blur(4px); pointer-events: none; opacity: 0.4; }
+    .locked-msg { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; border-radius: 10px; padding: 14px 18px; font-size: 14px; margin-bottom: 20px; }
   </style>
 </head>
 <body>
-<div class="card">
-  <h1>🔧 Admin User Seed</h1>
-  <p>Adds the users below to this domain's storage. Only works when visited by admin (johnyeo).</p>
+<div class="wrap">
+  <h1>🔧 User Setup</h1>
+  <p class="subtitle">Manage users on this domain — admin only</p>
 
-  <div id="userList"></div>
+  <div id="adminGate">
+    <div class="locked-msg" id="notAdminMsg" style="display:none;">
+      ⚠️ You must be signed in as <strong>johnyeo</strong> to use this page. <a href="login.html" style="color:#fca5a5;">Sign in →</a>
+    </div>
 
-  <button class="btn" onclick="seedUsers()">Add / Update Users</button>
-  <div class="msg" id="msg"></div>
-  <a href="settings.html" class="back">← Back to Settings</a>
+    <div id="mainContent">
+      <div class="section-title">Quick-add users</div>
+
+      <!-- feliciayap -->
+      <div class="user-card" id="card-feliciayap">
+        <div class="user-card-top">
+          <div class="user-card-av">F</div>
+          <div class="user-card-info">
+            <strong>feliciayap</strong>
+            <small>Felicia Yap · user</small>
+          </div>
+          <span class="status-pill" id="status-feliciayap">checking…</span>
+        </div>
+        <div class="pw-row">
+          <input class="pw-input" type="password" id="pw-feliciayap" placeholder="Set password" value="1234" />
+          <button class="pw-toggle" onclick="togglePw('feliciayap')" title="Show/hide">👁</button>
+        </div>
+        <button class="btn-add-user" onclick="addUser('feliciayap','Felicia Yap')">Add / Update feliciayap</button>
+      </div>
+
+      <!-- shuling -->
+      <div class="user-card" id="card-shuling">
+        <div class="user-card-top">
+          <div class="user-card-av" style="background:#8B5CF6;">S</div>
+          <div class="user-card-info">
+            <strong>shuling</strong>
+            <small>Shu Ling · user</small>
+          </div>
+          <span class="status-pill" id="status-shuling">checking…</span>
+        </div>
+        <div class="pw-row">
+          <input class="pw-input" type="password" id="pw-shuling" placeholder="Set password" value="" />
+          <button class="pw-toggle" onclick="togglePw('shuling')" title="Show/hide">👁</button>
+        </div>
+        <button class="btn-add-user" onclick="addUser('shuling','Shu Ling')">Add / Update shuling</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Add any user -->
+      <div class="add-new-card">
+        <h3>➕ Add any user</h3>
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="newUsername" placeholder="e.g. amytan" />
+        </div>
+        <div class="field">
+          <label>Display Name</label>
+          <input type="text" id="newName" placeholder="e.g. Amy Tan" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-row">
+            <input type="password" id="newPassword" placeholder="Set a password" class="pw-input" style="border:none;" />
+            <button class="pw-toggle" onclick="togglePw('new')" title="Show/hide">👁</button>
+          </div>
+        </div>
+        <button class="btn-full" onclick="addCustomUser()">Add User</button>
+        <div class="msg" id="msgNew"></div>
+      </div>
+
+      <!-- Existing users on this domain -->
+      <div class="existing-section">
+        <div class="section-title">Users on this domain</div>
+        <div id="existingList"></div>
+      </div>
+
+      <a href="settings.html" class="back">← Back to Settings</a>
+    </div>
+  </div>
 </div>
 
 <script>
-  // Users to seed — add more entries here as needed
-  var SEED_USERS = [
-    { username: 'feliciayap', password: '1234', name: 'Felicia Yap', role: 'user' }
-  ];
-
   function isAdmin() {
-    try {
-      var s = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
-      return s && s.role === 'admin';
-    } catch(e) { return false; }
+    try { var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null'); return s&&s.role==='admin'; } catch(e){return false;}
   }
-
   function getUsers() {
-    try { return JSON.parse(localStorage.getItem('pac-swift-users') || '{}'); } catch(e) { return {}; }
+    try { return JSON.parse(localStorage.getItem('pac-swift-users')||'{}'); } catch(e){return {};}
+  }
+  function saveUsers(u) { localStorage.setItem('pac-swift-users', JSON.stringify(u)); }
+
+  function togglePw(id) {
+    var inp = document.getElementById('pw-' + id) || document.getElementById(id==='new'?'newPassword':'pw-'+id);
+    if (!inp) return;
+    inp.type = inp.type === 'password' ? 'text' : 'password';
   }
 
-  function renderList() {
+  function updateStatus(username) {
+    var el = document.getElementById('status-' + username); if (!el) return;
+    var exists = !!getUsers()[username];
+    el.textContent = exists ? '✓ exists' : '+ new';
+    el.className = 'status-pill ' + (exists ? 'status-exists' : 'status-new');
+  }
+
+  function addUser(username, name) {
+    var pwInp = document.getElementById('pw-' + username);
+    var pw = (pwInp ? pwInp.value.trim() : '');
+    if (!pw) { alert('Please enter a password for ' + username); return; }
     var users = getUsers();
-    var html = '';
-    SEED_USERS.forEach(function(u) {
-      var exists = !!users[u.username];
-      html += '<div class="user-row">'
-        + '<div class="user-info"><strong>' + u.username + '</strong><small>pw: ' + u.password + ' · ' + u.role + '</small></div>'
-        + '<span class="status ' + (exists ? 'ok' : 'new') + '">' + (exists ? '✓ exists' : '+ new') + '</span>'
-        + '</div>';
-    });
-    document.getElementById('userList').innerHTML = html;
+    users[username] = { password: pw, role: 'user', name: name, created: (users[username]&&users[username].created)||new Date().toISOString() };
+    saveUsers(users);
+    updateStatus(username);
+    renderExisting();
+    var btn = document.querySelector('#card-' + username + ' .btn-add-user');
+    if (btn) { btn.textContent = '✓ Saved!'; btn.className = 'btn-add-user done'; setTimeout(function(){ btn.textContent='Add / Update ' + username; btn.className='btn-add-user'; }, 2000); }
   }
 
-  function seedUsers() {
-    if (!isAdmin()) {
-      showMsg('error', 'You must be logged in as admin (johnyeo) to use this tool.');
-      return;
-    }
+  function addCustomUser() {
+    var u = document.getElementById('newUsername').value.trim();
+    var n = document.getElementById('newName').value.trim();
+    var p = document.getElementById('newPassword').value.trim();
+    var msg = document.getElementById('msgNew');
+    if (!u || !p) { showMsg(msg,'error','Username and password are required.'); return; }
     var users = getUsers();
-    var added = 0, updated = 0;
-    SEED_USERS.forEach(function(u) {
-      var isNew = !users[u.username];
-      users[u.username] = { password: u.password, role: u.role, name: u.name, created: users[u.username] && users[u.username].created || new Date().toISOString() };
-      if (isNew) added++; else updated++;
-    });
-    localStorage.setItem('pac-swift-users', JSON.stringify(users));
-    renderList();
-    showMsg('success', 'Done! ' + added + ' added, ' + updated + ' updated. Users can now log in on this domain.');
+    var isNew = !users[u];
+    users[u] = { password: p, role: 'user', name: n||u, created: (users[u]&&users[u].created)||new Date().toISOString() };
+    saveUsers(users);
+    renderExisting();
+    showMsg(msg,'success', (isNew?'Added':'Updated') + ' user "' + u + '" successfully.');
+    document.getElementById('newUsername').value='';
+    document.getElementById('newName').value='';
+    document.getElementById('newPassword').value='';
   }
 
-  function showMsg(type, text) {
-    var el = document.getElementById('msg');
-    el.className = 'msg ' + type;
-    el.textContent = text;
-    el.style.display = 'block';
+  function showMsg(el, type, text) {
+    el.className='msg '+type; el.textContent=text; el.style.display='block';
+    setTimeout(function(){ el.style.display='none'; }, 4000);
   }
 
-  // Check admin on load
+  function renderExisting() {
+    var users = getUsers();
+    var keys = Object.keys(users);
+    var el = document.getElementById('existingList');
+    if (!keys.length) { el.innerHTML='<div style="font-size:13px;color:rgba(255,255,255,0.35);padding:8px 0;">No users yet on this domain.</div>'; return; }
+    el.innerHTML = keys.map(function(u){
+      return '<div class="existing-row">'
+        +'<div class="user-card-av" style="width:28px;height:28px;border-radius:50%;background:#0ABFBC;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#002D6A;flex-shrink:0;">'+u.charAt(0).toUpperCase()+'</div>'
+        +'<span class="eu-name">'+u+'</span>'
+        +'<span class="eu-role">'+(users[u].role||'user')+'</span>'
+        +'</div>';
+    }).join('');
+  }
+
+  // Init
   if (!isAdmin()) {
-    document.querySelector('.btn').disabled = true;
-    document.querySelector('.btn').textContent = 'Sign in as admin first';
-    document.querySelector('.btn').style.opacity = '0.4';
-    document.querySelector('.btn').style.cursor = 'not-allowed';
-    showMsg('error', 'Not signed in as admin. Go to login.html first.');
-    document.getElementById('msg').style.display = 'block';
+    document.getElementById('notAdminMsg').style.display = 'block';
+    document.getElementById('mainContent').style.opacity = '0.3';
+    document.getElementById('mainContent').style.pointerEvents = 'none';
+  } else {
+    updateStatus('feliciayap');
+    updateStatus('shuling');
+    renderExisting();
   }
-
-  renderList();
 </script>
 </body>
 </html>

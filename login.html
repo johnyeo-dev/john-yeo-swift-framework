@@ -192,7 +192,10 @@
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" />
+        <div style="position:relative;">
+          <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" style="padding-right:46px;" />
+          <button type="button" id="pwToggleBtn" onclick="toggleShowPw()" style="position:absolute;right:0;top:0;bottom:0;width:44px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.35);font-size:16px;display:flex;align-items:center;justify-content:center;transition:color 0.15s;" title="Show password">👁</button>
+        </div>
       </div>
 
       <button class="btn-login" onclick="doLogin()">Sign In</button>
@@ -274,6 +277,18 @@
         if (!a.firstLogin) a.firstLogin = a.lastLogin;
         localStorage.setItem(key, JSON.stringify(a));
       } catch(e) {}
+    }
+
+    function toggleShowPw() {
+      var inp = document.getElementById('loginPassword');
+      var btn = document.getElementById('pwToggleBtn');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        btn.style.color = 'rgba(255,255,255,0.7)';
+      } else {
+        inp.type = 'password';
+        btn.style.color = 'rgba(255,255,255,0.35)';
+      }
     }
 
     // Allow Enter key to submit
