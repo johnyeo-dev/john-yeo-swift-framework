@@ -197,7 +197,10 @@
 
       <button class="btn-login" onclick="doLogin()">Sign In</button>
 
-      <p class="login-footer">No account? <a href="signup.html" style="color:var(--gold);text-decoration:none;font-weight:600;">Request access →</a></p>
+      <p class="login-footer" style="margin-top:14px;">
+        <a href="forgot-password.html" style="color:rgba(255,255,255,0.45);text-decoration:none;font-size:13px;">Forgot password?</a>
+      </p>
+      <p class="login-footer" style="margin-top:10px;">No account? <a href="signup.html" style="color:var(--gold);text-decoration:none;font-weight:600;">Request access →</a></p>
     </div>
   </div>
 
@@ -226,11 +229,14 @@
         return;
       }
 
-      // Check master account
-      if (username === 'johnyeo' && password === '2706') {
-        localStorage.setItem('pac-swift-session', JSON.stringify({ u: 'johnyeo', role: 'admin' }));
-        window.location.href = 'index.html';
-        return;
+      // Check master account (password can be overridden via settings)
+      if (username === 'johnyeo') {
+        var adminPw = localStorage.getItem('pac-swift-admin-pw') || '2706';
+        if (password === adminPw) {
+          localStorage.setItem('pac-swift-session', JSON.stringify({ u: 'johnyeo', role: 'admin' }));
+          window.location.href = 'index.html';
+          return;
+        }
       }
 
       // Check stored users
