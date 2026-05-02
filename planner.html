@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calendar Plan | SWIFT Framework</title>
@@ -991,6 +992,7 @@
       inp.value = '';
       renderPanelTasks(currentEditDate);
       renderCalendar(planData.startDate); // refresh calendar cells
+      if (window.__pacRefreshStrip) window.__pacRefreshStrip();
     }
 
     function epToggleTask(taskId, dateStr) {
@@ -999,6 +1001,7 @@
       savePlannerTasks(u, tasks);
       renderPanelTasks(dateStr);
       renderCalendar(planData.startDate);
+      if (window.__pacRefreshStrip) window.__pacRefreshStrip();
     }
 
     function epDeleteTask(taskId, dateStr) {
@@ -1007,6 +1010,7 @@
       savePlannerTasks(u, tasks);
       renderPanelTasks(dateStr);
       renderCalendar(planData.startDate);
+      if (window.__pacRefreshStrip) window.__pacRefreshStrip();
     }
 
     function openPanel(dateStr, dayNum) {

@@ -698,6 +698,17 @@
     localStorage.setItem('pac-sug-dismiss-'+currentPage(),'1');
   };
 
+  // ── GLOBAL REFRESH (called by planner or other pages after task changes) ──
+  window.__pacRefreshStrip = function() {
+    var session = getSession();
+    if (session && session.u) {
+      refreshUI(session.u);
+      // also refresh task modal if open
+      var tm = document.getElementById('pacTaskModal');
+      if (tm && tm.classList.contains('open')) refreshTaskModal(session.u);
+    }
+  };
+
   // ── INIT ─────────────────────────────────────────────────────────────────
   function init() {
     var session=getSession();
