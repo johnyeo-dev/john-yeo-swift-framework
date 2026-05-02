@@ -66,26 +66,20 @@
 
   // ── CSS ──────────────────────────────────────────────────────────────────
   var CSS = `
-    .pac-ps { background:linear-gradient(90deg,#0d1520,#111827); border-bottom:2px solid rgba(10,191,188,0.25); padding:0 20px; display:flex; align-items:center; gap:12px; position:sticky; top:44px; z-index:89; height:46px; overflow:hidden; flex-shrink:0; }
-    .pac-ps-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.4); white-space:nowrap; flex-shrink:0; }
-    .pac-ps-bar-wrap { flex:0 0 120px; height:6px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; flex-shrink:0; }
-    .pac-ps-bar { height:100%; border-radius:99px; background:linear-gradient(90deg,#0ABFBC,#4A8FE7); transition:width 0.6s ease; }
-    .pac-ps-pct { font-size:12px; font-weight:700; color:#0ABFBC; white-space:nowrap; flex-shrink:0; }
-    .pac-ps-steps { display:flex; gap:4px; flex:1; overflow:hidden; }
-    .pac-ps-step { width:26px; height:26px; border-radius:6px; border:1.5px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:rgba(255,255,255,0.4); cursor:pointer; transition:all 0.15s; flex-shrink:0; position:relative; font-family:'DM Sans',sans-serif; }
-    .pac-ps-step.done { color:white; border-color:transparent; }
-    .pac-ps-step.done::after { content:'✓'; position:absolute; top:-4px; right:-4px; width:12px; height:12px; border-radius:50%; background:#10B981; font-size:8px; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; }
-    .pac-ps-step.current { box-shadow:0 0 0 2px rgba(10,191,188,0.6); }
-    .pac-ps-step:hover { transform:scale(1.15); z-index:2; }
-    .pac-ps-social { display:flex; align-items:center; gap:4px; margin-left:4px; flex-shrink:0; }
+    .pac-ps { background:linear-gradient(90deg,#0d1520,#111827); border-bottom:2px solid rgba(10,191,188,0.3); padding:0 24px; display:flex; align-items:center; justify-content:center; gap:14px; position:sticky; top:44px; z-index:89; height:52px; overflow:hidden; flex-shrink:0; }
+    .pac-ps-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.45); white-space:nowrap; flex-shrink:0; }
+    .pac-ps-bar-wrap { flex:0 0 200px; height:10px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; flex-shrink:0; box-shadow:0 0 10px rgba(10,191,188,0.15); }
+    .pac-ps-bar { height:100%; border-radius:99px; background:linear-gradient(90deg,#0ABFBC,#4A8FE7); transition:width 0.6s ease; box-shadow:0 0 8px rgba(10,191,188,0.5); }
+    .pac-ps-pct { font-size:14px; font-weight:800; color:#0ABFBC; white-space:nowrap; flex-shrink:0; letter-spacing:0.3px; }
+    .pac-ps-social { display:flex; align-items:center; gap:4px; margin-left:2px; flex-shrink:0; }
     .pac-ps-social-label { font-size:10px; color:rgba(255,255,255,0.3); white-space:nowrap; }
     .pac-ps-avatar { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white; border:1.5px solid #111827; margin-left:-6px; cursor:pointer; position:relative; flex-shrink:0; }
     .pac-ps-avatar:first-child { margin-left:0; }
     .pac-ps-avatar-tip { display:none; position:absolute; bottom:calc(100%+6px); left:50%; transform:translateX(-50%); background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:6px 10px; white-space:nowrap; font-size:11px; color:white; z-index:200; }
     .pac-ps-avatar:hover .pac-ps-avatar-tip { display:block; }
-    .pac-ps-btn { background:rgba(10,191,188,0.15); border:1px solid rgba(10,191,188,0.35); color:#0ABFBC; border-radius:7px; padding:5px 12px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s; }
-    .pac-ps-btn:hover { background:rgba(10,191,188,0.25); }
-    @media(max-width:768px) { .pac-ps { top:0; gap:8px; padding:0 12px; } .pac-ps-steps { display:none; } .pac-ps-social { display:none; } .pac-ps-bar-wrap { flex:1; } }
+    .pac-ps-btn { background:rgba(10,191,188,0.18); border:1.5px solid rgba(10,191,188,0.45); color:#0ABFBC; border-radius:8px; padding:6px 14px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s; letter-spacing:0.2px; }
+    .pac-ps-btn:hover { background:rgba(10,191,188,0.3); box-shadow:0 0 10px rgba(10,191,188,0.25); }
+    @media(max-width:768px) { .pac-ps { top:0; gap:10px; padding:0 14px; justify-content:flex-start; } .pac-ps-social { display:none; } .pac-ps-bar-wrap { flex:1; min-width:0; } }
 
     /* PROGRESS MODAL */
     .pac-pm-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:900; display:none; align-items:flex-start; justify-content:center; padding:20px; overflow-y:auto; }
@@ -150,19 +144,8 @@
   function renderStrip(session) {
     var u = session ? session.u : null;
     if (!u) return;
-    var prog = getProgress(u);
     var done = getDone(u);
     var pct  = getPct(u);
-    var page = currentPage();
-
-    // Build step pills
-    var stepsHtml = STEPS.map(function(s) {
-      var isDone    = !!prog[s.id];
-      var isCurrent = (s.page === page);
-      var cls = 'pac-ps-step' + (isDone ? ' done' : '') + (isCurrent ? ' current' : '');
-      return '<div class="' + cls + '" style="background:' + (isDone ? s.color : 'transparent') + '" '
-           + 'onclick="window.__pacToggleStep(\'' + s.id + '\')" title="' + s.desc + '">' + s.short + '</div>';
-    }).join('');
 
     // Social proof avatars
     var users = getUsers();
@@ -192,9 +175,8 @@
       '<span class="pac-ps-label">Progress</span>'
       + '<div class="pac-ps-bar-wrap"><div class="pac-ps-bar" id="pacPsBar" style="width:' + pct + '%"></div></div>'
       + '<span class="pac-ps-pct" id="pacPsPct">' + done + '/' + STEPS.length + '</span>'
-      + '<div class="pac-ps-steps" id="pacPsSteps">' + stepsHtml + '</div>'
-      + socialHtml
-      + '<button class="pac-ps-btn" onclick="window.__pacOpenModal()">Details →</button>';
+      + '<button class="pac-ps-btn" onclick="window.__pacOpenModal()">My Progress</button>'
+      + socialHtml;
 
     // Insert after mobile-menu-bar or after swift-nav — before main content
     var insertAfter = document.querySelector('.mobile-menu-bar') || document.querySelector('.swift-nav');
@@ -328,24 +310,12 @@
     var prog = getProgress(u);
     var done = getDone(u);
     var pct  = getPct(u);
-    var page = currentPage();
 
     // Update strip
     var bar = document.getElementById('pacPsBar');
     if (bar) bar.style.width = pct + '%';
     var pctEl = document.getElementById('pacPsPct');
     if (pctEl) pctEl.textContent = done + '/' + STEPS.length;
-    var stepsEl = document.getElementById('pacPsSteps');
-    if (stepsEl) {
-      STEPS.forEach(function(s, i) {
-        var el = stepsEl.children[i];
-        if (!el) return;
-        var isDone = !!prog[s.id];
-        var isCurrent = (s.page === page);
-        el.className = 'pac-ps-step' + (isDone?' done':'') + (isCurrent?' current':'');
-        el.style.background = isDone ? s.color : 'transparent';
-      });
-    }
 
     // Update modal if open
     var pmBar  = document.getElementById('pacPmBar');
