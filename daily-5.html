@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily 5 | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+      --s: #0ABFBC; --w: #4A8FE7; --i: #8B5CF6; --f: #F59E0B; --t: #10B981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: var(--navy); padding: 24px 40px; display: flex; align-items: flex-end; gap: 20px; }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 32px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 14px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    /* SWIFT NAV */
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-size: 12px; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    /* MOBILE NAV */
+    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
+
+    /* MAIN */
+    .main { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* PAGE HERO */
+    .page-hero { margin-bottom: 44px; }
+    .page-hero-tag { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(26px, 4vw, 40px); color: var(--navy); line-height: 1.15; margin-bottom: 12px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero-sub { font-size: 15px; color: var(--text-muted); line-height: 1.75; max-width: 620px; margin-bottom: 20px; }
+
+    /* MODULE INTRO */
+    .module-intro { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 28px 32px; margin-bottom: 32px; }
+    .module-intro-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+    .module-intro-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 14px; }
+    .module-intro p { font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+    .module-intro p + p { margin-top: 10px; }
+
+    /* THE ONE FILTER */
+    .filter-box { background: linear-gradient(135deg, rgba(10,191,188,0.12), rgba(74,143,231,0.1)); border: 2px solid rgba(10,191,188,0.35); border-radius: 14px; padding: 24px 28px; margin-bottom: 44px; display: flex; gap: 16px; align-items: flex-start; }
+    .filter-icon { font-size: 28px; flex-shrink: 0; line-height: 1; }
+    .filter-body { }
+    .filter-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .filter-text { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); line-height: 1.5; margin-bottom: 8px; }
+    .filter-text em { font-style: italic; color: var(--gold); }
+    .filter-sub { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+    /* SECTION HEADING */
+    .section-heading { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+    .section-heading-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+    .section-heading-rule { flex: 1; height: 1px; background: var(--border); }
+
+    /* ACTION CARDS */
+    .action-cards { display: flex; flex-direction: column; gap: 24px; margin-bottom: 52px; }
+    .action-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 18px; overflow: hidden; transition: box-shadow 0.2s; }
+    .action-card:hover { box-shadow: 0 8px 28px rgba(0,45,106,0.09); }
+
+    .action-card-header { padding: 22px 28px 18px; display: flex; align-items: flex-start; gap: 18px; }
+    .action-num-badge { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 700; color: white; line-height: 1; }
+    .action-card-title-wrap { }
+    .action-card-num-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+    .action-card-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); line-height: 1.2; margin-bottom: 5px; }
+    .action-card-sub { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    .action-card-body { padding: 0 28px 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .action-section { border-radius: 10px; padding: 16px 18px; }
+    .action-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .action-section-text { font-size: 13px; line-height: 1.7; }
+
+    /* THE ACTION — full width */
+    .action-section.a-action { grid-column: 1 / -1; background: var(--cream); border: 1px solid var(--border); }
+    .action-section.a-action .action-section-label { color: var(--navy); }
+    .action-section.a-action .action-section-text { color: var(--text); }
+
+    /* RESISTANCE — muted warning */
+    .action-section.a-resistance { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); }
+    .action-section.a-resistance .action-section-label { color: #B45309; }
+    .action-section.a-resistance .action-section-text { color: #78350F; }
+    .resistance-quote { font-style: italic; font-weight: 600; color: #92400E; }
+    .resistance-why { margin-top: 6px; font-size: 12px; color: #A16207; }
+
+    /* MINDSET LESSON — teal */
+    .action-section.a-mindset { background: rgba(10,191,188,0.07); border: 1px solid rgba(10,191,188,0.22); }
+    .action-section.a-mindset .action-section-label { color: #0E7490; }
+    .action-section.a-mindset .action-section-text { color: #0A4B5A; }
+
+    /* ANCHOR — gold italic */
+    .action-section.a-anchor { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.18); border-left: 3px solid #F59E0B; }
+    .action-section.a-anchor .action-section-label { color: #92400E; }
+    .action-anchor-text { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 15px; color: #78350F; line-height: 1.55; }
+    .action-anchor-text::before { content: '"'; }
+    .action-anchor-text::after { content: '"'; }
+
+    /* Card accent colours */
+    .card-01 { border-top: 4px solid #0ABFBC; }
+    .card-01 .action-num-badge { background: #0ABFBC; }
+    .card-02 { border-top: 4px solid #4A8FE7; }
+    .card-02 .action-num-badge { background: #4A8FE7; }
+    .card-03 { border-top: 4px solid #8B5CF6; }
+    .card-03 .action-num-badge { background: #8B5CF6; }
+    .card-04 { border-top: 4px solid #F59E0B; }
+    .card-04 .action-num-badge { background: #F59E0B; }
+    .card-05 { border-top: 4px solid #10B981; }
+    .card-05 .action-num-badge { background: #10B981; }
+
+    /* MINDSET MINUTE */
+    .mindset-minute { background: var(--navy); border-radius: 18px; padding: 34px 36px; margin-bottom: 32px; }
+    .mindset-minute-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(10,191,188,0.8); margin-bottom: 12px; }
+    .mindset-minute-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); margin-bottom: 16px; }
+    .mindset-minute p { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.78; }
+    .mindset-minute p + p { margin-top: 10px; }
+    .mindset-minute-question { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 17px; color: var(--gold); margin: 14px 0 10px; line-height: 1.5; }
+
+    /* WEEKLY STORY CHECK */
+    .story-check { background: var(--white); border: 1.5px solid var(--border); border-radius: 18px; padding: 32px 36px; margin-bottom: 48px; }
+    .story-check-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .story-check-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); margin-bottom: 8px; }
+    .story-check-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 26px; line-height: 1.65; }
+    .story-steps { display: flex; flex-direction: column; gap: 16px; }
+    .story-step { display: flex; gap: 16px; align-items: flex-start; }
+    .story-step-num { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); font-weight: 700; flex-shrink: 0; }
+    .story-step-body { padding-top: 4px; }
+    .story-step-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .story-step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+    .story-step-note { font-size: 12px; color: var(--gold); font-style: italic; margin-top: 4px; }
+
+    /* CLOSING QUOTE */
+    .closing-quote { background: linear-gradient(135deg, rgba(10,191,188,0.08), rgba(74,143,231,0.08)); border: 1.5px solid rgba(10,191,188,0.25); border-radius: 14px; padding: 28px 32px; margin-bottom: 48px; text-align: center; }
+    .closing-quote-text { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(16px, 2.5vw, 21px); color: var(--navy); line-height: 1.6; margin-bottom: 12px; }
+    .closing-quote-attr { font-size: 13px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px; }
+    .closing-quote-attr strong { color: var(--gold); }
+
+    /* FOOTER */
+    .home-footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
+
+    /* USER PILL */
+    .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
+    .user-logout-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(255,255,255,0.75); font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; white-space:nowrap; }
+    .user-logout-btn:hover { background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.4); color:#fca5a5; }
+
+    /* MOBILE NAV */
+    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
+    .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
+    .mobile-menu-panel { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #111827; z-index: 501; overflow-y: auto; padding: 0 0 40px; transform: translateX(-100%); transition: transform 0.25s ease; pointer-events: none; }
+    .mobile-menu-panel.open { transform: translateX(0); pointer-events: auto; }
+    .mobile-menu-overlay.open { display: block; }
+    .mobile-menu-header { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 22px; cursor: pointer; }
+    .mobile-menu-section { padding: 16px 16px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; }
+    .mobile-menu-item:hover, .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
+    @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+
+    /* COLLAPSIBLE MOBILE SECTIONS */
+    .mobile-menu-section { cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .mobile-menu-section:hover { color: rgba(255,255,255,0.6); }
+    .ms-chevron { font-size: 14px; opacity: 0.45; flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
+    .mobile-section-items { overflow: hidden; max-height: 600px; transition: max-height 0.25s ease; }
+    .mobile-section-items.ms-collapsed { max-height: 0; }
+
+    /* NAV SEARCH */
+    .nav-search { position: relative; display: flex; align-items: center; padding: 0 8px; }
+    .nav-search-input { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 12px 6px 32px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: white; outline: none; width: 140px; transition: all 0.2s; }
+    .nav-search-input::placeholder { color: rgba(255,255,255,0.35); }
+    .nav-search-input:focus { background: rgba(255,255,255,0.12); border-color: var(--gold); width: 200px; }
+    .nav-search-icon { position: absolute; left: 20px; font-size: 13px; opacity: 0.4; pointer-events: none; }
+    .nav-search-results { position: absolute; top: calc(100% + 6px); left: 8px; right: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 300; overflow: hidden; display: none; min-width: 280px; max-width: 360px; }
+    .nav-search-results.open { display: block; }
+    .nav-search-result { display: flex; align-items: center; gap: 12px; padding: 11px 14px; color: rgba(255,255,255,0.75); font-size: 13px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+    .nav-search-result:last-child { border-bottom: none; }
+    .nav-search-result:hover, .nav-search-result.focused { background: rgba(10,191,188,0.12); color: white; }
+    .nav-search-result-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
+    .nav-search-result-text { flex: 1; min-width: 0; }
+    .nav-search-result-title { font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-search-no-results { padding: 16px 14px; font-size: 13px; color: rgba(255,255,255,0.35); text-align: center; font-family: 'DM Sans', sans-serif; }
+    @media (max-width: 960px) { .nav-search-input { width: 100px; } .nav-search-input:focus { width: 140px; } }
+    @media (max-width: 768px) { .nav-search { display: none; } }
+    /* Mobile search */
+    .mobile-search-wrap { padding: 12px 16px 8px; }
+    .mobile-search-input { width: 100%; background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 14px 10px 36px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: white; outline: none; box-sizing: border-box; }
+    .mobile-search-input::placeholder { color: rgba(255,255,255,0.35); }
+    .mobile-search-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+    .mobile-search-icon-wrap { position: relative; }
+    .mobile-search-icon-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; opacity: 0.5; }
+    .mobile-search-results { margin-top: 6px; }
+    .mobile-search-result { display: flex; align-items: center; gap: 10px; padding: 11px 4px; color: rgba(255,255,255,0.75); font-size: 14px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; }
+    .mobile-search-result:hover { color: white; }
+    .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
+    .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
+    .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+    @media (max-width: 600px) {
+      .header { padding: 18px 16px; }
+      .main { padding: 28px 16px 60px; }
+      .action-card-body { grid-template-columns: 1fr; }
+      .action-section.a-action { grid-column: 1; }
+      .mindset-minute { padding: 24px 20px; }
+      .story-check { padding: 24px 20px; }
+      .filter-box { flex-direction: column; gap: 10px; }
+      .module-intro { padding: 20px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">Product Architect Coaching · By John Yeo</div>
+      <h1>The Daily 5 — <em>Students &amp; Momentum</em></h1>
+    </div>
+    <div class="swift-badge">
+      <div class="s">5</div>
+      <div class="label">Daily</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+        <a class="swift-sub-item active" href="daily-5.html">5️⃣ Daily 5</a>
+        <a class="swift-sub-item" href="planner.html">📅 30-Day Plan</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
+        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
+        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+      </div>
+    </div>
+    <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+    <div class="nav-search" id="navSearch">
+      <span class="nav-search-icon">🔍</span>
+      <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
+      <div class="nav-search-results" id="navSearchResults"></div>
+    </div>
+    <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
+    <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <div class="mobile-search-wrap">
+      <div class="mobile-search-icon-wrap">
+        <input class="mobile-search-input" id="mobileSearchInput" type="text" placeholder="Search pages…" autocomplete="off" />
+      </div>
+      <div class="mobile-search-results" id="mobileSearchResults"></div>
+    </div>
+
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item active" href="daily-5.html"><span class="mobile-menu-letter" style="color:var(--gold);">5️⃣</span>Daily 5</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item" href="prompt-3-teach-to-pitch.html" style="padding-left:36px;font-size:13px;">✦ Teach to Pitch</a>
+    <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Lead Collection Form</a>
+    <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
+    <div class="mobile-menu-section">Community</div>
+    <a class="mobile-menu-item" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
+    <div class="mobile-menu-section">Account</div>
+    <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <main class="main">
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="page-hero-tag">✶ Daily Rhythm · Operational Clarity ✶</div>
+      <h2>The Daily 5</h2>
+      <p class="page-hero-sub">5 Daily Actions × Mindset Work = Students &amp; Momentum. Five specific actions, done daily, that move real people closer to saying yes — each paired with the mindset lesson that removes the internal brake holding you back.</p>
+    </div>
+
+    <!-- MODULE INTRO -->
+    <div class="module-intro">
+      <div class="module-intro-label">What This Module Is For</div>
+      <div class="module-intro-title">This is not motivational content. This is operational clarity.</div>
+      <p>Most tutors know what to do. They just don't do it consistently. Not because they're lazy — but because every step triggers a story. A fear. A reason to wait.</p>
+      <p>The Daily 5 is your customer-closer rhythm. Five specific actions, done daily, that move real people closer to saying yes. Each one is paired with the mindset lesson that removes the internal brake holding you back from doing it.</p>
+      <p>This is not motivational content. This is operational clarity — with the inner game built in.</p>
+    </div>
+
+    <!-- THE ONE FILTER -->
+    <div class="filter-box">
+      <div class="filter-icon">🎯</div>
+      <div class="filter-body">
+        <div class="filter-label">The One Filter</div>
+        <div class="filter-text">After each action ask: <em>Did a real person move closer to me today because of this?</em></div>
+        <div class="filter-sub">If yes — it counts. If no — it was busy work.</div>
+      </div>
+    </div>
+
+    <!-- THE 5 ACTIONS -->
+    <div class="section-heading">
+      <div class="section-heading-title">The 5 Actions</div>
+      <div class="section-heading-rule"></div>
+    </div>
+
+    <div class="action-cards">
+
+      <!-- ACTION 01 -->
+      <div class="action-card card-01">
+        <div class="action-card-header">
+          <div class="action-num-badge">01</div>
+          <div class="action-card-title-wrap">
+            <div class="action-card-num-label">Action 01</div>
+            <div class="action-card-title">Message One Warm Lead</div>
+            <div class="action-card-sub">Someone who already knows you — check in, add value, stay top of mind</div>
+          </div>
+        </div>
+        <div class="action-card-body">
+          <div class="action-section a-action">
+            <div class="action-section-label">The Action</div>
+            <div class="action-section-text">Pick one person from your existing network — a past enquiry, a parent who watched your content, someone who liked your post. Send them one message. Not a pitch. A genuine check-in or a useful tip.</div>
+          </div>
+          <div class="action-section a-resistance">
+            <div class="action-section-label">The Resistance</div>
+            <div class="action-section-text">
+              <div class="resistance-quote">"I don't want to bother them."</div>
+              <div class="resistance-why">This keeps your pipeline empty.</div>
+            </div>
+          </div>
+          <div class="action-section a-mindset">
+            <div class="action-section-label">The Mindset Lesson</div>
+            <div class="action-section-text">Reaching out IS the care. If your programme can help them, silence is the selfish choice. Showing up = service.</div>
+          </div>
+          <div class="action-section a-anchor">
+            <div class="action-section-label">Anchor Reminder</div>
+            <div class="action-anchor-text">They're not bothered. They're waiting to be reminded I exist.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION 02 -->
+      <div class="action-card card-02">
+        <div class="action-card-header">
+          <div class="action-num-badge">02</div>
+          <div class="action-card-title-wrap">
+            <div class="action-card-num-label">Action 02</div>
+            <div class="action-card-title">Post One Proof</div>
+            <div class="action-card-sub">A result, transformation, or testimony — makes silent observers take one step closer to trust</div>
+          </div>
+        </div>
+        <div class="action-card-body">
+          <div class="action-section a-action">
+            <div class="action-section-label">The Action</div>
+            <div class="action-section-text">Share one piece of evidence that your method works. A student's result. A parent's message. A client's breakthrough. Post it anywhere — Facebook, IG, WhatsApp status.</div>
+          </div>
+          <div class="action-section a-resistance">
+            <div class="action-section-label">The Resistance</div>
+            <div class="action-section-text">
+              <div class="resistance-quote">"I feel like I'm bragging."</div>
+              <div class="resistance-why">This hides your credibility.</div>
+            </div>
+          </div>
+          <div class="action-section a-mindset">
+            <div class="action-section-label">The Mindset Lesson</div>
+            <div class="action-section-text">You're not showing off. You're giving evidence to someone who is silently deciding whether to trust you. Proof is a gift, not a boast.</div>
+          </div>
+          <div class="action-section a-anchor">
+            <div class="action-section-label">Anchor Reminder</div>
+            <div class="action-anchor-text">Every proof I post is permission for someone to take the next step.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION 03 -->
+      <div class="action-card card-03">
+        <div class="action-card-header">
+          <div class="action-num-badge">03</div>
+          <div class="action-card-title-wrap">
+            <div class="action-card-num-label">Action 03</div>
+            <div class="action-card-title">Make One Direct Invite</div>
+            <div class="action-card-sub">Trial class, discovery call, webinar — one ask to one real person</div>
+          </div>
+        </div>
+        <div class="action-card-body">
+          <div class="action-section a-action">
+            <div class="action-section-label">The Action</div>
+            <div class="action-section-text">Look at your list. Identify one person who is ready for the next step. Ask them directly. "I think you'd get a lot from my trial class this week — want me to reserve a spot for you?"</div>
+          </div>
+          <div class="action-section a-resistance">
+            <div class="action-section-label">The Resistance</div>
+            <div class="action-section-text">
+              <div class="resistance-quote">"What if they say no?"</div>
+              <div class="resistance-why">This turns tutors into content creators instead of business owners.</div>
+            </div>
+          </div>
+          <div class="action-section a-mindset">
+            <div class="action-section-label">The Mindset Lesson</div>
+            <div class="action-section-text">Every no is data. Every yes is revenue. The invite is where the money lives — and where most tutors go quiet.</div>
+          </div>
+          <div class="action-section a-anchor">
+            <div class="action-section-label">Anchor Reminder</div>
+            <div class="action-anchor-text">The ask is an act of care. I'm not selling. I'm solving.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION 04 -->
+      <div class="action-card card-04">
+        <div class="action-card-header">
+          <div class="action-num-badge">04</div>
+          <div class="action-card-title-wrap">
+            <div class="action-card-num-label">Action 04</div>
+            <div class="action-card-title">Follow Up One No-Reply</div>
+            <div class="action-card-sub">Someone who didn't respond last time — most sales happen after the third touch</div>
+          </div>
+        </div>
+        <div class="action-card-body">
+          <div class="action-section a-action">
+            <div class="action-section-label">The Action</div>
+            <div class="action-section-text">Go back to a conversation that went quiet. "Hey, just circling back — is this still something you're thinking about?" Keep it short. Keep it human.</div>
+          </div>
+          <div class="action-section a-resistance">
+            <div class="action-section-label">The Resistance</div>
+            <div class="action-section-text">
+              <div class="resistance-quote">"If they were interested, they would have replied."</div>
+              <div class="resistance-why">This lets leads go cold.</div>
+            </div>
+          </div>
+          <div class="action-section a-mindset">
+            <div class="action-section-label">The Mindset Lesson</div>
+            <div class="action-section-text">The fortune is in the follow-up. Most tutors give up after one message. Most clients need 3–5 touches before they decide.</div>
+          </div>
+          <div class="action-section a-anchor">
+            <div class="action-section-label">Anchor Reminder</div>
+            <div class="action-anchor-text">Following up is not chasing. It's showing I haven't forgotten them.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION 05 -->
+      <div class="action-card card-05">
+        <div class="action-card-header">
+          <div class="action-num-badge">05</div>
+          <div class="action-card-title-wrap">
+            <div class="action-card-num-label">Action 05</div>
+            <div class="action-card-title">Start One New Conversation</div>
+            <div class="action-card-sub">A parent, a peer, someone in a group — relationships before transactions</div>
+          </div>
+        </div>
+        <div class="action-card-body">
+          <div class="action-section a-action">
+            <div class="action-section-label">The Action</div>
+            <div class="action-section-text">Comment meaningfully in a parent group. Reply to someone's story. DM a tutor peer. Ask a genuine question. Don't pitch. Just connect. Today's conversation is next month's client.</div>
+          </div>
+          <div class="action-section a-resistance">
+            <div class="action-section-label">The Resistance</div>
+            <div class="action-section-text">
+              <div class="resistance-quote">"I don't know what to say."</div>
+              <div class="resistance-why">This keeps tutors invisible.</div>
+            </div>
+          </div>
+          <div class="action-section a-mindset">
+            <div class="action-section-label">The Mindset Lesson</div>
+            <div class="action-section-text">Every client relationship started with a first conversation. Pipeline is just connections you haven't deepened yet. Today you plant. In 30–90 days, you harvest.</div>
+          </div>
+          <div class="action-section a-anchor">
+            <div class="action-section-label">Anchor Reminder</div>
+            <div class="action-anchor-text">I'm not looking for clients. I'm building relationships that turn into clients.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MINDSET MINUTE -->
+    <div class="mindset-minute">
+      <div class="mindset-minute-label">The Mindset Minute</div>
+      <div class="mindset-minute-title">Before You Begin</div>
+      <p>Before you open any app or send any message, take 60 seconds.</p>
+      <div class="mindset-minute-question">"What story am I walking into today with — and is it actually true?"</div>
+      <p>Name it. Challenge it. Replace it with: <em style="color:var(--gold);">"The truer story is..."</em></p>
+      <p style="margin-top:14px;">You don't need to feel ready. You need to act while your mindset is still messy — and let the results do the rewiring.</p>
+    </div>
+
+    <!-- WEEKLY STORY CHECK -->
+    <div class="story-check">
+      <div class="story-check-label">For Group Calls</div>
+      <div class="story-check-title">The Weekly Story Check</div>
+      <div class="story-check-sub">At the start of every PAC group session, run this 3-minute ritual:</div>
+      <div class="story-steps">
+        <div class="story-step">
+          <div class="story-step-num">1</div>
+          <div class="story-step-body">
+            <div class="story-step-name">Name it</div>
+            <div class="story-step-desc">"What story slowed you down in your Daily 5 this week?" Let 2–3 tutors share.</div>
+            <div class="story-step-note">Don't fix it. Receive it.</div>
+          </div>
+        </div>
+        <div class="story-step">
+          <div class="story-step-num">2</div>
+          <div class="story-step-body">
+            <div class="story-step-name">Challenge it</div>
+            <div class="story-step-desc">"Is that story actually true — or just familiar?" One person answers. Others witness.</div>
+          </div>
+        </div>
+        <div class="story-step">
+          <div class="story-step-num">3</div>
+          <div class="story-step-body">
+            <div class="story-step-name">Replace it</div>
+            <div class="story-step-desc">"What's the truer version of that story?" They say it out loud. The group hears it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLOSING QUOTE -->
+    <div class="closing-quote">
+      <div class="closing-quote-text">The goal is not to feel ready before you act. The goal is to act while your mindset is still messy — and let the results do the rewiring.</div>
+      <div class="closing-quote-attr">— <strong>Coach John</strong> | Product Architect Coaching</div>
+    </div>
+
+  </main>
+
+  <footer class="home-footer">Product Architect Coaching &nbsp;|&nbsp; Peace Over Profit &nbsp;|&nbsp; Pace of Love &nbsp;|&nbsp; © John Yeo</footer>
+
+  <script>
+    // Nav dropdowns — hover on desktop, tap on mobile
+    (function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(group){
+        var closeTimer;
+        group.addEventListener('mouseenter', function(){
+          clearTimeout(closeTimer);
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          group.classList.add('open');
+        });
+        group.addEventListener('mouseleave', function(){
+          closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+        });
+        var btn = group.querySelector('button');
+        if (btn) btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isOpen = group.classList.contains('open');
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          if (!isOpen) group.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(){
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      });
+    })();
+  </script>
+
+  <script>
+  function openMobileMenu() {
+    document.getElementById('mobilePanel').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobilePanel').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('open');
+  }
+  </script>
+
+  <script>
+  (function() {
+    function initCollapse() {
+      var panel = document.getElementById('mobilePanel');
+      if (!panel) return;
+      var STORE_KEY = 'pac-menu-state';
+      var state = {};
+      try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) {}
+
+      panel.querySelectorAll('.mobile-menu-section').forEach(function(section) {
+        var label = section.textContent.trim();
+        var key = label.toLowerCase().replace(/\s+/g, '-');
+
+        var chev = document.createElement('span');
+        chev.className = 'ms-chevron';
+        section.appendChild(chev);
+
+        var items = [];
+        var el = section.nextElementSibling;
+        while (el && !el.classList.contains('mobile-menu-section')) {
+          items.push(el);
+          el = el.nextElementSibling;
+        }
+        if (!items.length) return;
+
+        var wrap = document.createElement('div');
+        wrap.className = 'mobile-section-items';
+        section.parentNode.insertBefore(wrap, items[0]);
+        items.forEach(function(item) { wrap.appendChild(item); });
+
+        var hasActive = !!wrap.querySelector('.active');
+        var savedState = state[key];
+        var startCollapsed = savedState !== undefined ? savedState : !hasActive;
+
+        if (startCollapsed) { wrap.classList.add('ms-collapsed'); chev.textContent = '›'; }
+        else { chev.textContent = '⌄'; }
+
+        section.addEventListener('click', function() {
+          var nowCollapsed = wrap.classList.toggle('ms-collapsed');
+          chev.textContent = nowCollapsed ? '›' : '⌄';
+          state[key] = nowCollapsed;
+          try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+        });
+      });
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCollapse); }
+    else { initCollapse(); }
+  })();
+  </script>
+
+  <script>
+  // ── SITE SEARCH ──────────────────────────────────────────────────────────
+  var SEARCH_PAGES = [
+    { title:'Home',                    sub:'SWIFT Framework overview',              url:'index.html',                  icon:'⌂',  tags:'home swift framework pace love' },
+    { title:'Signature Programme',     sub:'S · Create your signature offer',       url:'signature-programme.html',    icon:'S',  tags:'signature programme offer create s swift' },
+    { title:'Webinar Programme',       sub:'W · Run your online webinar',           url:'webinar-programme.html',      icon:'W',  tags:'webinar online programme w swift' },
+    { title:'Invite Programme',        sub:'I · Referral & invite system',          url:'invite-programme.html',       icon:'I',  tags:'invite referral system i swift' },
+    { title:'Fill Class',              sub:'F · Revenue calculator & scheduling',   url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator schedule students f swift' },
+    { title:'Track Programme',         sub:'T · Track your progress',               url:'track-programme.html',        icon:'T',  tags:'track progress t swift' },
+    { title:'Case Studies',            sub:'Success stories from members',          url:'casestudies.html',            icon:'★',  tags:'case studies success stories members results' },
+    { title:'Daily 5',                 sub:'5 daily actions to grow your student base', url:'daily-5.html',            icon:'5️⃣', tags:'daily 5 actions warm lead proof invite follow up conversation' },
+    { title:'30-Day Planner',          sub:'Plan your next 30 days',                url:'planner.html',                icon:'📅', tags:'planner 30 day plan calendar tasks prompts' },
+    { title:'Parties for Kids',        sub:'Birthday & holiday party resources',    url:'other-resources.html',        icon:'🎉', tags:'parties kids birthday holiday resources' },
+    { title:'Holiday Workshops',       sub:'Holiday workshop resources',            url:'holiday-workshops.html',      icon:'🗓️', tags:'holiday workshop resources' },
+    { title:'Monthly → Annual',        sub:'Upgrade payment plan',                  url:'payment-upgrade.html',        icon:'💳', tags:'payment upgrade monthly annual billing' },
+    { title:'IG & FB Ads',             sub:'Instagram & Facebook advertising',      url:'ig-ads.html',                 icon:'📸', tags:'instagram facebook ads advertising social media' },
+    { title:'Sales Call',              sub:'Sales call scripts & tips',             url:'sales-call.html',             icon:'📞', tags:'sales call script closing enrol' },
+    { title:'AI & Automation',         sub:'AI tools & automation workflows',       url:'ai-automation.html',          icon:'🤖', tags:'ai automation chatgpt tools workflow' },
+    { title:'Product Creation',        sub:'Create & package your product',         url:'product-creation.html',       icon:'⚡', tags:'product creation package offer digital' },
+    { title:'Video Content',           sub:'Video content strategy',                url:'video-content.html',          icon:'🎬', tags:'video content strategy reels youtube tiktok' },
+    { title:'6 AI Prompts',            sub:'All 6 prompts overview',                url:'6-prompts.html',              icon:'✦',  tags:'6 prompts ai claude chatgpt overview' },
+    { title:'Prompt 1 · Signature',    sub:'AI prompt for signature programme',     url:'prompt-1-signature.html',     icon:'✦',  tags:'prompt 1 signature ai claude' },
+    { title:'Prompt 2 · Lead Magnet',  sub:'AI prompt for lead magnet',             url:'prompt-2-lead-magnet.html',   icon:'✦',  tags:'prompt 2 lead magnet ai freebie' },
+    { title:'Prompt 3 · Teach to Pitch',sub:'AI webinar pitch script',             url:'prompt-3-teach-to-pitch.html',icon:'✦',  tags:'prompt 3 teach pitch webinar script ai' },
+    { title:'Prompt 4 · Content Style',sub:'AI prompt for content style',           url:'prompt-3-content.html',       icon:'✦',  tags:'prompt 4 content style ai caption post' },
+    { title:'Prompt 5 · Lead Form',    sub:'AI prompt for lead collection form',    url:'prompt-4-5-forms.html',       icon:'✦',  tags:'prompt 5 lead form google forms collection' },
+    { title:'Prompt 6 · Feedback',     sub:'AI prompt for feedback form',           url:'prompt-6-feedback.html',      icon:'✦',  tags:'prompt 6 feedback form survey ai' },
+    { title:'Settings',                sub:'Account, password & user management',   url:'settings.html',               icon:'⚙️', tags:'settings account password email users admin' },
+    { title:'Case Study · Feon',       sub:'Member success story',                  url:'casestudy-feon.html',         icon:'★',  tags:'case study feon success story' },
+    { title:'Case Study · Fion',       sub:'Member success story',                  url:'casestudy-fion.html',         icon:'★',  tags:'case study fion success story' },
+  ];
+
+  function searchPages(q) {
+    if (!q || q.length < 1) return [];
+    q = q.toLowerCase();
+    return SEARCH_PAGES.filter(function(p) {
+      return p.title.toLowerCase().includes(q) || p.tags.toLowerCase().includes(q) || p.sub.toLowerCase().includes(q);
+    }).slice(0, 7);
+  }
+
+  function buildResultHTML(results, mobile) {
+    if (!results.length) return '<div class="nav-search-no-results">No results found</div>';
+    return results.map(function(p) {
+      var cls = mobile ? 'mobile-search-result' : 'nav-search-result';
+      var iconCls = mobile ? 'mobile-search-result-icon' : 'nav-search-result-icon';
+      var titleCls = mobile ? 'mobile-search-result-title' : 'nav-search-result-title';
+      var subCls = mobile ? 'mobile-search-result-sub' : 'nav-search-result-sub';
+      return '<a class="' + cls + '" href="' + p.url + '">'
+           + '<div class="' + iconCls + '">' + p.icon + '</div>'
+           + '<div class="nav-search-result-text">'
+           + '<div class="' + titleCls + '">' + p.title + '</div>'
+           + '<div class="' + subCls + '">' + p.sub + '</div>'
+           + '</div></a>';
+    }).join('');
+  }
+
+  // Desktop search
+  (function() {
+    var inp = document.getElementById('navSearchInput');
+    var res = document.getElementById('navSearchResults');
+    if (!inp) return;
+    var focusIdx = -1;
+
+    inp.addEventListener('input', function() {
+      focusIdx = -1;
+      var results = searchPages(this.value.trim());
+      if (!this.value.trim()) { res.classList.remove('open'); return; }
+      res.innerHTML = buildResultHTML(results, false);
+      res.classList.add('open');
+    });
+
+    inp.addEventListener('keydown', function(e) {
+      var items = res.querySelectorAll('.nav-search-result');
+      if (e.key === 'ArrowDown') { focusIdx = Math.min(focusIdx+1, items.length-1); items.forEach(function(el,i){ el.classList.toggle('focused', i===focusIdx); }); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { focusIdx = Math.max(focusIdx-1, 0); items.forEach(function(el,i){ el.classList.toggle('focused', i===focusIdx); }); e.preventDefault(); }
+      else if (e.key === 'Enter') { if (focusIdx >= 0 && items[focusIdx]) { window.location.href = items[focusIdx].href; } else if (items[0]) { window.location.href = items[0].href; } }
+      else if (e.key === 'Escape') { res.classList.remove('open'); inp.blur(); }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('navSearch').contains(e.target)) res.classList.remove('open');
+    });
+  })();
+
+  // Mobile search
+  (function() {
+    var inp = document.getElementById('mobileSearchInput');
+    var res = document.getElementById('mobileSearchResults');
+    if (!inp) return;
+    inp.addEventListener('input', function() {
+      var results = searchPages(this.value.trim());
+      if (!this.value.trim()) { res.innerHTML = ''; return; }
+      res.innerHTML = buildResultHTML(results, true);
+    });
+  })();
+  </script>
+
+  <script src="progress-tracker.js"></script>
+</body>
+</html>

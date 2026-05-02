@@ -327,6 +327,7 @@
     <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
     <div class="mobile-menu-section">Resources</div>
     <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">✦</span>The Daily 5</a>
     <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
     <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
     <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
@@ -572,6 +573,7 @@
                   <th style="padding-left:18px;">User</th>
                   <th>Email</th>
                   <th>Role</th>
+                  <th>Trial</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -720,6 +722,24 @@
         <label>Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);">(admin only, not visible to user)</span></label>
         <input type="text" id="editModalNotes" placeholder="e.g. Joined Jan batch, PSLE tutor" />
       </div>
+      <div style="border-top:1px solid var(--border);margin:18px 0 16px;"></div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">⏱ Trial Access</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Trial Start Date</label>
+          <input type="date" id="editModalTrialStart" />
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Trial Duration (days)</label>
+          <input type="number" id="editModalTrialDays" min="1" max="365" placeholder="e.g. 30" />
+        </div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" class="btn btn-ghost btn-sm" style="font-size:11px;" onclick="setQuickTrial(30)">30 days from today</button>
+        <button type="button" class="btn btn-ghost btn-sm" style="font-size:11px;" onclick="setQuickTrial(14)">14 days from today</button>
+        <button type="button" class="btn btn-ghost btn-sm" style="font-size:11px;color:var(--danger,#ef4444);" onclick="clearTrial()">Remove trial</button>
+      </div>
+      <div id="editModalTrialStatus" style="margin-top:8px;font-size:12px;color:var(--text-muted);"></div>
       <div class="alert alert-success" id="editModalSuccess"></div>
       <div class="btn-row">
         <button class="btn btn-ghost btn-sm" onclick="closeEditModal()">Cancel</button>
@@ -984,15 +1004,28 @@
     var keys = Object.keys(users);
     var tbody = document.getElementById('userTableBody');
     if (!keys.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No active users yet.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No active users yet.</td></tr>';
       return;
     }
     var html = '';
     keys.forEach(function(u) {
       var usr = users[u];
       var role = usr.role || 'user';
-      var email = usr.email || '<span style="color:var(--text-muted);font-style:italic;">no email</span>';
       var avatarColor = getAvatarColor(u);
+      // Trial status cell
+      var trialCell = '';
+      if (usr.trialStart && usr.trialDays) {
+        var start = new Date(usr.trialStart + 'T00:00:00');
+        var elapsed = Math.floor((Date.now() - start) / 86400000);
+        var remaining = usr.trialDays - elapsed;
+        if (remaining <= 0) {
+          trialCell = '<span style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;">EXPIRED</span>';
+        } else {
+          trialCell = '<span style="background:rgba(16,185,129,0.12);color:#059669;border:1px solid rgba(16,185,129,0.3);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;">' + remaining + 'd left</span>';
+        }
+      } else {
+        trialCell = '<span style="font-size:11px;color:var(--text-muted);">–</span>';
+      }
       html += '<tr>'
             + '<td style="padding-left:18px;">'
             + '<div style="display:flex;align-items:center;gap:10px;">'
@@ -1005,6 +1038,7 @@
               ? '<span class="role-badge role-admin">✦ Admin</span>'
               : '<span class="role-badge role-user">● Member</span>')
             + '</td>'
+            + '<td>' + trialCell + '</td>'
             + '<td><div class="urow-actions">'
             + '<button class="btn btn-primary btn-sm" onclick="openEditModal(\''  + u + '\')")>✏️ Edit</button>'
             + '<button class="btn btn-ghost btn-sm" onclick="openResetModal(\'' + u + '\')">🔑 Reset PW</button>'
@@ -1106,6 +1140,16 @@
 
   // ── ADMIN: EDIT USER MODAL ────────────────────────────────────────────────
   var _editTarget = null;
+
+  function trialStatus(usr) {
+    if (!usr.trialStart || !usr.trialDays) return '';
+    var start   = new Date(usr.trialStart + 'T00:00:00');
+    var elapsed = Math.floor((Date.now() - start) / 86400000);
+    var remaining = usr.trialDays - elapsed;
+    if (remaining <= 0) return '<span style="color:#ef4444;font-weight:600;">EXPIRED (' + Math.abs(remaining) + ' days ago)</span>';
+    return '<span style="color:#10B981;font-weight:600;">' + remaining + ' day' + (remaining !== 1 ? 's' : '') + ' remaining</span> (ends ' + new Date(start.getTime() + usr.trialDays * 86400000).toLocaleDateString('en-SG', {day:'numeric',month:'short',year:'numeric'}) + ')';
+  }
+
   function openEditModal(u) {
     _editTarget = u;
     var users = getUsers();
@@ -1114,8 +1158,12 @@
     document.getElementById('editModalEmail').value = usr.email || '';
     document.getElementById('editModalRole').value  = usr.role  || 'user';
     document.getElementById('editModalNotes').value = usr.notes || '';
-    // Display name — stored in analytics or as displayName on user record
     document.getElementById('editModalName').value  = usr.displayName || '';
+    // Trial fields
+    document.getElementById('editModalTrialStart').value = usr.trialStart || '';
+    document.getElementById('editModalTrialDays').value  = usr.trialDays  || '';
+    var statusHtml = trialStatus(usr);
+    document.getElementById('editModalTrialStatus').innerHTML = statusHtml ? ('Status: ' + statusHtml) : 'No trial set — user has permanent access.';
     hideAlert('editModalSuccess');
     document.getElementById('editModal').classList.add('open');
   }
@@ -1123,6 +1171,26 @@
     document.getElementById('editModal').classList.remove('open');
     _editTarget = null;
   }
+
+  function setQuickTrial(days) {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm   = String(today.getMonth() + 1).padStart(2, '0');
+    var dd   = String(today.getDate()).padStart(2, '0');
+    document.getElementById('editModalTrialStart').value = yyyy + '-' + mm + '-' + dd;
+    document.getElementById('editModalTrialDays').value  = days;
+    // Update status preview
+    var start = new Date(yyyy + '-' + mm + '-' + dd + 'T00:00:00');
+    var endDate = new Date(start.getTime() + days * 86400000);
+    document.getElementById('editModalTrialStatus').innerHTML = 'Will expire in <strong>' + days + ' days</strong> on ' + endDate.toLocaleDateString('en-SG', {day:'numeric',month:'short',year:'numeric'}) + ' (save to apply)';
+  }
+
+  function clearTrial() {
+    document.getElementById('editModalTrialStart').value = '';
+    document.getElementById('editModalTrialDays').value  = '';
+    document.getElementById('editModalTrialStatus').innerHTML = 'Trial will be removed — user gets permanent access (save to apply)';
+  }
+
   function saveEditModal() {
     if (!_editTarget) return;
     var users = getUsers();
@@ -1132,10 +1200,19 @@
       showAlert('editModalSuccess','alert-error','✗ Invalid email address.');
       return;
     }
+    var trialStart = document.getElementById('editModalTrialStart').value;
+    var trialDays  = parseInt(document.getElementById('editModalTrialDays').value, 10);
     users[_editTarget].email       = email;
     users[_editTarget].role        = document.getElementById('editModalRole').value;
     users[_editTarget].notes       = document.getElementById('editModalNotes').value.trim();
     users[_editTarget].displayName = document.getElementById('editModalName').value.trim();
+    if (trialStart && trialDays > 0) {
+      users[_editTarget].trialStart = trialStart;
+      users[_editTarget].trialDays  = trialDays;
+    } else {
+      delete users[_editTarget].trialStart;
+      delete users[_editTarget].trialDays;
+    }
     saveUsers(users);
     showAlert('editModalSuccess','alert-success','✓ Saved.');
     setTimeout(function() { closeEditModal(); renderUserTable(); }, 800);

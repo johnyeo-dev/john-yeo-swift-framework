@@ -243,7 +243,18 @@
       // Check stored users
       var users = getUsers();
       if (users[username] && users[username].password === password) {
-        localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: users[username].role || 'user' }));
+        // Check trial expiry
+        var usr = users[username];
+        if (usr.trialStart && usr.trialDays) {
+          var trialStart = new Date(usr.trialStart + 'T00:00:00');
+          var elapsed = Math.floor((Date.now() - trialStart) / 86400000);
+          if (elapsed >= usr.trialDays) {
+            errorEl.textContent = 'Your ' + usr.trialDays + '-day trial has ended. Please contact your coach.';
+            errorEl.style.display = 'block';
+            return;
+          }
+        }
+        localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: usr.role || 'user' }));
         trackLogin(username);
         window.location.href = 'index.html';
         return;

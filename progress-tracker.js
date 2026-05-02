@@ -20,6 +20,30 @@
   var TASK_PTS_ADD  = 5;   // points for adding a task
   var TASK_PTS_DONE = 20;  // bonus points for completing a task
 
+  // ── RANKS ─────────────────────────────────────────────────────────────────
+  // Early ranks are very easy to reach — hooks users fast, rewards momentum
+  var RANKS = [
+    { min:    0, name:'Starter',      emoji:'🌱', color:'#9CA3AF', desc:'You\'ve just begun!' },
+    { min:   25, name:'Planner',      emoji:'📋', color:'#10B981', desc:'You\'re setting intentions' },
+    { min:   80, name:'Action Taker', emoji:'⚡', color:'#0ABFBC', desc:'You\'re making moves' },
+    { min:  200, name:'Go-Getter',    emoji:'🎯', color:'#4A8FE7', desc:'Consistent daily action' },
+    { min:  500, name:'Builder',      emoji:'🔨', color:'#8B5CF6', desc:'You\'re building real momentum' },
+    { min: 1000, name:'Momentum',     emoji:'🚀', color:'#F59E0B', desc:'Unstoppable energy' },
+    { min: 2000, name:'Closer',       emoji:'💎', color:'#EC4899', desc:'You close what you start' },
+    { min: 4000, name:'PAC Champion', emoji:'🏆', color:'#F59E0B', desc:'Top tier performer' },
+    { min: 8000, name:'SWIFT Master', emoji:'👑', color:'#0ABFBC', desc:'Elite — the best of the best' },
+  ];
+
+  function getRank(pts) {
+    var rank = RANKS[0];
+    for (var i = 0; i < RANKS.length; i++) { if (pts >= RANKS[i].min) rank = RANKS[i]; else break; }
+    return rank;
+  }
+  function getNextRank(pts) {
+    for (var i = 0; i < RANKS.length; i++) { if (pts < RANKS[i].min) return RANKS[i]; }
+    return null;
+  }
+
   // ── PAGE SUGGESTIONS ─────────────────────────────────────────────────────
   var SUGGESTIONS = {
     'signature-programme.html':    { stepId:'sig',   text:'Have you built your Signature Programme yet?' },
@@ -110,6 +134,17 @@
     .pac-ps-btn:hover { background:rgba(10,191,188,0.3); box-shadow:0 0 10px rgba(10,191,188,0.3); }
     .pac-ps-btn-task { background:rgba(245,158,11,0.15); border:1.5px solid rgba(245,158,11,0.4); color:#F59E0B; }
     .pac-ps-btn-task:hover { background:rgba(245,158,11,0.28); box-shadow:0 0 10px rgba(245,158,11,0.3); }
+    .pac-ps-rank { display:inline-flex; align-items:center; gap:4px; border-radius:99px; padding:3px 10px; font-size:11px; font-weight:700; white-space:nowrap; flex-shrink:0; border:1.5px solid; }
+    /* rank panel in modal */
+    .pac-pm-rank-panel { background:#F4F7FB; border:1.5px solid #E8EDF5; border-radius:12px; padding:14px 18px; margin:0 28px 0; }
+    .pac-pm-rank-current { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .pac-pm-rank-badge { font-size:22px; }
+    .pac-pm-rank-name { font-size:16px; font-weight:700; color:#002D6A; }
+    .pac-pm-rank-desc { font-size:12px; color:#6B7A96; margin-top:1px; }
+    .pac-pm-rank-next { font-size:12px; color:#6B7A96; margin-bottom:6px; }
+    .pac-pm-rank-next strong { color:#002D6A; }
+    .pac-pm-rank-bar-track { height:8px; background:#E8EDF5; border-radius:99px; overflow:hidden; }
+    .pac-pm-rank-bar-fill { height:100%; border-radius:99px; transition:width 0.8s ease; }
     .pac-ps-cohort { display:flex; align-items:center; gap:16px; flex:1; overflow:hidden; }
     .pac-ps-member { display:flex; align-items:center; gap:5px; flex-shrink:0; }
     .pac-ps-member-av { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:white; flex-shrink:0; }
@@ -261,11 +296,16 @@
     strip.className = 'pac-ps';
     strip.id = 'pacProgressStrip';
 
+    var myRank = getRank(pts);
+    var rankBadge = '<span class="pac-ps-rank" id="pacPsRank" style="color:' + myRank.color + ';border-color:' + myRank.color + '33;background:' + myRank.color + '18;">'
+      + myRank.emoji + ' ' + myRank.name + '</span>';
+
     var row1 = '<div class="pac-ps-row">'
       + '<span class="pac-ps-label">You</span>'
       + '<div class="pac-ps-bar-wrap"><div class="pac-ps-bar" id="pacPsBar" style="width:' + pct + '%"></div></div>'
       + '<span class="pac-ps-count" id="pacPsCount">' + done + '/' + STEPS.length + '</span>'
       + '<span class="pac-ps-pts" id="pacPsPts">' + fmtPts(pts) + '</span>'
+      + rankBadge
       + '<button class="pac-ps-btn" onclick="window.__pacOpenModal()">My Progress</button>'
       + '<button class="pac-ps-btn pac-ps-btn-task" onclick="window.__pacOpenTaskModal()">📋 Tasks</button>'
       + '</div>';
@@ -344,6 +384,7 @@
       + '<div class="pac-pm-hero-sub"><strong id="pacPmDone">' + done + '</strong> of ' + STEPS.length + ' steps · <strong>' + pct + '%</strong> complete</div>'
       + '<div class="pac-pm-hero-rank" id="pacPmRank"></div>'
       + '</div></div>'
+      + '<div id="pacPmRankPanel"></div>'
       + '<div class="pac-pm-body">'
       + '<div class="pac-pm-cat">SWIFT Framework · <span style="font-weight:400;text-transform:none;letter-spacing:0;">📅 Action = commit to calendar &nbsp;✅ Done = completed &nbsp;🏆 Result = got results</span></div>'
       + '<div class="pac-pm-steps" id="pacPmSwiftSteps">' + stepsHtml.swift + '</div>'
@@ -355,7 +396,7 @@
 
     document.body.appendChild(modal);
     modal.addEventListener('click', function(e){ if(e.target===modal) window.__pacCloseModal(); });
-    updateRank(u);
+    updateRank(u);  // populates rank panel + strip badge
   }
 
   // ── TASK MODAL ────────────────────────────────────────────────────────────
@@ -437,15 +478,46 @@
 
   // ── RANK ─────────────────────────────────────────────────────────────────
   function updateRank(u) {
+    var pts = getTotalPoints(u);
+
+    // Leaderboard rank
     var el = document.getElementById('pacPmRank');
-    if (!el) return;
-    var users = getUsers();
-    var all   = Object.keys(users).filter(function(x){ return x !== 'johnyeo'; });
-    if (all.indexOf(u) === -1) all.push(u);
-    var myPts  = getTotalPoints(u);
-    var ranked = all.map(function(ou){ return getTotalPoints(ou); }).sort(function(a,b){ return b-a; });
-    var rank   = ranked.indexOf(myPts) + 1;
-    el.textContent = rank ? '🏅 Rank #' + rank + ' of ' + all.length : '';
+    if (el) {
+      var users = getUsers();
+      var all   = Object.keys(users).filter(function(x){ return x !== 'johnyeo'; });
+      if (all.indexOf(u) === -1) all.push(u);
+      var ranked = all.map(function(ou){ return getTotalPoints(ou); }).sort(function(a,b){ return b-a; });
+      var pos = ranked.indexOf(pts) + 1;
+      el.textContent = pos ? '🏅 Rank #' + pos + ' of ' + all.length : '';
+    }
+
+    // Rank panel in modal
+    var panel = document.getElementById('pacPmRankPanel');
+    if (!panel) return;
+    var cur  = getRank(pts);
+    var next = getNextRank(pts);
+    var pctToNext = next ? Math.round((pts - cur.min) / (next.min - cur.min) * 100) : 100;
+    var ptsToNext = next ? (next.min - pts) : 0;
+
+    panel.innerHTML = '<div class="pac-pm-rank-panel">'
+      + '<div class="pac-pm-rank-current">'
+      + '<div class="pac-pm-rank-badge">' + cur.emoji + '</div>'
+      + '<div><div class="pac-pm-rank-name" style="color:' + cur.color + ';">' + cur.name + '</div><div class="pac-pm-rank-desc">' + cur.desc + '</div></div>'
+      + '</div>'
+      + (next
+        ? '<div class="pac-pm-rank-next">Next rank: <strong>' + next.emoji + ' ' + next.name + '</strong> — ' + ptsToNext.toLocaleString() + ' pts to go</div>'
+          + '<div class="pac-pm-rank-bar-track"><div class="pac-pm-rank-bar-fill" style="width:' + pctToNext + '%;background:' + cur.color + ';box-shadow:0 0 8px ' + cur.color + '66;"></div></div>'
+        : '<div class="pac-pm-rank-next" style="color:' + cur.color + ';font-weight:700;">🎉 Maximum rank achieved — you\'re a SWIFT Master!</div>')
+      + '</div>';
+
+    // Also update strip rank badge
+    var stripRank = document.getElementById('pacPsRank');
+    if (stripRank) {
+      stripRank.textContent = cur.emoji + ' ' + cur.name;
+      stripRank.style.color = cur.color;
+      stripRank.style.borderColor = cur.color + '33';
+      stripRank.style.background  = cur.color + '18';
+    }
   }
 
   // ── SUGGESTION BOX ───────────────────────────────────────────────────────

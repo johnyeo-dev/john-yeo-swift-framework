@@ -262,6 +262,7 @@
     <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
     <div class="mobile-menu-section">Resources</div>
     <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies</a>
+    <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">✦</span>The Daily 5</a>
     <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>30-Day Plan</a>
     <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
     <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
@@ -312,6 +313,23 @@
     ];
     var TASK_PTS_ADD  = 5;
     var TASK_PTS_DONE = 20;
+
+    var RANKS = [
+      { min:    0, name:'Starter',      emoji:'🌱', color:'#9CA3AF' },
+      { min:   25, name:'Planner',      emoji:'📋', color:'#10B981' },
+      { min:   80, name:'Action Taker', emoji:'⚡', color:'#0ABFBC' },
+      { min:  200, name:'Go-Getter',    emoji:'🎯', color:'#4A8FE7' },
+      { min:  500, name:'Builder',      emoji:'🔨', color:'#8B5CF6' },
+      { min: 1000, name:'Momentum',     emoji:'🚀', color:'#F59E0B' },
+      { min: 2000, name:'Closer',       emoji:'💎', color:'#EC4899' },
+      { min: 4000, name:'PAC Champion', emoji:'🏆', color:'#F59E0B' },
+      { min: 8000, name:'SWIFT Master', emoji:'👑', color:'#0ABFBC' },
+    ];
+    function getRank(pts) {
+      var r = RANKS[0];
+      for (var i = 0; i < RANKS.length; i++) { if (pts >= RANKS[i].min) r = RANKS[i]; }
+      return r;
+    }
 
     function getSession()  { try { return JSON.parse(localStorage.getItem('pac-swift-session')||'null'); } catch(e){return null;} }
     function getUsers()    { try { return JSON.parse(localStorage.getItem('pac-swift-users')||'{}'); } catch(e){return {};} }
@@ -445,10 +463,12 @@
           if (!entry) return '<div class="podium-item"><div class="podium-block ' + cls + '"><span class="podium-empty">—</span></div></div>';
           var color=getAvatarColor(entry.u), isMe=me&&entry.u===me, dname=getDisplayName(entry.u);
           var crown=rank===1?'👑':rank===2?'🥈':'🥉';
+          var r = getRank(entry.pts);
           return '<div class="podium-item'+(isMe?' podium-me':'')+'">'
             +'<div class="podium-avatar" style="background:'+color+';">'
             +'<span class="podium-crown">'+crown+'</span>'+dname.charAt(0).toUpperCase()+'</div>'
             +'<div class="podium-name">'+dname+(isMe?' (You)':'')+'</div>'
+            +'<div style="font-size:11px;margin:-4px 0 2px;"><span style="background:'+r.color+'22;color:'+r.color+';border:1px solid '+r.color+'44;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;">'+r.emoji+' '+r.name+'</span></div>'
             +'<div class="podium-pts">'+entry.pts.toLocaleString()+' pts</div>'
             +'<div class="podium-block '+cls+'">'+rank+'</div>'
             +'</div>';
@@ -472,11 +492,15 @@
           var pctW = topPts > 0 ? Math.round(entry.pts/topPts*100) : 0;
           var rankCls=rank===1?' top1':rank===2?' top2':rank===3?' top3':'';
           var hasBd = entry.bd.action||entry.bd.done||entry.bd.result||entry.bd.taskAdd||entry.bd.taskDone;
+          var r = getRank(entry.pts);
           html += '<tr class="'+(isMe?'lb-me':'')+'">'
             +'<td class="lb-rank'+rankCls+'">'+rank+'</td>'
             +'<td><div class="lb-user"><div class="lb-av" style="background:'+color+';">'+dname.charAt(0).toUpperCase()+'</div>'
             +'<div><div class="lb-username">'+dname+(isMe?'<span class="lb-you-tag">You</span>':'')+'</div>'
-            +'<div style="font-size:11px;color:#6B7A96;margin-top:2px;">'+entry.done+'/'+STEPS.length+' steps'+(entry.bd.taskDoneCount?' · '+entry.bd.taskDoneCount+' tasks':'')+'</div></div></div></td>'
+            +'<div style="font-size:11px;color:#6B7A96;margin-top:2px;display:flex;align-items:center;gap:6px;">'
+            +'<span style="background:'+r.color+'22;color:'+r.color+';border:1px solid '+r.color+'44;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;">'+r.emoji+' '+r.name+'</span>'
+            +'<span>'+entry.done+'/'+STEPS.length+' steps'+(entry.bd.taskDoneCount?' · '+entry.bd.taskDoneCount+' tasks':'')+'</span>'
+            +'</div></div></div></td>'
             +'<td class="lb-bar-cell"><div class="lb-mini-track"><div class="lb-mini-fill" style="width:'+pctW+'%;background:'+color+';box-shadow:0 0 6px '+color+'88;"></div></div></td>'
             +'<td class="lb-badges-cell">'
             +(entry.bd.action?'<span class="lb-badge lb-badge-a">📅 '+entry.bd.action+'</span>':'')
