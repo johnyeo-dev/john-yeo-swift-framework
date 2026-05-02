@@ -155,6 +155,38 @@
     .ms-chevron { font-size: 14px; opacity: 0.45; flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
     .mobile-section-items { overflow: hidden; max-height: 600px; transition: max-height 0.25s ease; }
     .mobile-section-items.ms-collapsed { max-height: 0; }
+
+    /* ── NAV SEARCH ── */
+    .nav-search { position: relative; display: flex; align-items: center; padding: 0 8px; }
+    .nav-search-input { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 12px 6px 32px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: white; outline: none; width: 140px; transition: all 0.2s; }
+    .nav-search-input::placeholder { color: rgba(255,255,255,0.35); }
+    .nav-search-input:focus { background: rgba(255,255,255,0.12); border-color: var(--gold); width: 200px; }
+    .nav-search-icon { position: absolute; left: 20px; font-size: 13px; opacity: 0.4; pointer-events: none; }
+    .nav-search-results { position: absolute; top: calc(100% + 6px); left: 8px; right: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 300; overflow: hidden; display: none; min-width: 280px; max-width: 360px; }
+    .nav-search-results.open { display: block; }
+    .nav-search-result { display: flex; align-items: center; gap: 12px; padding: 11px 14px; color: rgba(255,255,255,0.75); font-size: 13px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+    .nav-search-result:last-child { border-bottom: none; }
+    .nav-search-result:hover, .nav-search-result.focused { background: rgba(10,191,188,0.12); color: white; }
+    .nav-search-result-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
+    .nav-search-result-text { flex: 1; min-width: 0; }
+    .nav-search-result-title { font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-search-no-results { padding: 16px 14px; font-size: 13px; color: rgba(255,255,255,0.35); text-align: center; font-family: 'DM Sans', sans-serif; }
+    @media (max-width: 960px) { .nav-search-input { width: 100px; } .nav-search-input:focus { width: 140px; } }
+    @media (max-width: 768px) { .nav-search { display: none; } }
+    /* Mobile search */
+    .mobile-search-wrap { padding: 12px 16px 8px; }
+    .mobile-search-input { width: 100%; background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 14px 10px 36px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: white; outline: none; box-sizing: border-box; }
+    .mobile-search-input::placeholder { color: rgba(255,255,255,0.35); }
+    .mobile-search-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+    .mobile-search-icon-wrap { position: relative; }
+    .mobile-search-icon-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; opacity: 0.5; }
+    .mobile-search-results { margin-top: 6px; }
+    .mobile-search-result { display: flex; align-items: center; gap: 10px; padding: 11px 4px; color: rgba(255,255,255,0.75); font-size: 14px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; }
+    .mobile-search-result:hover { color: white; }
+    .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
+    .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
+    .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
   </style>
 </head>
 <body>
@@ -211,6 +243,11 @@
         <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
       </div>
     </div>
+    <div class="nav-search" id="navSearch">
+      <span class="nav-search-icon">🔍</span>
+      <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
+      <div class="nav-search-results" id="navSearchResults"></div>
+    </div>
     <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a><button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
   </nav>
 
@@ -221,6 +258,13 @@
       <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
       <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
     </div>
+    <div class="mobile-search-wrap">
+      <div class="mobile-search-icon-wrap">
+        <input class="mobile-search-input" id="mobileSearchInput" type="text" placeholder="Search pages…" autocomplete="off" />
+      </div>
+      <div class="mobile-search-results" id="mobileSearchResults"></div>
+    </div>
+
     <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
     <div class="mobile-menu-section">SWIFT Programme</div>
     <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
@@ -912,5 +956,102 @@
     else { initCollapse(); }
   })();
   </script>
+
+  <script>
+  // ── SITE SEARCH ──────────────────────────────────────────────────────────
+  var PAGES = [
+    { title:'Home',                    sub:'SWIFT Framework overview',              url:'index.html',                  icon:'⌂',  tags:'home swift framework pace love' },
+    { title:'Signature Programme',     sub:'S · Create your signature offer',       url:'signature-programme.html',    icon:'S',  tags:'signature programme offer create s swift' },
+    { title:'Webinar Programme',       sub:'W · Run your online webinar',           url:'webinar-programme.html',      icon:'W',  tags:'webinar online programme w swift' },
+    { title:'Invite Programme',        sub:'I · Referral & invite system',          url:'invite-programme.html',       icon:'I',  tags:'invite referral system i swift' },
+    { title:'Fill Class',              sub:'F · Revenue calculator & scheduling',   url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator schedule students f swift' },
+    { title:'Track Programme',         sub:'T · Track your progress',               url:'track-programme.html',        icon:'T',  tags:'track progress t swift' },
+    { title:'Case Studies',            sub:'Success stories from members',          url:'casestudies.html',            icon:'★',  tags:'case studies success stories members results' },
+    { title:'30-Day Planner',          sub:'Plan your next 30 days',                url:'planner.html',                icon:'📅', tags:'planner 30 day plan calendar tasks prompts' },
+    { title:'Parties for Kids',        sub:'Birthday & holiday party resources',    url:'other-resources.html',        icon:'🎉', tags:'parties kids birthday holiday resources' },
+    { title:'Holiday Workshops',       sub:'Holiday workshop resources',            url:'holiday-workshops.html',      icon:'🗓️', tags:'holiday workshop resources' },
+    { title:'Monthly → Annual',        sub:'Upgrade payment plan',                  url:'payment-upgrade.html',        icon:'💳', tags:'payment upgrade monthly annual billing' },
+    { title:'IG & FB Ads',             sub:'Instagram & Facebook advertising',      url:'ig-ads.html',                 icon:'📸', tags:'instagram facebook ads advertising social media' },
+    { title:'Sales Call',              sub:'Sales call scripts & tips',             url:'sales-call.html',             icon:'📞', tags:'sales call script closing enrol' },
+    { title:'AI & Automation',         sub:'AI tools & automation workflows',       url:'ai-automation.html',          icon:'🤖', tags:'ai automation chatgpt tools workflow' },
+    { title:'Product Creation',        sub:'Create & package your product',         url:'product-creation.html',       icon:'⚡', tags:'product creation package offer digital' },
+    { title:'Video Content',           sub:'Video content strategy',                url:'video-content.html',          icon:'🎬', tags:'video content strategy reels youtube tiktok' },
+    { title:'6 AI Prompts',            sub:'All 6 prompts overview',                url:'6-prompts.html',              icon:'✦',  tags:'6 prompts ai claude chatgpt overview' },
+    { title:'Prompt 1 · Signature',    sub:'AI prompt for signature programme',     url:'prompt-1-signature.html',     icon:'✦',  tags:'prompt 1 signature ai claude' },
+    { title:'Prompt 2 · Lead Magnet',  sub:'AI prompt for lead magnet',             url:'prompt-2-lead-magnet.html',   icon:'✦',  tags:'prompt 2 lead magnet ai freebie' },
+    { title:'Prompt 3 · Teach to Pitch',sub:'AI webinar pitch script',             url:'prompt-3-teach-to-pitch.html',icon:'✦',  tags:'prompt 3 teach pitch webinar script ai' },
+    { title:'Prompt 4 · Content Style',sub:'AI prompt for content style',           url:'prompt-3-content.html',       icon:'✦',  tags:'prompt 4 content style ai caption post' },
+    { title:'Prompt 5 · Lead Form',    sub:'AI prompt for lead collection form',    url:'prompt-4-5-forms.html',       icon:'✦',  tags:'prompt 5 lead form google forms collection' },
+    { title:'Prompt 6 · Feedback',     sub:'AI prompt for feedback form',           url:'prompt-6-feedback.html',      icon:'✦',  tags:'prompt 6 feedback form survey ai' },
+    { title:'Settings',                sub:'Account, password & user management',   url:'settings.html',               icon:'⚙️', tags:'settings account password email users admin' },
+    { title:'Case Study · Feon',       sub:'Member success story',                  url:'casestudy-feon.html',         icon:'★',  tags:'case study feon success story' },
+    { title:'Case Study · Fion',       sub:'Member success story',                  url:'casestudy-fion.html',         icon:'★',  tags:'case study fion success story' },
+  ];
+
+  function searchPages(q) {
+    if (!q || q.length < 1) return [];
+    q = q.toLowerCase();
+    return PAGES.filter(function(p) {
+      return p.title.toLowerCase().includes(q) || p.tags.toLowerCase().includes(q) || p.sub.toLowerCase().includes(q);
+    }).slice(0, 7);
+  }
+
+  function buildResultHTML(results, mobile) {
+    if (!results.length) return '<div class="nav-search-no-results">No results found</div>';
+    return results.map(function(p, i) {
+      var cls = mobile ? 'mobile-search-result' : 'nav-search-result';
+      var iconCls = mobile ? 'mobile-search-result-icon' : 'nav-search-result-icon';
+      var titleCls = mobile ? 'mobile-search-result-title' : 'nav-search-result-title';
+      var subCls = mobile ? 'mobile-search-result-sub' : 'nav-search-result-sub';
+      return '<a class="' + cls + '" href="' + p.url + '">'
+           + '<div class="' + iconCls + '">' + p.icon + '</div>'
+           + '<div class="nav-search-result-text">'
+           + '<div class="' + titleCls + '">' + p.title + '</div>'
+           + '<div class="' + subCls + '">' + p.sub + '</div>'
+           + '</div></a>';
+    }).join('');
+  }
+
+  // Desktop search
+  (function() {
+    var inp = document.getElementById('navSearchInput');
+    var res = document.getElementById('navSearchResults');
+    if (!inp) return;
+    var focusIdx = -1;
+
+    inp.addEventListener('input', function() {
+      focusIdx = -1;
+      var results = searchPages(this.value.trim());
+      if (!this.value.trim()) { res.classList.remove('open'); return; }
+      res.innerHTML = buildResultHTML(results, false);
+      res.classList.add('open');
+    });
+
+    inp.addEventListener('keydown', function(e) {
+      var items = res.querySelectorAll('.nav-search-result');
+      if (e.key === 'ArrowDown') { focusIdx = Math.min(focusIdx+1, items.length-1); items.forEach(function(el,i){ el.classList.toggle('focused', i===focusIdx); }); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { focusIdx = Math.max(focusIdx-1, 0); items.forEach(function(el,i){ el.classList.toggle('focused', i===focusIdx); }); e.preventDefault(); }
+      else if (e.key === 'Enter') { if (focusIdx >= 0 && items[focusIdx]) { window.location.href = items[focusIdx].href; } else if (items[0]) { window.location.href = items[0].href; } }
+      else if (e.key === 'Escape') { res.classList.remove('open'); inp.blur(); }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('navSearch').contains(e.target)) res.classList.remove('open');
+    });
+  })();
+
+  // Mobile search
+  (function() {
+    var inp = document.getElementById('mobileSearchInput');
+    var res = document.getElementById('mobileSearchResults');
+    if (!inp) return;
+    inp.addEventListener('input', function() {
+      var results = searchPages(this.value.trim());
+      if (!this.value.trim()) { res.innerHTML = ''; return; }
+      res.innerHTML = buildResultHTML(results, true);
+    });
+  })();
+  </script>
+
 </body>
 </html>
