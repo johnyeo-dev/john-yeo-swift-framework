@@ -1259,7 +1259,9 @@
     if (!pw || pw.length < 4) { showAlert('resetModalError','alert-error','✗ Password must be at least 4 characters.'); return; }
     if (pw !== pw2)            { showAlert('resetModalError','alert-error','✗ Passwords do not match.'); return; }
     var users = getUsers();
-    if (!users[_resetTarget]) return;
+    if (!users[_resetTarget]) {
+      users[_resetTarget] = { name: _resetTarget, role: 'user', created: new Date().toISOString() };
+    }
     users[_resetTarget].password = pw;
     saveUsers(users);
     closeResetModal();
