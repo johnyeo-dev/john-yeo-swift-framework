@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Settings | PAC SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <!-- EmailJS SDK (for testing connection) -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     :root {
       --navy: #002D6A; --navy-light: #0A0F1C;
@@ -573,73 +571,6 @@
       </div>
 
       <!-- EMAILJS CONFIG -->
-      <div class="scard">
-        <div class="scard-header">
-          <div class="scard-icon" style="background:rgba(74,143,231,0.12);">📧</div>
-          <div>
-            <div class="scard-title">Email Service (EmailJS)</div>
-            <div class="scard-sub">Enables self-service password reset emails for your members</div>
-          </div>
-        </div>
-        <div class="scard-body">
-          <div class="alert alert-info show" style="margin-bottom:20px;">
-            <span>ℹ️</span>
-            <div>
-              <strong>Setup in 3 steps:</strong><br>
-              1. Go to <a href="https://www.emailjs.com" target="_blank" style="color:var(--gold-light);">emailjs.com</a> → create free account<br>
-              2. Connect your email (Gmail / Outlook) → copy <strong>Service ID</strong><br>
-              3. Create an email template using the variables below → copy <strong>Template ID</strong> and <strong>Public Key</strong>
-            </div>
-          </div>
-
-          <!-- Template variables reference -->
-          <div style="background:var(--cream-dark);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:12px;line-height:1.9;">
-            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Template 1 — Password Reset (sent to member)</div>
-            <div><code style="background:var(--white);padding:2px 6px;border-radius:4px;">{{to_email}}</code> &nbsp;<code style="background:var(--white);padding:2px 6px;border-radius:4px;">{{username}}</code> &nbsp;<code style="background:var(--white);padding:2px 6px;border-radius:4px;">{{reset_code}}</code> &nbsp;<code style="background:var(--white);padding:2px 6px;border-radius:4px;">{{expiry_mins}}</code></div>
-            <div style="color:var(--text-muted);margin-top:4px;">Subject: <em>Your SWIFT Framework password reset code</em></div>
-            <div style="height:1px;background:var(--border);margin:12px 0;"></div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Template 2 — New Signup Alert (sent to you)</div>
-            <div><code style="background:var(--white);padding:2px 6px;border-radius:4px;">{{to_email}}</code> &nbsp;<code style="background:var(--white);padding:2px 6px;border-radius:4px;">{{username}}</code> &nbsp;<code style="background:var(--white);padding:2px 6px;border-radius:4px;">{{requested_at}}</code> &nbsp;<code style="background:var(--white);padding:2px 6px;border-radius:4px;">{{approve_url}}</code></div>
-            <div style="color:var(--text-muted);margin-top:4px;">Subject: <em>New access request on SWIFT Framework</em></div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Public Key</label>
-              <input type="text" id="ejsPublicKey" placeholder="e.g. aBcDeFgHiJk..." />
-            </div>
-            <div class="form-group">
-              <label>Service ID</label>
-              <input type="text" id="ejsServiceId" placeholder="e.g. service_xxxxxxx" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Password Reset Template ID</label>
-              <input type="text" id="ejsTemplateId" placeholder="e.g. template_xxxxxxx" />
-              <p class="field-hint">Sends reset code to user</p>
-            </div>
-            <div class="form-group">
-              <label>New Request Notification ID</label>
-              <input type="text" id="ejsNotifyTemplateId" placeholder="e.g. template_xxxxxxx" />
-              <p class="field-hint">Alerts you when someone signs up</p>
-            </div>
-          </div>
-
-          <div class="alert alert-success" id="ejsSaveAlert"></div>
-          <div class="alert alert-error"   id="ejsTestAlert"></div>
-
-          <div class="btn-row" style="margin-top:8px;">
-            <button class="btn btn-primary" onclick="saveEjsConfig()">Save Config</button>
-            <button class="btn btn-ghost"   onclick="testEjsConfig()">Send Test Email</button>
-            <button class="btn btn-danger btn-sm" onclick="clearEjsConfig()" style="margin-left:auto;">Clear</button>
-          </div>
-          <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">
-            Test email requires your admin email to be saved in <em>My Account → Email Address</em> above.
-          </p>
-        </div>
-      </div>
-
     </div><!-- /panel-1 -->
 
     <!-- TAB 2: ANALYTICS (ADMIN ONLY) -->
@@ -1269,74 +1200,6 @@ document.getElementById('deleteModal').addEventListener('click', function(e) { i
     else { initCollapse(); }
   })();
 
-  // ── EMAILJS CONFIG ────────────────────────────────────────────────────────
-  function loadEjsConfig() {
-    try {
-      var cfg = JSON.parse(localStorage.getItem('pac-swift-emailjs') || '{}');
-      if (cfg.publicKey)          document.getElementById('ejsPublicKey').value          = cfg.publicKey;
-      if (cfg.serviceId)          document.getElementById('ejsServiceId').value          = cfg.serviceId;
-      if (cfg.templateId)         document.getElementById('ejsTemplateId').value         = cfg.templateId;
-      if (cfg.notifyTemplateId)   document.getElementById('ejsNotifyTemplateId').value   = cfg.notifyTemplateId;
-    } catch(e) {}
-  }
-
-  function saveEjsConfig() {
-    var cfg = {
-      publicKey:        document.getElementById('ejsPublicKey').value.trim(),
-      serviceId:        document.getElementById('ejsServiceId').value.trim(),
-      templateId:       document.getElementById('ejsTemplateId').value.trim(),
-      notifyTemplateId: document.getElementById('ejsNotifyTemplateId').value.trim()
-    };
-    if (!cfg.publicKey || !cfg.serviceId || !cfg.templateId) {
-      showAlert('ejsTestAlert','alert-error','✗ Please fill in Public Key, Service ID, and Password Reset Template ID.');
-      return;
-    }
-    localStorage.setItem('pac-swift-emailjs', JSON.stringify(cfg));
-    var msg = '✓ Config saved. Password reset emails active.';
-    if (cfg.notifyTemplateId) msg += ' New signup notifications active.';
-    showAlert('ejsSaveAlert','alert-success', msg);
-  }
-
-  function clearEjsConfig() {
-    localStorage.removeItem('pac-swift-emailjs');
-    document.getElementById('ejsPublicKey').value          = '';
-    document.getElementById('ejsServiceId').value          = '';
-    document.getElementById('ejsTemplateId').value         = '';
-    document.getElementById('ejsNotifyTemplateId').value   = '';
-    showAlert('ejsSaveAlert','alert-success','EmailJS config cleared.');
-  }
-
-  function testEjsConfig() {
-    hideAlert('ejsTestAlert');
-    var cfg = {
-      publicKey:  document.getElementById('ejsPublicKey').value.trim(),
-      serviceId:  document.getElementById('ejsServiceId').value.trim(),
-      templateId: document.getElementById('ejsTemplateId').value.trim()
-    };
-    if (!cfg.publicKey || !cfg.serviceId || !cfg.templateId) {
-      showAlert('ejsTestAlert','alert-error','✗ Fill in all three fields first.');
-      return;
-    }
-    var adminEmail = localStorage.getItem('pac-swift-admin-email') || '';
-    if (!adminEmail) {
-      showAlert('ejsTestAlert','alert-error','✗ No admin email saved. Go to My Account tab → Email Address first.');
-      return;
-    }
-    showAlert('ejsSaveAlert','alert-success','Sending test email to ' + adminEmail + '…');
-    emailjs.init(cfg.publicKey);
-    emailjs.send(cfg.serviceId, cfg.templateId, {
-      to_email:    adminEmail,
-      username:    'johnyeo',
-      reset_code:  '123456',
-      expiry_mins: '15'
-    }).then(function() {
-      showAlert('ejsSaveAlert','alert-success','✓ Test email sent to ' + adminEmail + '! Check your inbox.');
-    }, function(err) {
-      console.error('EmailJS test error:', err);
-      showAlert('ejsTestAlert','alert-error','✗ Failed: ' + (err.text || JSON.stringify(err)) + '. Check your Service ID / Template ID / Public Key.');
-    });
-  }
-
   // ── ANALYTICS ─────────────────────────────────────────────────────────────
   function getAnalytics(u) {
     try { return JSON.parse(localStorage.getItem('pac-swift-analytics-' + u) || '{}'); } catch(e) { return {}; }
@@ -1469,12 +1332,7 @@ document.getElementById('deleteModal').addEventListener('click', function(e) { i
   initPage();
 
   // Load EJS config when admin tab is shown
-  var _origRenderAdmin = renderAdminPanel;
-  renderAdminPanel = function() {
-    _origRenderAdmin();
-    loadEjsConfig();
-  };
-  </script>
+</script>
 
 
   <script>
