@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Request Access | PAC SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     :root {
       --navy: #002D6A; --navy-light: #0A0F1C;
@@ -116,6 +117,9 @@
       pending[u] = { password: p, requestedAt: new Date().toISOString() };
       localStorage.setItem('pac-swift-pending', JSON.stringify(pending));
 
+      // Notify admin via EmailJS if configured
+      notifyAdmin(u);
+
       document.getElementById('formState').style.display = 'none';
       document.getElementById('formFooter').style.display = 'none';
       document.getElementById('successState').style.display = 'block';
@@ -125,6 +129,22 @@
       var el = document.getElementById('errMsg');
       el.textContent = msg;
       el.style.display = 'block';
+    }
+
+    function notifyAdmin(username) {
+      try {
+        var cfg = JSON.parse(localStorage.getItem('pac-swift-emailjs') || '{}');
+        if (!cfg.publicKey || !cfg.serviceId || !cfg.notifyTemplateId) return;
+        var adminEmail = localStorage.getItem('pac-swift-admin-email') || '';
+        if (!adminEmail) return;
+        emailjs.init(cfg.publicKey);
+        emailjs.send(cfg.serviceId, cfg.notifyTemplateId, {
+          to_email:     adminEmail,
+          username:     username,
+          requested_at: new Date().toLocaleString('en-SG', { dateStyle: 'medium', timeStyle: 'short' }),
+          approve_url:  window.location.origin + '/settings.html'
+        });
+      } catch(e) {}
     }
 
     document.addEventListener('keydown', function(e) {
