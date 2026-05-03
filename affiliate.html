@@ -1,305 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Affiliate Programme | SWIFT Framework</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <title>Affiliate Programme | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --navy: #002D6A; --navy-light: #0A0F1C;
-      --gold: #0ABFBC; --gold-light: #4A8FE7;
-      --cream: #F4F7FB; --cream-dark: #E8EDF5;
-      --text: #0A0F1C; --text-muted: #6B7A96;
-      --white: #FFFFFF; --border: #B8C4D4;
-      --green: #10B981;
+      --navy:      #002D6A;
+      --navy-dark: #0A0F1C;
+      --gold:      #0ABFBC;
+      --gold-light:#4A8FE7;
+      --cream:     #F4F7FB;
+      --text:      #0A0F1C;
+      --muted:     #6B7A96;
+      --white:     #FFFFFF;
+      --border:    #D1DAE8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--text); }
 
-    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
-    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
-    .header h1 em { font-style: italic; color: var(--gold-light); }
-    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
-    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
-    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+    /* ── HERO ── */
+    .hero { background: var(--navy-dark); padding: 72px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 0%, rgba(10,191,188,0.12) 0%, transparent 70%); pointer-events: none; }
+    .hero-tag { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 5vw, 48px); color: var(--white); line-height: 1.15; margin-bottom: 20px; max-width: 680px; margin-left: auto; margin-right: auto; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: clamp(15px, 2vw, 17px); color: rgba(255,255,255,0.6); max-width: 540px; margin: 0 auto 32px; line-height: 1.75; }
+    .hero-amount { display: inline-flex; align-items: baseline; gap: 4px; background: rgba(10,191,188,0.12); border: 1px solid rgba(10,191,188,0.3); border-radius: 14px; padding: 16px 32px; margin-top: 8px; }
+    .hero-amount .num { font-family: 'DM Serif Display', serif; font-size: 52px; color: var(--gold); line-height: 1; }
+    .hero-amount .label { font-size: 14px; color: rgba(255,255,255,0.5); }
 
-    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Serif Display', serif; font-size: 15px; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .swift-tab:hover { color: rgba(255,255,255,0.75); }
-    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
-    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
-    .swift-tab.active .swift-letter { color: var(--gold); }
-    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
-    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
-    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
-    .swift-tab-group.open .swift-sub-menu { display: block; }
-    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
-    .swift-sub-item:last-child { border-bottom: none; }
-    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
-    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+    /* ── LAYOUT ── */
+    .page-wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 60px 0; }
+    .section + .section { border-top: 1px solid var(--border); }
+    .section-tag { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .section h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3.5vw, 34px); color: var(--navy); line-height: 1.25; margin-bottom: 16px; }
+    .section h2 em { font-style: italic; color: var(--gold-light); }
+    .section p { font-size: 17px; color: var(--text); line-height: 1.9; margin-bottom: 16px; }
 
-    /* MOBILE NAV */
-    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
-    .mobile-menu-overlay.open { display: block; }
-    .mobile-menu-panel { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #111827; z-index: 501; overflow-y: auto; padding: 0 0 40px; transform: translateX(-100%); transition: transform 0.25s ease; pointer-events: none; }
-    .mobile-menu-panel.open { transform: translateX(0); pointer-events: auto; }
-    .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.5); font-size: 20px; cursor: pointer; }
-    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; }
-    .mobile-menu-item:hover, .mobile-menu-item.active { color: white; background: rgba(255,255,255,0.05); }
-    .mobile-menu-letter { width: 24px; text-align: center; font-size: 16px; flex-shrink: 0; }
-    .mobile-menu-section { padding: 16px 16px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
-    .mobile-menu-section:hover { color: rgba(255,255,255,0.6); }
-    .ms-chevron { font-size: 14px; }
-    .mobile-section-items { overflow: hidden; max-height: 600px; transition: max-height 0.25s ease; }
-    .mobile-section-items.ms-collapsed { max-height: 0; }
-    .mobile-menu-bar { display: none; background: var(--navy-light); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 10px 16px; }
-    .mobile-menu-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: space-between; }
-    .mobile-search-wrap { padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .mobile-search-input { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 9px 14px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; }
-    .mobile-search-results { margin-top: 6px; }
-    .mobile-search-result { display: flex; align-items: center; gap: 10px; padding: 10px 4px; color: rgba(255,255,255,0.7); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
-    .mobile-search-result:hover { color: white; }
-    .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
-    .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
-    .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .step { display: flex; align-items: flex-start; gap: 20px; padding: 20px 24px; background: var(--cream); border-radius: 14px; border-left: 4px solid var(--gold); }
+    .step-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; flex-shrink: 0; width: 36px; }
+    .step-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .step-desc { font-size: 15px; color: var(--muted); line-height: 1.65; }
 
-    /* NAV SEARCH */
-    .nav-search { position: relative; display: flex; align-items: center; margin-left: 8px; }
-    .nav-search-icon { font-size: 14px; position: absolute; left: 10px; pointer-events: none; opacity: 0.5; }
-    .nav-search-input { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 7px 12px 7px 32px; color: white; font-family: 'DM Sans', sans-serif; font-size: 13px; width: 160px; outline: none; transition: width 0.2s; }
-    .nav-search-input:focus { width: 220px; background: rgba(255,255,255,0.1); }
-    .nav-search-results { position: absolute; top: calc(100% + 6px); left: 0; width: 300px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 300; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: none; }
-    .nav-search-results.open { display: block; }
-    .nav-search-result { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: rgba(255,255,255,0.7); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; transition: background 0.15s; }
-    .nav-search-result:last-child { border-bottom: none; }
-    .nav-search-result:hover, .nav-search-result.focused { background: rgba(255,255,255,0.06); color: white; }
-    .nav-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
-    .nav-search-result-title { font-weight: 600; color: white; font-size: 13px; }
-    .nav-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
-    .nav-search-no-results { padding: 14px 16px; font-size: 13px; color: rgba(255,255,255,0.4); }
-
-    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
-    @media (max-width: 640px) { .swift-nav { display: none; } .mobile-menu-bar { display: block; } .header { padding: 20px 16px; } }
-
-    /* MAIN */
-    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
-
-    /* PAGE INTRO */
-    .page-intro { margin-bottom: 36px; }
-    .page-intro .tag { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .page-intro h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--navy); margin-bottom: 8px; }
-    .page-intro h2 em { font-style: italic; color: var(--gold-light); }
-    .page-intro p { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 580px; }
-
-    /* EARN HIGHLIGHT */
-    .earn-highlight { background: linear-gradient(135deg, var(--navy), #0f1e3d); border-radius: 18px; padding: 32px 36px; margin-bottom: 36px; display: flex; align-items: center; gap: 28px; }
-    .earn-highlight .amount { font-family: 'DM Serif Display', serif; font-size: 56px; color: var(--gold); line-height: 1; flex-shrink: 0; }
-    .earn-highlight .detail { color: rgba(255,255,255,0.8); font-size: 15px; line-height: 1.7; }
-    .earn-highlight .detail strong { color: white; display: block; font-size: 17px; margin-bottom: 4px; }
-
-    /* PRODUCT CARD */
-    .product-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
-    .product-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 10px; }
-    .product-price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
-    .product-price .current { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--navy); }
-    .product-price .usual { font-size: 15px; color: var(--text-muted); text-decoration: line-through; }
-    .product-price .tag { font-size: 11px; font-weight: 700; background: rgba(10,191,188,0.1); color: var(--gold); border: 1px solid rgba(10,191,188,0.3); border-radius: 99px; padding: 3px 10px; }
-    .product-items { display: flex; flex-direction: column; gap: 7px; }
-    .product-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
-    .product-item::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
-
-    /* STEPS */
-    .steps { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
-    .step { display: flex; align-items: flex-start; gap: 18px; padding: 18px 20px; background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; border-left: 4px solid var(--gold); }
-    .step-num { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--gold); line-height: 1; flex-shrink: 0; width: 32px; }
-    .step-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
-    .step-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
-
-    /* CALCULATOR */
-    .calc-wrap { background: linear-gradient(135deg, var(--navy), #0f1e3d); border-radius: 18px; padding: 32px; margin: 24px 0; }
-    .calc-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--white); margin-bottom: 4px; }
-    .calc-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
-    .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
-    .calc-tile { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 14px 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    /* ── EARNINGS CALCULATOR ── */
+    .calc-wrap { background: linear-gradient(135deg, var(--navy-dark), #0f1e3d); border-radius: 20px; padding: 40px 36px; margin: 28px 0; }
+    .calc-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); margin-bottom: 6px; }
+    .calc-sub { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
+    .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+    .calc-tile { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
     .calc-tile:hover, .calc-tile.active { background: rgba(10,191,188,0.15); border-color: var(--gold); }
-    .calc-tile .refs { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--white); line-height: 1; }
-    .calc-tile .ref-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; }
-    .calc-result { text-align: center; padding: 20px; background: rgba(10,191,188,0.1); border: 1px solid rgba(10,191,188,0.3); border-radius: 12px; }
-    .calc-result .earn-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
-    .calc-result .earn-amount { font-family: 'DM Serif Display', serif; font-size: 44px; color: var(--gold); line-height: 1; }
-    .calc-result .earn-note { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 8px; }
+    .calc-tile .refs { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--white); line-height: 1; }
+    .calc-tile .ref-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+    .calc-result { text-align: center; padding: 24px; background: rgba(10,191,188,0.1); border: 1px solid rgba(10,191,188,0.3); border-radius: 14px; }
+    .calc-result .earn-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 8px; letter-spacing: 0.5px; }
+    .calc-result .earn-amount { font-family: 'DM Serif Display', serif; font-size: 48px; color: var(--gold); line-height: 1; }
+    .calc-result .earn-note { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 8px; }
 
-    /* WHY LIST */
-    .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
-    .why-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--text); line-height: 1.65; padding: 14px 16px; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; }
+    /* ── WHY LIST ── */
+    .why-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .why-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; color: var(--text); line-height: 1.65; padding: 14px 16px; background: var(--cream); border-radius: 10px; }
     .why-list li .icon { font-size: 20px; flex-shrink: 0; }
 
-    /* FAQ */
-    .faq-list { display: flex; flex-direction: column; gap: 0; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin: 20px 0; }
+    /* ── PRODUCT CARD ── */
+    .product-card { background: var(--cream); border: 1.5px solid var(--border); border-radius: 16px; padding: 28px 24px; margin: 20px 0; }
+    .product-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 12px; }
+    .product-price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+    .product-price .current { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--navy); }
+    .product-price .usual { font-size: 16px; color: var(--muted); text-decoration: line-through; }
+    .product-price .tag { font-size: 12px; font-weight: 700; background: rgba(10,191,188,0.12); color: var(--gold); border: 1px solid rgba(10,191,188,0.3); border-radius: 99px; padding: 3px 10px; }
+    .product-items { display: flex; flex-direction: column; gap: 8px; }
+    .product-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+    .product-item::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+    /* ── COMMISSION BOX ── */
+    .commission-box { background: var(--navy); border-radius: 14px; padding: 24px 28px; margin: 20px 0; display: flex; align-items: center; gap: 24px; }
+    .commission-box .big { font-family: 'DM Serif Display', serif; font-size: 42px; color: var(--gold); line-height: 1; flex-shrink: 0; }
+    .commission-box .detail { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.7; }
+    .commission-box .detail strong { color: white; }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 0; margin: 20px 0; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
     .faq-item { border-bottom: 1px solid var(--border); }
     .faq-item:last-child { border-bottom: none; }
-    .faq-q { width: 100%; background: none; border: none; padding: 16px 20px; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .faq-q { width: 100%; background: none; border: none; padding: 18px 20px; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
     .faq-q:hover { background: var(--cream); }
     .faq-chev { color: var(--gold); font-size: 18px; flex-shrink: 0; transition: transform 0.2s; }
-    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+    .faq-a { display: none; padding: 0 20px 18px; font-size: 15px; color: var(--muted); line-height: 1.75; }
     .faq-item.open .faq-a { display: block; }
     .faq-item.open .faq-chev { transform: rotate(90deg); }
 
-    /* CTA */
-    .btn-affiliate { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--gold); color: var(--navy); font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; padding: 16px 40px; border-radius: 12px; text-decoration: none; transition: all 0.2s; }
+    /* ── CTA ── */
+    .btn-affiliate { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--gold); color: var(--navy); font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; padding: 18px 48px; border-radius: 12px; text-decoration: none; transition: all 0.2s; letter-spacing: 0.3px; }
     .btn-affiliate:hover { background: #08a8a5; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(10,191,188,0.35); }
 
-    /* SECTION DIVIDER */
-    .section { padding: 36px 0; border-top: 1px solid var(--border); }
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .section h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); margin-bottom: 14px; }
-    .section h3 em { font-style: italic; color: var(--gold-light); }
+    /* ── FOOTER ── */
+    .page-footer { background: var(--navy-dark); padding: 28px 24px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); line-height: 1.8; margin-top: 40px; }
+    .page-footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
 
+    /* ── MOBILE ── */
     @media (max-width: 600px) {
-      .earn-highlight { flex-direction: column; gap: 12px; padding: 24px 20px; }
+      .hero { padding: 52px 20px 60px; }
+      .section { padding: 44px 0; }
+      .calc-wrap { padding: 28px 20px; }
       .calc-grid { grid-template-columns: repeat(2, 1fr); }
-      .main { padding: 28px 16px 60px; }
+      .commission-box { flex-direction: column; gap: 12px; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <div>
-      <div class="header-label">PAC · SWIFT Framework</div>
-      <h1>🤝 <em>Affiliate</em> Programme</h1>
-    </div>
-    <div class="swift-badge">
-      <div class="s">🤝</div>
-      <div class="label">Affiliate</div>
-    </div>
-  </header>
-
-  <nav class="swift-nav">
-    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
-    <div class="swift-tab-group">
-      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
-      <div class="swift-sub-menu">
-        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
-        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
-        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
-        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
-        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="page-wrap">
+      <div class="hero-tag">✶ Affiliate Programme ✶</div>
+      <h1>Earn <em>S$123.50</em> per referral.<br>Share what's already working.</h1>
+      <p class="hero-sub">If you've found value in the SWIFT Framework, your recommendation is worth more than any ad. Refer someone, and earn half of their first month — paid directly to your PayNow.</p>
+      <div class="hero-amount">
+        <div class="num">S$123.50</div>
+        <div class="label">&nbsp;per referral</div>
       </div>
     </div>
-    <div class="swift-tab-group">
-      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
-      <div class="swift-sub-menu">
-        <a class="swift-sub-item" href="casestudies.html">★ Case Studies (Paid vs Free)</a>
-        <a class="swift-sub-item" href="daily-5.html">✦ The Daily 5</a>
-        <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a>
-        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
-        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
-        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
-        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
-        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
-        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
-        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
-        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
-      </div>
-    </div>
-    <div class="swift-tab-group">
-      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">6 Prompts ▾</span></button>
-      <div class="swift-sub-menu">
-        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
-        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
-        <a class="swift-sub-item" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
-        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
-        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
-        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
-      </div>
-    </div>
-    <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
-    <div class="nav-search" id="navSearch">
-      <span class="nav-search-icon">🔍</span>
-      <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
-      <div class="nav-search-results" id="navSearchResults"></div>
-    </div>
-    <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
-    <a class="swift-tab active" href="affiliate.html" style="color:var(--gold);"><span class="swift-letter" style="color:var(--gold);font-size:14px;">🤝</span><span class="swift-word" style="color:var(--gold);">Affiliate</span></a>
-    <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
-  </nav>
-
-  <!-- MOBILE NAV -->
-  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
-  <div class="mobile-menu-panel" id="mobilePanel">
-    <div class="mobile-menu-header">
-      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
-      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
-    </div>
-    <button onclick="localStorage.removeItem('pac-swift-session');localStorage.removeItem('pac-swift-user');window.location.href='login.html';" style="width:100%;text-align:left;background:rgba(248,113,113,0.08);border:none;border-bottom:1px solid rgba(248,113,113,0.18);padding:11px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#f87171;display:flex;align-items:center;gap:10px;"><span style="font-size:15px;">⏻</span>Sign Out</button>
-    <div class="mobile-search-wrap">
-      <div class="mobile-search-icon-wrap">
-        <input class="mobile-search-input" id="mobileSearchInput" type="text" placeholder="Search pages…" autocomplete="off" />
-      </div>
-      <div class="mobile-search-results" id="mobileSearchResults"></div>
-    </div>
-    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
-    <div class="mobile-menu-section">SWIFT Programme</div>
-    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
-    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
-    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
-    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
-    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
-    <div class="mobile-menu-section">Resources</div>
-    <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies (Paid vs Free)</a>
-    <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">✦</span>The Daily 5</a>
-    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>Calendar Plan</a>
-    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
-    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
-    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
-    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
-    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
-    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
-    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
-    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
-    <div class="mobile-menu-section">Community</div>
-    <a class="mobile-menu-item" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
-    <div class="mobile-menu-section">Account</div>
-    <a class="mobile-menu-item active" href="affiliate.html"><span class="mobile-menu-letter" style="color:var(--gold);">🤝</span>Affiliate</a>
-    <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
-  </div>
-  <div class="mobile-menu-bar">
-    <button class="mobile-menu-btn" onclick="openMobileMenu()">
-      <span>☰ &nbsp;Menu</span>
-      <span style="font-size:11px;opacity:0.5;">▾</span>
-    </button>
   </div>
 
-  <main class="main">
-
-    <div class="page-intro">
-      <div class="tag">Affiliate Programme</div>
-      <h2>Earn <em>S$123.50</em> per referral.<br>Share what's already working.</h2>
-      <p>If you've found value in the SWIFT Framework, your recommendation is worth more than any ad. Refer someone, and earn half of their first month — paid directly to your PayNow.</p>
-    </div>
-
-    <!-- EARN HIGHLIGHT -->
-    <div class="earn-highlight">
-      <div class="amount">S$123.50</div>
-      <div class="detail">
-        <strong>per referral · first month commission</strong>
-        50% of S$247 first month payment. Paid manually via PayNow to your mobile number after 60 days — once the 30-day refund window has passed.
-      </div>
-    </div>
+  <div class="page-wrap">
 
     <!-- WHAT YOU'RE PROMOTING -->
     <div class="section">
-      <div class="section-label">What You're Promoting</div>
-      <h3>Product Architect Swift Membership</h3>
+      <div class="section-tag">What You're Promoting</div>
+      <h2>The SWIFT Framework —<br><em>your pocket adviser at your fingertips</em></h2>
+      <p>You're sharing something real. The SWIFT Framework is a monthly membership built for tutors, educators and coaches who want to grow their group classes without burning out.</p>
+
       <div class="product-card">
-        <div class="product-name">PA Swift Membership</div>
+        <div class="product-name">Product Architect Swift Membership</div>
         <div class="product-price">
-          <span class="current">S$247<span style="font-size:16px;font-weight:400;">/mo</span></span>
+          <span class="current">S$247<span style="font-size:18px;font-weight:400;">/mo</span></span>
           <span class="usual">S$397</span>
           <span class="tag">Founding Rate · Next 5 only</span>
         </div>
@@ -311,12 +150,21 @@
           <div class="product-item">🛡️ 30-day money-back guarantee</div>
         </div>
       </div>
+
+      <div class="commission-box">
+        <div class="big">50%</div>
+        <div class="detail">
+          <strong>S$123.50 commission per referral</strong><br>
+          50% of the first month's payment. Paid manually after 60 days — this covers the 30-day refund window, so you only get paid on members who stay.
+        </div>
+      </div>
     </div>
 
     <!-- HOW IT WORKS -->
     <div class="section">
-      <div class="section-label">How It Works</div>
-      <h3>Three steps. <em>That's it.</em></h3>
+      <div class="section-tag">How It Works</div>
+      <h2>Three steps.<br><em>That's it.</em></h2>
+
       <div class="steps">
         <div class="step">
           <div class="step-num">1</div>
@@ -329,9 +177,9 @@
           <div class="step-num">2</div>
           <div>
             <div class="step-title">Get your unique referral link</div>
-            <div class="step-desc">Share it on WhatsApp, Instagram, or wherever you connect with fellow tutors and educators. Send them to the sales page below — your link will track the referral automatically.</div>
-            <div style="margin-top:10px;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-              <span style="font-size:13px;color:var(--text-muted);">📄 Sales page:</span>
+            <div class="step-desc">Share it on WhatsApp, Instagram, or wherever you connect with fellow tutors. Send them to the sales page below — your link tracks the referral automatically.</div>
+            <div style="margin-top:10px;background:#f4f7fb;border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+              <span style="font-size:13px;color:var(--muted);">📄 Sales page:</span>
               <a href="https://john-yeo-swift-framework.vercel.app/apply.html" target="_blank" rel="noopener" style="font-size:13px;color:var(--gold);font-weight:600;text-decoration:none;word-break:break-all;">john-yeo-swift-framework.vercel.app/apply.html →</a>
             </div>
           </div>
@@ -346,13 +194,14 @@
       </div>
     </div>
 
-    <!-- CALCULATOR -->
+    <!-- EARNINGS CALCULATOR -->
     <div class="section">
-      <div class="section-label">Earnings Calculator</div>
-      <h3>How much could <em>you earn?</em></h3>
+      <div class="section-tag">Your Potential Earnings</div>
+      <h2>How much could<br><em>you earn?</em></h2>
+
       <div class="calc-wrap">
-        <div class="calc-title">Tap to calculate</div>
-        <div class="calc-sub">Based on S$123.50 per referral</div>
+        <div class="calc-title">Earnings Calculator</div>
+        <div class="calc-sub">Tap to see how much you'd earn</div>
         <div class="calc-grid">
           <div class="calc-tile active" onclick="setCalc(this,1)">
             <div class="refs">1</div>
@@ -372,36 +221,37 @@
           </div>
         </div>
         <div class="calc-result">
-          <div class="earn-label">You Earn</div>
+          <div class="earn-label">YOU EARN</div>
           <div class="earn-amount" id="calcAmount">S$123.50</div>
-          <div class="earn-note">Paid via PayNow · after 60 days</div>
+          <div class="earn-note">Paid via PayNow to your mobile number · after 60 days</div>
         </div>
       </div>
     </div>
 
     <!-- WHY PROMOTE -->
     <div class="section">
-      <div class="section-label">Why This Is Worth Sharing</div>
-      <h3>You're not selling. <em>You're recommending.</em></h3>
+      <div class="section-tag">Why This Is Worth Sharing</div>
+      <h2>You're not selling.<br><em>You're recommending.</em></h2>
       <ul class="why-list">
-        <li><span class="icon">💸</span><div><strong>Founding rate — S$247 vs usual S$397.</strong> A genuinely good deal that won't last forever.</div></li>
+        <li><span class="icon">💸</span><div><strong>Founding rate — S$247 vs usual S$397.</strong> A genuinely good deal that won't be available forever.</div></li>
         <li><span class="icon">🛡️</span><div><strong>30-day money-back guarantee.</strong> Zero risk for the person you refer.</div></li>
-        <li><span class="icon">📲</span><div><strong>Paid directly to your PayNow.</strong> No invoices. Payment goes to your mobile number after 60 days.</div></li>
+        <li><span class="icon">🤝</span><div><strong>A coach they can trust.</strong> John has worked with tutors and educators for years.</div></li>
+        <li><span class="icon">📲</span><div><strong>Paid direct to your PayNow.</strong> No invoices. Payment goes straight to your mobile number after 60 days.</div></li>
       </ul>
     </div>
 
     <!-- CTA -->
     <div class="section" style="text-align:center;">
-      <div class="section-label">Ready to Start?</div>
-      <h3 style="margin-bottom:20px;">Become an affiliate.<br><em>Earn S$123.50 per referral.</em></h3>
+      <div class="section-tag" style="margin-bottom:14px;">Ready to Start?</div>
+      <h2 style="margin-bottom:20px;">Become an affiliate.<br><em>Earn S$123.50 per referral.</em></h2>
       <a href="https://learningoutofthebox.thrivecart.com/pa-swift/partner/" class="btn-affiliate" target="_blank" rel="noopener">Become an Affiliate →</a>
-      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;">Free to join. No targets. No pressure.</p>
+      <p style="font-size:13px;color:var(--muted);margin-top:14px;">Free to join. No targets. No pressure. Just share and earn.</p>
     </div>
 
     <!-- FAQ -->
     <div class="section">
-      <div class="section-label">Questions</div>
-      <h3>FAQ</h3>
+      <div class="section-tag">Questions</div>
+      <h2>FAQ</h2>
       <div class="faq-list">
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">When do I get paid? <span class="faq-chev">›</span></button>
@@ -413,16 +263,26 @@
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">What if my referral asks for a refund? <span class="faq-chev">›</span></button>
-          <div class="faq-a">If a referral refunds within 30 days, no commission is paid. After 60 days, your referral is confirmed and you get paid.</div>
+          <div class="faq-a">If a referral refunds within 30 days, no commission is paid. After 60 days your referral is confirmed and you get paid.</div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)">Do I earn recurring commission? <span class="faq-chev">›</span></button>
           <div class="faq-a">Commission is on the first month only (50% = S$123.50). No recurring commission on subsequent months.</div>
         </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Do I need to be a SWIFT member to join? <span class="faq-chev">›</span></button>
+          <div class="faq-a">No — anyone can sign up as an affiliate. But members who have experienced the framework tend to refer with more confidence.</div>
+        </div>
       </div>
     </div>
 
-  </main>
+  </div><!-- /page-wrap -->
+
+  <div class="page-footer">
+    Product Architect Coaching &nbsp;·&nbsp; By John Yeo &nbsp;·&nbsp; Singapore<br>
+    <a href="mailto:lobcoach@gmail.com">lobcoach@gmail.com</a> &nbsp;|&nbsp;
+    <a href="apply.html">← Back to membership page</a>
+  </div>
 
   <script>
     var commissions = { 1: 'S$123.50', 3: 'S$370.50', 5: 'S$617.50', 10: 'S$1,235.00' };
@@ -437,132 +297,6 @@
       document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
       if (!isOpen) item.classList.add('open');
     }
-  </script>
-
-  <script>
-    // Nav dropdown
-    (function() {
-      document.querySelectorAll('.swift-tab-group').forEach(function(group) {
-        group.addEventListener('click', function(e) {
-          e.stopPropagation();
-          var isOpen = group.classList.contains('open');
-          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
-          if (!isOpen) group.classList.add('open');
-        });
-      });
-      document.addEventListener('click', function(){
-        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
-      });
-    })();
-  </script>
-
-  <script>
-  function openMobileMenu() {
-    document.getElementById('mobilePanel').classList.add('open');
-    document.getElementById('mobileOverlay').classList.add('open');
-  }
-  function closeMobileMenu() {
-    document.getElementById('mobilePanel').classList.remove('open');
-    document.getElementById('mobileOverlay').classList.remove('open');
-  }
-  </script>
-
-  <script>
-  (function() {
-    function initCollapse() {
-      var panel = document.getElementById('mobilePanel');
-      if (!panel) return;
-      var STORE_KEY = 'pac-menu-state';
-      var state = {};
-      try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) {}
-      panel.querySelectorAll('.mobile-menu-section').forEach(function(section) {
-        var label = section.textContent.trim();
-        var key = label.toLowerCase().replace(/\s+/g, '-');
-        var chev = document.createElement('span');
-        chev.className = 'ms-chevron';
-        section.appendChild(chev);
-        var items = [];
-        var el = section.nextElementSibling;
-        while (el && !el.classList.contains('mobile-menu-section')) {
-          items.push(el);
-          el = el.nextElementSibling;
-        }
-        if (!items.length) return;
-        var wrap = document.createElement('div');
-        wrap.className = 'mobile-section-items';
-        section.parentNode.insertBefore(wrap, items[0]);
-        items.forEach(function(item) { wrap.appendChild(item); });
-        var hasActive = !!wrap.querySelector('.active');
-        var savedState = state[key];
-        var startCollapsed = savedState !== undefined ? savedState : !hasActive;
-        if (startCollapsed) { wrap.classList.add('ms-collapsed'); chev.textContent = '›'; }
-        else { chev.textContent = '⌄'; }
-        section.addEventListener('click', function() {
-          var nowCollapsed = wrap.classList.toggle('ms-collapsed');
-          chev.textContent = nowCollapsed ? '›' : '⌄';
-          state[key] = nowCollapsed;
-          try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
-        });
-      });
-    }
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCollapse); }
-    else { initCollapse(); }
-  })();
-  </script>
-
-  <script>
-  var PAGES = [
-    { title:'Home', sub:'SWIFT Framework overview', url:'index.html', icon:'⌂', tags:'home swift framework' },
-    { title:'Signature Programme', sub:'S · Create your signature offer', url:'signature-programme.html', icon:'S', tags:'signature' },
-    { title:'Webinar Programme', sub:'W · Run your online webinar', url:'webinar-programme.html', icon:'W', tags:'webinar' },
-    { title:'Invite Programme', sub:'I · Referral & invite system', url:'invite-programme.html', icon:'I', tags:'invite referral' },
-    { title:'Fill Class', sub:'F · Revenue calculator & scheduling', url:'fill-programme.html', icon:'F', tags:'fill class revenue' },
-    { title:'Track Programme', sub:'T · Track your progress', url:'track-programme.html', icon:'T', tags:'track progress' },
-    { title:'Case Studies', sub:'Success stories from members', url:'casestudies.html', icon:'★', tags:'case studies success' },
-    { title:'Affiliate Programme', sub:'Earn S$123.50 per referral', url:'affiliate.html', icon:'🤝', tags:'affiliate earn referral commission paynow' },
-    { title:'Settings', sub:'Account & user management', url:'settings.html', icon:'⚙️', tags:'settings account' },
-  ];
-  function searchPages(q) {
-    if (!q || q.length < 1) return [];
-    q = q.toLowerCase();
-    return PAGES.filter(function(p) {
-      return p.title.toLowerCase().includes(q) || p.tags.toLowerCase().includes(q) || p.sub.toLowerCase().includes(q);
-    }).slice(0, 7);
-  }
-  function buildResultHTML(results, mobile) {
-    if (!results.length) return '<div class="nav-search-no-results">No results found</div>';
-    return results.map(function(p) {
-      var cls = mobile ? 'mobile-search-result' : 'nav-search-result';
-      var iconCls = mobile ? 'mobile-search-result-icon' : 'nav-search-result-icon';
-      var titleCls = mobile ? 'mobile-search-result-title' : 'nav-search-result-title';
-      var subCls = mobile ? 'mobile-search-result-sub' : 'nav-search-result-sub';
-      return '<a class="'+cls+'" href="'+p.url+'"><div class="'+iconCls+'">'+p.icon+'</div><div class="nav-search-result-text"><div class="'+titleCls+'">'+p.title+'</div><div class="'+subCls+'">'+p.sub+'</div></div></a>';
-    }).join('');
-  }
-  (function() {
-    var inp = document.getElementById('navSearchInput');
-    var res = document.getElementById('navSearchResults');
-    if (!inp) return;
-    inp.addEventListener('input', function() {
-      var results = searchPages(this.value.trim());
-      if (!this.value.trim()) { res.classList.remove('open'); return; }
-      res.innerHTML = buildResultHTML(results, false);
-      res.classList.add('open');
-    });
-    document.addEventListener('click', function(e) {
-      if (!document.getElementById('navSearch').contains(e.target)) res.classList.remove('open');
-    });
-  })();
-  (function() {
-    var inp = document.getElementById('mobileSearchInput');
-    var res = document.getElementById('mobileSearchResults');
-    if (!inp) return;
-    inp.addEventListener('input', function() {
-      var results = searchPages(this.value.trim());
-      if (!this.value.trim()) { res.innerHTML = ''; return; }
-      res.innerHTML = buildResultHTML(results, true);
-    });
-  })();
   </script>
 
 </body>
