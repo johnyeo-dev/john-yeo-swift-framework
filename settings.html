@@ -544,6 +544,7 @@
                 <tr>
                   <th style="padding-left:18px;">User</th>
                   <th>Email</th>
+                  <th>Tier</th>
                   <th>Role</th>
                   <th>Trial</th>
                   <th>Actions</th>
@@ -901,6 +902,10 @@
       } else {
         trialCell = '<span style="font-size:11px;color:var(--text-muted);">–</span>';
       }
+      var tier = usr.tier || 'swift';
+      var tierBadge = tier === 'elite'
+        ? '<span style="background:rgba(245,158,11,0.15);color:#b45309;border:1px solid rgba(245,158,11,0.35);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;" onclick="toggleTier(\'' + u + '\')" title="Click to change">⭐ Elite</span>'
+        : '<span style="background:rgba(10,191,188,0.12);color:#0ABFBC;border:1px solid rgba(10,191,188,0.3);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;" onclick="toggleTier(\'' + u + '\')" title="Click to change">◆ Swift</span>';
       html += '<tr>'
             + '<td style="padding-left:18px;">'
             + '<div style="display:flex;align-items:center;gap:10px;">'
@@ -908,6 +913,7 @@
             + '<div><div class="urow-name">' + escHtml(u) + '</div>' + (usr.displayName ? '<div class="urow-email">' + escHtml(usr.displayName) + '</div>' : '') + (usr.notes ? '<div style="font-size:11px;color:var(--text-muted);margin-top:1px;font-style:italic;">' + escHtml(usr.notes) + '</div>' : '') + '</div>'
             + '</div></td>'
             + '<td style="font-size:13px;color:var(--text-muted);">' + (usr.email ? escHtml(usr.email) : '<em style="opacity:0.5;">–</em>') + '</td>'
+            + '<td>' + tierBadge + '</td>'
             + '<td>'
             + (role === 'admin'
               ? '<span class="role-badge role-admin">✦ Admin</span>'
@@ -922,6 +928,16 @@
             + '</tr>';
     });
     tbody.innerHTML = html;
+  }
+
+  // ── TIER TOGGLE ──────────────────────────────────────────────────────────
+  function toggleTier(u) {
+    var users = getUsers();
+    if (!users[u]) users[u] = {};
+    var current = users[u].tier || 'swift';
+    users[u].tier = current === 'elite' ? 'swift' : 'elite';
+    localStorage.setItem('pac-swift-users', JSON.stringify(users));
+    renderUserTable();
   }
 
   // ── ADMIN: ADD USER DIRECTLY ─────────────────────────────────────────────
