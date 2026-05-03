@@ -376,11 +376,18 @@
 
 
   <!-- BOOK TOP BAR -->
-  <div id="bookBar" style="background:linear-gradient(90deg,#7C3AED,#8B5CF6);color:white;padding:9px 16px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;font-family:'DM Sans',sans-serif;position:relative;">
-    <span style="font-size:15px;">📚</span>
-    <span style="opacity:0.9;">This framework complements John's books —</span>
-    <a href="https://johnyeo.name/get-your-book" target="_blank" rel="noopener" style="color:white;font-weight:700;text-decoration:underline;text-underline-offset:2px;white-space:nowrap;">find out more →</a>
-    <button onclick="document.getElementById('bookBar').style.display='none'" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.6);font-size:16px;cursor:pointer;line-height:1;padding:4px;" title="Dismiss">✕</button>
+  <div id="bookBar" style="background:linear-gradient(90deg,#5B21B6,#7C3AED);color:white;padding:10px 44px 10px 16px;display:flex;align-items:center;justify-content:center;gap:14px;font-family:'DM Sans',sans-serif;position:relative;flex-wrap:wrap;">
+    <!-- Book thumbnails -->
+    <a href="https://johnyeo.name/get-your-book" target="_blank" rel="noopener" style="display:flex;gap:8px;flex-shrink:0;text-decoration:none;">
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/SyL4eX4oGs7zLJXLdJ7o/media/694bbfd973a5e04090ff37a0.png" alt="In the Business of Being Authentic" style="height:54px;width:auto;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.35);" />
+      <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/SyL4eX4oGs7zLJXLdJ7o/media/69f34778b7fe31537a98572f.jpg" alt="100 True Fans" style="height:54px;width:auto;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.35);" />
+    </a>
+    <!-- Text -->
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <span style="font-size:13px;font-weight:600;opacity:0.95;">John's books on building with heart</span>
+      <a href="https://johnyeo.name/get-your-book" target="_blank" rel="noopener" style="font-size:12px;color:rgba(255,255,255,0.75);text-decoration:underline;text-underline-offset:2px;">find out more →</a>
+    </div>
+    <button onclick="document.getElementById('bookBar').style.display='none'" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.5);font-size:16px;cursor:pointer;line-height:1;padding:4px;" title="Dismiss">✕</button>
   </div>
 
   <main class="main">
