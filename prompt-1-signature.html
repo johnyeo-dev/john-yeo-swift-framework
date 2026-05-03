@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
+<script>/* pac-auto-user */(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
+
+<script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
+
   <meta charset="UTF-8" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -472,69 +476,14 @@ FORMAT NOTES
       </div>
     </div>
 
-  </main>
-
-  <div id="nameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,20,0.75);z-index:9999;align-items:center;justify-content:center;">
-    <div style="background:white;border-radius:20px;padding:40px 32px;width:min(380px,90vw);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-      <div style="font-size:36px;margin-bottom:16px;">👋</div>
-      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:#002D6A;margin-bottom:8px;">What's your name?</h3>
+  </main><h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:#002D6A;margin-bottom:8px;">What's your name?</h3>
       <p style="font-size:14px;color:#6B7A96;margin-bottom:24px;line-height:1.6;">So we know who's using the SWIFT Framework.</p>
       <input id="nameModalInput" type="text" placeholder="e.g. Sherina" autocomplete="given-name" style="width:100%;border:1.5px solid #B8C4D4;border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#0A0F1C;outline:none;margin-bottom:16px;box-sizing:border-box;" />
       <button onclick="saveNameAndClose()" style="width:100%;background:#0ABFBC;color:#002D6A;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Get Started →</button>
     </div>
   </div>
 
-  <script>
-    (function(){
-      var saved = localStorage.getItem('pac-swift-user') || '';
-      var disp = document.getElementById('nameDisplay');
-      if (disp && saved) { disp.textContent = saved; disp.style.display = 'block'; disp.style.border = '1px solid rgba(255,255,255,0.25)'; disp.style.background = 'rgba(255,255,255,0.08)'; }
-      if (!saved) { var modal = document.getElementById('nameModal'); if (modal) { modal.style.display = 'flex'; setTimeout(function(){ var i = document.getElementById('nameModalInput'); if(i) i.focus(); }, 150); } }
-    })();
-    function saveNameAndClose() {
-      var v = (document.getElementById('nameModalInput').value || '').trim();
-      if (!v) return;
-      localStorage.setItem('pac-swift-user', v);
-      var disp = document.getElementById('nameDisplay');
-      if (disp) { disp.textContent = v; disp.style.display = 'block'; disp.style.border = '1px solid rgba(255,255,255,0.25)'; disp.style.background = 'rgba(255,255,255,0.08)'; }
-      document.getElementById('nameModal').style.display = 'none';
-    }
-    function promptChangeName() {
-      var modal = document.getElementById('nameModal');
-      if (modal) { var inp = document.getElementById('nameModalInput'); if (inp) inp.value = localStorage.getItem('pac-swift-user') || ''; modal.style.display = 'flex'; setTimeout(function(){ if(inp) inp.focus(); }, 100); }
-    }
-    (function(){
-      document.querySelectorAll('.swift-tab-group').forEach(function(group){
-        var closeTimer;
-        group.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); group.classList.add('open'); });
-        group.addEventListener('mouseleave', function(){ closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120); });
-        var btn = group.querySelector('button');
-        if (btn) btn.addEventListener('click', function(e){ e.stopPropagation(); var isOpen = group.classList.contains('open'); document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); if (!isOpen) group.classList.add('open'); });
-      });
-      document.addEventListener('click', function(){ document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); });
-    })();
-    function openMobileMenu() { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
-    function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
-    function copyPrompt(contentId, btnId) {
-      var el = document.getElementById(contentId);
-      var btn = document.getElementById(btnId);
-      if (!el || !btn) return;
-      var text = el.innerText || el.textContent;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function(){
-          btn.textContent = '✓ Copied!'; btn.classList.add('copied');
-          setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500);
-        }).catch(function(){ fallbackCopy(text, btn); });
-      } else { fallbackCopy(text, btn); }
-    }
-    function fallbackCopy(text, btn) {
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.focus(); ta.select();
-      try { document.execCommand('copy'); btn.textContent = '✓ Copied!'; btn.classList.add('copied'); setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500); } catch(e) {}
-      document.body.removeChild(ta);
-    }
-  </script>
+  
 
   <script>
   (function() {

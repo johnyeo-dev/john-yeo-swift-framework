@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
+<script>/* pac-auto-user */(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
+
+<script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
+
   <meta charset="UTF-8" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
