@@ -544,8 +544,8 @@
                 <tr>
                   <th style="padding-left:18px;">User</th>
                   <th>Email</th>
-                  <th>Tier</th>
                   <th>Role</th>
+                  <th>Tier</th>
                   <th>Trial</th>
                   <th>Actions</th>
                 </tr>
@@ -913,12 +913,12 @@
             + '<div><div class="urow-name">' + escHtml(u) + '</div>' + (usr.displayName ? '<div class="urow-email">' + escHtml(usr.displayName) + '</div>' : '') + (usr.notes ? '<div style="font-size:11px;color:var(--text-muted);margin-top:1px;font-style:italic;">' + escHtml(usr.notes) + '</div>' : '') + '</div>'
             + '</div></td>'
             + '<td style="font-size:13px;color:var(--text-muted);">' + (usr.email ? escHtml(usr.email) : '<em style="opacity:0.5;">–</em>') + '</td>'
-            + '<td>' + tierBadge + '</td>'
             + '<td>'
             + (role === 'admin'
               ? '<span class="role-badge role-admin">✦ Admin</span>'
               : '<span class="role-badge role-user">● Member</span>')
             + '</td>'
+            + '<td>' + tierBadge + '</td>'
             + '<td>' + trialCell + '</td>'
             + '<td><div class="urow-actions">'
             + '<button onclick="viewMember(\'' + u + '\')" style="background:rgba(74,143,231,0.15);border:1px solid rgba(74,143,231,0.3);color:#4A8FE7;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif;">👁 View</button>'
