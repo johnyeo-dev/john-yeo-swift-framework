@@ -470,6 +470,7 @@
             <div class="threec-dot" onclick="threecGoTo(1)"></div>
             <div class="threec-dot" onclick="threecGoTo(2)"></div>
           </div>
+          <button class="threec-btn" id="threecPlayPause" onclick="threecTogglePlay()" title="Pause auto-advance">⏸</button>
           <button class="threec-btn" id="threecNext" onclick="threecSlide(1)">›</button>
         </div>
       </div>
@@ -1013,9 +1014,11 @@
   <script>
   // ── 3C SLIDER ──────────────────────────────────────────────────────────────
   (function() {
-    var current = 0, total = 3;
-    var track = document.getElementById('threecTrack');
-    var dots  = document.querySelectorAll('.threec-dot');
+    var current = 0, total = 3, playing = true;
+    var track  = document.getElementById('threecTrack');
+    var dots   = document.querySelectorAll('.threec-dot');
+    var ppBtn  = document.getElementById('threecPlayPause');
+    var timer  = null;
 
     function goTo(n) {
       current = (n + total) % total;
@@ -1023,8 +1026,23 @@
       dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
     }
 
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(function() { goTo(current + 1); }, 5000);
+    }
+
+    function updateBtn() {
+      ppBtn.textContent = playing ? '⏸' : '▶';
+      ppBtn.title = playing ? 'Pause auto-advance' : 'Play auto-advance';
+    }
+
     window.threecSlide = function(dir) { goTo(current + dir); };
     window.threecGoTo  = function(n)   { goTo(n); };
+    window.threecTogglePlay = function() {
+      playing = !playing;
+      if (playing) { startTimer(); } else { clearInterval(timer); }
+      updateBtn();
+    };
 
     // Touch / swipe support
     var startX = 0;
@@ -1034,12 +1052,8 @@
       if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
     });
 
-    // Auto-advance every 5s
-    var timer = setInterval(function() { goTo(current + 1); }, 5000);
-    track.parentElement.addEventListener('mouseenter', function() { clearInterval(timer); });
-    track.parentElement.addEventListener('mouseleave', function() {
-      timer = setInterval(function() { goTo(current + 1); }, 5000);
-    });
+    startTimer();
+    updateBtn();
   })();
   </script>
 </body>
