@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Affiliate Programme | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:      #002D6A;
+      --navy-dark: #0A0F1C;
+      --gold:      #0ABFBC;
+      --gold-light:#4A8FE7;
+      --cream:     #F4F7FB;
+      --text:      #0A0F1C;
+      --muted:     #6B7A96;
+      --white:     #FFFFFF;
+      --border:    #D1DAE8;
+      --green:     #10B981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--text); }
+
+    /* ── TOP BAR ── */
+    .top-bar { background: var(--navy-dark); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .top-bar-back { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; }
+    .top-bar-back:hover { color: rgba(255,255,255,0.8); }
+
+    /* ── HERO ── */
+    .hero { background: var(--navy-dark); padding: 72px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 0%, rgba(10,191,188,0.12) 0%, transparent 70%); pointer-events: none; }
+    .hero-tag { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 5vw, 48px); color: var(--white); line-height: 1.15; margin-bottom: 20px; max-width: 680px; margin-left: auto; margin-right: auto; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: clamp(15px, 2vw, 17px); color: rgba(255,255,255,0.6); max-width: 540px; margin: 0 auto 32px; line-height: 1.75; }
+    .hero-amount { display: inline-flex; align-items: baseline; gap: 4px; background: rgba(10,191,188,0.12); border: 1px solid rgba(10,191,188,0.3); border-radius: 14px; padding: 16px 32px; margin-top: 8px; }
+    .hero-amount .num { font-family: 'DM Serif Display', serif; font-size: 52px; color: var(--gold); line-height: 1; }
+    .hero-amount .label { font-size: 14px; color: rgba(255,255,255,0.5); }
+
+    /* ── LAYOUT ── */
+    .page-wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 60px 0; }
+    .section + .section { border-top: 1px solid var(--border); }
+    .section-tag { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .section h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3.5vw, 34px); color: var(--navy); line-height: 1.25; margin-bottom: 16px; }
+    .section h2 em { font-style: italic; color: var(--gold-light); }
+    .section p { font-size: 17px; color: var(--text); line-height: 1.9; margin-bottom: 16px; }
+    .section p:last-child { margin-bottom: 0; }
+
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .step { display: flex; align-items: flex-start; gap: 20px; padding: 20px 24px; background: var(--cream); border-radius: 14px; border-left: 4px solid var(--gold); }
+    .step-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; flex-shrink: 0; width: 36px; }
+    .step-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .step-desc { font-size: 15px; color: var(--muted); line-height: 1.65; }
+
+    /* ── EARNINGS CALCULATOR ── */
+    .calc-wrap { background: linear-gradient(135deg, var(--navy-dark), #0f1e3d); border-radius: 20px; padding: 40px 36px; margin: 28px 0; }
+    .calc-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); margin-bottom: 6px; }
+    .calc-sub { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
+    .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+    .calc-tile { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .calc-tile:hover, .calc-tile.active { background: rgba(10,191,188,0.15); border-color: var(--gold); }
+    .calc-tile .refs { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--white); line-height: 1; }
+    .calc-tile .ref-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+    .calc-result { text-align: center; padding: 24px; background: rgba(10,191,188,0.1); border: 1px solid rgba(10,191,188,0.3); border-radius: 14px; }
+    .calc-result .earn-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 8px; letter-spacing: 0.5px; }
+    .calc-result .earn-amount { font-family: 'DM Serif Display', serif; font-size: 48px; color: var(--gold); line-height: 1; }
+    .calc-result .earn-note { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 8px; }
+
+    /* ── WHY LIST ── */
+    .why-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .why-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; color: var(--text); line-height: 1.65; padding: 14px 16px; background: var(--cream); border-radius: 10px; }
+    .why-list li .icon { font-size: 20px; flex-shrink: 0; }
+
+    /* ── PRODUCT CARD ── */
+    .product-card { background: var(--cream); border: 1.5px solid var(--border); border-radius: 16px; padding: 28px 24px; margin: 20px 0; }
+    .product-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 12px; }
+    .product-price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+    .product-price .current { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--navy); }
+    .product-price .usual { font-size: 16px; color: var(--muted); text-decoration: line-through; }
+    .product-price .tag { font-size: 12px; font-weight: 700; background: rgba(10,191,188,0.12); color: var(--gold); border: 1px solid rgba(10,191,188,0.3); border-radius: 99px; padding: 3px 10px; }
+    .product-items { display: flex; flex-direction: column; gap: 8px; }
+    .product-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+    .product-item::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+    /* ── COMMISSION BOX ── */
+    .commission-box { background: var(--navy); border-radius: 14px; padding: 24px 28px; margin: 20px 0; display: flex; align-items: center; gap: 24px; }
+    .commission-box .big { font-family: 'DM Serif Display', serif; font-size: 42px; color: var(--gold); line-height: 1; flex-shrink: 0; }
+    .commission-box .detail { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.7; }
+    .commission-box .detail strong { color: white; }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 0; margin: 20px 0; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { width: 100%; background: none; border: none; padding: 18px 20px; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .faq-q:hover { background: var(--cream); }
+    .faq-chev { color: var(--gold); font-size: 18px; flex-shrink: 0; transition: transform 0.2s; }
+    .faq-a { display: none; padding: 0 20px 18px; font-size: 15px; color: var(--muted); line-height: 1.75; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-chev { transform: rotate(90deg); }
+
+    /* ── CTA ── */
+    .cta-block { text-align: center; padding: 60px 0; }
+    .btn-affiliate { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--gold); color: var(--navy); font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; padding: 18px 48px; border-radius: 12px; text-decoration: none; transition: all 0.2s; letter-spacing: 0.3px; }
+    .btn-affiliate:hover { background: #08a8a5; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(10,191,188,0.35); }
+    .btn-affiliate:active { transform: translateY(0); }
+    .cta-note { font-size: 13px; color: var(--muted); margin-top: 14px; }
+
+    /* ── FOOTER ── */
+    .page-footer { background: var(--navy-dark); padding: 28px 24px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); line-height: 1.8; margin-top: 40px; }
+    .page-footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .hero { padding: 52px 20px 60px; }
+      .section { padding: 44px 0; }
+      .calc-wrap { padding: 28px 20px; }
+      .calc-grid { grid-template-columns: repeat(2, 1fr); }
+      .commission-box { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <a href="index.html" class="top-bar-back">← Back to portal</a>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="page-wrap">
+      <div class="hero-tag">✶ Affiliate Programme ✶</div>
+      <h1>Earn <em>S$123.50</em> per referral.<br>Share what's already working.</h1>
+      <p class="hero-sub">If you've found value in the SWIFT Framework, your recommendation is worth more than any ad. Refer someone, and earn half of their first month — automatically.</p>
+      <div class="hero-amount">
+        <div class="num">S$123.50</div>
+        <div class="label">&nbsp;per referral</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- WHAT YOU'RE PROMOTING -->
+    <div class="section">
+      <div class="section-tag">What You're Promoting</div>
+      <h2>The SWIFT Framework —<br><em>your pocket adviser at your fingertips</em></h2>
+      <p>You're sharing something you're already a part of. The SWIFT Framework is a monthly membership built for tutors, educators and coaches who want to grow their group classes without burning out.</p>
+
+      <div class="product-card">
+        <div class="product-name">Product Architect Swift Membership</div>
+        <div class="product-price">
+          <span class="current">S$247<span style="font-size:18px;font-weight:400;">/mo</span></span>
+          <span class="usual">S$347</span>
+          <span class="tag">Founding Rate</span>
+        </div>
+        <div class="product-items">
+          <div class="product-item">Full SWIFT Framework — all 5 modules</div>
+          <div class="product-item">Personal progress dashboard & task tracker</div>
+          <div class="product-item">Heart-based educator community</div>
+          <div class="product-item">AI prompts, templates & case studies</div>
+          <div class="product-item">🎙️ Live group coaching calls (optional bonus)</div>
+          <div class="product-item">🛡️ 30-day money-back guarantee</div>
+        </div>
+      </div>
+
+      <div class="commission-box">
+        <div class="big">50%</div>
+        <div class="detail">
+          <strong>S$123.50 commission per referral</strong><br>
+          50% of the first month's payment. Paid manually after 60 days — this covers the 30-day refund window, so you only get paid on members who stay.
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="section">
+      <div class="section-tag">How It Works</div>
+      <h2>Three steps.<br><em>That's it.</em></h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Sign up as an affiliate</div>
+            <div class="step-desc">Click the button below and fill in your details on ThriveCart. Takes less than 2 minutes.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Get your unique referral link</div>
+            <div class="step-desc">ThriveCart gives you a personal link. Share it on WhatsApp, Instagram, or wherever you connect with fellow tutors.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Earn S$123.50 per sale</div>
+            <div class="step-desc">When someone joins through your link and stays past 60 days, you get paid via PayNow to your mobile number.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EARNINGS CALCULATOR -->
+    <div class="section">
+      <div class="section-tag">Your Potential Earnings</div>
+      <h2>How much could<br><em>you earn?</em></h2>
+
+      <div class="calc-wrap">
+        <div class="calc-title">Earnings Calculator</div>
+        <div class="calc-sub">Tap to see how much you'd earn</div>
+        <div class="calc-grid">
+          <div class="calc-tile active" onclick="setCalc(1)">
+            <div class="refs">1</div>
+            <div class="ref-label">referral</div>
+          </div>
+          <div class="calc-tile" onclick="setCalc(3)">
+            <div class="refs">3</div>
+            <div class="ref-label">referrals</div>
+          </div>
+          <div class="calc-tile" onclick="setCalc(5)">
+            <div class="refs">5</div>
+            <div class="ref-label">referrals</div>
+          </div>
+          <div class="calc-tile" onclick="setCalc(10)">
+            <div class="refs">10</div>
+            <div class="ref-label">referrals</div>
+          </div>
+        </div>
+        <div class="calc-result">
+          <div class="earn-label">YOU EARN</div>
+          <div class="earn-amount" id="calcAmount">S$123.50</div>
+          <div class="earn-note">Paid via PayNow to your mobile number · after 60 days</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHY PROMOTE -->
+    <div class="section">
+      <div class="section-tag">Why This Is Worth Sharing</div>
+      <h2>You're not selling.<br><em>You're recommending.</em></h2>
+      <p>The best affiliates aren't salespeople — they're genuine believers. If you've experienced the SWIFT Framework yourself, your referral carries real weight. Here's why it's an easy yes:</p>
+
+      <ul class="why-list">
+        <li><span class="icon">💸</span><div><strong>Founding rate — S$247 vs usual S$347.</strong> You're sharing a genuinely good deal that won't be available forever.</div></li>
+        <li><span class="icon">🎙️</span><div><strong>Live group coaching calls included.</strong> Your referrals get access to the same calls that elite clients attend — a tangible bonus.</div></li>
+        <li><span class="icon">🛡️</span><div><strong>30-day money-back guarantee.</strong> Zero risk for the person you refer. If it doesn't work for them, they get a full refund.</div></li>
+        <li><span class="icon">🤝</span><div><strong>A coach they can trust.</strong> John has worked with tutors and educators for years. Your recommendation is backed by a real track record.</div></li>
+        <li><span class="icon">📲</span><div><strong>Paid direct to your PayNow.</strong> No invoices, no waiting on platforms. Payment goes straight to your mobile number after 60 days.</div></li>
+      </ul>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <div class="section-tag" style="margin-bottom:14px;">Ready to Start?</div>
+      <h2 style="margin-bottom:20px;">Become an affiliate.<br><em>Earn S$123.50 per referral.</em></h2>
+      <a href="https://learningoutofthebox.thrivecart.com/pa-swift/partner/" class="btn-affiliate" target="_blank" rel="noopener">Become an Affiliate →</a>
+      <p class="cta-note">Free to join. No targets. No pressure. Just share and earn.</p>
+    </div>
+
+    <!-- FAQ -->
+    <div class="section">
+      <div class="section-tag">Questions</div>
+      <h2>FAQ</h2>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            When do I get paid? <span class="faq-chev">›</span>
+          </button>
+          <div class="faq-a">After 60 days from the referral's payment date. This covers the 30-day refund window, so you only get paid on members who stay. Payment is made manually via PayNow to your registered mobile number.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            How is my referral tracked? <span class="faq-chev">›</span>
+          </button>
+          <div class="faq-a">ThriveCart uses cookie tracking on your unique affiliate link. When someone clicks your link and joins within the cookie window, the sale is attributed to you automatically.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            What if my referral asks for a refund? <span class="faq-chev">›</span>
+          </button>
+          <div class="faq-a">The 30-day money-back guarantee is why we wait 60 days to pay commissions. If a referral refunds within 30 days, no commission is paid. After 60 days, your referral is confirmed and you get paid.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Do I earn recurring commission? <span class="faq-chev">›</span>
+          </button>
+          <div class="faq-a">The commission is on the first month only (50% = S$123.50). There is no recurring commission on subsequent months. This is a first-month referral reward.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Do I need to be a SWIFT member to join? <span class="faq-chev">›</span>
+          </button>
+          <div class="faq-a">No — anyone can sign up as an affiliate. But members who have experienced the framework tend to refer with more confidence and get better results.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-wrap -->
+
+  <div class="page-footer">
+    Product Architect Coaching &nbsp;·&nbsp; By John Yeo &nbsp;·&nbsp; Singapore<br>
+    <a href="mailto:lobcoach@gmail.com">lobcoach@gmail.com</a> &nbsp;|&nbsp;
+    <a href="index.html">Member portal</a>
+  </div>
+
+  <script>
+    var commissions = { 1: 'S$123.50', 3: 'S$370.50', 5: 'S$617.50', 10: 'S$1,235.00' };
+
+    function setCalc(n) {
+      document.getElementById('calcAmount').textContent = commissions[n];
+      document.querySelectorAll('.calc-tile').forEach(function(t) { t.classList.remove('active'); });
+      event.currentTarget.classList.add('active');
+    }
+
+    function toggleFaq(btn) {
+      var item = btn.parentElement;
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+      if (!isOpen) item.classList.add('open');
+    }
+  </script>
+
+</body>
+</html>
