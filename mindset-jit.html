@@ -4,7 +4,7 @@
   <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>6 Prompts | SWIFT Framework</title>
+  <title>Just in Time Mindset | PAC SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -13,25 +13,28 @@
       --cream: #F4F7FB; --cream-dark: #E8EDF5;
       --text: #0A0F1C; --text-muted: #6B7A96;
       --white: #FFFFFF; --border: #B8C4D4;
+      --s: #0ABFBC; --w: #4A8FE7; --i: #8B5CF6; --f: #F59E0B; --t: #10B981;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
 
-    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    /* HEADER */
+    .header { background: var(--navy); padding: 24px 40px; display: flex; align-items: flex-end; gap: 20px; }
     .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 32px); color: var(--white); line-height: 1.1; }
     .header h1 em { font-style: italic; color: var(--gold-light); }
-    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 14px; text-align: center; flex-shrink: 0; }
     .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
     .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
 
+    /* SWIFT NAV */
     .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .swift-tab { padding: 14px 20px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
     .swift-tab:hover { color: rgba(255,255,255,0.85); }
     .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
-    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
     .swift-tab.active .swift-letter { color: var(--gold); }
-    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-word { font-size: 12px; }
     .swift-tab-group { position: relative; display: flex; align-items: stretch; }
     .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
     .swift-tab-group.open .swift-sub-menu { display: block; }
@@ -40,6 +43,7 @@
     .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
     .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
 
+    /* MOBILE NAV */
     .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
     .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
     .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
@@ -54,54 +58,16 @@
     .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
     @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
     @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
 
-    /* ── MAIN ── */
-    .main { max-width: 800px; margin: 0 auto; padding: 50px 24px 80px; }
-
-    .page-intro { margin-bottom: 36px; }
-    .page-intro .overline { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .page-intro h2 { font-family: 'DM Serif Display', serif; font-size: clamp(26px, 4vw, 38px); color: var(--navy); line-height: 1.15; margin-bottom: 14px; }
-    .page-intro h2 em { font-style: italic; color: var(--gold-light); }
-    .page-intro p { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 580px; }
-
-    /* ── PROMPT GRID ── */
-    .prompt-grid { display: flex; flex-direction: column; gap: 12px; }
-
-    .prompt-hub-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px 22px; display: flex; align-items: center; gap: 18px; text-decoration: none; color: var(--text); transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s; box-shadow: 0 1px 6px rgba(0,45,106,0.05); }
-    .prompt-hub-card:hover { border-color: var(--gold); box-shadow: 0 4px 20px rgba(10,191,188,0.12); transform: translateY(-1px); }
-    .prompt-hub-soon { opacity: 0.55; cursor: default; pointer-events: none; background: var(--cream); }
-    .prompt-hub-soon:hover { transform: none; box-shadow: none; border-color: var(--border); }
-
-    .phc-num { background: var(--navy); color: var(--white); font-family: 'DM Serif Display', serif; font-size: 18px; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .phc-num-soon { background: var(--cream-dark); color: var(--text-muted); }
-
-    .phc-body { flex: 1; }
-    .phc-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
-    .phc-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 4px; }
-    .prompt-hub-soon .phc-title { color: var(--text-muted); }
-    .phc-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-
-    .phc-arrow { font-size: 18px; color: var(--gold); flex-shrink: 0; transition: transform 0.2s; }
-    .prompt-hub-card:hover .phc-arrow { transform: translateX(4px); }
-
-    .phc-soon-badge { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--text-muted); background: var(--cream-dark); border-radius: 20px; padding: 4px 12px; flex-shrink: 0; }
-
-    @media (max-width: 600px) {
-      .header { padding: 20px 16px; }
-      .main { padding: 32px 16px 60px; }
-      .prompt-hub-card { padding: 16px 16px; gap: 14px; }
-      .phc-num { width: 34px; height: 34px; font-size: 15px; }
-      .phc-title { font-size: 16px; }
-    }
-
-    /* ── COLLAPSIBLE MOBILE SECTIONS ── */
+    /* COLLAPSIBLE MOBILE SECTIONS */
     .mobile-menu-section { cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
     .mobile-menu-section:hover { color: rgba(255,255,255,0.6); }
     .ms-chevron { font-size: 14px; opacity: 0.45; flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
     .mobile-section-items { overflow: hidden; max-height: 600px; transition: max-height 0.25s ease; }
     .mobile-section-items.ms-collapsed { max-height: 0; }
 
-    /* ── NAV SEARCH ── */
+    /* NAV SEARCH */
     .nav-search { position: relative; display: flex; align-items: center; padding: 0 8px; }
     .nav-search-input { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 12px 6px 32px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: white; outline: none; width: 140px; transition: all 0.2s; }
     .nav-search-input::placeholder { color: rgba(255,255,255,0.35); }
@@ -129,24 +95,96 @@
     .mobile-search-results { margin-top: 6px; }
     .mobile-search-result { display: flex; align-items: center; gap: 10px; padding: 11px 4px; color: rgba(255,255,255,0.75); font-size: 14px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; }
     .mobile-search-result:hover { color: white; }
-    .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
+    .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
     .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
     .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+    /* MAIN */
+    .main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* PAGE HERO */
+    .page-hero { margin-bottom: 40px; }
+    .page-hero-tag { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(26px, 4vw, 40px); color: var(--navy); line-height: 1.15; margin-bottom: 12px; }
+    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
+    .page-hero-sub { font-size: 15px; color: var(--text-muted); line-height: 1.75; max-width: 640px; }
+
+    /* PERSONAL QUOTE */
+    .personal-quote { background: var(--white); border: 1.5px solid var(--border); border-left: 4px solid var(--gold); border-radius: 0 14px 14px 0; padding: 24px 28px; margin-bottom: 40px; }
+    .personal-quote p { font-size: 15px; color: var(--text-muted); line-height: 1.8; font-style: italic; }
+    .personal-quote .attr { font-style: normal; font-size: 12px; color: var(--text-muted); margin-top: 12px; display: block; font-weight: 600; letter-spacing: 0.5px; }
+
+    /* SECTION HEADING */
+    .section-heading { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; margin-top: 40px; }
+    .section-heading-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
+    .section-heading-rule { flex: 1; height: 1px; background: var(--border); }
+    .section-sub { font-size: 15px; color: var(--text-muted); line-height: 1.75; max-width: 620px; margin-bottom: 24px; }
+
+    /* COMPARE CARDS */
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    @media (max-width: 580px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px; overflow: hidden; }
+    .compare-card.danger { border-top: 4px solid #E24B4A; }
+    .compare-card.good { border-top: 4px solid var(--gold); }
+    .compare-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+    .compare-card.danger .compare-label { color: #A32D2D; }
+    .compare-card.good .compare-label { color: #0F6E56; }
+    .compare-card h3 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 16px; }
+    .compare-card ul { padding-left: 1.1rem; }
+    .compare-card ul li { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 7px; }
+
+    /* STEPS */
+    .steps-list { display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
+    .step-item { display: flex; gap: 20px; background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px; transition: box-shadow 0.2s; }
+    .step-item:hover { box-shadow: 0 6px 20px rgba(0,45,106,0.07); }
+    .step-num { min-width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+    .step-body h4 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 8px; }
+    .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+    .step-ask { display: block; font-size: 14px; color: var(--gold); font-style: italic; margin-top: 12px; padding: 10px 14px; background: rgba(10,191,188,0.07); border-radius: 8px; line-height: 1.6; }
+
+    /* ACTION GRID */
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 40px; }
+    @media (max-width: 580px) { .action-grid { grid-template-columns: 1fr; } }
+    .action-item { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+    .action-item-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .action-item p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* CLOSING */
+    .closing-block { background: var(--navy); border-radius: 18px; padding: 36px 40px; margin-bottom: 32px; }
+    .closing-block p { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.85; margin-bottom: 14px; }
+    .closing-block p:last-child { margin: 0; }
+    .closing-block strong { color: var(--white); font-weight: 600; }
+
+    /* TAGS */
+    .tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+    .tag { display: inline-block; background: var(--white); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--text-muted); padding: 4px 14px; }
+
+    /* USER PILL */
+    .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
+    .user-logout-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(255,255,255,0.75); font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; white-space:nowrap; }
+    .user-logout-btn:hover { background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.4); color:#fca5a5; }
+
+    /* FOOTER */
+    .home-footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
+
+    @media (max-width: 600px) {
+      .header { padding: 18px 16px; }
+      .main { padding: 28px 16px 60px; }
+      .closing-block { padding: 24px 20px; }
+      .step-item { flex-direction: column; gap: 12px; }
+    }
   </style>
 </head>
 <body>
 
   <header class="header">
     <div>
-      <div class="header-label">PAC · SWIFT Framework</div>
-      <h1><em>6 Prompts</em></h1>
+      <div class="header-label">Product Architect Coaching · By John Yeo</div>
+      <h1>Just in Time — <em>Not Just in Case</em></h1>
     </div>
-    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
-      <div class="swift-badge" style="margin-left:0;">
-        <div class="s">6</div>
-        <div class="label">Prompts</div>
-      </div>
-      <div id="nameDisplay" onclick="promptChangeName()" title="Click to change name" style="font-size:11px;color:rgba(255,255,255,0.85);cursor:pointer;text-align:center;padding:3px 10px;border-radius:4px;white-space:nowrap;display:none;"></div>
+    <div class="swift-badge">
+      <div class="s">🧠</div>
+      <div class="label">Mindset</div>
     </div>
   </header>
 
@@ -163,11 +201,11 @@
       </div>
     </div>
     <div class="swift-tab-group">
-      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
       <div class="swift-sub-menu">
         <a class="swift-sub-item" href="casestudies.html">★ Case Studies (Paid vs Free)</a>
-        <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
-        <a class="swift-sub-item" href="daily-5.html">✦ The Daily 5</a>
+        <a class="swift-sub-item active" href="mindset-jit.html">🧠 Just in Time Mindset</a>
+        <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
         <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a>
         <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
         <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
@@ -180,7 +218,7 @@
       </div>
     </div>
     <div class="swift-tab-group">
-      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;border-bottom:3px solid var(--gold);color:white;"><span class="swift-word">6 Prompts ▾</span></button>
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">6 Prompts ▾</span></button>
       <div class="swift-sub-menu">
         <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
         <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
@@ -197,7 +235,8 @@
       <div class="nav-search-results" id="navSearchResults"></div>
     </div>
     <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
-    </div><button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
+    </div>
+    <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
   </nav>
 
   <!-- MOBILE NAV -->
@@ -224,8 +263,8 @@
     <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
     <div class="mobile-menu-section">Resources</div>
     <a class="mobile-menu-item" href="casestudies.html"><span class="mobile-menu-letter">★</span>Case Studies (Paid vs Free)</a>
-    <a class="mobile-menu-item" href="mindset-jit.html"><span class="mobile-menu-letter" style="color:var(--gold);">🧠</span>Just in Time Mindset</a>
-    <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">✦</span>The Daily 5</a>
+    <a class="mobile-menu-item active" href="mindset-jit.html"><span class="mobile-menu-letter" style="color:var(--gold);">🧠</span>Just in Time Mindset</a>
+    <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter" style="color:var(--gold);">5️⃣</span>Daily 5</a>
     <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>Calendar Plan</a>
     <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
     <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
@@ -236,7 +275,7 @@
     <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
     <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
     <div class="mobile-menu-section">6 Prompts</div>
-    <a class="mobile-menu-item active" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
     <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
     <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
     <a class="mobile-menu-item" href="prompt-3-teach-to-pitch.html" style="padding-left:36px;font-size:13px;">✦ Teach to Pitch</a>
@@ -258,119 +297,196 @@
 
   <main class="main">
 
-    <div class="page-intro">
-      <div class="overline">AI Prompts for Educators</div>
-      <h2>6 Prompts to Build Your<br><em>Education Business</em></h2>
-      <p>Each prompt is crafted to help you create the core pillars of your teaching business. Tap a prompt, copy it into Claude, and let the AI do the heavy lifting.</p>
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <div class="page-hero-tag">✶ Mindset · Foundation ✶</div>
+      <h2>Just in Time, <em>Not Just in Case</em></h2>
+      <p class="page-hero-sub">One of the biggest silent killers in building a scalable coaching or tutoring business isn't laziness. It's the opposite — over-preparing for problems that haven't arrived yet, and hoarding knowledge you don't need right now.</p>
     </div>
 
-    <div class="prompt-grid">
+    <!-- PERSONAL QUOTE -->
+    <div class="personal-quote">
+      <p>"I'm going to be honest with you — I still struggle with this. I find myself chasing resources, saving courses, buying tools, researching ideas... just in case I need them one day. My wife once told me: focus on the next two hours. That simple line changed how I work. This page exists because I needed it too."</p>
+      <span class="attr">— John, founder of SWIFT Framework</span>
+    </div>
 
-      <a class="prompt-hub-card" href="prompt-1-signature.html">
-        <div class="phc-num">1</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 1</div>
-          <div class="phc-title">Signature Programme</div>
-          <div class="phc-desc">Create your named, structured teaching framework using your real student testimonials.</div>
+    <!-- TWO MODES -->
+    <div class="section-heading">
+      <div class="section-heading-title">The Two Modes</div>
+      <div class="section-heading-rule"></div>
+    </div>
+    <p class="section-sub">Most of us default to one of these without realising it. Understanding the difference is the first step to changing your pattern.</p>
+
+    <div class="compare-grid">
+      <div class="compare-card danger">
+        <p class="compare-label">The Trap</p>
+        <h3>Just in Case Thinking</h3>
+        <ul>
+          <li>Collecting resources before you need them</li>
+          <li>Learning everything before starting</li>
+          <li>Waiting until you feel "ready"</li>
+          <li>Preparing for every possible scenario</li>
+          <li>Buying tools you're not yet using</li>
+          <li>Saying yes to things that might be useful</li>
+        </ul>
+      </div>
+      <div class="compare-card good">
+        <p class="compare-label">The Shift</p>
+        <h3>Just in Time Thinking</h3>
+        <ul>
+          <li>Learning what you need, when you need it</li>
+          <li>Starting before you feel fully ready</li>
+          <li>Solving problems as they actually appear</li>
+          <li>Saying no to what isn't relevant right now</li>
+          <li>Taking the next step, not ten steps ahead</li>
+          <li>Trusting the process to teach you as you go</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- WHY TUTORS -->
+    <div class="section-heading">
+      <div class="section-heading-title">Why Tutors Are Especially Vulnerable</div>
+      <div class="section-heading-rule"></div>
+    </div>
+    <p class="section-sub">As educators, we were trained to know before we teach. That instinct is a strength in the classroom — but it becomes a trap when you're building a business. You keep waiting to know enough before you start. The truth is: you already know more than your next student needs.</p>
+
+    <!-- HOW TO SHIFT -->
+    <div class="section-heading">
+      <div class="section-heading-title">How to Shift — Step by Step</div>
+      <div class="section-heading-rule"></div>
+    </div>
+    <p class="section-sub">These aren't quick fixes. They are habits to practise, especially on the days when anxiety kicks in and the urge to "prepare more" gets loud.</p>
+
+    <div class="steps-list">
+
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Name what you're actually afraid of</h4>
+          <p>Just in case thinking is usually anxiety wearing a productivity costume. Before you open another tab or buy another course, ask yourself what you're really trying to avoid. Failure? Embarrassment? Being asked a question you can't answer?</p>
+          <span class="step-ask">Ask: "What am I afraid will happen if I don't prepare for this right now?"</span>
         </div>
-        <div class="phc-arrow">→</div>
-      </a>
+      </div>
 
-      <a class="prompt-hub-card" href="prompt-2-lead-magnet.html">
-        <div class="phc-num">2</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 2</div>
-          <div class="phc-title">Lead Magnet</div>
-          <div class="phc-desc">Build a 7-page lead magnet PDF written in your voice using your Fathom call transcript.</div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Define your next 2 hours, not your next 2 months</h4>
+          <p>The moment your planning horizon stretches past what you can act on today, you're in just in case territory. Bring it back. What is the one thing that moves your work forward in the next 2 hours?</p>
+          <span class="step-ask">Ask: "What is the most useful thing I can do right now — not eventually?"</span>
         </div>
-        <div class="phc-arrow">→</div>
-      </a>
+      </div>
 
-      <a class="prompt-hub-card" href="prompt-3-teach-to-pitch.html">
-        <div class="phc-num">3</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 3</div>
-          <div class="phc-title">Teach to Pitch</div>
-          <div class="phc-desc">Upload your teaching slides to Claude and get a complete, ready-to-read webinar pitch script.</div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Learn in response to real problems, not imagined ones</h4>
+          <p>You don't need a full Facebook ads course before you run your first ad. Run the ad. When a real problem appears — low click-through, wrong audience — go learn exactly that one thing. The problem becomes your curriculum.</p>
+          <span class="step-ask">Ask: "Has this problem actually happened, or am I solving a ghost?"</span>
         </div>
-        <div class="phc-arrow">→</div>
-      </a>
+      </div>
 
-      <a class="prompt-hub-card" href="prompt-3-content.html">
-        <div class="phc-num">4</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 4</div>
-          <div class="phc-title">Content Style</div>
-          <div class="phc-desc">Extract your writing voice from 10 posts so Claude always writes content that sounds like you.</div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Create a "parking lot" for good ideas that aren't for now</h4>
+          <p>Not everything you shelve is wasted. Keep a simple notes doc called "later" — for tools, ideas, courses, strategies that feel important but aren't urgent. This lets your brain let go without losing the idea. Revisit it monthly.</p>
+          <span class="step-ask">Ask: "Is this for now or for later?" Then park it and move on.</span>
         </div>
-        <div class="phc-arrow">→</div>
-      </a>
+      </div>
 
-      <a class="prompt-hub-card" href="prompt-4-5-forms.html">
-        <div class="phc-num">5</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 5</div>
-          <div class="phc-title">Lead Collection Form</div>
-          <div class="phc-desc">Build a leads enquiry form automatically via Google Apps Script — no coding needed.</div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Build trust with yourself by finishing small things</h4>
+          <p>Just in case thinking often comes from a lack of trust — you don't believe you can handle what comes next, so you try to pre-load everything. The cure is evidence. Finish small things. Notice that you figured it out. Build the track record that tells your brain: "I can handle this when it comes."</p>
+          <span class="step-ask">Ask: "What is one small thing I can finish today to build that trust?"</span>
         </div>
-        <div class="phc-arrow">→</div>
-      </a>
+      </div>
 
-      <a class="prompt-hub-card" href="prompt-6-feedback.html">
-        <div class="phc-num">6</div>
-        <div class="phc-body">
-          <div class="phc-label">Prompt 6</div>
-          <div class="phc-title">Feedback Form</div>
-          <div class="phc-desc">Build a feedback form to collect student responses at the end of every term via Apps Script.</div>
+      <div class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Protect your energy like it's your most valuable resource</h4>
+          <p>Because it is. Every time you chase something just in case, you're spending attention you could have given to the student in front of you, the post you haven't written, or the rest you actually need. Energy is the foundation of everything else in your business.</p>
+          <span class="step-ask">Ask: "Would I still do this if I only had 3 hours of good energy today?"</span>
         </div>
-        <div class="phc-arrow">→</div>
-      </a>
+      </div>
 
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="section-heading">
+      <div class="section-heading-title">Quick Action Steps to Start Today</div>
+      <div class="section-heading-rule"></div>
+    </div>
+    <p class="section-sub">Pick one. Just one. That's the point.</p>
+
+    <div class="action-grid">
+      <div class="action-item">
+        <div class="action-item-label">Today</div>
+        <p>Write down the one thing that actually needs to happen this week. Cross off everything that is "nice to have."</p>
+      </div>
+      <div class="action-item">
+        <div class="action-item-label">This Week</div>
+        <p>Create a "later" note or folder. Move 3 things from your current to-do list into it. Notice how that feels.</p>
+      </div>
+      <div class="action-item">
+        <div class="action-item-label">Ongoing Habit</div>
+        <p>Before starting any new learning or research, ask: "Does a real problem exist right now that requires this?"</p>
+      </div>
+      <div class="action-item">
+        <div class="action-item-label">With Your Coach</div>
+        <p>In your next session, bring 3 things you've been "preparing" for. We'll decide together which ones are real and which are just fear wearing a busy hat.</p>
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="closing-block">
+      <p>The SWIFT Framework is built on the idea that you don't need more information to move forward. You need <strong>the right information at the right time</strong>, paired with the courage to act before you feel fully ready.</p>
+      <p>Just in time thinking isn't careless. It's <strong>intentional trust</strong> — in yourself, in your clients, and in the process of learning by doing.</p>
+      <p>The tutors who build sustainable, peaceful businesses aren't the ones who prepared the most. They're the ones who <strong>started, stayed present, and solved problems as they came.</strong></p>
+    </div>
+
+    <div class="tags-row">
+      <span class="tag">Mindset</span>
+      <span class="tag">SWIFT Framework</span>
+      <span class="tag">Energy Management</span>
+      <span class="tag">Scalable Business</span>
     </div>
 
   </main>
 
-  <div id="nameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,20,0.75);z-index:9999;align-items:center;justify-content:center;">
-    <div style="background:white;border-radius:20px;padding:40px 32px;width:min(380px,90vw);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-      <div style="font-size:36px;margin-bottom:16px;">👋</div>
-      <h3 style="font-family:'DM Serif Display',serif;font-size:24px;color:#002D6A;margin-bottom:8px;">What's your name?</h3>
-      <p style="font-size:14px;color:#6B7A96;margin-bottom:24px;line-height:1.6;">So we know who's using the SWIFT Framework.</p>
-      <input id="nameModalInput" type="text" placeholder="e.g. Sherina" autocomplete="given-name" style="width:100%;border:1.5px solid #B8C4D4;border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#0A0F1C;outline:none;margin-bottom:16px;box-sizing:border-box;" />
-      <button onclick="saveNameAndClose()" style="width:100%;background:#0ABFBC;color:#002D6A;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Get Started →</button>
-    </div>
-  </div>
+  <footer class="home-footer">
+    © Product Architect Coaching · SWIFT Framework · by John Yeo
+  </footer>
 
   <script>
-    (function(){
-      var saved = localStorage.getItem('pac-swift-user') || '';
-      var disp = document.getElementById('nameDisplay');
-      if (disp && saved) { disp.textContent = saved; disp.style.display = 'block'; disp.style.border = '1px solid rgba(255,255,255,0.25)'; disp.style.background = 'rgba(255,255,255,0.08)'; }
-      if (!saved) { var modal = document.getElementById('nameModal'); if (modal) { modal.style.display = 'flex'; setTimeout(function(){ var i = document.getElementById('nameModalInput'); if(i) i.focus(); }, 150); } }
-    })();
-    function saveNameAndClose() {
-      var v = (document.getElementById('nameModalInput').value || '').trim();
-      if (!v) return;
-      localStorage.setItem('pac-swift-user', v);
-      var disp = document.getElementById('nameDisplay');
-      if (disp) { disp.textContent = v; disp.style.display = 'block'; disp.style.border = '1px solid rgba(255,255,255,0.25)'; disp.style.background = 'rgba(255,255,255,0.08)'; }
-      document.getElementById('nameModal').style.display = 'none';
-    }
-    function promptChangeName() {
-      var modal = document.getElementById('nameModal');
-      if (modal) { var inp = document.getElementById('nameModalInput'); if (inp) inp.value = localStorage.getItem('pac-swift-user') || ''; modal.style.display = 'flex'; setTimeout(function(){ if(inp) inp.focus(); }, 100); }
-    }
-    (function(){
-      document.querySelectorAll('.swift-tab-group').forEach(function(group){
-        var closeTimer;
-        group.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); group.classList.add('open'); });
-        group.addEventListener('mouseleave', function(){ closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120); });
-        var btn = group.querySelector('button');
-        if (btn) btn.addEventListener('click', function(e){ e.stopPropagation(); var isOpen = group.classList.contains('open'); document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); if (!isOpen) group.classList.add('open'); });
-      });
-      document.addEventListener('click', function(){ document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); }); });
-    })();
-    function openMobileMenu() { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
-    function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
+  function openMobileMenu() {
+    document.getElementById('mobilePanel').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobilePanel').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('open');
+  }
+  </script>
+
+  <script>
+  // Desktop dropdown toggles
+  document.querySelectorAll('.swift-tab-group > button').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var group = btn.closest('.swift-tab-group');
+      var wasOpen = group.classList.contains('open');
+      document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      if (!wasOpen) group.classList.add('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+  });
   </script>
 
   <script>
@@ -425,7 +541,7 @@
 
   <script>
   // ── SITE SEARCH ──────────────────────────────────────────────────────────
-  var PAGES = [
+  var SEARCH_PAGES = [
     { title:'Home',                    sub:'SWIFT Framework overview',              url:'index.html',                  icon:'⌂',  tags:'home swift framework pace love' },
     { title:'Signature Programme',     sub:'S · Create your signature offer',       url:'signature-programme.html',    icon:'S',  tags:'signature programme offer create s swift' },
     { title:'Webinar Programme',       sub:'W · Run your online webinar',           url:'webinar-programme.html',      icon:'W',  tags:'webinar online programme w swift' },
@@ -433,7 +549,9 @@
     { title:'Fill Class',              sub:'F · Revenue calculator & scheduling',   url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator schedule students f swift' },
     { title:'Track Programme',         sub:'T · Track your progress',               url:'track-programme.html',        icon:'T',  tags:'track progress t swift' },
     { title:'Case Studies',            sub:'Success stories from members',          url:'casestudies.html',            icon:'★',  tags:'case studies success stories members results' },
-    { title:'Calendar Plan',          sub:'Calendar & daily tasks planner',                url:'planner.html',                icon:'📅', tags:'planner calendar plan daily tasks' },
+    { title:'Just in Time Mindset',    sub:'Stop over-preparing. Start now.',       url:'mindset-jit.html',            icon:'🧠', tags:'mindset just in time jit over prepare anxiety energy focus' },
+    { title:'Daily 5',                 sub:'5 daily actions to grow your student base', url:'daily-5.html',            icon:'5️⃣', tags:'daily 5 actions warm lead proof invite follow up conversation' },
+    { title:'Calendar Plan',           sub:'Calendar & daily tasks planner',        url:'planner.html',                icon:'📅', tags:'planner calendar plan daily tasks' },
     { title:'Parties for Kids',        sub:'Birthday & holiday party resources',    url:'other-resources.html',        icon:'🎉', tags:'parties kids birthday holiday resources' },
     { title:'Holiday Workshops',       sub:'Holiday workshop resources',            url:'holiday-workshops.html',      icon:'🗓️', tags:'holiday workshop resources' },
     { title:'Monthly → Annual',        sub:'Upgrade payment plan',                  url:'payment-upgrade.html',        icon:'💳', tags:'payment upgrade monthly annual billing' },
@@ -455,89 +573,54 @@
   ];
 
   function searchPages(q) {
-    if (!q || q.length < 1) return [];
-    q = q.toLowerCase();
-    return PAGES.filter(function(p) {
-      return p.title.toLowerCase().includes(q) || p.tags.toLowerCase().includes(q) || p.sub.toLowerCase().includes(q);
-    }).slice(0, 7);
+    if (!q || q.length < 2) return [];
+    var ql = q.toLowerCase();
+    return SEARCH_PAGES.filter(function(p) {
+      return p.title.toLowerCase().includes(ql) || p.sub.toLowerCase().includes(ql) || p.tags.toLowerCase().includes(ql);
+    }).slice(0, 6);
   }
 
-  function buildResultHTML(results, mobile) {
-    if (!results.length) return '<div class="nav-search-no-results">No results found</div>';
-    return results.map(function(p, i) {
-      var cls = mobile ? 'mobile-search-result' : 'nav-search-result';
-      var iconCls = mobile ? 'mobile-search-result-icon' : 'nav-search-result-icon';
-      var titleCls = mobile ? 'mobile-search-result-title' : 'nav-search-result-title';
-      var subCls = mobile ? 'mobile-search-result-sub' : 'nav-search-result-sub';
-      return '<a class="' + cls + '" href="' + p.url + '">'
-           + '<div class="' + iconCls + '">' + p.icon + '</div>'
-           + '<div class="nav-search-result-text">'
-           + '<div class="' + titleCls + '">' + p.title + '</div>'
-           + '<div class="' + subCls + '">' + p.sub + '</div>'
-           + '</div></a>';
+  function renderResults(results, container, isMobile) {
+    if (!results.length) {
+      container.innerHTML = '<div class="' + (isMobile ? 'nav-search-no-results' : 'nav-search-no-results') + '">No pages found</div>';
+      return;
+    }
+    container.innerHTML = results.map(function(p) {
+      if (isMobile) {
+        return '<a class="mobile-search-result" href="' + p.url + '"><div class="mobile-search-result-icon">' + p.icon + '</div><div><div class="mobile-search-result-title">' + p.title + '</div><div class="mobile-search-result-sub">' + p.sub + '</div></div></a>';
+      }
+      return '<a class="nav-search-result" href="' + p.url + '"><div class="nav-search-result-icon">' + p.icon + '</div><div class="nav-search-result-text"><div class="nav-search-result-title">' + p.title + '</div><div class="nav-search-result-sub">' + p.sub + '</div></div></a>';
     }).join('');
   }
 
-  // Desktop search
-  (function() {
-    var inp = document.getElementById('navSearchInput');
-    var res = document.getElementById('navSearchResults');
-    if (!inp) return;
-    var focusIdx = -1;
-
-    inp.addEventListener('input', function() {
-      focusIdx = -1;
-      var results = searchPages(this.value.trim());
-      if (!this.value.trim()) { res.classList.remove('open'); return; }
-      res.innerHTML = buildResultHTML(results, false);
-      res.classList.add('open');
+  var navInput = document.getElementById('navSearchInput');
+  var navResults = document.getElementById('navSearchResults');
+  if (navInput) {
+    navInput.addEventListener('input', function() {
+      var q = navInput.value.trim();
+      var results = searchPages(q);
+      if (!q || q.length < 2) { navResults.classList.remove('open'); return; }
+      renderResults(results, navResults, false);
+      navResults.classList.add('open');
     });
-
-    inp.addEventListener('keydown', function(e) {
-      var items = res.querySelectorAll('.nav-search-result');
-      if (e.key === 'ArrowDown') { focusIdx = Math.min(focusIdx+1, items.length-1); items.forEach(function(el,i){ el.classList.toggle('focused', i===focusIdx); }); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') { focusIdx = Math.max(focusIdx-1, 0); items.forEach(function(el,i){ el.classList.toggle('focused', i===focusIdx); }); e.preventDefault(); }
-      else if (e.key === 'Enter') { if (focusIdx >= 0 && items[focusIdx]) { window.location.href = items[focusIdx].href; } else if (items[0]) { window.location.href = items[0].href; } }
-      else if (e.key === 'Escape') { res.classList.remove('open'); inp.blur(); }
+    navInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { navResults.classList.remove('open'); navInput.blur(); }
     });
-
     document.addEventListener('click', function(e) {
-      if (!document.getElementById('navSearch').contains(e.target)) res.classList.remove('open');
+      if (!navInput.contains(e.target) && !navResults.contains(e.target)) navResults.classList.remove('open');
     });
-  })();
+  }
 
-  // Mobile search
-  (function() {
-    var inp = document.getElementById('mobileSearchInput');
-    var res = document.getElementById('mobileSearchResults');
-    if (!inp) return;
-    inp.addEventListener('input', function() {
-      var results = searchPages(this.value.trim());
-      if (!this.value.trim()) { res.innerHTML = ''; return; }
-      res.innerHTML = buildResultHTML(results, true);
+  var mobileInput = document.getElementById('mobileSearchInput');
+  var mobileResults = document.getElementById('mobileSearchResults');
+  if (mobileInput) {
+    mobileInput.addEventListener('input', function() {
+      var q = mobileInput.value.trim();
+      var results = searchPages(q);
+      renderResults(results, mobileResults, true);
     });
-  })();
+  }
   </script>
 
-
-  <script>
-  // ── PAC ANALYTICS TRACKER ─────────────────────────────────────────────
-  (function() {
-    try {
-      var sess = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
-      if (!sess || !sess.u) return;
-      var u = sess.u;
-      var key = 'pac-swift-analytics-' + u;
-      var a = JSON.parse(localStorage.getItem(key) || '{}');
-      if (!a.pageVisits) a.pageVisits = [];
-      // Push visit (keep last 200)
-      a.pageVisits.unshift({ p: '6-prompts.html', t: '6 AI Prompts', ts: Date.now() });
-      if (a.pageVisits.length > 200) a.pageVisits = a.pageVisits.slice(0, 200);
-      localStorage.setItem(key, JSON.stringify(a));
-    } catch(e) {}
-  })();
-  </script>
-
-  <script src="progress-tracker.js"></script>
 </body>
 </html>
