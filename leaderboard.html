@@ -212,19 +212,19 @@
       <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
       <div class="swift-sub-menu">
         <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
-<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:4px;">Mindset &amp; Systems</div>
+<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Mindset &amp; Systems</div>
         <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
         <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
         <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a>
-<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:4px;">Get Students</div>
+<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Get Students</div>
         <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
         <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
         <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
         <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
-<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:4px;">Business</div>
+<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Business</div>
         <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
         <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
-<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:4px;">Tools</div>
+<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Tools</div>
         <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
         <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
       </div>
@@ -683,6 +683,33 @@
   }
   initSearch('navSearchInput','navSearchResults');
   initSearch('mobileSearchInput','mobileSearchResults');
+  </script>
+
+  <script>
+    // Nav dropdowns — hover on desktop, tap on mobile
+    (function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(group){
+        var closeTimer;
+        group.addEventListener('mouseenter', function(){
+          clearTimeout(closeTimer);
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          group.classList.add('open');
+        });
+        group.addEventListener('mouseleave', function(){
+          closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+        });
+        var btn = group.querySelector('button');
+        if (btn) btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isOpen = group.classList.contains('open');
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          if (!isOpen) group.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(){
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      });
+    })();
   </script>
 
   <script>
