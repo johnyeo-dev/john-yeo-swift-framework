@@ -628,6 +628,66 @@
 
       <hr class="divider" />
 
+      <!-- REFERRAL SECTION -->
+      <p class="section-label">Turn Happy Parents Into Your Referral Engine</p>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">The most powerful leads you'll ever get don't come from ads — they come from a parent who already trusts you telling their friend. One warm word from a happy parent is worth ten cold enquiries. This is the actual "Invite" in the Invite module.</p>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">🤝</span>
+        <div class="callout-text">
+          <strong>The best time to ask is right after a win</strong>
+          When a parent says "my child really enjoyed that" or "I can already see a difference" — that's your moment. They're emotionally present and goodwill is at its peak. Don't wait for later. Later never comes.
+        </div>
+      </div>
+
+      <div class="steps" id="steps-referral">
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-2')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 9</div>
+            <div class="step-title">Ask your best parents to refer one friend — the warm introduction</div>
+            <div class="step-desc">Don't broadcast a generic "please refer a friend" message to everyone. Pick your top 2–3 parents who already speak positively about you. Ask them privately and personally — it feels very different to a group blast. The ask itself is simple:</div>
+            <div style="margin-top: 12px; font-size: 13.5px; color: var(--text-muted); line-height: 1.7; font-style: italic;">
+              "Hi [Name], I'm glad [child's name] has been doing well 😊 I'm opening a few new spots soon — is there any parent in your network who you think would benefit from this? Even one name would mean a lot."
+            </div>
+            <div class="step-action">→ One name from a trusted parent is worth more than 20 cold leads</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-3')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 10</div>
+            <div class="step-title">Make it easy — give them the exact message to forward</div>
+            <div class="step-desc">Most parents want to help but don't know what to say. Remove that friction completely. Send them a ready-to-forward message they can paste straight into WhatsApp:</div>
+            <div style="margin-top: 12px; font-size: 13.5px; color: var(--text-muted); line-height: 1.7; font-style: italic;">
+              "Hey! My child has been attending [tutor's name]'s sessions and honestly it's been really good. She/He has a few spots opening soon if your child needs help with [subject]. Want me to connect you?"
+            </div>
+            <div class="step-action">→ You write it once. They send it with one tap.</div>
+          </div>
+        </div>
+
+        <div class="step-card" onclick="toggleStep(this, 'step-2-4')">
+          <div class="step-check">
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="step-body">
+            <div class="step-badge">Step 11</div>
+            <div class="step-title">Close the loop — follow up with the referred parent the same way you would any enquiry</div>
+            <div class="step-desc">When a referred parent reaches out, treat the referral like gold. Mention it naturally: "Sarah mentioned you were looking for help with your child's English — that means a lot." It immediately lowers their guard. They already trust you a little because a friend trusts you. Use that. Go consultative from there.</div>
+            <div class="step-action">→ Referred leads convert at 3–5× the rate of cold ones</div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="divider" />
+
       <!-- POST-WEBINAR DM SCRIPT -->
       <p class="section-label">Post-Webinar DM — Send This Within 24 Hours</p>
       <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6;">Send this to everyone who attended but didn't register. Wait for their reply, then go consultative from there — ask about their child, understand their situation, then guide them to the next step.</p>
@@ -659,6 +719,9 @@ Just wanted to check in — was there anything that stood out for you, or any qu
         <div class="summary-item"><div class="num">I6</div><p>Sent 2–3 reminders before the appointment</p></div>
         <div class="summary-item"><div class="num">I7</div><p>Followed up after 2–3 days of silence with a personalised nudge</p></div>
         <div class="summary-item"><div class="num">I8</div><p>Asked every happy parent for a Google review within 24 hours</p></div>
+        <div class="summary-item"><div class="num">I9</div><p>Asked top 2–3 happy parents privately to refer one friend — at the moment of a win</p></div>
+        <div class="summary-item"><div class="num">I10</div><p>Gave them a ready-to-forward WhatsApp message so it took them one tap</p></div>
+        <div class="summary-item"><div class="num">I11</div><p>Followed up with referred leads by name — mentioning who sent them</p></div>
       </div>
 
       <div class="nav-row">
@@ -682,7 +745,7 @@ Just wanted to check in — was there anything that stood out for you, or any qu
 
   <script>
     let currentTab = 0;
-    const TOTAL_STEPS = 8;
+    const TOTAL_STEPS = 11;
     let currentUser = '';
     let checkedSteps = new Set();
 
@@ -754,7 +817,7 @@ Just wanted to check in — was there anything that stood out for you, or any qu
       const pct = Math.min(100, Math.round((count / TOTAL_STEPS) * 100));
       document.getElementById('progressFill').style.width = pct + '%';
       document.getElementById('progressCount').textContent = count + ' / ' + TOTAL_STEPS + ' done';
-      const tabStepMap = [3, 3, 2];
+      const tabStepMap = [3, 3, 5];
       const tabs = document.querySelectorAll('.tab-btn');
       tabStepMap.forEach((c, i) => {
         const ids = Array.from({length: c}, (_, j) => `step-${i}-${j}`);
