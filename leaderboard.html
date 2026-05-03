@@ -354,7 +354,8 @@
       'feontang':    { password: 'ft678',     name: 'Feon Tang',     role: 'user' },
       'adam':        { password: 'adam246',   name: 'Adam',          role: 'user' },
       'carlyn':      { password: 'ca9876',    name: 'Carlyn',        role: 'user' },
-      'vanessa':     { password: 'van8888',   name: 'Vanessa',       role: 'user' }
+      'vanessa':     { password: 'van8888',   name: 'Vanessa',       role: 'user' },
+      'test':        { password: 'test123',   name: 'Test',          role: 'user', hidden: true }
     };
     function getAllUsers() {
       var stored = getUsers();
@@ -448,7 +449,7 @@
 
     function buildRanking() {
       var users = getAllUsers();
-      var list  = Object.keys(users).filter(function(u){ return u !== 'johnyeo'; });
+      var list  = Object.keys(users).filter(function(u){ return u !== 'johnyeo' && !users[u].hidden; });
       if (currentView === 'month') {
         return list.map(function(u) {
           return { u:u, pts:getMonthPoints(u), bd:getMonthBreakdown(u), done:getDoneCount(u) };
