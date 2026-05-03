@@ -38,10 +38,11 @@
     /* HEADER */
     .header {
       background: var(--navy);
-      padding: 28px 40px 24px;
+      padding: 12px 32px;
       display: flex;
-      align-items: flex-end;
-      gap: 20px;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
     }
     .header-label {
       font-size: 11px;
@@ -49,13 +50,14 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 6px;
+      margin-bottom: 2px;
     }
     .header h1 {
       font-family: 'DM Serif Display', serif;
-      font-size: clamp(24px, 4vw, 36px);
+      font-size: clamp(15px, 2vw, 19px);
       color: var(--white);
-      line-height: 1.1;
+      line-height: 1.2;
+      margin: 0;
     }
     .header h1 em {
       font-style: italic;
@@ -649,7 +651,8 @@
     .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
     .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
     .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
-  </style>
+      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+</style>
 </head>
 <body>
 
@@ -657,21 +660,11 @@
   <div class="header">
     <div>
       <div class="header-label">Product Architect Coaching · by John Yeo</div>
-      <h1>SWIFT Framework —<br><em>Webinar Programme</em></h1>
+      <h1>SWIFT Framework — <em>Webinar Programme</em></h1>
     </div>
-    <div class="user-chip-wrap">
-      <div class="user-chip" onclick="switchUser()" title="Switch user">
-        <div class="user-avatar" id="userAvatar">?</div>
-      </div>
-      <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
-<div class="swift-badge" style="margin-left:0;">
+    <div class="swift-badge" style="margin-left:auto;">
         <div class="s">W</div>
         <div class="label">Webinar</div>
-      </div>
-      
-    </div>
-    </div>
-  </div>
 
   <!-- PROGRESS -->
   <div class="progress-wrap">

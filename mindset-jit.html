@@ -24,7 +24,7 @@
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
 
     /* HEADER */
-    .header { background: var(--navy); padding: 24px 40px; display: flex; align-items: flex-end; gap: 20px; }
+    .header { background: var(--navy); padding: 12px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
     .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
     .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 32px); color: var(--white); line-height: 1.1; }
     .header h1 em { font-style: italic; color: var(--gold-light); }
@@ -178,7 +178,8 @@
       .closing-block { padding: 24px 20px; }
       .step-item { flex-direction: column; gap: 12px; }
     }
-  </style>
+      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+</style>
 </head>
 <body>
 

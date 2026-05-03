@@ -23,7 +23,7 @@
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
 
     /* HEADER */
-    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header { background: var(--navy); padding: 12px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
     .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
     .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
     .header h1 em { font-style: italic; color: var(--gold-light); }
@@ -185,7 +185,8 @@
     .my-rank-bar-label { font-size: 11px; color: var(--text-muted); text-align: right; }
     @media(max-width:600px) { .my-rank-card { flex-direction: column; align-items: flex-start; } .my-rank-bar-wrap { flex:0 0 auto; width:100%; } .podium-avatar { width:44px; height:44px; font-size:18px; } .lb-table { font-size:13px; } .lb-bar-cell { display:none; } .lb-badges-cell { display:none; } }
     @media(max-width:400px) { .lb-pts-breakdown { display:none; } }
-  </style>
+      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+</style>
 </head>
 <body>
 

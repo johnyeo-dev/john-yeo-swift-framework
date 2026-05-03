@@ -22,7 +22,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
 
-    .header { background: var(--navy); padding: 28px 40px 24px; display: flex; align-items: flex-end; gap: 20px; }
+    .header { background: var(--navy); padding: 12px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
     .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
     .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
     .header h1 em { font-style: italic; color: var(--gold-light); }
@@ -409,7 +409,8 @@
       .ai-playlist-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
       .ai-playlist-embed { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; border: 1.5px solid var(--border); }
       .ai-playlist-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-    </style>
+        @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+</style>
 
     <p class="ai-nav-intro"><strong>What do you want to create today?</strong> Pick a category below — we'll show you the exact videos to watch. One step at a time.</p>
 
