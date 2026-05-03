@@ -70,6 +70,47 @@
     .pace-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(10,191,188,0.08); border: 1px solid rgba(10,191,188,0.25); border-radius: 99px; padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--navy); }
     .pace-badge span { color: var(--gold); font-size: 16px; }
 
+    /* 3C SLIDER */
+    .threec-wrap { margin-bottom: 52px; }
+    .threec-intro { text-align: center; margin-bottom: 28px; }
+    .threec-intro-tag { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .threec-intro h3 { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 32px); color: var(--navy); line-height: 1.25; margin-bottom: 10px; }
+    .threec-intro h3 em { font-style: italic; color: var(--gold-light); }
+    .threec-intro p { font-size: 14px; color: var(--text-muted); max-width: 540px; margin: 0 auto; line-height: 1.7; }
+    .threec-slider-outer { position: relative; }
+    .threec-slider { overflow: hidden; border-radius: 20px; }
+    .threec-track { display: flex; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
+    .threec-slide { min-width: 100%; padding: 0 2px; box-sizing: border-box; }
+    .threec-card { border-radius: 18px; padding: 36px 32px; position: relative; overflow: hidden; min-height: 320px; display: flex; flex-direction: column; justify-content: space-between; }
+    .threec-card::before { content: ''; position: absolute; inset: 0; opacity: 0.07; border-radius: 18px; }
+    .threec-c1 { background: linear-gradient(135deg, #0ABFBC08, #0ABFBC18); border: 1.5px solid #0ABFBC44; }
+    .threec-c2 { background: linear-gradient(135deg, #4A8FE708, #4A8FE718); border: 1.5px solid #4A8FE744; }
+    .threec-c3 { background: linear-gradient(135deg, #8B5CF608, #8B5CF618); border: 1.5px solid #8B5CF644; }
+    .threec-num { font-family: 'DM Serif Display', serif; font-size: 72px; font-weight: 400; line-height: 1; position: absolute; right: 28px; top: 20px; opacity: 0.08; letter-spacing: -2px; }
+    .threec-c1 .threec-num { color: #0ABFBC; }
+    .threec-c2 .threec-num { color: #4A8FE7; }
+    .threec-c3 .threec-num { color: #8B5CF6; }
+    .threec-badge { display: inline-flex; align-items: center; gap: 8px; border-radius: 99px; padding: 5px 14px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .threec-c1 .threec-badge { background: rgba(10,191,188,0.12); color: #0ABFBC; border: 1px solid rgba(10,191,188,0.3); }
+    .threec-c2 .threec-badge { background: rgba(74,143,231,0.12); color: #4A8FE7; border: 1px solid rgba(74,143,231,0.3); }
+    .threec-c3 .threec-badge { background: rgba(139,92,246,0.12); color: #8B5CF6; border: 1px solid rgba(139,92,246,0.3); }
+    .threec-title { font-family: 'DM Serif Display', serif; font-size: clamp(22px, 3vw, 28px); color: var(--navy); margin-bottom: 4px; line-height: 1.2; }
+    .threec-sub { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 14px; }
+    .threec-c1 .threec-sub { color: #0ABFBC; }
+    .threec-c2 .threec-sub { color: #4A8FE7; }
+    .threec-c3 .threec-sub { color: #8B5CF6; }
+    .threec-desc { font-size: 14px; color: var(--text-muted); line-height: 1.75; margin-bottom: 20px; flex: 1; }
+    .threec-swift-link { display: flex; align-items: flex-start; gap: 10px; background: var(--cream); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--text); line-height: 1.5; }
+    .threec-swift-link-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; }
+    .threec-swift-link strong { color: var(--navy); }
+    .threec-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 20px; }
+    .threec-btn { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--white); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--navy); flex-shrink: 0; }
+    .threec-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+    .threec-dots { display: flex; gap: 7px; align-items: center; }
+    .threec-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.25s; }
+    .threec-dot.active { background: var(--gold); width: 22px; border-radius: 4px; }
+    @media (max-width: 600px) { .threec-card { padding: 28px 22px; min-height: 280px; } .threec-num { font-size: 56px; } }
+
     /* SWIFT STEPS */
     .steps-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
     .steps { display: flex; flex-direction: column; gap: 16px; margin-bottom: 48px; }
@@ -354,6 +395,84 @@
       <h2>Your 5-Step System: From Webinar to <em>Thriving Group Classes</em></h2>
       <p class="hero-sub">A heart-based approach to growing your tutoring business with peace, not pressure.</p>
       <div class="pace-badge"><span>✶</span> SWIFT doesn't mean fast. It means moving forward — at a pace that is yours.</div>
+    </div>
+
+    <!-- 3C FRAMEWORK INTRO + SLIDER -->
+    <div class="threec-wrap">
+      <div class="threec-intro">
+        <div class="threec-intro-tag">✶ The Foundation ✶</div>
+        <h3>SWIFT is built on the <em>3C Framework</em></h3>
+        <p>Before the steps, there is the strategy. The 3C Framework — Content, Community, Connection — is the engine behind everything SWIFT helps you build. Most educators work on only one. The ones who thrive run all three.</p>
+      </div>
+
+      <div class="threec-slider-outer">
+        <div class="threec-slider">
+          <div class="threec-track" id="threecTrack">
+
+            <!-- C1 CONTENT -->
+            <div class="threec-slide">
+              <div class="threec-card threec-c1">
+                <div class="threec-num">C1</div>
+                <div>
+                  <div class="threec-badge">C1 · Content</div>
+                  <div class="threec-title">Attract the Right People</div>
+                  <div class="threec-sub">Content</div>
+                  <p class="threec-desc">The right content pulls the right people toward you before they ever reach out. Not posts about your credentials or results — but stories that make parents and students feel deeply understood. The tutor who writes about what it feels like to have a child who cries over homework will always out-attract the tutor who posts "A1 results guaranteed." Emotion creates connection. Credentials create comparison.</p>
+                  <div class="threec-swift-link">
+                    <span style="font-size:18px;">S</span>
+                    <div><div class="threec-swift-link-label">SWIFT Step</div><strong>S — Signature Offer</strong> is where your Content identity begins. Your signature framework makes every post feel cohesive and positions you as the expert with a proprietary approach.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- C2 COMMUNITY -->
+            <div class="threec-slide">
+              <div class="threec-card threec-c2">
+                <div class="threec-num">C2</div>
+                <div>
+                  <div class="threec-badge">C2 · Community</div>
+                  <div class="threec-title">Convert Followers into Believers</div>
+                  <div class="threec-sub">Community</div>
+                  <p class="threec-desc">You don't need 10,000 followers. You need 100 people who genuinely trust you. A parent who attends your free webinar and feels understood is 10x more likely to enrol than one who has seen 50 of your posts. Live experience collapses the trust timeline. Shared experience turns curious followers into people who invest — not just in your programme, but in you.</p>
+                  <div class="threec-swift-link">
+                    <span style="font-size:18px;">W</span>
+                    <div><div class="threec-swift-link-label">SWIFT Step</div><strong>W — Webinar</strong> is your Community catalyst. A 90-minute Heart-Based Webinar using the 70/30 formula is the single highest-leverage activity to build the trust that converts.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- C3 CONNECTION -->
+            <div class="threec-slide">
+              <div class="threec-card threec-c3">
+                <div class="threec-num">C3</div>
+                <div>
+                  <div class="threec-badge">C3 · Connection</div>
+                  <div class="threec-title">Retain, Refer &amp; Return</div>
+                  <div class="threec-sub">Connection</div>
+                  <p class="threec-desc">Most educators lose leads not because they can't close — but because they never follow up. A warm lead who doesn't hear from you after a webinar will forget you within 72 hours. Follow-up is not chasing. It is caring. When you follow up with genuine value — not a sales pitch — you're not being pushy. You're being the person who shows up even before someone becomes a client.</p>
+                  <div class="threec-swift-link">
+                    <span style="font-size:18px;">I</span>
+                    <div><div class="threec-swift-link-label">SWIFT Step</div><strong>I — Invite &amp; Follow-Up</strong> is your Connection system. Send your follow-up within 24 hours of every webinar — to every attendee, buyer or not. This single habit separates those who fill programmes from those who wonder why nobody converted.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="threec-nav">
+          <button class="threec-btn" id="threecPrev" onclick="threecSlide(-1)">‹</button>
+          <div class="threec-dots" id="threecDots">
+            <div class="threec-dot active" onclick="threecGoTo(0)"></div>
+            <div class="threec-dot" onclick="threecGoTo(1)"></div>
+            <div class="threec-dot" onclick="threecGoTo(2)"></div>
+          </div>
+          <button class="threec-btn" id="threecNext" onclick="threecSlide(1)">›</button>
+        </div>
+      </div>
     </div>
 
     <!-- 5 STEPS -->
@@ -890,5 +1009,38 @@
   </script>
 
   <script src="progress-tracker.js"></script>
+
+  <script>
+  // ── 3C SLIDER ──────────────────────────────────────────────────────────────
+  (function() {
+    var current = 0, total = 3;
+    var track = document.getElementById('threecTrack');
+    var dots  = document.querySelectorAll('.threec-dot');
+
+    function goTo(n) {
+      current = (n + total) % total;
+      track.style.transform = 'translateX(-' + (current * 100) + '%)';
+      dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+    }
+
+    window.threecSlide = function(dir) { goTo(current + dir); };
+    window.threecGoTo  = function(n)   { goTo(n); };
+
+    // Touch / swipe support
+    var startX = 0;
+    track.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend',   function(e) {
+      var diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
+    });
+
+    // Auto-advance every 5s
+    var timer = setInterval(function() { goTo(current + 1); }, 5000);
+    track.parentElement.addEventListener('mouseenter', function() { clearInterval(timer); });
+    track.parentElement.addEventListener('mouseleave', function() {
+      timer = setInterval(function() { goTo(current + 1); }, 5000);
+    });
+  })();
+  </script>
 </body>
 </html>
