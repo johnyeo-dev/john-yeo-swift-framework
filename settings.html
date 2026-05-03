@@ -537,6 +537,13 @@
             <div class="scard-sub">Manage existing member accounts</div>
           </div>
         </div>
+        <div class="scard-body" style="padding:12px 18px 0;">
+          <div id="tierFilterBar" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+            <button onclick="setTierFilter('all')" id="tierBtn-all" style="padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--navy);color:white;font-family:'DM Sans',sans-serif;">All <span id="tierCount-all"></span></button>
+            <button onclick="setTierFilter('elite')" id="tierBtn-elite" style="padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid rgba(245,158,11,0.4);background:white;color:#b45309;font-family:'DM Sans',sans-serif;">⭐ Elite <span id="tierCount-elite"></span></button>
+            <button onclick="setTierFilter('swift')" id="tierBtn-swift" style="padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid rgba(10,191,188,0.4);background:white;color:#0ABFBC;font-family:'DM Sans',sans-serif;">◆ Swift <span id="tierCount-swift"></span></button>
+          </div>
+        </div>
         <div class="scard-body" style="padding:0;">
           <div id="userTableWrap" style="overflow-x:auto;">
             <table class="users-table">
@@ -874,16 +881,47 @@
     renderUserTable();
   }
 
+  var _tierFilter = 'all';
+  function setTierFilter(f) {
+    _tierFilter = f;
+    document.querySelectorAll('[id^="tierBtn-"]').forEach(function(b) {
+      b.style.background = 'white';
+      b.style.color = b.id === 'tierBtn-elite' ? '#b45309' : b.id === 'tierBtn-swift' ? '#0ABFBC' : 'var(--navy)';
+    });
+    var active = document.getElementById('tierBtn-' + f);
+    if (active) {
+      active.style.background = f === 'elite' ? '#b45309' : f === 'swift' ? '#0ABFBC' : 'var(--navy)';
+      active.style.color = 'white';
+    }
+    renderUserTable();
+  }
+
   function renderUserTable() {
     var users = getAllUsers();
     var keys = Object.keys(users);
     var tbody = document.getElementById('userTableBody');
     if (!keys.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No active users yet.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No active users yet.</td></tr>';
       return;
     }
     var html = '';
     keys = keys.filter(function(u) { return !users[u].hidden; });
+
+    // Update counts
+    var eliteCount = keys.filter(function(u){ return (users[u].tier||'swift')==='elite'; }).length;
+    var swiftCount = keys.filter(function(u){ return (users[u].tier||'swift')==='swift'; }).length;
+    document.getElementById('tierCount-all').textContent   = '(' + keys.length + ')';
+    document.getElementById('tierCount-elite').textContent = '(' + eliteCount + ')';
+    document.getElementById('tierCount-swift').textContent = '(' + swiftCount + ')';
+
+    // Apply filter
+    if (_tierFilter !== 'all') {
+      keys = keys.filter(function(u){ return (users[u].tier||'swift') === _tierFilter; });
+    }
+    if (!keys.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No ' + _tierFilter + ' members yet.</td></tr>';
+      return;
+    }
     keys.forEach(function(u) {
       var usr = users[u];
       var role = usr.role || 'user';
