@@ -22,12 +22,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--text); }
 
-    /* ── TOP BAR ── */
-    .top-bar { background: var(--navy-dark); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
-    .top-bar-brand { font-family: 'DM Serif Display', serif; color: var(--gold); font-size: 18px; }
-    .top-bar-login { font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; }
-    .top-bar-login:hover { color: rgba(255,255,255,0.75); }
-
     /* ── HERO ── */
     .hero { background: var(--navy-dark); padding: 72px 24px 80px; text-align: center; position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 0%, rgba(10,191,188,0.12) 0%, transparent 70%); pointer-events: none; }
@@ -161,11 +155,6 @@
   </style>
 </head>
 <body>
-
-  <!-- TOP BAR -->
-  <div class="top-bar" style="justify-content:flex-end;">
-    <a href="login.html" class="top-bar-login">Already a member? Sign in →</a>
-  </div>
 
   <!-- HERO -->
   <div class="hero">
