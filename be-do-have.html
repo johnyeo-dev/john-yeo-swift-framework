@@ -156,6 +156,21 @@
     .user-logout-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(255,255,255,0.75); font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; white-space:nowrap; }
     .user-logout-btn:hover { background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.4); color:#fca5a5; }
 
+    /* AFFIRMATION STEPS */
+    .affirmation-block { margin-top: 20px; }
+    .affirmation-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+    .affirmation-list { display: flex; flex-direction: column; gap: 10px; }
+    .affirmation-item { display: flex; align-items: flex-start; gap: 14px; background: rgba(10,191,188,0.05); border: 1px solid rgba(10,191,188,0.18); border-radius: 10px; padding: 14px 16px; }
+    .affirmation-breath { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 2px; }
+    .affirmation-breath-icon { font-size: 17px; line-height: 1; }
+    .affirmation-breath-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+    .affirmation-text { flex: 1; }
+    .affirmation-text strong { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--navy); display: block; margin-bottom: 4px; }
+    .affirmation-text span { font-size: 13px; color: var(--text-muted); line-height: 1.6; font-style: italic; }
+    .affirmation-own { background: rgba(74,143,231,0.07); border-color: rgba(74,143,231,0.2); }
+    .affirmation-own .affirmation-breath-label { color: var(--gold-light); }
+    .affirmation-own .affirmation-text strong { color: var(--gold-light); }
+
     /* FOOTER */
     .home-footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
 
@@ -446,6 +461,68 @@
           <p>Every morning, before the day pulls you in, take two minutes. Not to plan. Not to scroll. Just to ask one question: <em>Who am I today?</em></p>
           <p>Not who do you want to be eventually. Not who will you be when this is working. Who are you today? Write down the answer in three to five words: <em>I am grounded. I lead. I know my worth.</em> Then ask the second question: <em>What would this person do first?</em> And do that — one thing, before the noise starts.</p>
           <p>This is a daily recalibration of identity before the world starts telling you who you are based on what's in your inbox. Do it long enough, and you won't need to ask anymore. The identity becomes automatic. The actions become natural.</p>
+
+          <div class="affirmation-block">
+            <div class="affirmation-label">☽ &nbsp;Action Steps — Say these slowly, one breath each</div>
+            <div class="affirmation-list">
+
+              <div class="affirmation-item">
+                <div class="affirmation-breath">
+                  <div class="affirmation-breath-icon">🌬</div>
+                  <div class="affirmation-breath-label">Breathe in</div>
+                </div>
+                <div class="affirmation-text">
+                  <strong>I am worthy.</strong>
+                  <span>Worthy of full fees, full respect, and students who value what you give. You don't have to earn the right to charge what your work is worth.</span>
+                </div>
+              </div>
+
+              <div class="affirmation-item">
+                <div class="affirmation-breath">
+                  <div class="affirmation-breath-icon">🌬</div>
+                  <div class="affirmation-breath-label">Breathe in</div>
+                </div>
+                <div class="affirmation-text">
+                  <strong>I am kind.</strong>
+                  <span>Kind to your students, to the parents who trust you, and — most importantly — to yourself when a lesson doesn't land perfectly or a week goes sideways.</span>
+                </div>
+              </div>
+
+              <div class="affirmation-item">
+                <div class="affirmation-breath">
+                  <div class="affirmation-breath-icon">🌬</div>
+                  <div class="affirmation-breath-label">Breathe in</div>
+                </div>
+                <div class="affirmation-text">
+                  <strong>I am confident.</strong>
+                  <span>Confident enough to hold your rate in a negotiation, to say no to the wrong student, and to walk into a discovery call knowing your programme changes lives.</span>
+                </div>
+              </div>
+
+              <div class="affirmation-item">
+                <div class="affirmation-breath">
+                  <div class="affirmation-breath-icon">🌬</div>
+                  <div class="affirmation-breath-label">Breathe in</div>
+                </div>
+                <div class="affirmation-text">
+                  <strong>I have enough.</strong>
+                  <span>Enough skills, enough experience, enough insight to help a student right now. You do not need one more course, one more certification, or one more year before you are ready.</span>
+                </div>
+              </div>
+
+              <div class="affirmation-item affirmation-own">
+                <div class="affirmation-breath">
+                  <div class="affirmation-breath-icon">✍️</div>
+                  <div class="affirmation-breath-label" style="color:var(--gold-light);">Yours</div>
+                </div>
+                <div class="affirmation-text">
+                  <strong style="color:var(--gold-light);">I am ___________.</strong>
+                  <span>Write the one word that describes the tutor you are choosing to be today. Not the tutor you hope to become. The one you are — right now, in this moment, before the day begins.</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
 
