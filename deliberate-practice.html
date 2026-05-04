@@ -448,19 +448,30 @@
   </script>
 
   <script>
-  // Desktop dropdown toggles
-  document.querySelectorAll('.swift-tab-group > button').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      var group = btn.closest('.swift-tab-group');
-      var wasOpen = group.classList.contains('open');
-      document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
-      if (!wasOpen) group.classList.add('open');
-    });
-  });
-  document.addEventListener('click', function() {
-    document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
-  });
+    // Nav dropdowns — hover on desktop, tap on mobile
+    (function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(group){
+        var closeTimer;
+        group.addEventListener('mouseenter', function(){
+          clearTimeout(closeTimer);
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          group.classList.add('open');
+        });
+        group.addEventListener('mouseleave', function(){
+          closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+        });
+        var btn = group.querySelector('button');
+        if (btn) btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isOpen = group.classList.contains('open');
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          if (!isOpen) group.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(){
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      });
+    })();
   </script>
 
   <script>
