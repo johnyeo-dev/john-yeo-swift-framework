@@ -565,6 +565,14 @@
     <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
   </footer>
 <script>
+  function openMobileMenu() {
+    document.getElementById('mobilePanel').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobilePanel').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('open');
+  }
   // Nav dropdown hover + click
   document.querySelectorAll('.swift-tab-group').forEach(function(group) {
     var closeTimer;
