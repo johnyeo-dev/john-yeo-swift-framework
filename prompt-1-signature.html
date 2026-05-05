@@ -699,5 +699,43 @@ FORMAT NOTES
   <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
     <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
   </footer>
+<script>
+  // Nav dropdown hover + click
+  document.querySelectorAll('.swift-tab-group').forEach(function(group) {
+    var closeTimer;
+    group.addEventListener('mouseenter', function() {
+      clearTimeout(closeTimer);
+      document.querySelectorAll('.swift-tab-group').forEach(function(g) { if (g !== group) g.classList.remove('open'); });
+      group.classList.add('open');
+    });
+    group.addEventListener('mouseleave', function() {
+      closeTimer = setTimeout(function() { group.classList.remove('open'); }, 120);
+    });
+    var btn = group.querySelector('button');
+    if (btn) btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = group.classList.contains('open');
+      document.querySelectorAll('.swift-tab-group').forEach(function(g) { g.classList.remove('open'); });
+      if (!isOpen) group.classList.add('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.swift-tab-group').forEach(function(g) { g.classList.remove('open'); });
+  });
+  // Sub-group toggle (global scope)
+  function toggleSubGroup(e, header) {
+    e.stopPropagation();
+    header.classList.toggle('open');
+    var items = header.nextElementSibling;
+    if (items) items.classList.toggle('open');
+  }
+  document.querySelectorAll('.sub-group-items').forEach(function(items) {
+    if (items.querySelector('.swift-sub-item.active')) {
+      items.classList.add('open');
+      var hdr = items.previousElementSibling;
+      if (hdr) hdr.classList.add('open');
+    }
+  });
+</script>
 </body>
 </html>
