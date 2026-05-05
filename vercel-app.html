@@ -4,12 +4,10 @@
   <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
 <script>/* pac-auto-user */(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
 
-<script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
-
   <meta charset="UTF-8" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mind &amp; Body | PAC SWIFT Framework</title>
+  <title>Build on Vercel | PAC SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -18,7 +16,6 @@
       --cream: #F4F7FB; --cream-dark: #E8EDF5;
       --text: #0A0F1C; --text-muted: #6B7A96;
       --white: #FFFFFF; --border: #B8C4D4;
-      --s: #0ABFBC; --w: #4A8FE7; --i: #8B5CF6; --f: #F59E0B; --t: #10B981;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
@@ -47,6 +44,14 @@
     .swift-sub-item:last-child { border-bottom: none; }
     .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
     .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+
+    /* COLLAPSIBLE DESKTOP SUB-GROUPS */
+    .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
+    .sub-group-header:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
+    .sub-chev { font-size: 10px; transition: transform 0.2s; line-height: 1; opacity: 0.55; }
+    .sub-group-header.open .sub-chev { transform: rotate(180deg); }
+    .sub-group-items { overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
+    .sub-group-items.open { max-height: 900px; }
 
     /* MOBILE NAV */
     .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
@@ -90,7 +95,6 @@
     .nav-search-no-results { padding: 16px 14px; font-size: 13px; color: rgba(255,255,255,0.35); text-align: center; font-family: 'DM Sans', sans-serif; }
     @media (max-width: 960px) { .nav-search-input { width: 100px; } .nav-search-input:focus { width: 140px; } }
     @media (max-width: 768px) { .nav-search { display: none; } }
-    /* Mobile search */
     .mobile-search-wrap { padding: 12px 16px 8px; }
     .mobile-search-input { width: 100%; background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 14px 10px 36px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: white; outline: none; box-sizing: border-box; }
     .mobile-search-input::placeholder { color: rgba(255,255,255,0.35); }
@@ -123,20 +127,6 @@
     .section-heading { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; margin-top: 40px; }
     .section-heading-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); }
     .section-heading-rule { flex: 1; height: 1px; background: var(--border); }
-    .section-sub { font-size: 15px; color: var(--text-muted); line-height: 1.75; max-width: 620px; margin-bottom: 24px; }
-
-    /* COMPARE CARDS */
-    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
-    @media (max-width: 580px) { .compare-grid { grid-template-columns: 1fr; } }
-    .compare-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px; overflow: hidden; }
-    .compare-card.danger { border-top: 4px solid #E24B4A; }
-    .compare-card.good { border-top: 4px solid var(--gold); }
-    .compare-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
-    .compare-card.danger .compare-label { color: #A32D2D; }
-    .compare-card.good .compare-label { color: #0F6E56; }
-    .compare-card h3 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 16px; }
-    .compare-card ul { padding-left: 1.1rem; }
-    .compare-card ul li { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 7px; }
 
     /* STEPS */
     .steps-list { display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
@@ -145,32 +135,30 @@
     .step-num { min-width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); font-weight: 700; flex-shrink: 0; margin-top: 2px; }
     .step-body h4 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 8px; }
     .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+    .step-body p + p { margin-top: 10px; }
     .step-ask { display: block; font-size: 14px; color: var(--gold); font-style: italic; margin-top: 12px; padding: 10px 14px; background: rgba(10,191,188,0.07); border-radius: 8px; line-height: 1.6; }
 
-    /* ACTION GRID */
-    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 40px; }
-    @media (max-width: 580px) { .action-grid { grid-template-columns: 1fr; } }
-    .action-item { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 18px 20px; }
-    .action-item-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-    .action-item p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    /* CODE BLOCKS */
+    .code-block { background: #0d1117; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 20px; margin: 12px 0; overflow-x: auto; }
+    .code-block code { font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #e6edf3; line-height: 1.7; white-space: pre; display: block; }
+    .code-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .code-comment { color: #8b949e; }
+    .code-string { color: #a5d6ff; }
+    .code-key { color: #79c0ff; }
+
+    /* IDEA GRID */
+    .idea-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 40px; }
+    @media (max-width: 580px) { .idea-grid { grid-template-columns: 1fr; } }
+    .idea-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+    .idea-card-icon { font-size: 22px; margin-bottom: 8px; }
+    .idea-card h5 { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--navy); margin-bottom: 6px; }
+    .idea-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
 
     /* CLOSING */
     .closing-block { background: var(--navy); border-radius: 18px; padding: 36px 40px; margin-bottom: 32px; }
     .closing-block p { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.85; margin-bottom: 14px; }
     .closing-block p:last-child { margin: 0; }
-    .closing-block strong { color: var(--white); font-weight: 600; }
-
-    /* TAGS */
-    .tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
-    .tag { display: inline-block; background: var(--white); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--text-muted); padding: 4px 14px; }
-
-    /* USER PILL */
-    .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
-    .user-logout-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(255,255,255,0.75); font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; white-space:nowrap; }
-    .user-logout-btn:hover { background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.4); color:#fca5a5; }
-
-    /* FOOTER */
-    .home-footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
+    .closing-block strong { color: var(--white); }
 
     @media (max-width: 600px) {
       .header { padding: 18px 16px; }
@@ -178,27 +166,19 @@
       .closing-block { padding: 24px 20px; }
       .step-item { flex-direction: column; gap: 12px; }
     }
-      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
-
-    /* COLLAPSIBLE DESKTOP SUB-GROUPS */
-    .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
-    .sub-group-header:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
-    .sub-chev { font-size: 10px; transition: transform 0.2s; line-height: 1; opacity: 0.55; }
-    .sub-group-header.open .sub-chev { transform: rotate(180deg); }
-    .sub-group-items { overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
-    .sub-group-items.open { max-height: 900px; }
-</style>
+    @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+  </style>
 </head>
 <body>
 
   <header class="header">
     <div>
       <div class="header-label">Product Architect Coaching · By John Yeo</div>
-      <h1>Mind &amp; Body — <em>Visualise, Breathe &amp; Move</em></h1>
+      <h1>Build on Vercel — <em>Deploy Your Own App</em></h1>
     </div>
     <div class="swift-badge">
-      <div class="s">🧘</div>
-      <div class="label">Wellbeing</div>
+      <div class="s">🚀</div>
+      <div class="label">Build</div>
     </div>
   </header>
 
@@ -215,7 +195,7 @@
       </div>
     </div>
     <div class="swift-tab-group">
-      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
       <div class="swift-sub-menu">
         <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
 <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Mindset &amp; Systems</span><span class="sub-chev">▾</span></div>
@@ -223,7 +203,7 @@
         <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
         <a class="swift-sub-item" href="be-do-have.html">✨ Be. Do. Have.</a>
         <a class="swift-sub-item" href="deliberate-practice.html">🎯 Deliberate Practice</a>
-        <a class="swift-sub-item active" href="mind-body.html">🧘 Mind &amp; Body</a>
+        <a class="swift-sub-item" href="mind-body.html">🧘 Mind &amp; Body</a>
         <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
         <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a></div>
 <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
@@ -254,13 +234,13 @@
       </div>
     </div>
     <div class="swift-tab-group">
-      <button class="swift-tab " style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Build ▾</span></button>
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Build ▾</span></button>
       <div class="swift-sub-menu">
-        <a class="swift-sub-item " href="product-creation.html">⚡ Product Creation</a>
-        <a class="swift-sub-item " href="vercel-app.html">🚀 Build on Vercel</a>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item active" href="vercel-app.html">🚀 Build on Vercel</a>
       </div>
     </div>
-        <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+    <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
     <div class="nav-search" id="navSearch">
       <span class="nav-search-icon">🔍</span>
       <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
@@ -284,7 +264,6 @@
       </div>
       <div class="mobile-search-results" id="mobileSearchResults"></div>
     </div>
-
     <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
     <div class="mobile-menu-section">SWIFT Programme</div>
     <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
@@ -297,7 +276,7 @@
     <a class="mobile-menu-item" href="mindset-jit.html"><span class="mobile-menu-letter">🧠</span>Just in Time Mindset</a>
     <a class="mobile-menu-item" href="be-do-have.html"><span class="mobile-menu-letter">✨</span>Be. Do. Have.</a>
     <a class="mobile-menu-item" href="deliberate-practice.html"><span class="mobile-menu-letter">🎯</span>Deliberate Practice</a>
-    <a class="mobile-menu-item active" href="mind-body.html"><span class="mobile-menu-letter">🧘</span>Mind &amp; Body</a>
+    <a class="mobile-menu-item" href="mind-body.html"><span class="mobile-menu-letter">🧘</span>Mind &amp; Body</a>
     <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">5️⃣</span>The Daily 5</a>
     <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>Calendar Plan</a>
     <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Get Students</div>
@@ -320,8 +299,8 @@
     <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
     <div class="mobile-menu-section">Build</div>
     <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
-    <a class="mobile-menu-item" href="vercel-app.html"><span class="mobile-menu-letter">🚀</span>Build on Vercel</a>
-        <div class="mobile-menu-section">Community</div>
+    <a class="mobile-menu-item active" href="vercel-app.html"><span class="mobile-menu-letter">🚀</span>Build on Vercel</a>
+    <div class="mobile-menu-section">Community</div>
     <a class="mobile-menu-item" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
     <div class="mobile-menu-section">Account</div>
     <a class="mobile-menu-item" href="affiliate.html"><span class="mobile-menu-letter" style="color:var(--gold);">🤝</span>Affiliate</a>
@@ -336,16 +315,59 @@
 
   <main class="main">
 
-    <!-- PAGE HERO -->
     <div class="page-hero">
-      <div class="page-hero-tag">✶ Mindset &amp; Systems ✶</div>
-      <h2>You Can Only Give What <em>You Have</em></h2>
-      <p class="page-hero-sub">Your energy, clarity, and presence are not extras. They are the product. Before the strategy — regulate. Before the call — breathe. Before the week — see it clearly.</p>
+      <div class="page-hero-tag">✶ Build &amp; Create ✶</div>
+      <h2>Ship Your Own App — <em>No Coding Background Required</em></h2>
+      <p class="page-hero-sub">Vercel lets you take an HTML file — or a Claude-generated app — and turn it into a live, shareable URL in under 5 minutes. No server. No hosting fees for small projects. No technical gatekeeping.</p>
     </div>
 
-    <!-- SECTION 1: Visualisation -->
+    <div class="personal-quote">
+      <p>You don't need to hire a developer to have a live app. You need a GitHub account, a Vercel account, and one file. That's the entire stack for 90% of what most tutors will ever need to build.</p>
+      <span class="attr">— The simplest path to a live product</span>
+    </div>
+
+    <!-- IDEAS -->
     <div class="section-heading">
-      <div class="section-heading-title">Visualisation</div>
+      <div class="section-heading-title">What You Can Build</div>
+      <div class="section-heading-rule"></div>
+    </div>
+
+    <div class="idea-grid">
+      <div class="idea-card">
+        <div class="idea-card-icon">📋</div>
+        <h5>Quiz &amp; Assessment Tool</h5>
+        <p>A topic-specific quiz for your students. Tracks score, shows answers. Share the URL after class.</p>
+      </div>
+      <div class="idea-card">
+        <div class="idea-card-icon">🗓️</div>
+        <h5>Booking / Enquiry Page</h5>
+        <p>A clean landing page for your programme with a contact form — no WordPress needed.</p>
+      </div>
+      <div class="idea-card">
+        <div class="idea-card-icon">📊</div>
+        <h5>Progress Tracker</h5>
+        <p>A simple dashboard where students log their practice hours or revision sessions each week.</p>
+      </div>
+      <div class="idea-card">
+        <div class="idea-card-icon">📝</div>
+        <h5>Revision Worksheet</h5>
+        <p>An interactive HTML worksheet with fill-in answers, hints, and a submit button — shareable instantly.</p>
+      </div>
+      <div class="idea-card">
+        <div class="idea-card-icon">🎁</div>
+        <h5>Lead Magnet Page</h5>
+        <p>A simple download or email capture page for your free resource. Live in minutes.</p>
+      </div>
+      <div class="idea-card">
+        <div class="idea-card-icon">🔐</div>
+        <h5>Member Portal</h5>
+        <p>A password-protected resource hub — exactly like this one. Pure HTML + localStorage. No backend.</p>
+      </div>
+    </div>
+
+    <!-- SETUP -->
+    <div class="section-heading">
+      <div class="section-heading-title">One-Time Setup</div>
       <div class="section-heading-rule"></div>
     </div>
 
@@ -354,32 +376,42 @@
       <div class="step-item">
         <div class="step-num">1</div>
         <div class="step-body">
-          <h4>See It Before You Live It</h4>
-          <p>Before the hard conversation. Before the scary post. Before any moment that asks something of you — pause and see it first. Close your eyes. Picture yourself on the other side of this. Not perfect. Not polished. Just you — having done it. Having shown up. Having moved through what felt impossible. That image is a message to your nervous system: you can do this. You've already been there. Visualisation isn't wishful thinking. It's rehearsal. And your brain doesn't know the difference.</p>
+          <h4>Create Your Accounts (5 minutes)</h4>
+          <p>You need two free accounts. Go to <strong>github.com</strong> and sign up — GitHub is where your files live. Then go to <strong>vercel.com</strong> and sign up using your GitHub account. That connection is what makes deployment automatic: every time you update a file on GitHub, Vercel re-deploys in seconds.</p>
+          <p>Both accounts are free for the kind of projects tutors build. You only pay if you need a custom domain or heavy traffic — neither of which applies at the start.</p>
         </div>
       </div>
 
       <div class="step-item">
         <div class="step-num">2</div>
         <div class="step-body">
-          <h4>How to Use It</h4>
-          <p>Five minutes is enough. Sit upright. Close your eyes. Breathe slowly and picture yourself after — not during — the moment you're preparing for. Notice how your body feels on the other side. Calm. Capable. Proud. Hold that image for 60 seconds. Then open your eyes and begin. Use it before webinars, difficult parent conversations, any moment where fear shows up before courage does.</p>
+          <h4>Create a GitHub Repository</h4>
+          <p>Think of a repository (repo) as a folder for your project. On GitHub, click <strong>New Repository</strong>. Give it a name (e.g. <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">my-quiz-app</code>). Set it to <strong>Public</strong> (required for free Vercel deployment). Click <strong>Create Repository</strong>.</p>
+          <p>You can create as many repos as you want. One repo = one project = one live URL.</p>
         </div>
       </div>
 
       <div class="step-item">
         <div class="step-num">3</div>
         <div class="step-body">
-          <h4>Your Visualisation Prompt</h4>
-          <span class="step-ask">Before your next webinar or difficult conversation — take 5 minutes. Close your eyes. See yourself having done it. What does the other side look like? Write it down: "On the other side, I feel ___." Then begin.</span>
+          <h4>Add Your HTML File</h4>
+          <p>In your new repo, click <strong>Add file → Create new file</strong>. Name it exactly <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">index.html</code> — this is the file Vercel will serve as your homepage. Paste in your HTML content (built with Claude, Cursor, or by hand). Scroll down and click <strong>Commit changes</strong>.</p>
+
+          <div class="code-label">Your file structure (simplest possible)</div>
+          <div class="code-block">
+            <code><span class="code-comment">my-quiz-app/</span>
+  index.html      <span class="code-comment">← your app lives here</span>
+  style.css       <span class="code-comment">← optional: separate CSS</span>
+  script.js       <span class="code-comment">← optional: separate JS</span></code>
+          </div>
         </div>
       </div>
 
     </div>
 
-    <!-- SECTION 2: Daily Visualisation Practice -->
+    <!-- DEPLOY -->
     <div class="section-heading">
-      <div class="section-heading-title">Daily Visualisation Practice</div>
+      <div class="section-heading-title">Deploy to Vercel</div>
       <div class="section-heading-rule"></div>
     </div>
 
@@ -388,32 +420,35 @@
       <div class="step-item">
         <div class="step-num">1</div>
         <div class="step-body">
-          <h4>The Morning Statement</h4>
-          <p>Every morning, before the day begins, complete these sentences slowly. Breathe. Feel each one. The structure is simple: I … and it feels like … Here are examples to anchor you: "I have the best students and it feels like I am exactly where I am supposed to be — teaching people who are ready, who show up, who grow right in front of me." "I have all my classes filled and it feels like peace. Not hustle. Not chasing. Just a full, calm, sustainable business that works because I built it with intention." "I have appreciative parents and it feels like my work matters — like every lesson, every care I put in is seen, valued, and returned with trust."</p>
+          <h4>Import Your GitHub Repo into Vercel</h4>
+          <p>Go to your Vercel dashboard. Click <strong>Add New → Project</strong>. You'll see your GitHub repos listed — click <strong>Import</strong> next to your project. Vercel will auto-detect that it's a static HTML site. Click <strong>Deploy</strong>.</p>
+          <p>That's it. In about 30 seconds, Vercel gives you a live URL like <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">my-quiz-app.vercel.app</code>. Share it with anyone.</p>
         </div>
       </div>
 
       <div class="step-item">
         <div class="step-num">2</div>
         <div class="step-body">
-          <h4>Build Your Statement Practice</h4>
-          <p>Write 5–7 statements covering what matters most — income, energy, family, students, community. Read them aloud, slowly, before checking your phone each morning. Don't rush. Breathe between each one. This is not positive thinking. It is priming. You are deciding — in advance — who you already are. Add a new statement each month as your vision expands.</p>
+          <h4>Every Update is Automatic</h4>
+          <p>This is the part that saves the most time. After the first deployment, you never have to touch Vercel again. Every time you edit your <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">index.html</code> on GitHub and commit, Vercel automatically re-deploys. The live URL updates within 20–30 seconds.</p>
+          <p>This means you can iterate fast — ask Claude to improve a section, paste it into GitHub, and your live app is updated before the next student refresh.</p>
         </div>
       </div>
 
       <div class="step-item">
         <div class="step-num">3</div>
         <div class="step-body">
-          <h4>Write Yours Now</h4>
-          <span class="step-ask">Write your 5 "I … and it feels like …" statements right now. Cover: your students. Your income. Your energy. Your family. Your community. Then read them aloud tonight and again tomorrow morning before you check your phone.</span>
+          <h4>Custom Domain (Optional)</h4>
+          <p>By default your app lives at <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">yourproject.vercel.app</code>. If you want a proper URL like <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">myquiz.com</code>, buy a domain from Namecheap or Google Domains (~$15/year), then add it in Vercel under <strong>Project → Settings → Domains</strong>. Vercel handles the SSL certificate automatically.</p>
+          <span class="step-ask">For most tutors, the free <code>.vercel.app</code> URL is enough to start — especially for tools you're sharing directly with students or parents. Get it live first. Polish the domain later.</span>
         </div>
       </div>
 
     </div>
 
-    <!-- SECTION 3: Box Breathing -->
+    <!-- USING CLAUDE -->
     <div class="section-heading">
-      <div class="section-heading-title">Box Breathing</div>
+      <div class="section-heading-title">Build It with Claude</div>
       <div class="section-heading-rule"></div>
     </div>
 
@@ -422,58 +457,36 @@
       <div class="step-item">
         <div class="step-num">1</div>
         <div class="step-body">
-          <h4>4 Counts. 4 Sides. Everything Changes.</h4>
-          <p>Inhale for 4 counts. Hold for 4. Exhale for 4. Hold for 4. Do it twice before you begin. This is how you walk into a coaching call without carrying the weight of the last three hours. How you show up for a parent fully — not frazzled, not rushed, not performing. When you are regulated, the people around you can regulate too. Box breathing is leadership from the inside out. Two minutes. Every time. It changes everything in the room.</p>
+          <h4>Describe What You Want</h4>
+          <p>Open Claude (claude.ai) and describe your tool in plain English. Be specific about what it does and who uses it. The more detail you give, the better the output.</p>
+
+          <div class="code-label">Example prompt to Claude</div>
+          <div class="code-block">
+            <code><span class="code-string">"Build me a single HTML file quiz app for PSLE Maths
+revision. Include 10 multiple choice questions about
+fractions. Show the score at the end. Use a clean white
+and navy design. Everything in one index.html file."</span></code>
+          </div>
+
+          <p style="margin-top:12px;">Claude will output a complete, working HTML file. Copy the entire output.</p>
         </div>
       </div>
 
       <div class="step-item">
         <div class="step-num">2</div>
         <div class="step-body">
-          <h4>The Practice</h4>
-          <p>Sit upright. Breathe in through your nose for 4 slow counts. Hold for 4. Exhale through your mouth for 4. Hold for 4. That is one round. Do two rounds minimum before a webinar, a coaching call, a difficult conversation, or any moment where you need to arrive fully. You can also teach this to your students — a regulated classroom always starts with a regulated teacher.</p>
+          <h4>Paste → Commit → Live</h4>
+          <p>Paste Claude's output into your <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">index.html</code> on GitHub. Commit. Vercel deploys. Done. You now have a live app at a shareable URL.</p>
+          <p>If something doesn't look right, tell Claude: <em>"The score isn't showing at the end — fix that"</em> or <em>"Make the buttons bigger on mobile."</em> Paste the updated code back in. Repeat.</p>
         </div>
       </div>
 
       <div class="step-item">
         <div class="step-num">3</div>
         <div class="step-body">
-          <h4>Try It Right Now</h4>
-          <span class="step-ask">Do two rounds of box breathing right now — before you read anything else. In for 4. Hold for 4. Out for 4. Hold for 4. Then decide: before which recurring moment in your week will you make this a non-negotiable?</span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- SECTION 4: Exercise -->
-    <div class="section-heading">
-      <div class="section-heading-title">Exercise</div>
-      <div class="section-heading-rule"></div>
-    </div>
-
-    <div class="steps-list">
-
-      <div class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <h4>This Is About Who You Get to Be</h4>
-          <p>This is not about how you look. This is about who you get to be. Movement is the one thing that generates energy instead of spending it. When you're running on empty and you rest more — you stay empty. When you move, something shifts. Clarity returns. Mood lifts. You walk back into your day as someone who has something to give. You don't need to train like an athlete. You need to move enough that your family, your clients, and your community get the best version of you.</p>
-        </div>
-      </div>
-
-      <div class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <h4>The Minimum That Changes Everything</h4>
-          <p>20–30 minutes, three to five times a week. It doesn't have to be a gym. A brisk walk qualifies. The standard: can you sustain a light conversation while moving? If yes, it counts. The run doesn't have to be fast. The walk doesn't have to be long. It just has to happen. And once you start tracking the difference it makes — in your mood, your clarity, your patience with students — the motivation becomes the data itself.</p>
-        </div>
-      </div>
-
-      <div class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <h4>Your Movement This Week</h4>
-          <span class="step-ask">Open your calendar right now. Choose 3 days this week and block 30 minutes each. Label it "Energy" — not "exercise." Start with what you'll actually do. After each session, write one word for how you feel. Let the pattern motivate you.</span>
+          <h4>Use Claude Code for Bigger Projects</h4>
+          <p>If you're building something more complex — a full portal, a multi-page app, a tool with user accounts — use <strong>Claude Code</strong> (the desktop CLI) rather than the web interface. Claude Code can read, edit, and create multiple files at once, run scripts, and push to GitHub automatically. It's what was used to build this entire portal.</p>
+          <span class="step-ask">Start with one small tool. A quiz. A checklist. A single landing page. Get it live, share the URL, and see the reaction. That feedback loop — build, ship, share, improve — is faster than any planning session you'll ever have.</span>
         </div>
       </div>
 
@@ -481,15 +494,15 @@
 
     <!-- CLOSING -->
     <div class="closing-block">
-      <p>You can't pour from an empty cup — and your students, your family, and your business are asking you to pour every single day.</p>
-      <p>Visualize the person you're becoming. Breathe before you begin. Move enough to stay full.</p>
-      <p>These aren't indulgences. They are the infrastructure that makes everything else possible. Take care of the person doing the work — and watch the work take care of itself.</p>
+      <p>The barrier to having a live, professional-looking app is lower than it has ever been. You don't need to know how to code. You don't need to hire anyone. You need an idea, a conversation with Claude, and two free accounts.</p>
+      <p><strong>GitHub holds the files. Vercel makes them live. Claude builds them.</strong> The whole stack costs nothing to start and takes an afternoon to learn.</p>
+      <p>Pick one tool your students actually need. Build it this week. Ship it before you're ready.</p>
     </div>
 
   </main>
 
-  <footer class="home-footer">
-    © Product Architect Coaching · SWIFT Framework · by John Yeo
+  <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
+    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
   </footer>
 
   <script>
@@ -501,171 +514,99 @@
     document.getElementById('mobilePanel').classList.remove('open');
     document.getElementById('mobileOverlay').classList.remove('open');
   }
-  </script>
 
-  <script>
-    // Nav dropdowns — hover on desktop, tap on mobile
-    (function(){
-      document.querySelectorAll('.swift-tab-group').forEach(function(group){
-        var closeTimer;
-        group.addEventListener('mouseenter', function(){
-          clearTimeout(closeTimer);
-          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
-          group.classList.add('open');
-        });
-        group.addEventListener('mouseleave', function(){
-          closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
-        });
-        var btn = group.querySelector('button');
-        if (btn) btn.addEventListener('click', function(e){
-          e.stopPropagation();
-          var isOpen = group.classList.contains('open');
-          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
-          if (!isOpen) group.classList.add('open');
-        });
-      });
-      document.addEventListener('click', function(){
-        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
-      });
-    })();
-  </script>
+  // Nav dropdown hover + click
+  document.querySelectorAll('.swift-tab-group').forEach(function(group) {
+    var closeTimer;
+    group.addEventListener('mouseenter', function() {
+      clearTimeout(closeTimer);
+      document.querySelectorAll('.swift-tab-group').forEach(function(g) { if (g !== group) g.classList.remove('open'); });
+      group.classList.add('open');
+    });
+    group.addEventListener('mouseleave', function() {
+      closeTimer = setTimeout(function() { group.classList.remove('open'); }, 120);
+    });
+    var btn = group.querySelector('button');
+    if (btn) btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = group.classList.contains('open');
+      document.querySelectorAll('.swift-tab-group').forEach(function(g) { g.classList.remove('open'); });
+      if (!isOpen) group.classList.add('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.swift-tab-group').forEach(function(g) { g.classList.remove('open'); });
+  });
 
-  <script>
-  (function() {
-    function initCollapse() {
-      var panel = document.getElementById('mobilePanel');
-      if (!panel) return;
-      var STORE_KEY = 'pac-menu-state';
-      var state = {};
-      try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) {}
-
-      panel.querySelectorAll('.mobile-menu-section').forEach(function(section) {
-        var label = section.textContent.trim();
-        var key = label.toLowerCase().replace(/\s+/g, '-');
-
-        var chev = document.createElement('span');
-        chev.className = 'ms-chevron';
-        section.appendChild(chev);
-
-        var items = [];
-        var el = section.nextElementSibling;
-        while (el && !el.classList.contains('mobile-menu-section')) {
-          items.push(el);
-          el = el.nextElementSibling;
-        }
-        if (!items.length) return;
-
-        var wrap = document.createElement('div');
-        wrap.className = 'mobile-section-items';
-        section.parentNode.insertBefore(wrap, items[0]);
-        items.forEach(function(item) { wrap.appendChild(item); });
-
-        var hasActive = !!wrap.querySelector('.active');
-        var savedState = state[key];
-        var startCollapsed = savedState !== undefined ? savedState : !hasActive;
-
-        if (startCollapsed) { wrap.classList.add('ms-collapsed'); chev.textContent = '›'; }
-        else { chev.textContent = '⌄'; }
-
-        section.addEventListener('click', function() {
-          var nowCollapsed = wrap.classList.toggle('ms-collapsed');
-          chev.textContent = nowCollapsed ? '›' : '⌄';
-          state[key] = nowCollapsed;
-          try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
-        });
-      });
-    }
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCollapse); }
-    else { initCollapse(); }
-  })();
-  </script>
-
-  <script src="progress-tracker.js"></script>
-
-  <script>
-  // ── SITE SEARCH ──────────────────────────────────────────────────────────
-  var SEARCH_PAGES = [
-    { title:'Home',                    sub:'SWIFT Framework overview',              url:'index.html',                  icon:'⌂',  tags:'home swift framework pace love' },
-    { title:'Signature Programme',     sub:'S · Create your signature offer',       url:'signature-programme.html',    icon:'S',  tags:'signature programme offer create s swift' },
-    { title:'Webinar Programme',       sub:'W · Run your online webinar',           url:'webinar-programme.html',      icon:'W',  tags:'webinar online programme w swift' },
-    { title:'Invite Programme',        sub:'I · Referral & invite system',          url:'invite-programme.html',       icon:'I',  tags:'invite referral system i swift' },
-    { title:'Fill Class',              sub:'F · Revenue calculator & scheduling',   url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator schedule students f swift' },
-    { title:'Track Programme',         sub:'T · Track your progress',               url:'track-programme.html',        icon:'T',  tags:'track progress t swift' },
-    { title:'Case Studies',            sub:'Success stories from members',          url:'casestudies.html',            icon:'★',  tags:'case studies success stories members results' },
-    { title:'Just in Time Mindset',    sub:'Stop over-preparing. Start now.',       url:'mindset-jit.html',            icon:'🧠', tags:'mindset just in time jit over prepare anxiety energy focus' },
-    { title:'Deliberate Practice',     sub:'Goals, action & habits for tutors',     url:'deliberate-practice.html',    icon:'🎯', tags:'deliberate practice goals action habits consistency discipline' },
-    { title:'Mind & Body',             sub:'Visualise, breathe & move',             url:'mind-body.html',              icon:'🧘', tags:'mind body visualisation breathing box breathing exercise wellbeing' },
-    { title:'Daily 5',                 sub:'5 daily actions to grow your student base', url:'daily-5.html',            icon:'5️⃣', tags:'daily 5 actions warm lead proof invite follow up conversation' },
-    { title:'Calendar Plan',           sub:'Calendar & daily tasks planner',        url:'planner.html',                icon:'📅', tags:'planner calendar plan daily tasks' },
-    { title:'Parties for Kids',        sub:'Birthday & holiday party resources',    url:'other-resources.html',        icon:'🎉', tags:'parties kids birthday holiday resources' },
-    { title:'Holiday Workshops',       sub:'Holiday workshop resources',            url:'holiday-workshops.html',      icon:'🗓️', tags:'holiday workshop resources' },
-    { title:'Monthly → Annual',        sub:'Upgrade payment plan',                  url:'payment-upgrade.html',        icon:'💳', tags:'payment upgrade monthly annual billing' },
-    { title:'IG & FB Ads',             sub:'Instagram & Facebook advertising',      url:'ig-ads.html',                 icon:'📸', tags:'instagram facebook ads advertising social media' },
-    { title:'Sales Call',              sub:'Sales call scripts & tips',             url:'sales-call.html',             icon:'📞', tags:'sales call script closing enrol' },
-    { title:'AI & Automation',         sub:'AI tools & automation workflows',       url:'ai-automation.html',          icon:'🤖', tags:'ai automation chatgpt tools workflow' },
-    { title:'Product Creation',        sub:'Create & package your product',         url:'product-creation.html',       icon:'⚡', tags:'product creation package offer digital' },
-    { title:'Video Content',           sub:'Video content strategy',                url:'video-content.html',          icon:'🎬', tags:'video content strategy reels youtube tiktok' },
-    { title:'6 AI Prompts',            sub:'All 6 prompts overview',                url:'6-prompts.html',              icon:'✦',  tags:'6 prompts ai claude chatgpt overview' },
-    { title:'Prompt 1 · Signature',    sub:'AI prompt for signature programme',     url:'prompt-1-signature.html',     icon:'✦',  tags:'prompt 1 signature ai claude' },
-    { title:'Prompt 2 · Lead Magnet',  sub:'AI prompt for lead magnet',             url:'prompt-2-lead-magnet.html',   icon:'✦',  tags:'prompt 2 lead magnet ai freebie' },
-    { title:'Prompt 3 · Teach to Pitch',sub:'AI webinar pitch script',             url:'prompt-3-teach-to-pitch.html',icon:'✦',  tags:'prompt 3 teach pitch webinar script ai' },
-    { title:'Prompt 4 · Content Style',sub:'AI prompt for content style',           url:'prompt-3-content.html',       icon:'✦',  tags:'prompt 4 content style ai caption post' },
-    { title:'Prompt 5 · Lead Form',    sub:'AI prompt for lead collection form',    url:'prompt-4-5-forms.html',       icon:'✦',  tags:'prompt 5 lead form google forms collection' },
-    { title:'Prompt 6 · Feedback',     sub:'AI prompt for feedback form',           url:'prompt-6-feedback.html',      icon:'✦',  tags:'prompt 6 feedback form survey ai' },
-    { title:'Settings',                sub:'Account, password & user management',   url:'settings.html',               icon:'⚙️', tags:'settings account password email users admin' },
-    { title:'Case Study · Feon',       sub:'Member success story',                  url:'casestudy-feon.html',         icon:'★',  tags:'case study feon success story' },
-    { title:'Case Study · Fion',       sub:'Member success story',                  url:'casestudy-fion.html',         icon:'★',  tags:'case study fion success story' },
-  ];
-
-  function searchPages(q) {
-    if (!q || q.length < 2) return [];
-    var ql = q.toLowerCase();
-    return SEARCH_PAGES.filter(function(p) {
-      return p.title.toLowerCase().includes(ql) || p.sub.toLowerCase().includes(ql) || p.tags.toLowerCase().includes(ql);
-    }).slice(0, 6);
+  // Sub-group collapsible toggle
+  function toggleSubGroup(e, header) {
+    e.stopPropagation();
+    header.classList.toggle('open');
+    var items = header.nextElementSibling;
+    if (items) items.classList.toggle('open');
   }
+  // Auto-expand the group containing the active item
+  document.querySelectorAll('.sub-group-items').forEach(function(items) {
+    if (items.querySelector('.swift-sub-item.active')) {
+      items.classList.add('open');
+      var hdr = items.previousElementSibling;
+      if (hdr) hdr.classList.add('open');
+    }
+  });
 
-  function renderResults(results, container, isMobile) {
+  // Nav search
+  var NAV_PAGES = [
+    {title:'Home',sub:'Dashboard',icon:'⌂',href:'index.html'},
+    {title:'Signature Programme',sub:'SWIFT · S',icon:'S',href:'signature-programme.html'},
+    {title:'Webinar Programme',sub:'SWIFT · W',icon:'W',href:'webinar-programme.html'},
+    {title:'Invite Programme',sub:'SWIFT · I',icon:'I',href:'invite-programme.html'},
+    {title:'Fill Class',sub:'SWIFT · F',icon:'F',href:'fill-programme.html'},
+    {title:'Track Progress',sub:'SWIFT · T',icon:'T',href:'track-programme.html'},
+    {title:'Case Studies',sub:'Resources',icon:'★',href:'casestudies.html'},
+    {title:'Just in Time Mindset',sub:'Mindset & Systems',icon:'🧠',href:'mindset-jit.html'},
+    {title:'Be. Do. Have.',sub:'Mindset & Systems',icon:'✨',href:'be-do-have.html'},
+    {title:'Deliberate Practice',sub:'Mindset & Systems',icon:'🎯',href:'deliberate-practice.html'},
+    {title:'Mind & Body',sub:'Mindset & Systems',icon:'🧘',href:'mind-body.html'},
+    {title:'The Daily 5',sub:'Mindset & Systems',icon:'5️⃣',href:'daily-5.html'},
+    {title:'Calendar Plan',sub:'Resources',icon:'📅',href:'planner.html'},
+    {title:'IG & FB Ads',sub:'Get Students',icon:'📸',href:'ig-ads.html'},
+    {title:'Sales Call',sub:'Get Students',icon:'📞',href:'sales-call.html'},
+    {title:'Parties for Kids',sub:'Get Students',icon:'🎉',href:'other-resources.html'},
+    {title:'Holiday Workshops',sub:'Get Students',icon:'🗓️',href:'holiday-workshops.html'},
+    {title:'Monthly → Annual',sub:'Business',icon:'💳',href:'payment-upgrade.html'},
+    {title:'AI & Automation',sub:'Tools',icon:'🤖',href:'ai-automation.html'},
+    {title:'Video Content',sub:'Tools',icon:'🎬',href:'video-content.html'},
+    {title:'Product Creation',sub:'Build & Create',icon:'⚡',href:'product-creation.html'},
+    {title:'Build on Vercel',sub:'Build & Create',icon:'🚀',href:'vercel-app.html'},
+    {title:'All Prompts',sub:'6 Prompts',icon:'✦',href:'6-prompts.html'},
+    {title:'Leaderboard',sub:'Community',icon:'🏆',href:'leaderboard.html'},
+    {title:'Affiliate',sub:'Account',icon:'🤝',href:'affiliate.html'},
+    {title:'Settings',sub:'Account',icon:'⚙',href:'settings.html'},
+  ];
+  function renderSearchResults(q, results, container, isMobile) {
+    if (!q) { container.innerHTML = ''; if (!isMobile) container.classList.remove('open'); return; }
     if (!results.length) {
-      container.innerHTML = '<div class="' + (isMobile ? 'nav-search-no-results' : 'nav-search-no-results') + '">No pages found</div>';
+      container.innerHTML = '<div style="padding:16px 14px;font-size:13px;color:rgba(255,255,255,0.35);text-align:center;font-family:\'DM Sans\',sans-serif;">No pages found</div>';
+      if (!isMobile) container.classList.add('open');
       return;
     }
-    container.innerHTML = results.map(function(p) {
-      if (isMobile) {
-        return '<a class="mobile-search-result" href="' + p.url + '"><div class="mobile-search-result-icon">' + p.icon + '</div><div><div class="mobile-search-result-title">' + p.title + '</div><div class="mobile-search-result-sub">' + p.sub + '</div></div></a>';
-      }
-      return '<a class="nav-search-result" href="' + p.url + '"><div class="nav-search-result-icon">' + p.icon + '</div><div class="nav-search-result-text"><div class="nav-search-result-title">' + p.title + '</div><div class="nav-search-result-sub">' + p.sub + '</div></div></a>';
+    container.innerHTML = results.slice(0,7).map(function(p) {
+      if (isMobile) return '<a class="mobile-search-result" href="'+p.href+'"><div class="mobile-search-result-icon">'+p.icon+'</div><div><div class="mobile-search-result-title">'+p.title+'</div><div class="mobile-search-result-sub">'+p.sub+'</div></div></a>';
+      return '<a class="nav-search-result" href="'+p.href+'"><div class="nav-search-result-icon">'+p.icon+'</div><div class="nav-search-result-text"><div class="nav-search-result-title">'+p.title+'</div><div class="nav-search-result-sub">'+p.sub+'</div></div></a>';
     }).join('');
+    if (!isMobile) container.classList.add('open');
   }
-
-  var navInput = document.getElementById('navSearchInput');
-  var navResults = document.getElementById('navSearchResults');
-  if (navInput) {
-    navInput.addEventListener('input', function() {
-      var q = navInput.value.trim();
-      var results = searchPages(q);
-      if (!q || q.length < 2) { navResults.classList.remove('open'); return; }
-      renderResults(results, navResults, false);
-      navResults.classList.add('open');
-    });
-    navInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') { navResults.classList.remove('open'); navInput.blur(); }
-    });
-    document.addEventListener('click', function(e) {
-      if (!navInput.contains(e.target) && !navResults.contains(e.target)) navResults.classList.remove('open');
-    });
-  }
-
-  var mobileInput = document.getElementById('mobileSearchInput');
-  var mobileResults = document.getElementById('mobileSearchResults');
-  if (mobileInput) {
-    mobileInput.addEventListener('input', function() {
-      var q = mobileInput.value.trim();
-      var results = searchPages(q);
-      renderResults(results, mobileResults, true);
-    });
-  }
+  var nsi = document.getElementById('navSearchInput'), nsr = document.getElementById('navSearchResults');
+  if (nsi) nsi.addEventListener('input', function() {
+    var q = this.value.trim().toLowerCase();
+    renderSearchResults(q, NAV_PAGES.filter(function(p){return p.title.toLowerCase().includes(q)||p.sub.toLowerCase().includes(q);}), nsr, false);
+  });
+  if (nsi) nsi.addEventListener('blur', function(){setTimeout(function(){nsr.classList.remove('open');},200);});
+  var msi = document.getElementById('mobileSearchInput'), msr = document.getElementById('mobileSearchResults');
+  if (msi) msi.addEventListener('input', function() {
+    var q = this.value.trim().toLowerCase();
+    renderSearchResults(q, NAV_PAGES.filter(function(p){return p.title.toLowerCase().includes(q)||p.sub.toLowerCase().includes(q);}), msr, true);
+  });
   </script>
-
 </body>
 </html>

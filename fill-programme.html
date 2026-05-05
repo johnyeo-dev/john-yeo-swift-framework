@@ -409,7 +409,7 @@
       <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
       <div class="swift-sub-menu">
         <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
-<div class="sub-group-header" onclick="toggleSubGroup(this)"><span>Mindset &amp; Systems</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Mindset &amp; Systems</span><span class="sub-chev">▾</span></div>
 <div class="sub-group-items">
         <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
         <a class="swift-sub-item" href="be-do-have.html">✨ Be. Do. Have.</a>
@@ -417,17 +417,16 @@
         <a class="swift-sub-item" href="mind-body.html">🧘 Mind &amp; Body</a>
         <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
         <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a></div>
-<div class="sub-group-header" onclick="toggleSubGroup(this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
 <div class="sub-group-items">
         <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
         <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
         <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
         <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a></div>
-<div class="sub-group-header" onclick="toggleSubGroup(this)"><span>Business</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Business</span><span class="sub-chev">▾</span></div>
 <div class="sub-group-items">
-        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
-        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a></div>
-<div class="sub-group-header" onclick="toggleSubGroup(this)"><span>Tools</span><span class="sub-chev">▾</span></div>
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Tools</span><span class="sub-chev">▾</span></div>
 <div class="sub-group-items">
         <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
         <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a></div>
@@ -445,7 +444,14 @@
         <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
       </div>
     </div>
-    <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab " style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Build ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item " href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item " href="vercel-app.html">🚀 Build on Vercel</a>
+      </div>
+    </div>
+        <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
     <div class="nav-search" id="navSearch">
       <span class="nav-search-icon">🔍</span>
       <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
@@ -491,7 +497,6 @@
     <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
     <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Business</div>
     <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
-    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
     <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Tools</div>
     <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
     <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
@@ -503,7 +508,10 @@
     <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
     <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Lead Collection Form</a>
     <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
-    <div class="mobile-menu-section">Community</div>
+    <div class="mobile-menu-section">Build</div>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="vercel-app.html"><span class="mobile-menu-letter">🚀</span>Build on Vercel</a>
+        <div class="mobile-menu-section">Community</div>
     <a class="mobile-menu-item" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
       <div class="mobile-menu-section">Account</div>
     <a class="mobile-menu-item" href="affiliate.html"><span class="mobile-menu-letter" style="color:var(--gold);">🤝</span>Affiliate</a>
