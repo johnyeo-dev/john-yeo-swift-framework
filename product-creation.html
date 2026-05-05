@@ -754,7 +754,24 @@
 
   <script>
   (function() {
-    function initCollapse() {
+    
+  // Sub-group collapsible toggle
+  function toggleSubGroup(e, header) {
+    e.stopPropagation();
+    header.classList.toggle('open');
+    var items = header.nextElementSibling;
+    if (items) items.classList.toggle('open');
+  }
+  // Auto-expand the group containing the active item
+  document.querySelectorAll('.sub-group-items').forEach(function(items) {
+    if (items.querySelector('.swift-sub-item.active')) {
+      items.classList.add('open');
+      var hdr = items.previousElementSibling;
+      if (hdr) hdr.classList.add('open');
+    }
+  });
+
+  function initCollapse() {
       var panel = document.getElementById('mobilePanel');
       if (!panel) return;
       var STORE_KEY = 'pac-menu-state';

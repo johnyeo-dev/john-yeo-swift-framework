@@ -1710,6 +1710,23 @@ POST-WORKSHOP — Non-converter follow-up:
   </script>
 
   <script>
+  
+  // Sub-group collapsible toggle
+  function toggleSubGroup(e, header) {
+    e.stopPropagation();
+    header.classList.toggle('open');
+    var items = header.nextElementSibling;
+    if (items) items.classList.toggle('open');
+  }
+  // Auto-expand the group containing the active item
+  document.querySelectorAll('.sub-group-items').forEach(function(items) {
+    if (items.querySelector('.swift-sub-item.active')) {
+      items.classList.add('open');
+      var hdr = items.previousElementSibling;
+      if (hdr) hdr.classList.add('open');
+    }
+  });
+
   function openMobileMenu() {
     document.getElementById('mobilePanel').classList.add('open');
     document.getElementById('mobileOverlay').classList.add('open');
