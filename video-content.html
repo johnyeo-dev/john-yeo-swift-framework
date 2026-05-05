@@ -194,6 +194,14 @@
     .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
     .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
       @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+
+    /* COLLAPSIBLE DESKTOP SUB-GROUPS */
+    .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
+    .sub-group-header:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
+    .sub-chev { font-size: 10px; transition: transform 0.2s; line-height: 1; opacity: 0.55; }
+    .sub-group-header.open .sub-chev { transform: rotate(180deg); }
+    .sub-group-items { overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
+    .sub-group-items.open { max-height: 900px; }
 </style>
 </head>
 <body>
@@ -228,24 +236,28 @@
       <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
       <div class="swift-sub-menu">
         <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
-<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Mindset &amp; Systems</div>
+<div class="sub-group-header" onclick="toggleSubGroup(this)"><span>Mindset &amp; Systems</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
         <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
         <a class="swift-sub-item" href="be-do-have.html">✨ Be. Do. Have.</a>
         <a class="swift-sub-item" href="deliberate-practice.html">🎯 Deliberate Practice</a>
         <a class="swift-sub-item" href="mind-body.html">🧘 Mind &amp; Body</a>
         <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
-        <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a>
-<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Get Students</div>
+        <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
         <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
         <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
         <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
-        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
-<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Business</div>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(this)"><span>Business</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
         <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
-        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
-<div style="padding:7px 16px 3px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Tools</div>
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(this)"><span>Tools</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
         <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
-        <a class="swift-sub-item active" href="video-content.html">🎬 Video Content</a>
+        <a class="swift-sub-item active" href="video-content.html">🎬 Video Content</a></div>
       </div>
     </div>
     <div class="swift-tab-group">

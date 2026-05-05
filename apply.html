@@ -153,7 +153,15 @@
       .community-strip-overlay { padding: 16px 20px; }
       .video-grid { grid-template-columns: 1fr; }
     }
-  </style>
+  
+    /* COLLAPSIBLE DESKTOP SUB-GROUPS */
+    .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
+    .sub-group-header:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
+    .sub-chev { font-size: 10px; transition: transform 0.2s; line-height: 1; opacity: 0.55; }
+    .sub-group-header.open .sub-chev { transform: rotate(180deg); }
+    .sub-group-items { overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
+    .sub-group-items.open { max-height: 900px; }
+</style>
 </head>
 <body>
 
