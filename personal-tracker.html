@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
+  <script>/* pac-auto-user */(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Tracker | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --text-muted: #6B7A96;
+      --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: var(--navy); padding: 12px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    /* SWIFT NAV */
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-size: 12px; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
+
+    /* MOBILE MENU */
+    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150; }
+    .mobile-menu-overlay.open { display: block; }
+    .mobile-menu-panel { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background: #111827; z-index: 200; overflow-y: auto; transition: left 0.3s ease; padding-bottom: 40px; }
+    .mobile-menu-panel.open { left: 0; }
+    .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.5); font-size: 20px; cursor: pointer; }
+    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .mobile-menu-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .mobile-menu-item.active .mobile-menu-letter { color: var(--gold); }
+    .mobile-menu-section { padding: 16px 20px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .mobile-section-items.ms-collapsed { display: none; }
+    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
+    .mobile-menu-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 8px; }
+    .mobile-search-wrap { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .mobile-search-input { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 9px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: white; outline: none; }
+    .mobile-search-results { margin-top: 8px; }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
+    @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+
+    /* NAV SEARCH */
+    .nav-search { position: relative; display: flex; align-items: center; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13); border-radius: 8px; padding: 5px 12px; gap: 7px; margin: 6px 8px; }
+    .nav-search-icon { font-size: 13px; opacity: 0.5; flex-shrink: 0; }
+    .nav-search-input { background: none; border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 13px; color: white; width: 140px; }
+    .nav-search-input::placeholder { color: rgba(255,255,255,0.3); }
+    .nav-search-results { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 300; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: none; }
+    .nav-search-results.open { display: block; }
+    .nav-search-result-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; color: rgba(255,255,255,0.75); font-size: 13px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; }
+    .nav-search-result-item:hover { background: rgba(255,255,255,0.07); color: white; }
+
+    /* COLLAPSIBLE SUB-GROUPS */
+    .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; }
+    .sub-chev { font-size: 10px; transition: transform 0.2s; line-height: 1; opacity: 0.55; }
+    .sub-group-header.open .sub-chev { transform: rotate(180deg); }
+    .sub-group-items { overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
+    .sub-group-items.open { max-height: 900px; }
+
+    /* MAIN */
+    .main { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } .main { padding: 24px 16px 60px; } }
+
+    /* ── TAB SWITCHER ── */
+    .tracker-tabs { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+    .t-tab { padding: 11px 22px; border-radius: 10px; border: 1.5px solid var(--border); background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-muted); transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .t-tab:hover { border-color: var(--gold); color: var(--navy); }
+    .t-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+    .t-panel { display: none; }
+    .t-panel.active { display: block; }
+
+    /* ── CONTENT PLANNER ── */
+    .planner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 24px; }
+    .planner-col { background: white; border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .planner-col-head { padding: 16px 18px 14px; }
+    .planner-col-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .planner-col-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); }
+    .planner-col-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+    .planner-items { padding: 4px 0 12px; }
+    .planner-item { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-top: 1px solid var(--cream-dark); cursor: pointer; transition: background 0.15s; }
+    .planner-item:hover { background: var(--cream); }
+    .planner-item.checked { background: rgba(10,191,188,0.04); }
+    .planner-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; font-size: 12px; color: transparent; }
+    .planner-item.checked .planner-check { background: #0ABFBC; border-color: #0ABFBC; color: white; }
+    .planner-item-text { font-size: 13px; color: var(--text); line-height: 1.4; flex: 1; }
+    .planner-item.checked .planner-item-text { color: var(--text-muted); text-decoration: line-through; }
+    .attract-head { background: linear-gradient(135deg, rgba(10,191,188,0.1), rgba(10,191,188,0.05)); border-bottom: 1px solid rgba(10,191,188,0.15); }
+    .attract-head .planner-col-tag { color: #0ABFBC; }
+    .connect-head { background: linear-gradient(135deg, rgba(74,143,231,0.1), rgba(74,143,231,0.05)); border-bottom: 1px solid rgba(74,143,231,0.15); }
+    .connect-head .planner-col-tag { color: #4A8FE7; }
+    .convert-head { background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(139,92,246,0.05)); border-bottom: 1px solid rgba(139,92,246,0.15); }
+    .convert-head .planner-col-tag { color: #8B5CF6; }
+    .planner-week { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .planner-week-label { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .week-btn { background: white; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 14px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+    .week-btn:hover { border-color: var(--gold); color: var(--navy); }
+    .planner-summary { display: flex; gap: 12px; flex-wrap: wrap; }
+    .planner-summary-pill { background: var(--cream); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+    .planner-summary-pill span { color: var(--navy); font-size: 16px; font-family: 'DM Serif Display', serif; }
+    @media (max-width: 640px) { .planner-grid { grid-template-columns: 1fr; } }
+
+    /* ── PROGRESS SCORECARD ── */
+    .scorecard-summary { display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+    .sc-sum-pill { flex: 1; min-width: 100px; border-radius: 12px; padding: 16px 18px; text-align: center; }
+    .sc-sum-pill.red { background: rgba(239,68,68,0.08); border: 1.5px solid rgba(239,68,68,0.25); }
+    .sc-sum-pill.yellow { background: rgba(245,158,11,0.08); border: 1.5px solid rgba(245,158,11,0.25); }
+    .sc-sum-pill.green { background: rgba(16,185,129,0.08); border: 1.5px solid rgba(16,185,129,0.25); }
+    .sc-sum-pill.none { background: var(--cream); border: 1.5px solid var(--border); }
+    .sc-sum-num { font-family: 'DM Serif Display', serif; font-size: 36px; line-height: 1; margin-bottom: 4px; }
+    .sc-sum-pill.red .sc-sum-num { color: #DC2626; }
+    .sc-sum-pill.yellow .sc-sum-num { color: #D97706; }
+    .sc-sum-pill.green .sc-sum-num { color: #059669; }
+    .sc-sum-pill.none .sc-sum-num { color: var(--text-muted); }
+    .sc-sum-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+    .sc-category { margin-bottom: 24px; }
+    .sc-cat-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .sc-row { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; transition: border-color 0.2s; }
+    .sc-row.sc-red { border-color: rgba(239,68,68,0.4); background: rgba(239,68,68,0.03); }
+    .sc-row.sc-yellow { border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.03); }
+    .sc-row.sc-green { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.03); }
+    .sc-num { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(0,0,0,0.2); flex-shrink: 0; width: 24px; }
+    .sc-text { flex: 1; font-size: 14px; color: var(--text); line-height: 1.55; }
+    .sc-btns { display: flex; gap: 6px; flex-shrink: 0; }
+    .sc-btn { width: 34px; height: 34px; border-radius: 8px; border: 1.5px solid transparent; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; background: var(--cream); opacity: 0.45; }
+    .sc-btn:hover { opacity: 0.8; transform: scale(1.1); }
+    .sc-btn.active { opacity: 1; transform: scale(1.05); }
+    .sc-btn-red.active { background: rgba(239,68,68,0.15); border-color: #DC2626; }
+    .sc-btn-yellow.active { background: rgba(245,158,11,0.15); border-color: #D97706; }
+    .sc-btn-green.active { background: rgba(16,185,129,0.15); border-color: #059669; }
+    .sc-updated { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    @media (max-width: 480px) { .sc-btns { flex-direction: column; } .sc-row { flex-wrap: wrap; } }
+
+    /* ── PROGRAMME PATH ── */
+    .path-stages { display: flex; flex-direction: column; gap: 28px; }
+    .path-stage { background: white; border: 1.5px solid var(--border); border-radius: 18px; overflow: hidden; }
+    .path-stage-head { padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .path-stage-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--white); }
+    .path-stage-sub { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+    .path-stage-progress { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.15); border-radius: 99px; padding: 4px 12px; flex-shrink: 0; }
+    .starting-head { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
+    .launched-head { background: linear-gradient(135deg, #3730a3, #6D28D9); }
+    .thriving-head { background: linear-gradient(135deg, #065f46, #059669); }
+    .path-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+    .path-pillar { border-right: 1px solid var(--border); padding: 16px 18px; }
+    .path-pillar:last-child { border-right: none; }
+    .path-pillar-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--cream-dark); }
+    .offer-pillar .path-pillar-title { color: #0ABFBC; }
+    .audience-pillar .path-pillar-title { color: #4A8FE7; }
+    .income-pillar .path-pillar-title { color: #F59E0B; }
+    .path-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--cream-dark); cursor: pointer; }
+    .path-item:last-child { border-bottom: none; }
+    .path-item:hover .path-check { border-color: var(--gold); }
+    .path-check { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: all 0.15s; font-size: 10px; color: transparent; }
+    .path-item.checked .path-check { background: #10B981; border-color: #10B981; color: white; }
+    .path-item-text { font-size: 12px; color: var(--text); line-height: 1.5; flex: 1; }
+    .path-item.checked .path-item-text { color: var(--text-muted); text-decoration: line-through; }
+    @media (max-width: 640px) { .path-pillars { grid-template-columns: 1fr; } .path-pillar { border-right: none; border-bottom: 1px solid var(--border); } .path-pillar:last-child { border-bottom: none; } }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC SWIFT Framework</div>
+      <h1>📋 <em>Personal Tracker</em></h1>
+    </div>
+    <div class="swift-badge" style="margin-left:auto;">
+      <div class="s">📋</div>
+      <div class="label">Tracker</div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <a class="swift-tab" href="index.html"><span class="swift-letter">⌂</span><span class="swift-word">Home</span></a>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+        <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Mindset &amp; Systems</span><span class="sub-chev">▾</span></div>
+        <div class="sub-group-items">
+          <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
+          <a class="swift-sub-item" href="be-do-have.html">✨ Be. Do. Have.</a>
+          <a class="swift-sub-item" href="deliberate-practice.html">🎯 Deliberate Practice</a>
+          <a class="swift-sub-item" href="mind-body.html">🧘 Mind &amp; Body</a>
+          <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
+          <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a>
+        </div>
+        <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
+        <div class="sub-group-items">
+          <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+          <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+          <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+          <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+        </div>
+        <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Business</span><span class="sub-chev">▾</span></div>
+        <div class="sub-group-items">
+          <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+        </div>
+        <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Tools</span><span class="sub-chev">▾</span></div>
+        <div class="sub-group-items">
+          <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+          <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
+        </div>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="6-prompts.html">✦ All Prompts</a>
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
+        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
+        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter" style="font-size:14px;">🚀</span><span class="swift-word">Build ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="vercel-app.html">🚀 Build on Vercel</a>
+      </div>
+    </div>
+    <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+    <a class="swift-tab active" href="personal-tracker.html"><span class="swift-letter">📋</span><span class="swift-word">Tracker</span></a>
+    <div class="nav-search" id="navSearch">
+      <span class="nav-search-icon">🔍</span>
+      <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
+      <div class="nav-search-results" id="navSearchResults"></div>
+    </div>
+    <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
+    <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <button onclick="localStorage.removeItem('pac-swift-session');localStorage.removeItem('pac-swift-user');window.location.href='login.html';" style="width:100%;text-align:left;background:rgba(248,113,113,0.08);border:none;border-bottom:1px solid rgba(248,113,113,0.18);padding:11px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#f87171;display:flex;align-items:center;gap:10px;"><span style="font-size:15px;">⏻</span>Sign Out</button>
+    <div class="mobile-search-wrap">
+      <input class="mobile-search-input" id="mobileSearchInput" type="text" placeholder="Search pages…" autocomplete="off" />
+      <div class="mobile-search-results" id="mobileSearchResults"></div>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Mindset &amp; Systems</div>
+    <a class="mobile-menu-item" href="mindset-jit.html"><span class="mobile-menu-letter">🧠</span>Just in Time Mindset</a>
+    <a class="mobile-menu-item" href="be-do-have.html"><span class="mobile-menu-letter">✨</span>Be. Do. Have.</a>
+    <a class="mobile-menu-item" href="deliberate-practice.html"><span class="mobile-menu-letter">🎯</span>Deliberate Practice</a>
+    <a class="mobile-menu-item" href="mind-body.html"><span class="mobile-menu-letter">🧘</span>Mind &amp; Body</a>
+    <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">5️⃣</span>The Daily 5</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>Calendar Plan</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Get Students</div>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Business</div>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Tools</div>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item" href="prompt-3-teach-to-pitch.html" style="padding-left:36px;font-size:13px;">✦ Teach to Pitch</a>
+    <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Lead Collection Form</a>
+    <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
+    <div class="mobile-menu-section">Build</div>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="vercel-app.html"><span class="mobile-menu-letter">🚀</span>Build on Vercel</a>
+    <div class="mobile-menu-section">Community</div>
+    <a class="mobile-menu-item" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
+    <a class="mobile-menu-item active" href="personal-tracker.html"><span class="mobile-menu-letter" style="color:var(--gold);">📋</span>Personal Tracker</a>
+    <div class="mobile-menu-section">Account</div>
+    <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <main class="main">
+
+    <!-- HERO -->
+    <div style="margin-bottom:32px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">📋 Personal Tracker</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(26px,4vw,36px);color:var(--navy);margin-bottom:10px;line-height:1.2;">Plan. Reflect. <em style="font-style:italic;color:var(--gold-light);">Grow.</em></h2>
+      <p style="font-size:15px;color:var(--text-muted);line-height:1.7;max-width:580px;">Three tools in one place — plan your content, score your progress, and map your path. Use these weekly to stay honest and intentional.</p>
+    </div>
+
+    <!-- TAB SWITCHER -->
+    <div class="tracker-tabs">
+      <button class="t-tab active" id="tab-btn-planner" onclick="showTab('planner')">📅 Content Planner</button>
+      <button class="t-tab" id="tab-btn-scorecard" onclick="showTab('scorecard')">📊 Progress Scorecard</button>
+      <button class="t-tab" id="tab-btn-path" onclick="showTab('path')">🗺️ Programme Path</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB 1: CONTENT PLANNER                                  -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="tab-planner" class="t-panel active">
+
+      <div style="background:linear-gradient(135deg,#0A0F1C,#111827);border-radius:16px;padding:22px 28px;margin-bottom:24px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">The PAC Content Planner</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;color:white;margin-bottom:6px;">Your 4-week content cycle.</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);">Pick your play. Stay in motion. Tick off what you do each week.</div>
+      </div>
+
+      <div class="planner-week">
+        <div class="planner-week-label" id="plannerWeekLabel"></div>
+        <button class="week-btn" onclick="changeWeek(-1)">← Prev week</button>
+        <button class="week-btn" onclick="changeWeek(1)">Next week →</button>
+        <button class="week-btn" onclick="changeWeek(0)">This week</button>
+        <button class="week-btn" onclick="resetWeek()" style="color:#DC2626;border-color:rgba(220,38,38,0.3);">Reset</button>
+      </div>
+      <div class="planner-summary" id="plannerSummary" style="margin-bottom:20px;"></div>
+
+      <div class="planner-grid" id="plannerGrid"></div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB 2: PROGRESS SCORECARD                               -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="tab-scorecard" class="t-panel">
+
+      <div style="background:linear-gradient(135deg,#0A0F1C,#111827);border-radius:16px;padding:22px 28px;margin-bottom:24px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">The PAC Progress Scorecard</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;color:white;margin-bottom:6px;">Rate yourself honestly.</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);">🔴 Not there yet &nbsp;·&nbsp; 🟡 Getting there &nbsp;·&nbsp; 🟢 Nailed it. Be honest — this is for you.</div>
+      </div>
+
+      <div class="scorecard-summary" id="scorecardSummary"></div>
+      <div id="scorecardRows"></div>
+      <div class="sc-updated" id="scUpdated"></div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB 3: PROGRAMME PATH                                   -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="tab-path" class="t-panel">
+
+      <div style="background:linear-gradient(135deg,#0A0F1C,#111827);border-radius:16px;padding:22px 28px;margin-bottom:24px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">The PAC Programme Path</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;color:white;margin-bottom:6px;">Same 3 pillars at every level.</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);">Build your offer. Grow your audience. Generate income. Tick off what you've done.</div>
+      </div>
+
+      <div class="path-stages" id="pathStages"></div>
+
+    </div>
+
+  </main>
+
+  <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
+    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
+  </footer>
+
+  <script>
+  // ── HELPERS ───────────────────────────────────────────────────────────────
+  function getUser() { try { var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null'); return s?s.u:null; } catch(e){return null;} }
+  function load(key) { try { return JSON.parse(localStorage.getItem(key)||'null'); } catch(e){return null;} }
+  function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){} }
+
+  // ── TAB SWITCHING ─────────────────────────────────────────────────────────
+  function showTab(name) {
+    ['planner','scorecard','path'].forEach(function(t) {
+      document.getElementById('tab-'+t).classList.toggle('active', t===name);
+      document.getElementById('tab-btn-'+t).classList.toggle('active', t===name);
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 1: CONTENT PLANNER
+  // ══════════════════════════════════════════════════════════════════════════
+  var PLANNER_DATA = [
+    {
+      id: 'attract', label: 'ATTRACT', title: 'Attract', desc: 'Bring new eyes to your world',
+      color: '#0ABFBC', cls: 'attract-head',
+      items: ['Educational post — tip or insight','Story post — before and after','Video — Reels, TikTok, YouTube','Webinar or Workshop','Lead Magnet Drop']
+    },
+    {
+      id: 'connect', label: 'CONNECT', title: 'Connect', desc: 'Warm up your existing audience',
+      color: '#4A8FE7', cls: 'connect-head',
+      items: ['Community Q&A','Behind-the-scenes','Student win or testimony','Poll or question post','Live session']
+    },
+    {
+      id: 'convert', label: 'CONVERT', title: 'Convert', desc: 'Turn warm leads into students',
+      color: '#8B5CF6', cls: 'convert-head',
+      items: ['Direct invite post','Daily 5: Make the ask','Discovery call offer','Referral ask','Enrolment deadline post']
+    }
+  ];
+
+  var currentWeekOffset = 0;
+
+  function weekKey(offset) {
+    var d = new Date();
+    var day = d.getDay(); var diff = d.getDate() - day + (day===0?-6:1);
+    d.setDate(diff + offset*7);
+    return d.getFullYear() + '-W' + String(Math.ceil((((d - new Date(d.getFullYear(),0,1))/86400000)+1)/7)).padStart(2,'0');
+  }
+
+  function weekLabel(offset) {
+    var d = new Date();
+    var day = d.getDay(); var diff = d.getDate() - day + (day===0?-6:1);
+    d.setDate(diff + offset*7);
+    var end = new Date(d); end.setDate(d.getDate()+6);
+    var fmt = function(dt){ return dt.toLocaleDateString('en-SG',{day:'numeric',month:'short'}); };
+    return 'Week of ' + fmt(d) + ' – ' + fmt(end) + (offset===0?' (This week)':offset===-1?' (Last week)':offset===1?' (Next week)':'');
+  }
+
+  function plannerKey() { return 'pac-planner-' + getUser() + '-' + weekKey(currentWeekOffset); }
+
+  function renderPlanner() {
+    document.getElementById('plannerWeekLabel').textContent = weekLabel(currentWeekOffset);
+    var state = load(plannerKey()) || {};
+    var totalDone = 0, totalItems = 0;
+    var html = '';
+    PLANNER_DATA.forEach(function(col) {
+      html += '<div class="planner-col">';
+      html += '<div class="planner-col-head ' + col.cls + '">';
+      html += '<div class="planner-col-tag">' + col.label + '</div>';
+      html += '<div class="planner-col-title">' + col.title + '</div>';
+      html += '<div class="planner-col-desc">' + col.desc + '</div>';
+      html += '</div><div class="planner-items">';
+      col.items.forEach(function(item, idx) {
+        var k = col.id + '-' + idx;
+        var checked = !!state[k];
+        if (checked) totalDone++;
+        totalItems++;
+        html += '<div class="planner-item' + (checked?' checked':'') + '" onclick="togglePlanner(\'' + k + '\')">';
+        html += '<div class="planner-check">✓</div>';
+        html += '<div class="planner-item-text">' + item + '</div>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('plannerGrid').innerHTML = html;
+    document.getElementById('plannerSummary').innerHTML =
+      '<div class="planner-summary-pill"><span>' + totalDone + '</span> / ' + totalItems + ' done this week</div>' +
+      '<div class="planner-summary-pill" style="color:' + (totalDone>=10?'#059669':'var(--text-muted)') + ';">' +
+        (totalDone>=10?'🔥 Great week!':totalDone>=5?'💪 Good progress':'🎯 Keep going') +
+      '</div>';
+  }
+
+  function togglePlanner(key) {
+    var state = load(plannerKey()) || {};
+    state[key] = !state[key];
+    save(plannerKey(), state);
+    renderPlanner();
+  }
+
+  function changeWeek(dir) {
+    if (dir===0) currentWeekOffset=0; else currentWeekOffset+=dir;
+    renderPlanner();
+  }
+
+  function resetWeek() {
+    if (!confirm('Reset all ticks for this week?')) return;
+    save(plannerKey(), {});
+    renderPlanner();
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 2: PROGRESS SCORECARD
+  // ══════════════════════════════════════════════════════════════════════════
+  var SCORECARD_DATA = [
+    { cat: 'OFFER', color: '#0ABFBC', items: [
+      { id:1, text: "I know exactly who I'm built to serve and the transformation I give them." },
+      { id:2, text: "I have a Signature Programme with a clear structure, outcome, and price." },
+      { id:3, text: "I can explain my offer in one sentence and people immediately get it." }
+    ]},
+    { cat: 'AUDIENCE', color: '#4A8FE7', items: [
+      { id:4, text: "I post content consistently and it attracts the right people to me." },
+      { id:5, text: "New potential students discover me every week — not just my existing network." },
+      { id:6, text: "I run regular webinars or workshops that lead to enrolment conversations." }
+    ]},
+    { cat: 'INCOME', color: '#F59E0B', items: [
+      { id:7, text: "I have enrolment conversations every week that lead to paid sign-ups." },
+      { id:8, text: "I consistently fill my group class and close 2–3 new students every month." },
+      { id:9, text: "My students stay, renew, and refer others. Retention is strong." }
+    ]},
+    { cat: 'MINDSET FOUNDATION', color: '#8B5CF6', items: [
+      { id:10, text: "I take action before I feel ready. I use the Daily 5 consistently." },
+      { id:11, text: "I see myself as a programme owner — not just a tutor." },
+      { id:12, text: "I operate from peace, not panic. I build intentionally, not reactively." }
+    ]}
+  ];
+
+  function scKey() { return 'pac-scorecard-' + getUser(); }
+
+  function renderScorecard() {
+    var state = load(scKey()) || {};
+    var counts = { red:0, yellow:0, green:0, none:0 };
+    Object.values(state).forEach(function(v){ if(v==='red')counts.red++; else if(v==='yellow')counts.yellow++; else if(v==='green')counts.green++; });
+    counts.none = 12 - counts.red - counts.yellow - counts.green;
+
+    document.getElementById('scorecardSummary').innerHTML =
+      '<div class="sc-sum-pill green"><div class="sc-sum-num">' + counts.green + '</div><div class="sc-sum-label">🟢 Nailed it</div></div>' +
+      '<div class="sc-sum-pill yellow"><div class="sc-sum-num">' + counts.yellow + '</div><div class="sc-sum-label">🟡 Getting there</div></div>' +
+      '<div class="sc-sum-pill red"><div class="sc-sum-num">' + counts.red + '</div><div class="sc-sum-label">🔴 Not yet</div></div>' +
+      '<div class="sc-sum-pill none"><div class="sc-sum-num">' + counts.none + '</div><div class="sc-sum-label">◯ Unrated</div></div>';
+
+    var html = '';
+    SCORECARD_DATA.forEach(function(cat) {
+      html += '<div class="sc-category">';
+      html += '<div class="sc-cat-title" style="color:' + cat.color + ';">' + cat.cat + '</div>';
+      cat.items.forEach(function(item) {
+        var val = state[item.id] || '';
+        html += '<div class="sc-row' + (val?' sc-'+val:'') + '" id="scrow-'+item.id+'">';
+        html += '<div class="sc-num">' + item.id + '</div>';
+        html += '<div class="sc-text">' + item.text + '</div>';
+        html += '<div class="sc-btns">';
+        html += '<button class="sc-btn sc-btn-red' + (val==='red'?' active':'') + '" onclick="setScore(' + item.id + ',\'red\')" title="Not there yet">🔴</button>';
+        html += '<button class="sc-btn sc-btn-yellow' + (val==='yellow'?' active':'') + '" onclick="setScore(' + item.id + ',\'yellow\')" title="Getting there">🟡</button>';
+        html += '<button class="sc-btn sc-btn-green' + (val==='green'?' active':'') + '" onclick="setScore(' + item.id + ',\'green\')" title="Nailed it">🟢</button>';
+        html += '</div></div>';
+      });
+      html += '</div>';
+    });
+    document.getElementById('scorecardRows').innerHTML = html;
+
+    var lastSaved = load(scKey()+'_ts');
+    document.getElementById('scUpdated').textContent = lastSaved ? 'Last updated: ' + new Date(lastSaved).toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+  }
+
+  function setScore(id, val) {
+    var state = load(scKey()) || {};
+    if (state[id] === val) delete state[id]; else state[id] = val;
+    save(scKey(), state);
+    save(scKey()+'_ts', Date.now());
+    renderScorecard();
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 3: PROGRAMME PATH
+  // ══════════════════════════════════════════════════════════════════════════
+  var PATH_DATA = [
+    {
+      id: 'starting', label: 'Starting', sub: 'L1 – L2 · $0 – $6K/month', cls: 'starting-head',
+      pillars: {
+        offer: ['Define your Signature Programme', "Map who you're built to serve", 'Price your first group offer'],
+        audience: ['Post consistently', 'Join tutor communities', 'Run your first free webinar'],
+        income: ['Make daily invites', 'Start enrolment conversations', 'Close your first group students']
+      }
+    },
+    {
+      id: 'launched', label: 'Launched', sub: 'L3 – L4 · $6K – $20K/month', cls: 'launched-head',
+      pillars: {
+        offer: ['Refine after cohort 1', 'Add a bonus or upgrade', 'Build programme assets'],
+        audience: ['Run IG & FB Ads', 'Grow your WhatsApp community', 'Use Video + AI & Automation'],
+        income: ['Fill your next group class', 'Master your sales call', 'Run Track & Relaunch']
+      }
+    },
+    {
+      id: 'thriving', label: 'Thriving', sub: 'L5 · $20K – $30K/month', cls: 'thriving-head',
+      pillars: {
+        offer: ['Recurring cohort calendar', 'Develop an alumni or advanced tier', 'Systemise onboarding'],
+        audience: ['Content runs with minimal effort', 'Referrals as primary source', 'AI & Automation: heavy lifting done'],
+        income: ['Monthly recurring from renewals', 'Calls booked from content alone', 'Peace over Profit — fully lived']
+      }
+    }
+  ];
+
+  function pathKey() { return 'pac-path-' + getUser(); }
+
+  function renderPath() {
+    var state = load(pathKey()) || {};
+    var html = '';
+    PATH_DATA.forEach(function(stage) {
+      var total = 9, done = 0;
+      ['offer','audience','income'].forEach(function(p){
+        stage.pillars[p].forEach(function(_,i){
+          if (state[stage.id+'-'+p+'-'+i]) done++;
+        });
+      });
+      html += '<div class="path-stage">';
+      html += '<div class="path-stage-head ' + stage.cls + '">';
+      html += '<div><div class="path-stage-title">' + stage.label + '</div><div class="path-stage-sub">' + stage.sub + '</div></div>';
+      html += '<div class="path-stage-progress">' + done + ' / ' + total + ' done</div>';
+      html += '</div>';
+      html += '<div class="path-pillars">';
+      [
+        {key:'offer', label:'🎁 OFFER', cls:'offer-pillar'},
+        {key:'audience', label:'👥 AUDIENCE', cls:'audience-pillar'},
+        {key:'income', label:'📈 INCOME', cls:'income-pillar'}
+      ].forEach(function(p){
+        html += '<div class="path-pillar ' + p.cls + '">';
+        html += '<div class="path-pillar-title">' + p.label + '</div>';
+        stage.pillars[p.key].forEach(function(item, i) {
+          var k = stage.id + '-' + p.key + '-' + i;
+          var checked = !!state[k];
+          html += '<div class="path-item' + (checked?' checked':'') + '" onclick="togglePath(\'' + k + '\')">';
+          html += '<div class="path-check">✓</div>';
+          html += '<div class="path-item-text">' + item + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('pathStages').innerHTML = html;
+  }
+
+  function togglePath(key) {
+    var state = load(pathKey()) || {};
+    state[key] = !state[key];
+    save(pathKey(), state);
+    renderPath();
+  }
+
+  // ── MOBILE MENU ───────────────────────────────────────────────────────────
+  function openMobileMenu()  { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
+  function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
+
+  function toggleSubGroup(e, header) {
+    e.stopPropagation();
+    header.classList.toggle('open');
+    var items = header.nextElementSibling;
+    if (items) items.classList.toggle('open');
+  }
+
+  // ── INIT ──────────────────────────────────────────────────────────────────
+  renderPlanner();
+  renderScorecard();
+  renderPath();
+
+  // Nav dropdowns
+  document.querySelectorAll('.swift-tab-group').forEach(function(group){
+    var closeTimer;
+    group.addEventListener('mouseenter', function(){
+      clearTimeout(closeTimer);
+      document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      group.classList.add('open');
+    });
+    group.addEventListener('mouseleave', function(){
+      closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+    });
+    var btn = group.querySelector('button');
+    if (btn) btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var isOpen = group.classList.contains('open');
+      document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      if (!isOpen) group.classList.add('open');
+    });
+  });
+  document.addEventListener('click', function(){
+    document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+  });
+  </script>
+
+  <script src="progress-tracker.js"></script>
+</body>
+</html>
