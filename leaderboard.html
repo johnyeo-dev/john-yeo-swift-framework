@@ -500,6 +500,11 @@
       render();
     }
 
+    function refreshLeaderboard() {
+      document.getElementById('lbMain').innerHTML = '<div style="text-align:center;padding:80px 20px;color:#6B7A96;"><div style="font-size:40px;margin-bottom:14px;">⏳</div><div style="font-size:15px;font-weight:600;">Refreshing…</div></div>';
+      loadAllFromFirebase(function() { render(); });
+    }
+
     // ── RENDER ────────────────────────────────────────────────────────────────
     function render() {
       var session = getSession();
@@ -518,7 +523,10 @@
       // VIEW TOGGLE
       var isMonth = currentView === 'month';
       var viewLabel = isMonth ? 'This Month · ' + getCurrentMonthLabel() : 'All Time';
-      html += '<div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;">'
+      html += '<div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;align-items:center;">'
+        + '<button onclick="refreshLeaderboard()" style="padding:9px 16px;border-radius:99px;font-family:\'DM Sans\',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:2px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);transition:all 0.2s;" title="Reload latest data">🔄 Refresh</button>'
+        + '</div>'
+        + '<div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;">'
         + '<button onclick="switchView(\'alltime\')" style="padding:9px 20px;border-radius:99px;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:2px solid '+(isMonth?'rgba(255,255,255,0.2)':'#0ABFBC')+';background:'+(isMonth?'transparent':'rgba(10,191,188,0.18)')+';color:'+(isMonth?'rgba(255,255,255,0.5)':'#0ABFBC')+';transition:all 0.2s;">🏆 All Time</button>'
         + '<button onclick="switchView(\'month\')" style="padding:9px 20px;border-radius:99px;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:2px solid '+(!isMonth?'rgba(255,255,255,0.2)':'#F59E0B')+';background:'+(!isMonth?'transparent':'rgba(245,158,11,0.18)')+';color:'+(!isMonth?'rgba(255,255,255,0.5)':'#F59E0B')+';transition:all 0.2s;">📅 This Month</button>'
         + '</div>';
@@ -682,8 +690,37 @@
   function openMobileMenu()  { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
     function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
 
+    // ── FIREBASE LEADERBOARD LOAD ─────────────────────────────────────────────
+    var FB_DB_URL = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+    function tasksFromObj(obj) {
+      if (!obj) return [];
+      if (Array.isArray(obj)) return obj;
+      return Object.keys(obj).map(function(k){ return obj[k]; }).filter(Boolean);
+    }
+
+    function loadAllFromFirebase(callback) {
+      fetch(FB_DB_URL + '/users.json')
+        .then(function(r) { return r.json(); })
+        .then(function(fbData) {
+          if (fbData && typeof fbData === 'object') {
+            Object.keys(fbData).forEach(function(u) {
+              var d = fbData[u];
+              if (!d) return;
+              if (d.progress) localStorage.setItem('pac-swift-progress-' + u, JSON.stringify(d.progress));
+              if (d.actions)  localStorage.setItem('pac-swift-actions-'  + u, JSON.stringify(d.actions));
+              if (d.results)  localStorage.setItem('pac-swift-results-'  + u, JSON.stringify(d.results));
+              if (d.tasks)    localStorage.setItem('pac-swift-tasks-'    + u, JSON.stringify(tasksFromObj(d.tasks)));
+            });
+          }
+          callback();
+        })
+        .catch(function() { callback(); });
+    }
+
     // ── INIT ─────────────────────────────────────────────────────────────────
-    render();
+    document.getElementById('lbMain').innerHTML = '<div style="text-align:center;padding:80px 20px;color:#6B7A96;"><div style="font-size:40px;margin-bottom:14px;">⏳</div><div style="font-size:15px;font-weight:600;">Loading leaderboard…</div></div>';
+    loadAllFromFirebase(function() { render(); });
   </script>
 
   <script src="progress-tracker.js"></script>

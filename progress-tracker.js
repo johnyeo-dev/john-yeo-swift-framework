@@ -2,6 +2,53 @@
 (function() {
   'use strict';
 
+  // ── FIREBASE CONFIG ───────────────────────────────────────────────────────
+  var FB_DB_URL = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+  function tasksToObj(tasks) {
+    var obj = {};
+    if (!Array.isArray(tasks)) return obj;
+    tasks.forEach(function(t) { if (t && t.id) obj[t.id] = t; });
+    return obj;
+  }
+  function tasksFromObj(obj) {
+    if (!obj) return [];
+    if (Array.isArray(obj)) return obj;
+    return Object.keys(obj).map(function(k) { return obj[k]; }).filter(Boolean);
+  }
+
+  function syncUserToFirebase(u) {
+    if (!u) return;
+    var data = {
+      progress: getProgress(u),
+      actions:  getActions(u),
+      results:  getResults(u),
+      tasks:    tasksToObj(getTasks(u)),
+      lastUpdated: Date.now()
+    };
+    fetch(FB_DB_URL + '/users/' + u + '.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(function() { /* silent fail — localStorage still has the data */ });
+  }
+
+  function loadUserFromFirebase(u, callback) {
+    if (!u) { if (callback) callback(); return; }
+    fetch(FB_DB_URL + '/users/' + u + '.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data) {
+          if (data.progress) localStorage.setItem('pac-swift-progress-' + u, JSON.stringify(data.progress));
+          if (data.actions)  localStorage.setItem('pac-swift-actions-'  + u, JSON.stringify(data.actions));
+          if (data.results)  localStorage.setItem('pac-swift-results-'  + u, JSON.stringify(data.results));
+          if (data.tasks)    localStorage.setItem('pac-swift-tasks-'    + u, JSON.stringify(tasksFromObj(data.tasks)));
+        }
+        if (callback) callback();
+      })
+      .catch(function() { if (callback) callback(); });
+  }
+
   // ── STEPS ────────────────────────────────────────────────────────────────
   var STEPS = [
     { id:'sig',   label:'Signature',    short:'S',   color:'#0ABFBC', cat:'SWIFT', page:'signature-programme.html',    desc:'Created your Signature Programme',        pts:{action:25,done:75,result:150} },
@@ -21,7 +68,6 @@
   var TASK_PTS_DONE = 20;  // bonus points for completing a task
 
   // ── RANKS ─────────────────────────────────────────────────────────────────
-  // Early ranks are very easy to reach — hooks users fast, rewards momentum
   var RANKS = [
     { min:    0, name:'Starter',      emoji:'🌱', color:'#9CA3AF', desc:'You\'ve just begun!' },
     { min:   25, name:'Planner',      emoji:'📋', color:'#10B981', desc:'You\'re setting intentions' },
@@ -284,7 +330,6 @@
 
   // ── RANK BADGE (inline in strip main row) ────────────────────────────────
   function buildCohortHtml(currentUser) {
-    // Admin is not ranked
     if (currentUser === 'johnyeo') return '';
     var users = getUsers();
     var allUsers = Object.keys(users).filter(function(ou){ return ou !== 'johnyeo'; });
@@ -436,7 +481,7 @@
 
     document.body.appendChild(modal);
     modal.addEventListener('click', function(e){ if(e.target===modal) window.__pacCloseModal(); });
-    updateRank(u);  // populates rank panel + strip badge
+    updateRank(u);
   }
 
   // ── TASK MODAL ────────────────────────────────────────────────────────────
@@ -455,7 +500,6 @@
     var tasks  = getTasks(u);
     var today  = todayStr();
 
-    // Group tasks by date, most recent first
     var dateMap = {};
     tasks.forEach(function(t){ if (!dateMap[t.date]) dateMap[t.date]=[];  dateMap[t.date].push(t); });
     var dates = Object.keys(dateMap).sort().reverse();
@@ -512,10 +556,7 @@
       + '<span class="pac-tm-stat">All time: <strong>' + totalTasks + '</strong> tasks · <strong>' + totalDone + '</strong> done · <strong>' + totalTaskPts + ' pts</strong></span>'
       + '</div>';
 
-    // Focus input
     setTimeout(function(){ var inp=document.getElementById('pacTaskInput'); if(inp) inp.focus(); }, 50);
-
-    // Enter key on input
     var inp = document.getElementById('pacTaskInput');
     if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') window.__pacAddTask(); });
   }
@@ -524,7 +565,6 @@
   function updateRank(u) {
     var pts = getTotalPoints(u);
 
-    // Leaderboard rank
     var el = document.getElementById('pacPmRank');
     if (el) {
       var users = getUsers();
@@ -535,7 +575,6 @@
       el.textContent = pos ? '🏅 Rank #' + pos + ' of ' + all.length : '';
     }
 
-    // Rank panel in modal
     var panel = document.getElementById('pacPmRankPanel');
     if (!panel) return;
     var cur  = getRank(pts);
@@ -554,7 +593,6 @@
         : '<div class="pac-pm-rank-next" style="color:' + cur.color + ';font-weight:700;">🎉 Maximum rank achieved — you\'re a SWIFT Master!</div>')
       + '</div>';
 
-    // Also update strip rank badge
     var stripRank = document.getElementById('pacPsRank');
     if (stripRank) {
       stripRank.textContent = cur.emoji + ' ' + cur.name;
@@ -596,15 +634,20 @@
     var session=getSession(); var u=session?session.u:null; if(!u) return;
     var prog=getProgress(u); prog[stepId]=!prog[stepId]; saveProgress(u,prog);
     refreshUI(u);
+    syncUserToFirebase(u);
     if (prog[stepId]) { var box=document.getElementById('pacSuggestion'); if(box) box.remove(); }
   };
   window.__pacToggleAction = function(stepId) {
     var session=getSession(); var u=session?session.u:null; if(!u) return;
-    var acts=getActions(u); acts[stepId]=!acts[stepId]; saveActions(u,acts); refreshUI(u);
+    var acts=getActions(u); acts[stepId]=!acts[stepId]; saveActions(u,acts);
+    refreshUI(u);
+    syncUserToFirebase(u);
   };
   window.__pacToggleResult = function(stepId) {
     var session=getSession(); var u=session?session.u:null; if(!u) return;
-    var ress=getResults(u); ress[stepId]=!ress[stepId]; saveResults(u,ress); refreshUI(u);
+    var ress=getResults(u); ress[stepId]=!ress[stepId]; saveResults(u,ress);
+    refreshUI(u);
+    syncUserToFirebase(u);
   };
 
   // ── TASK FUNCTIONS ────────────────────────────────────────────────────────
@@ -620,13 +663,13 @@
     inp.value='';
     refreshUI(u);
     refreshTaskModal(u);
+    syncUserToFirebase(u);
   };
 
   window.__pacPrintTasks = function() {
     var session=getSession(); var u=session?session.u:null; if(!u) return;
     var tasks=getTasks(u);
     if (!tasks.length) { alert('No tasks to print yet!'); return; }
-    // Group by date
     var map={};
     tasks.forEach(function(t){ if(!map[t.date]) map[t.date]=[]; map[t.date].push(t); });
     var dates=Object.keys(map).sort();
@@ -657,6 +700,7 @@
       + '</body></html>');
     win.document.close();
   };
+
   window.__pacToggleTask = function(taskId) {
     var session=getSession(); var u=session?session.u:null; if(!u) return;
     var tasks=getTasks(u);
@@ -664,13 +708,16 @@
     saveTasks(u,tasks);
     refreshUI(u);
     refreshTaskModal(u);
+    syncUserToFirebase(u);
   };
+
   window.__pacDeleteTask = function(taskId) {
     var session=getSession(); var u=session?session.u:null; if(!u) return;
     var tasks=getTasks(u).filter(function(t){ return t.id!==taskId; });
     saveTasks(u,tasks);
     refreshUI(u);
     refreshTaskModal(u);
+    syncUserToFirebase(u);
   };
 
   // ── MODAL OPEN/CLOSE ──────────────────────────────────────────────────────
@@ -688,18 +735,15 @@
     var prog=getProgress(u), acts=getActions(u), ress=getResults(u);
     var done=getDone(u), pct=getPct(u), pts=getTotalPoints(u);
 
-    // Strip row 1
     var bar=document.getElementById('pacPsBar'); if(bar) bar.style.width=pct+'%';
     var countEl=document.getElementById('pacPsCount'); if(countEl) countEl.textContent=done+'/'+STEPS.length;
     var ptsEl=document.getElementById('pacPsPts'); if(ptsEl) ptsEl.textContent=fmtPts(pts);
 
-    // Modal hero
     var pmPts=document.getElementById('pacPmPts'); if(pmPts) pmPts.textContent=pts;
     var pmBar=document.getElementById('pacPmBar'); if(pmBar) pmBar.style.width=pct+'%';
     var pmDone=document.getElementById('pacPmDone'); if(pmDone) pmDone.textContent=done;
     updateRank(u);
 
-    // Modal step badges
     STEPS.forEach(function(s) {
       var el=document.getElementById('pacStep-'+s.id); if(!el) return;
       var isAction=!!acts[s.id], isDone=!!prog[s.id], isResult=!!ress[s.id];
@@ -717,7 +761,9 @@
   // ── SUGGESTION ACTIONS ────────────────────────────────────────────────────
   window.__pacSugYes = function(stepId) {
     var session=getSession(); var u=session?session.u:null; if(!u) return;
-    var prog=getProgress(u); prog[stepId]=true; saveProgress(u,prog); refreshUI(u);
+    var prog=getProgress(u); prog[stepId]=true; saveProgress(u,prog);
+    refreshUI(u);
+    syncUserToFirebase(u);
     var box=document.getElementById('pacSuggestion');
     if(box){ box.innerHTML='<div class="pac-suggestion-icon">🎉</div><div class="pac-suggestion-body"><div class="pac-suggestion-q" style="color:#065f46;">Awesome — marked as done! Keep going.</div></div>'; setTimeout(function(){ if(box.parentNode) box.remove(); },2500); }
   };
@@ -731,12 +777,11 @@
     localStorage.setItem('pac-sug-dismiss-'+currentPage(),'1');
   };
 
-  // ── GLOBAL REFRESH (called by planner or other pages after task changes) ──
+  // ── GLOBAL REFRESH ────────────────────────────────────────────────────────
   window.__pacRefreshStrip = function() {
     var session = getSession();
     if (session && session.u) {
       refreshUI(session.u);
-      // also refresh task modal if open
       var tm = document.getElementById('pacTaskModal');
       if (tm && tm.classList.contains('open')) refreshTaskModal(session.u);
     }
@@ -746,17 +791,19 @@
   function init() {
     var session=getSession();
     if (!session||!session.u) return;
-    // Auto-set pac-swift-user from login session so name modal never shows
     if (!localStorage.getItem('pac-swift-user')) {
       localStorage.setItem('pac-swift-user', session.u);
     }
-    // Hide name modal if somehow shown
     var nm = document.getElementById('nameModal');
     if (nm) nm.style.display = 'none';
-    renderStrip(session);
-    renderModal(session);
-    renderTaskModal();
-    renderSuggestion(session);
+
+    // Load latest data from Firebase, then render
+    loadUserFromFirebase(session.u, function() {
+      renderStrip(session);
+      renderModal(session);
+      renderTaskModal();
+      renderSuggestion(session);
+    });
   }
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
