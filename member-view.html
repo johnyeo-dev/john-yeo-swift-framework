@@ -141,6 +141,9 @@
   function getRank(pts) { var r=RANKS[0]; for(var i=0;i<RANKS.length;i++){if(pts>=RANKS[i].min)r=RANKS[i];else break;} return r; }
   function getSession() { try{return JSON.parse(localStorage.getItem('pac-swift-session')||'null');}catch(e){return null;} }
 
+  var FB_DB_URL = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
+  function tasksFromObj(obj) { if(!obj)return[]; if(Array.isArray(obj))return obj; return Object.keys(obj).map(function(k){return obj[k];}).filter(Boolean); }
+
   (function init() {
     var session = getSession();
     if (!session || session.role !== 'admin') {
@@ -156,6 +159,24 @@
     document.getElementById('mvSubtitle').textContent = 'Viewing ' + u + ' · Admin only';
     document.getElementById('mvAdminNote').textContent = u;
 
+    // Load both user data and analytics from Firebase, then render
+    Promise.all([
+      fetch(FB_DB_URL + '/users/' + u + '.json').then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch(FB_DB_URL + '/analytics/' + u + '.json').then(function(r){return r.json();}).catch(function(){return null;})
+    ]).then(function(results) {
+      var fbUser = results[0]; var fbAnalytics = results[1];
+      if (fbUser) {
+        if (fbUser.progress) localStorage.setItem('pac-swift-progress-'+u, JSON.stringify(fbUser.progress));
+        if (fbUser.actions)  localStorage.setItem('pac-swift-actions-'+u,  JSON.stringify(fbUser.actions));
+        if (fbUser.results)  localStorage.setItem('pac-swift-results-'+u,  JSON.stringify(fbUser.results));
+        if (fbUser.tasks)    localStorage.setItem('pac-swift-tasks-'+u,    JSON.stringify(tasksFromObj(fbUser.tasks)));
+      }
+      if (fbAnalytics) localStorage.setItem('pac-swift-analytics-'+u, JSON.stringify(fbAnalytics));
+      renderMemberView(u);
+    }).catch(function() { renderMemberView(u); });
+  })();
+
+  function renderMemberView(u) {
     var prog  = JSON.parse(localStorage.getItem('pac-swift-progress-'+u)||'{}');
     var acts  = JSON.parse(localStorage.getItem('pac-swift-actions-'+u)||'{}');
     var ress  = JSON.parse(localStorage.getItem('pac-swift-results-'+u)||'{}');
@@ -241,7 +262,7 @@
       var isA=!!acts[s.id], isD=!!prog[s.id], isR=!!ress[s.id];
       return '<div class="mv-step'+(isD?' has-done':'')+'"><div class="mv-step-icon" style="background:'+s.color+';">'+s.short+'</div><span class="mv-step-label">'+s.label+'</span><div class="mv-step-badges"><span class="mv-badge mv-badge-a'+(isA?' active':'')+'">Action</span><span class="mv-badge mv-badge-d'+(isD?' active':'')+'">Done</span><span class="mv-badge mv-badge-r'+(isR?' active':'')+'">Result</span></div></div>';
     }).join('');
-  })();
+  }
 </script>
 </body>
 </html>

@@ -20,10 +20,10 @@
   function syncUserToFirebase(u) {
     if (!u) return;
     var data = {
-      progress: getProgress(u),
-      actions:  getActions(u),
-      results:  getResults(u),
-      tasks:    tasksToObj(getTasks(u)),
+      progress:  getProgress(u),
+      actions:   getActions(u),
+      results:   getResults(u),
+      tasks:     tasksToObj(getTasks(u)),
       lastUpdated: Date.now()
     };
     fetch(FB_DB_URL + '/users/' + u + '.json', {
@@ -31,6 +31,19 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     }).catch(function() { /* silent fail — localStorage still has the data */ });
+  }
+
+  function syncAnalyticsToFirebase(u) {
+    if (!u) return;
+    try {
+      var a = JSON.parse(localStorage.getItem('pac-swift-analytics-' + u) || '{}');
+      if (!Object.keys(a).length) return;
+      fetch(FB_DB_URL + '/analytics/' + u + '.json', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(a)
+      }).catch(function() {});
+    } catch(e) {}
   }
 
   function loadUserFromFirebase(u, callback) {
@@ -797,12 +810,13 @@
     var nm = document.getElementById('nameModal');
     if (nm) nm.style.display = 'none';
 
-    // Load latest data from Firebase, then render
+    // Load latest data from Firebase, then render + sync analytics
     loadUserFromFirebase(session.u, function() {
       renderStrip(session);
       renderModal(session);
       renderTaskModal();
       renderSuggestion(session);
+      syncAnalyticsToFirebase(session.u);
     });
   }
 
