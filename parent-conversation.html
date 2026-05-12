@@ -2,232 +2,137 @@
 <html lang="en">
 <head>
   <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
-<script>/* pac-auto-user */(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
-
-<script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
-
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
   <meta charset="UTF-8" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parent Conversation | SWIFT Framework</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --navy: #002D6A; --navy-light: #0A0F1C;
-      --gold: #0ABFBC; --gold-light: #4A8FE7;
-      --cream: #F4F7FB; --cream-dark: #E8EDF5;
-      --text: #0A0F1C; --text-muted: #6B7A96;
-      --white: #FFFFFF; --border: #B8C4D4;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+    :root { --navy:#002D6A; --navy-light:#0A0F1C; --gold:#0ABFBC; --gold-light:#4A8FE7; --cream:#F4F7FB; --text:#0A0F1C; --text-muted:#6B7A96; --white:#FFFFFF; --border:#B8C4D4; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
 
-    .header { background: var(--navy); padding: 12px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
-    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 4vw, 36px); color: var(--white); line-height: 1.1; }
-    .header h1 em { font-style: italic; color: var(--gold-light); }
+    /* ── HEADER ── */
+    .header { background:var(--navy); padding:12px 32px; display:flex; align-items:center; gap:16px; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .header-label { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+    .header h1 { font-family:'DM Serif Display',serif; font-size:clamp(22px,3.5vw,32px); color:#fff; line-height:1.1; }
+    .header h1 em { font-style:italic; color:var(--gold-light); }
+    .user-pill { position:relative; display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:99px; padding:6px 12px 6px 6px; cursor:pointer; flex-shrink:0; margin-left:auto; }
+    .user-avatar { width:28px; height:28px; border-radius:50%; background:var(--gold); color:var(--navy); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .user-name { font-size:13px; color:white; font-weight:500; }
+    .user-menu { display:none; position:absolute; top:calc(100% + 8px); right:0; background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:10px; min-width:160px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:300; }
+    .user-menu.open { display:block; }
+    .user-menu-name { padding:12px 16px; font-size:12px; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.08); font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+    .user-menu-item { display:block; width:100%; padding:11px 16px; background:none; border:none; color:rgba(255,255,255,0.75); font-size:13px; font-weight:500; cursor:pointer; text-align:left; font-family:'DM Sans',sans-serif; transition:background 0.15s; }
+    .user-menu-item:hover { background:rgba(255,255,255,0.06); color:white; }
+    .user-menu-item.logout { color:#f87171; }
 
-    /* USER PILL */
-    .user-pill { position: relative; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 99px; padding: 6px 12px 6px 6px; cursor: pointer; flex-shrink: 0; margin-left: auto; }
-    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: var(--navy); font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
-    .user-name { font-size: 13px; color: white; font-weight: 500; }
-    .user-menu { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; min-width: 160px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 300; }
-    .user-menu.open { display: block; }
-    .user-menu-name { padding: 12px 16px; font-size: 12px; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
-    .user-menu-item { display: block; width: 100%; padding: 11px 16px; background: none; border: none; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 500; cursor: pointer; text-align: left; font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
-    .user-menu-item:hover { background: rgba(255,255,255,0.06); color: white; }
-    .user-menu-item.logout { color: #f87171; }
-    .user-menu-item.logout:hover { background: rgba(248,113,113,0.1); }
+    /* ── SWIFT NAV ── */
+    .swift-nav { background:var(--navy-light); position:sticky; top:0; z-index:100; padding:0 16px; display:flex; gap:0; overflow:visible; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding:11px 12px; border:none; background:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:rgba(255,255,255,0.65); border-bottom:3px solid transparent; margin-bottom:-1px; white-space:nowrap; transition:all 0.2s; display:flex; align-items:center; gap:8px; text-decoration:none; }
+    .swift-tab:hover { color:rgba(255,255,255,0.85); }
+    .swift-tab.active { color:#fff; border-bottom-color:var(--gold); }
+    .swift-letter { font-family:'DM Serif Display',serif; font-size:18px; color:rgba(255,255,255,0.3); line-height:1; }
+    .swift-tab.active .swift-letter { color:var(--gold); }
+    .swift-word { font-size:12px; }
+    .swift-tab-group { position:relative; display:flex; align-items:stretch; }
+    .swift-sub-menu { position:absolute; top:100%; left:0; background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:0 0 10px 10px; z-index:200; overflow:hidden; display:none; box-shadow:0 8px 24px rgba(0,0,0,0.5); min-width:220px; white-space:nowrap; }
+    .swift-tab-group.open .swift-sub-menu { display:block; }
+    .swift-sub-item { display:flex; align-items:center; gap:10px; padding:13px 16px; color:rgba(255,255,255,0.65); font-size:13px; font-weight:500; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); font-family:'DM Sans',sans-serif; transition:background 0.15s; }
+    .swift-sub-item:hover { background:rgba(255,255,255,0.06); color:white; }
+    .swift-sub-item.active { color:white; background:rgba(10,191,188,0.12); }
+    .sub-group-header { padding:8px 16px 5px; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.45); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-top:4px; user-select:none; }
+    .sub-group-header:hover { color:rgba(255,255,255,0.8); background:rgba(255,255,255,0.04); }
+    .sub-chev { font-size:10px; transition:transform 0.2s; line-height:1; opacity:0.55; }
+    .sub-group-header.open .sub-chev { transform:rotate(180deg); }
+    .sub-group-items { overflow:hidden; max-height:0; transition:max-height 0.28s ease; }
+    .sub-group-items.open { max-height:900px; }
 
-    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
-        .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
-    .swift-tab:hover { color: rgba(255,255,255,0.85); }
-    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
-    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
-    .swift-tab.active .swift-letter { color: var(--gold); }
-    .swift-word { font-size: 12px; }
-    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
-    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 220px; white-space: nowrap; }
-    .swift-tab-group.open .swift-sub-menu { display: block; }
-    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
-    .swift-sub-item:last-child { border-bottom: none; }
-    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
-    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+    /* ── MOBILE NAV ── */
+    .mobile-menu-bar { display:none; background:var(--navy-light); padding:8px 16px; border-bottom:1px solid rgba(255,255,255,0.08); position:relative; z-index:200; }
+    .mobile-menu-btn { width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px 16px; color:white; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+    .mobile-menu-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; }
+    .mobile-menu-panel { position:fixed; top:0; left:0; width:280px; height:100%; background:#111827; z-index:501; overflow-y:auto; padding:0 0 40px; transform:translateX(-100%); transition:transform 0.25s ease; pointer-events:none; }
+    .mobile-menu-panel.open { transform:translateX(0); pointer-events:auto; }
+    .mobile-menu-overlay.open { display:block; }
+    .mobile-menu-header { padding:20px 16px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; }
+    .mobile-menu-close { background:none; border:none; color:rgba(255,255,255,0.6); font-size:22px; cursor:pointer; }
+    .mobile-menu-section { padding:16px 16px 6px; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); }
+    .mobile-menu-item { display:flex; align-items:center; gap:12px; padding:13px 16px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.05); font-family:'DM Sans',sans-serif; }
+    .mobile-menu-item:hover, .mobile-menu-item.active { color:white; background:rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family:'DM Serif Display',serif; font-size:18px; width:24px; text-align:center; flex-shrink:0; }
+    @media (max-width:768px) { .swift-nav { display:none !important; } .mobile-menu-bar { display:block; } }
+    @media (min-width:769px) { .mobile-menu-bar { display:none !important; } }
 
-    /* MOBILE NAV */
-    .swift-nav-mobile { display: none; background: var(--navy-light); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 50; }
-    .swift-dropdown-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 11px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .swift-dropdown-btn span:last-child { font-size: 12px; opacity: 0.6; flex-shrink: 0; }
-    .swift-dropdown-menu { position: absolute; top: 100%; left: 16px; right: 16px; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; z-index: 100; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); margin-top: 4px; }
-    .swift-dropdown-menu.open { display: block; }
-    .swift-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
-    .swift-dropdown-item:last-child { border-bottom: none; }
-    .swift-dropdown-item:hover { background: rgba(255,255,255,0.06); color: white; }
-    .swift-dropdown-item.active { color: white; background: rgba(10,191,188,0.12); }
-    .swift-dropdown-item .item-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
-    .swift-dropdown-item.active .item-letter { color: var(--gold); }
-    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
-    
+    /* ── PAGE CONTENT ── */
+    .page-hero { background:linear-gradient(135deg,#002D6A 0%,#0A1628 60%,#001A3D 100%); padding:44px 40px 36px; border-bottom:1px solid rgba(10,191,188,0.15); }
+    .page-hero-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#0ABFBC; margin-bottom:10px; }
+    .page-hero h1 { font-family:'DM Serif Display',serif; font-size:clamp(28px,5vw,44px); color:#fff; line-height:1.15; margin-bottom:10px; }
+    .page-hero h1 em { font-style:italic; color:#4A8FE7; }
+    .page-hero p { font-size:15px; color:rgba(255,255,255,0.6); max-width:560px; line-height:1.6; }
+    .page-body { max-width:780px; margin:0 auto; padding:40px 24px 80px; }
 
-    /* RES SUBNAV */
-    .res-subnav { background: var(--white); position: sticky; top: 43px; z-index: 99; border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-    .res-subnav::-webkit-scrollbar { display: none; }
-    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
-    @media (max-width: 768px) { .res-subnav { padding: 0 12px; } .res-subnav-tab { padding: 12px 14px; font-size: 12px; } }
-    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
-    .res-subnav-tab:hover { color: var(--navy); }
-    .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
+    /* INTRO BOX */
+    .intro-box { background:#111827; border:1px solid rgba(10,191,188,0.2); border-radius:14px; padding:28px 28px; margin-bottom:40px; }
+    .intro-box .label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:8px; }
+    .intro-box h2 { font-family:'DM Serif Display',serif; font-size:22px; color:#0ABFBC; margin-bottom:12px; }
+    .intro-box p { font-size:14px; color:rgba(255,255,255,0.65); line-height:1.7; }
+    .intro-box p + p { margin-top:8px; }
 
-    /* MAIN */
-    .main { max-width: 820px; margin: 0 auto; padding: 36px 24px 80px; }
+    /* SECTION LABEL */
+    .section-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(0,0,0,0.35); margin:0 0 16px; padding-bottom:10px; border-bottom:2px solid rgba(0,45,106,0.12); }
 
-    /* PAGE HERO */
-    .page-hero { margin-bottom: 40px; }
-    .page-hero-tag { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .page-hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(24px,3.5vw,34px); color: var(--navy); line-height: 1.2; margin-bottom: 12px; }
-    .page-hero h2 em { font-style: italic; color: var(--gold-light); }
-    .page-hero p { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 580px; }
+    /* STEP CARDS */
+    .step-card { background:#fff; border:1.5px solid #dde5f0; border-radius:14px; margin-bottom:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,45,106,0.06); }
+    .step-header { display:flex; align-items:center; gap:14px; padding:16px 20px; cursor:pointer; user-select:none; }
+    .step-header:hover { background:rgba(0,45,106,0.02); }
+    .step-num { width:32px; height:32px; border-radius:50%; background:#0ABFBC; color:#002D6A; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'DM Sans',sans-serif; }
+    .step-num.obj { background:rgba(139,92,246,0.12); color:#7c3aed; border:1.5px solid rgba(139,92,246,0.3); font-size:10px; font-weight:700; }
+    .step-title { font-family:'DM Serif Display',serif; font-size:17px; color:#002D6A; flex:1; line-height:1.2; }
+    .step-chev { font-size:11px; color:rgba(0,45,106,0.3); transition:transform 0.2s; flex-shrink:0; }
+    .step-card.open .step-chev { transform:rotate(180deg); }
+    .step-body { display:none; padding:0 20px 20px; }
+    .step-card.open .step-body { display:block; }
+    .script-box { background:#002D6A; border-radius:10px; padding:20px 22px; margin-bottom:14px; }
+    .script-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:12px; }
+    .script-text { font-style:italic; font-size:14px; color:#fff; line-height:1.75; }
+    .script-text .aside { font-style:normal; color:rgba(255,255,255,0.4); font-size:12px; display:block; margin:6px 0; }
+    .why-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#0ABFBC; margin-bottom:6px; }
+    .why-text { font-size:13px; color:#4B5563; line-height:1.65; }
 
     /* MINDSET BLOCK */
-    .mindset-block { background: var(--navy); border-radius: 16px; padding: 28px 32px; margin-bottom: 40px; }
-    .mindset-block .label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 14px; }
-    .mindset-block blockquote { font-family: 'DM Serif Display', serif; font-size: clamp(16px,2.2vw,20px); color: var(--white); font-style: italic; line-height: 1.55; margin-bottom: 12px; }
-    .mindset-block .attr { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: 1px; }
-    .mindset-block .attr strong { color: var(--gold); }
-    .mindset-bullets { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-    .mindset-bullet { display: flex; align-items: flex-start; gap: 12px; background: rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 16px; }
-    .mindset-bullet .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .mindset-bullet p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.55; }
+    .mindset-box { background:linear-gradient(135deg,#001A3D,#002D6A); border:1px solid rgba(10,191,188,0.25); border-radius:16px; padding:36px 32px; margin:40px 0; text-align:center; }
+    .mindset-box .pre { font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:14px; letter-spacing:1px; text-transform:uppercase; }
+    .mindset-box h2 { font-family:'DM Serif Display',serif; font-size:clamp(20px,3.5vw,28px); color:#fff; line-height:1.3; margin-bottom:14px; }
+    .mindset-box .teal { color:#0ABFBC; font-family:'DM Serif Display',serif; font-size:17px; font-style:italic; margin-bottom:18px; display:block; }
+    .mindset-box .body { font-size:14px; color:rgba(255,255,255,0.6); line-height:1.65; max-width:520px; margin:0 auto 18px; }
+    .mindset-box .practice { font-size:13px; color:rgba(255,255,255,0.4); font-style:italic; border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; }
 
-    /* STAGE CARDS */
-    .stages { display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; }
-    .stage-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; }
-    .stage-header { padding: 18px 24px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); }
-    .stage-num { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 20px; color: white; flex-shrink: 0; }
-    .stage-header-text h3 { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); }
-    .stage-header-text .time { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
-    .stage-body { padding: 20px 24px; }
-    .stage-why { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; background: var(--cream); border-radius: 8px; padding: 12px 14px; }
-    .stage-why strong { color: var(--navy); font-weight: 700; }
-    .script-block { background: #F0FDF4; border-left: 3px solid #16a34a; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; font-size: 13px; color: #166534; font-style: italic; line-height: 1.6; }
-    .objection-block { margin-bottom: 16px; }
-    .objection-q { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
-    .objection-a { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-    .rules-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
-    .rule-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text); line-height: 1.55; }
-    .rule-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 6px; }
-    .layers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-    .layer { background: var(--cream); border-radius: 8px; padding: 12px 14px; }
-    .layer-num { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
-    .layer p { font-size: 13px; color: var(--text); line-height: 1.6; }
-    .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .dont-col { background: #FEF2F2; border-radius: 8px; padding: 12px 14px; }
-    .do-col   { background: #F0FDF4; border-radius: 8px; padding: 12px 14px; }
-    .do-dont .col-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
-    .dont-col .col-label { color: #dc2626; }
-    .do-col   .col-label { color: #16a34a; }
-    .do-dont p { font-size: 12px; line-height: 1.55; }
-    .dont-col p { color: #b91c1c; text-decoration: line-through; }
-    .do-col   p { color: #166534; }
+    /* ADVANCED SECTION */
+    .adv-toggle { display:flex; align-items:center; gap:12px; cursor:pointer; padding:16px 20px; background:#fff; border:1.5px solid rgba(139,92,246,0.25); border-radius:12px; margin-bottom:12px; user-select:none; box-shadow:0 2px 8px rgba(139,92,246,0.06); }
+    .adv-toggle:hover { background:#faf8ff; }
+    .adv-toggle h3 { font-family:'DM Serif Display',serif; font-size:17px; color:#6d28d9; flex:1; }
+    .adv-toggle small { font-size:12px; color:rgba(0,0,0,0.35); }
+    .adv-chev { font-size:11px; color:rgba(109,40,217,0.4); transition:transform 0.2s; }
+    .adv-section.open .adv-chev { transform:rotate(180deg); }
+    .adv-body { display:none; }
+    .adv-section.open .adv-body { display:block; }
+    .adv-card { background:#fff; border:1.5px solid rgba(139,92,246,0.15); border-radius:12px; margin-bottom:10px; overflow:hidden; box-shadow:0 1px 4px rgba(139,92,246,0.06); }
+    .adv-ref { font-size:11px; color:rgba(109,40,217,0.6); font-style:italic; padding:12px 18px 0; font-weight:600; }
+    .adv-script { background:#002D6A; border-radius:8px; margin:10px 18px; padding:16px 18px; font-size:13px; color:rgba(255,255,255,0.85); line-height:1.7; font-style:italic; }
+    .adv-tip { padding:10px 18px 14px; font-size:12px; color:#0ABFBC; font-style:italic; line-height:1.5; border-top:1px solid rgba(139,92,246,0.08); margin-top:4px; }
 
-    /* QUICK REFERENCE TABLE */
-    .ref-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 14px; overflow: hidden; border: 1.5px solid var(--border); margin-bottom: 32px; font-size: 13px; }
-    .ref-table thead tr { background: var(--navy); }
-    .ref-table thead th { padding: 12px 16px; color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-align: left; }
-    .ref-table tbody tr { border-bottom: 1px solid var(--border); }
-    .ref-table tbody tr:last-child { border-bottom: none; }
-    .ref-table tbody td { padding: 12px 16px; vertical-align: top; color: var(--text); line-height: 1.5; }
-    .ref-table tbody td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
-    .stage-badge { display: inline-block; width: 28px; height: 28px; border-radius: 6px; text-align: center; line-height: 28px; font-weight: 700; color: white; font-size: 12px; margin-right: 6px; }
-
-    /* JAMIE QUOTE */
-    .jamie-quote { background: linear-gradient(135deg, rgba(10,191,188,0.08), rgba(74,143,231,0.08)); border: 1.5px solid rgba(10,191,188,0.3); border-radius: 14px; padding: 24px 28px; margin-bottom: 40px; }
-    .jamie-quote .label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .jamie-quote blockquote { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); font-style: italic; line-height: 1.6; margin-bottom: 8px; }
-    .jamie-quote .attr { font-size: 12px; color: var(--text-muted); font-weight: 600; }
-
-    @media (max-width: 600px) {
-      .header { padding: 20px 16px; }
-      .main { padding: 24px 16px 60px; }
-      .stage-body { padding: 16px; }
-      .do-dont { grid-template-columns: 1fr; }
-    }
-
-    .user-pill { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; background:none; border:none; padding:0; cursor:default; }
-    .user-logout-btn { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(255,255,255,0.75); font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; white-space:nowrap; }
-    .user-logout-btn:hover { background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.4); color:#fca5a5; }
-
-    /* MOBILE NAV */
-    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
-    .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
-    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
-    .mobile-menu-panel { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #111827; z-index: 501; overflow-y: auto; padding: 0 0 40px; transform: translateX(-100%); transition: transform 0.25s ease; pointer-events: none; }
-    .mobile-menu-panel.open { transform: translateX(0); pointer-events: auto; }
-    .mobile-menu-overlay.open { display: block; }
-    .mobile-menu-header { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
-    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 22px; cursor: pointer; }
-    .mobile-menu-section { padding: 16px 16px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
-    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; }
-    .mobile-menu-item:hover, .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
-    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
-    @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
-    @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
-
-    /* ── COLLAPSIBLE MOBILE SECTIONS ── */
-    .mobile-menu-section { cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
-    .mobile-menu-section:hover { color: rgba(255,255,255,0.6); }
-    .ms-chevron { font-size: 14px; opacity: 0.45; flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
-    .mobile-section-items { overflow: hidden; max-height: 600px; transition: max-height 0.25s ease; }
-    .mobile-section-items.ms-collapsed { max-height: 0; }
-
-    /* ── NAV SEARCH ── */
-    .nav-search { position: relative; display: flex; align-items: center; padding: 0 8px; }
-    .nav-search-input { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 12px 6px 32px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: white; outline: none; width: 140px; transition: all 0.2s; }
-    .nav-search-input::placeholder { color: rgba(255,255,255,0.35); }
-    .nav-search-input:focus { background: rgba(255,255,255,0.12); border-color: var(--gold); width: 200px; }
-    .nav-search-icon { position: absolute; left: 20px; font-size: 13px; opacity: 0.4; pointer-events: none; }
-    .nav-search-results { position: absolute; top: calc(100% + 6px); left: 8px; right: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 300; overflow: hidden; display: none; min-width: 280px; max-width: 360px; }
-    .nav-search-results.open { display: block; }
-    .nav-search-result { display: flex; align-items: center; gap: 12px; padding: 11px 14px; color: rgba(255,255,255,0.75); font-size: 13px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; font-family: 'DM Sans', sans-serif; cursor: pointer; }
-    .nav-search-result:last-child { border-bottom: none; }
-    .nav-search-result:hover, .nav-search-result.focused { background: rgba(10,191,188,0.12); color: white; }
-    .nav-search-result-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
-    .nav-search-result-text { flex: 1; min-width: 0; }
-    .nav-search-result-title { font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .nav-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .nav-search-no-results { padding: 16px 14px; font-size: 13px; color: rgba(255,255,255,0.35); text-align: center; font-family: 'DM Sans', sans-serif; }
-    @media (max-width: 960px) { .nav-search-input { width: 100px; } .nav-search-input:focus { width: 140px; } }
-    @media (max-width: 768px) { .nav-search { display: none; } }
-    /* Mobile search */
-    .mobile-search-wrap { padding: 12px 16px 8px; }
-    .mobile-search-input { width: 100%; background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 14px 10px 36px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: white; outline: none; box-sizing: border-box; }
-    .mobile-search-input::placeholder { color: rgba(255,255,255,0.35); }
-    .mobile-search-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
-    .mobile-search-icon-wrap { position: relative; }
-    .mobile-search-icon-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; opacity: 0.5; }
-    .mobile-search-results { margin-top: 6px; }
-    .mobile-search-result { display: flex; align-items: center; gap: 10px; padding: 11px 4px; color: rgba(255,255,255,0.75); font-size: 14px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; }
-    .mobile-search-result:hover { color: white; }
-    .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
-    .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
-    .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
-      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
-
-    /* COLLAPSIBLE DESKTOP SUB-GROUPS */
-    .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
-    .sub-group-header:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
-    .sub-chev { font-size: 10px; transition: transform 0.2s; line-height: 1; opacity: 0.55; }
-    .sub-group-header.open .sub-chev { transform: rotate(180deg); }
-    .sub-group-items { overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
-    .sub-group-items.open { max-height: 900px; }
-</style>
+    @media (max-width:600px) { .page-hero { padding:28px 20px 24px; } .page-body { padding:24px 16px 60px; } .mindset-box { padding:28px 20px; } .script-box { padding:16px 16px; } }
+  </style>
+</head>
 </head>
 <body>
 
   <header class="header">
     <div>
-      <div class="header-label">Sales Framework · Jamie's Masterclass</div>
-      <h1>📞 Sales Call — <em>Heart-Based Closing</em></h1>
+      <div class="header-label">Fill Class · Get Students</div>
+      <h1>💬 The Parent <em>Conversation</em></h1>
     </div>
     <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
       <div style="background:rgba(10,191,188,0.15);border:1px solid var(--gold);border-radius:6px;padding:8px 16px;text-align:center;">
@@ -265,7 +170,7 @@
 <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
 <div class="sub-group-items">
         <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
-        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item active" href="sales-call.html">📞 Sales Call</a><a class="res-subnav-tab" href="parent-conversation.html">💬 Parent Conversation</a>
         <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
         <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a></div>
 <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Business</span><span class="sub-chev">▾</span></div>
@@ -377,15 +282,15 @@
     <a class="res-subnav-tab" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
     <a class="res-subnav-tab" href="payment-upgrade.html">💳 Monthly → Annual</a>
     <a class="res-subnav-tab" href="ig-ads.html">📸 IG &amp; FB Ads</a>
-    <a class="res-subnav-tab active" href="sales-call.html">📞 Sales Call</a><a class="res-subnav-tab" href="ai-automation.html">🤖 AI &amp; Automation</a><a class="res-subnav-tab" href="product-creation.html">⚡ Product Creation</a>
+    <a class="res-subnav-tab active" href="sales-call.html">📞 Sales Call</a><a class="res-subnav-tab" href="parent-conversation.html">💬 Parent Conversation</a><a class="res-subnav-tab" href="ai-automation.html">🤖 AI &amp; Automation</a><a class="res-subnav-tab" href="product-creation.html">⚡ Product Creation</a>
     <a class="res-subnav-tab" href="video-content.html">🎬 Video Content</a>
   </nav>
 
-  <main class="main">
-
+  
+<main>
   <div class="page-hero">
     <div class="page-hero-tag">Fill Class · Get Students</div>
-    <h1>The Parent<br><em>Conversation</em></h1>
+    <h1>The Parent <em>Conversation</em></h1>
     <p>Fill Your Classes. Help More Students. Feel Good Doing It.</p>
   </div>
 
@@ -395,14 +300,13 @@
       <div class="label">Nobody ever taught you this part</div>
       <h2>The Parent Clarity Conversation</h2>
       <p>Most tutors are brilliant at teaching. But when it comes to talking with parents about signing up — nobody ever showed them how. This training does that.</p>
-      <p style="margin-top:10px;">Help the parent get clear on where their child is, where they want to be, and whether you're the right fit. If you are — make it easy to say yes.</p>
+      <p>Help the parent get clear on where their child is, where they want to be, and whether you're the right fit. If you are — make it easy to say yes.</p>
     </div>
 
-    <!-- CONVERSATION FLOW -->
-    <div class="section-title" style="margin-bottom:20px;">The Conversation Flow</div>
+    <div class="section-label">The Conversation Flow</div>
 
-    <div class="step-card open" id="step-3">
-      <div class="step-header" onclick="toggleStep('step-3')">
+    <div class="step-card open" id="s1">
+      <div class="step-header" onclick="toggle('s1')">
         <div class="step-num">1</div>
         <div class="step-title">The Opening</div>
         <span class="step-chev">▾</span>
@@ -412,8 +316,8 @@
           <div class="script-label">Tutor Script</div>
           <div class="script-text">
             "Hi [name], good to connect. Thanks for making time.<br><br>
-            "I'd like to ask you a few questions first to understand where [child's name] is and what you're hoping for. Then I'll share how we work and whether it might be a fit.<br><br>
-            "Does that sound okay?"<br>
+            I'd like to ask you a few questions first to understand where [child's name] is and what you're hoping for. Then I'll share how we work and whether it might be a fit.<br><br>
+            Does that sound okay?"<br>
             <span class="aside">(Wait for yes.)</span>
           </div>
         </div>
@@ -422,8 +326,8 @@
       </div>
     </div>
 
-    <div class="step-card" id="step-4">
-      <div class="step-header" onclick="toggleStep('step-4')">
+    <div class="step-card" id="s2">
+      <div class="step-header" onclick="toggle('s2')">
         <div class="step-num">2</div>
         <div class="step-title">Understanding Where the Child Is</div>
         <span class="step-chev">▾</span>
@@ -444,9 +348,9 @@
       </div>
     </div>
 
-    <div class="step-card" id="step-5">
-      <div class="step-header" onclick="toggleStep('step-5')">
-        <div class="step-num">2b</div>
+    <div class="step-card" id="s2b">
+      <div class="step-header" onclick="toggle('s2b')">
+        <div class="step-num" style="font-size:10px;">2b</div>
         <div class="step-title">If They Say "Like That Lor" or "Okay Lah"</div>
         <span class="step-chev">▾</span>
       </div>
@@ -465,8 +369,8 @@
       </div>
     </div>
 
-    <div class="step-card" id="step-6">
-      <div class="step-header" onclick="toggleStep('step-6')">
+    <div class="step-card" id="s3">
+      <div class="step-header" onclick="toggle('s3')">
         <div class="step-num">3</div>
         <div class="step-title">Understanding What They Want</div>
         <span class="step-chev">▾</span>
@@ -485,8 +389,8 @@
       </div>
     </div>
 
-    <div class="step-card" id="step-7">
-      <div class="step-header" onclick="toggleStep('step-7')">
+    <div class="step-card" id="s4">
+      <div class="step-header" onclick="toggle('s4')">
         <div class="step-num">4</div>
         <div class="step-title">Helping Them Feel the Cost of Waiting</div>
         <span class="step-chev">▾</span>
@@ -505,8 +409,8 @@
       </div>
     </div>
 
-    <div class="step-card" id="step-8">
-      <div class="step-header" onclick="toggleStep('step-8')">
+    <div class="step-card" id="s5">
+      <div class="step-header" onclick="toggle('s5')">
         <div class="step-num">5</div>
         <div class="step-title">Before You Share the Price</div>
         <span class="step-chev">▾</span>
@@ -525,8 +429,8 @@
       </div>
     </div>
 
-    <div class="step-card" id="step-9">
-      <div class="step-header" onclick="toggleStep('step-9')">
+    <div class="step-card" id="s6">
+      <div class="step-header" onclick="toggle('s6')">
         <div class="step-num">6</div>
         <div class="step-title">Sharing Your Offer</div>
         <span class="step-chev">▾</span>
@@ -536,8 +440,8 @@
           <div class="script-label">Tutor Script</div>
           <div class="script-text">
             "Based on everything you've shared, I think we can genuinely help [child's name].<br><br>
-            "Here's how we work. [Share your programme — what it is, how long, the outcome.]<br><br>
-            "The investment is [price]."<br>
+            Here's how we work. [Share your programme — what it is, how long, the outcome.]<br><br>
+            The investment is [price]."<br>
             <span class="aside">(Say the number. Then stop. Don't fill the silence.)</span>
           </div>
         </div>
@@ -551,293 +455,209 @@
       <div class="pre">Before every conversation, hold this:</div>
       <h2>You're not there to convince.<br>You're there to help them get clear.</h2>
       <span class="teal">Which, ironically, is what closes.</span>
-      <p style="font-size:14px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:16px;">When that's your intention, your voice is calmer. Your questions are more genuine. The parent feels it. The conversation becomes less about closing — and more about connecting.</p>
+      <p class="body">When that's your intention, your voice is calmer. Your questions are more genuine. The parent feels it. The conversation becomes less about closing — and more about connecting.</p>
       <div class="practice">This week: practise the opening out loud until it sounds like you — not like a script.</div>
     </div>
 
-    <!-- OBJECTION HANDLING -->
-    <div class="section-title" style="margin-top:8px;">Objection Handling</div>
+    <!-- OBJECTIONS -->
+    <div class="section-label" style="margin-top:8px;">Objection Handling</div>
 
-    <div class="step-card" id="obj-1">
-      <div class="step-header" onclick="toggleStep('obj-1')">
+    <div class="step-card" id="o1">
+      <div class="step-header" onclick="toggle('o1')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"Let Me Think About It"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "Of course. What are the two things you're most uncertain about? I want to make sure you have everything you need to make a good decision."<br>
-            <span class="aside">(Listen. Address what they raise specifically.)</span>
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">"Let me think about it" almost always means "I'm unsure about something but don't know how to say it." This question surfaces the real concern — which is almost always something you can address directly.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"Of course. What are the two things you're most uncertain about? I want to make sure you have everything you need to make a good decision."<span class="aside">(Listen. Address what they raise specifically.)</span></div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">"Let me think about it" almost always means "I'm unsure about something but don't know how to say it." This question surfaces the real concern — which is almost always something you can address directly.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-2">
-      <div class="step-header" onclick="toggleStep('obj-2')">
+    <div class="step-card" id="o2">
+      <div class="step-header" onclick="toggle('o2')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"It's a Bit Expensive"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "I hear you. Going back to what you shared about [child's name] — [reflect their own words]. If getting this sorted gives you that outcome, do you feel it would be worth it?"<br>
-            <span class="aside">(Let them answer. If they genuinely can't stretch:)</span>
-            "What if we looked at a different payment arrangement — would that help?"
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">Don't apologise for your price. Reconnect them to their own stated outcome — in their own words. The price objection is usually a value objection in disguise. Once value is clear, price is easier to say yes to.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"I hear you. Going back to what you shared about [child's name] — [reflect their own words]. If getting this sorted gives you that outcome, do you feel it would be worth it?"<span class="aside">(Let them answer. If they genuinely can't stretch:)</span>"What if we looked at a different payment arrangement — would that help?"</div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">Don't apologise for your price. Reconnect them to their own stated outcome — in their own words. The price objection is usually a value objection in disguise. Once value is clear, price is easier to say yes to.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-3">
-      <div class="step-header" onclick="toggleStep('obj-3')">
+    <div class="step-card" id="o3">
+      <div class="step-header" onclick="toggle('o3')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"I Need to Check With My Spouse"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "Of course. Is it more about checking the schedule, or are there things about the programme you'd both want to go through together?"<br>
-            <span class="aside">(If they want to discuss together:)</span>
-            "I'm happy to do a short call with both of you — would that help?"
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">This is sometimes genuine, sometimes an exit. The follow-up question tells you which. A second call with both parents isn't a setback — it's often a stronger close.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"Of course. Is it more about checking the schedule, or are there things about the programme you'd both want to go through together?"<span class="aside">(If they want to discuss together:)</span>"I'm happy to do a short call with both of you — would that help?"</div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">This is sometimes genuine, sometimes an exit. The follow-up question tells you which. A second call with both parents isn't a setback — it's often a stronger close.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-4">
-      <div class="step-header" onclick="toggleStep('obj-4')">
+    <div class="step-card" id="o4">
+      <div class="step-header" onclick="toggle('o4')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"My Child Is Already in Another Tuition"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "That's good to hear. How is it going so far — is [child's name] seeing the kind of progress you were hoping for?"<br>
-            <span class="aside">(If there's hesitation in their answer:)</span>
-            "What would you need to see to feel like it's working?"
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">A parent who's already in a tuition and still enquiring is telling you something. Don't compete or dismiss. Open the door and let them walk through it. Their hesitation in answering is the signal.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"That's good to hear. How is it going so far — is [child's name] seeing the kind of progress you were hoping for?"<span class="aside">(If there's hesitation in their answer:)</span>"What would you need to see to feel like it's working?"</div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">A parent who's already in a tuition and still enquiring is telling you something. Don't compete or dismiss. Open the door and let them walk through it. Their hesitation in answering is the signal.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-5">
-      <div class="step-header" onclick="toggleStep('obj-5')">
+    <div class="step-card" id="o5">
+      <div class="step-header" onclick="toggle('o5')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"Can We Try One Lesson First?"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "That makes sense. Help me understand — is it more about whether [child's name] will respond well to the teaching style, or are you unsure about the commitment length?"<br>
-            <span class="aside">(If teaching style — a trial makes sense. If commitment — address that first.)</span>
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">Trial requests are often about unresolved uncertainty, not the lesson itself. Find out which kind before agreeing. A trial without resolving the real concern usually leads to the same hesitation afterwards.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"That makes sense. Help me understand — is it more about whether [child's name] will respond well to the teaching style, or are you unsure about the commitment length?"<span class="aside">(If teaching style — a trial makes sense. If commitment — address that first.)</span></div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">Trial requests are often about unresolved uncertainty, not the lesson itself. Find out which kind before agreeing. A trial without resolving the real concern usually leads to the same hesitation afterwards.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-6">
-      <div class="step-header" onclick="toggleStep('obj-6')">
+    <div class="step-card" id="o6">
+      <div class="step-header" onclick="toggle('o6')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"My Child Doesn't Want Tuition"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "I appreciate you sharing that. Is [he/she] resistant to tuition in general, or specifically to [subject]? Is it more about time, or feeling like it won't help?"<br>
-            <span class="aside">(If appropriate:)</span>
-            "Would it help to let [child's name] have a short chat with me directly? Sometimes hearing it from someone other than a parent makes a difference."
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">Respect the child's resistance — don't dismiss it. Burnout, bad past experiences, and packed schedules all need different responses. Understanding why shapes everything you say next.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"I appreciate you sharing that. Is [he/she] resistant to tuition in general, or specifically to [subject]? Is it more about time, or feeling like it won't help?"<span class="aside">(If appropriate:)</span>"Would it help to let [child's name] have a short chat with me directly? Sometimes hearing it from someone other than a parent makes a difference."</div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">Respect the child's resistance — don't dismiss it. Burnout, bad past experiences, and packed schedules all need different responses. Understanding why shapes everything you say next.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-7">
-      <div class="step-header" onclick="toggleStep('obj-7')">
+    <div class="step-card" id="o7">
+      <div class="step-header" onclick="toggle('o7')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"My Child Is Very Busy"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "I hear you — and I appreciate you still making time for this conversation. Can I ask — what made you reach out, even knowing [child's name] has a full schedule?"<br>
-            <span class="aside">(Let them answer. Then:)</span>
-            "So even with everything going on, this felt important enough to look into. What does that tell you about where this sits for you right now?"
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">The fact that they reached out despite being busy is itself a signal. Your job isn't to argue against their schedule — it's to help them reconnect to why they picked up the phone. That's where their own urgency lives.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"I hear you — and I appreciate you still making time for this conversation. Can I ask — what made you reach out, even knowing [child's name] has a full schedule?"<span class="aside">(Let them answer. Then:)</span>"So even with everything going on, this felt important enough to look into. What does that tell you about where this sits for you right now?"</div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">The fact that they reached out despite being busy is itself a signal. Your job isn't to argue against their schedule — it's to help them reconnect to why they picked up the phone. That's where their own urgency lives.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-8">
-      <div class="step-header" onclick="toggleStep('obj-8')">
+    <div class="step-card" id="o8">
+      <div class="step-header" onclick="toggle('o8')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"We'll Wait for the Exam Results First"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "That makes sense. What result would you be hoping for — and what happens if it comes back lower than expected?"<br>
-            <span class="aside">(If they say they'd act then:)</span>
-            "The challenge with waiting is that by then, time is shorter and stress is higher. What would it look like to get a head start now?"
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">This feels logical but often leads to acting too late. Asking "what happens if it comes back lower?" helps the parent think through the consequence of waiting — without you having to say it for them.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"That makes sense. What result would you be hoping for — and what happens if it comes back lower than expected?"<span class="aside">(If they say they'd act then:)</span>"The challenge with waiting is that by then, time is shorter and stress is higher. What would it look like to get a head start now?"</div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">Asking "what happens if it comes back lower?" helps the parent think through the consequence of waiting — without you having to say it for them.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-9">
-      <div class="step-header" onclick="toggleStep('obj-9')">
+    <div class="step-card" id="o9">
+      <div class="step-header" onclick="toggle('o9')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"I'll Come Back Closer to the Exam"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "Totally understand. When you say closer — are you thinking a few months out, or right before?"<br>
-            <span class="aside">(Get specific on their timeline. Then:)</span>
-            "Slots fill earlier than most parents expect. I'd hate for you to come back and find we don't have space. What if we pencil something in so you have the option?"
-          </div>
-        </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">Vague goodbyes become ghost enquiries. Getting a specific timeline — and offering to hold a slot — turns "maybe later" into a concrete next step, without pressure.</div>
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"Totally understand. When you say closer — are you thinking a few months out, or right before?"<span class="aside">(Get specific on their timeline. Then:)</span>"Slots fill earlier than most parents expect. I'd hate for you to come back and find we don't have space. What if we pencil something in so you have the option?"</div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">Vague goodbyes become ghost enquiries. Getting a specific timeline — and offering to hold a slot — turns "maybe later" into a concrete next step, without pressure.</div>
       </div>
     </div>
 
-    <div class="step-card" id="obj-10">
-      <div class="step-header" onclick="toggleStep('obj-10')">
+    <div class="step-card" id="o10">
+      <div class="step-header" onclick="toggle('o10')">
         <div class="step-num obj">OBJ</div>
         <div class="step-title">"Let Me Look Around and Compare First"</div>
         <span class="step-chev">▾</span>
       </div>
       <div class="step-body">
-        <div class="script-box">
-          <div class="script-label">Tutor Script</div>
-          <div class="script-text">
-            "That's a smart thing to do. What are the main things you'll be comparing? I want to make sure you know what to look out for so you make the best decision for [child's name]."
+        <div class="script-box"><div class="script-label">Tutor Script</div><div class="script-text">"That's a smart thing to do. What are the main things you'll be comparing? I want to make sure you know what to look out for so you make the best decision for [child's name]."</div></div>
+        <div class="why-label">Why This Works</div><div class="why-text">Trying to stop a parent from comparing creates resistance. Helping them compare positions you as the most trustworthy person in the room. It's counterintuitive — but it works.</div>
+      </div>
+    </div>
+
+    <!-- ADVANCED -->
+    <div style="margin-top:48px;">
+      <div class="adv-section" id="adv">
+        <div class="adv-toggle" onclick="toggleAdv()">
+          <h3>Advanced Closer Notes</h3>
+          <small>Deeper techniques · go further</small>
+          <span class="adv-chev">▾</span>
+        </div>
+        <div class="adv-body">
+
+          <div class="adv-card">
+            <div class="adv-ref">Re: The Opening</div>
+            <div class="adv-script">If the parent wants to just WhatsApp or talk over the phone, gently suggest a short Zoom instead.<br><br>"Would you be open to a quick video call? It's easier for me to walk you through everything properly."<br><br>You can build more trust in 30 minutes on video than in 3 days of back-and-forth messages.</div>
+            <div class="adv-tip">Video call &gt; phone call &gt; WhatsApp. Every step up in medium, every step up in trust.</div>
           </div>
+
+          <div class="adv-card">
+            <div class="adv-ref">Re: Understanding Where the Child Is</div>
+            <div class="adv-script">If the parent starts unloading everything at once, let them finish — then gently take the lead back:<br><br>"That's really helpful. From everything you've shared, the biggest concern right now sounds like [confidence / falling behind / the exam]. Is that right?"<br><br>(They say yes.) "Got it — how long has it been feeling this way?"<br><br>If issues are scattered: "You've mentioned a few things. If you had to pick the one that worries you most right now, what would it be?"</div>
+            <div class="adv-tip">The real problem when a parent hijacks the call: you lost the frame at the start. Set it clearly in the first 30 seconds — this rarely happens.</div>
+          </div>
+
+          <div class="adv-card">
+            <div class="adv-ref">Re: Before You Share the Price</div>
+            <div class="adv-script">If they say it's not urgent yet:<br><br>"What would need to change for it to become more urgent for you?"<br><br>If they're still asking questions despite saying it's not a priority:<br><br>"That's interesting — if it's not something you're looking at right now, what made you want to find out more?"<br><br>Their curiosity is a buying signal. Use it as your anchor back in.</div>
+            <div class="adv-tip">Willing to open up about hesitation = a buying signal. If they had zero interest, they'd just leave.</div>
+          </div>
+
+          <div class="adv-card">
+            <div class="adv-ref">Re: Sharing Your Offer</div>
+            <div class="adv-script">Share the what — not the how.<br><br>The what = the outcome, the direction, the result they'll get.<br>The how = your teaching process, methodology, step-by-step approach.<br><br>If you give away the how for free in the conversation, the parent feels like they can figure it out themselves — and you lose the reason to sign up.<br><br>Don't coach on a sales call. Give the destination, not the map.</div>
+            <div class="adv-tip">"Don't coach too much on a sales call — give the what, not the how."</div>
+          </div>
+
+          <div class="adv-card">
+            <div class="adv-ref">Re: "Let Me Think About It"</div>
+            <div class="adv-script">If you sense it's a yes but they can't decide — be honest:<br><br>"I want to be upfront with you — based on everything you've shared, I do think this would genuinely help [child's name]. But ultimately it's your call. What would help you feel more certain?"<br><br>Directness here feels like care, not pressure.</div>
+            <div class="adv-tip">"No to the offer is not no to you. Separate the two — and don't attach to the outcome."</div>
+          </div>
+
+          <div class="adv-card">
+            <div class="adv-ref">Re: "It's a Bit Expensive"</div>
+            <div class="adv-script">Two types of money objections — know which one before you respond.<br><br>Type 1 — They don't see the value yet. Anchor back to their stated goals. Rebuild value before you touch the price.<br><br>Type 2 — They genuinely can't afford it. Explore payment arrangements honestly. Don't push someone into a commitment they can't sustain.</div>
+            <div class="adv-tip">"Don't attach to the outcome — focus on the person. Money follows."</div>
+          </div>
+
+          <div class="adv-card">
+            <div class="adv-ref">Re: "Let Me Compare First"</div>
+            <div class="adv-script">If the parent is dominant, skeptical, or comes in with "convince me" energy — switch approach.<br><br>Don't use the warm, curious style. Match their directness. Be factual. Be confident. Don't over-explain.<br><br>Some parents respond to warmth. This type responds to certainty.<br><br>And if the energy is draining and there's genuinely no alignment — it's okay to let this one go. Not every family is the right fit.</div>
+            <div class="adv-tip">"Warmth + directness together — not one or the other. That combination builds trust fast."</div>
+          </div>
+
+          <div class="adv-card">
+            <div class="adv-ref">Re: Upselling Existing Students</div>
+            <div class="adv-script">Don't pitch an upsell directly. Use a progress review as the anchor instead.<br><br>"I'd love to set up a quick call to go through [child's name]'s progress this term."<br><br>Get them on Zoom. Build the conversation naturally. Let the upsell come from the review — not from you.<br><br>The relationship is already there. The trust is already there. You're not selling — you're extending what's already working.</div>
+            <div class="adv-tip">"Your empathy is a superpower — it's not a weakness. It's what gets people to open up."</div>
+          </div>
+
         </div>
-        <div class="why-label">Why This Works</div>
-        <div class="why-text">Trying to stop a parent from comparing creates resistance. Helping them compare positions you as the most trustworthy person in the room. It's counterintuitive — but it works.</div>
       </div>
     </div>
 
-    <!-- ADVANCED CLOSER NOTES -->
-    <div class="section-title" style="margin-top:48px;">Advanced Closer Notes</div>
-
-    <div class="adv-section" id="adv-main">
-      <div class="adv-toggle" onclick="toggleAdv('adv-main')">
-        <h3>Advanced Closer Notes</h3>
-        <small>Deeper techniques for those who want to go further</small>
-        <span class="adv-chev">▾</span>
-      </div>
-      <div class="adv-body">
-
-        <div class="adv-card">
-          <div class="adv-ref">Re: The Opening</div>
-          <div class="adv-script">If the parent wants to just WhatsApp or talk over the phone, gently suggest a short Zoom instead.<br><br>"Would you be open to a quick video call? It's easier for me to walk you through everything properly."<br><br>You can build more trust in 30 minutes on video than in 3 days of back-and-forth messages.</div>
-          <div class="adv-tip">Video call &gt; phone call &gt; WhatsApp. Every step up in medium, every step up in trust.</div>
-        </div>
-
-        <div class="adv-card">
-          <div class="adv-ref">Re: Understanding Where the Child Is</div>
-          <div class="adv-script">If the parent starts unloading everything at once, let them finish — then gently take the lead back:<br><br>"That's really helpful. From everything you've shared, the biggest concern right now sounds like [confidence / falling behind / the exam]. Is that right?"<br><br>(They say yes.) "Got it — how long has it been feeling this way?"<br><br>If issues are scattered: "You've mentioned a few things. If you had to pick the one that worries you most right now, what would it be?"</div>
-          <div class="adv-tip">The real problem when a parent hijacks the call: you lost the frame at the start. Set it clearly in the first 30 seconds — this rarely happens.</div>
-        </div>
-
-        <div class="adv-card">
-          <div class="adv-ref">Re: Before You Share the Price</div>
-          <div class="adv-script">If they say it's not urgent yet, explore it honestly:<br><br>"What would need to change for it to become more urgent for you?"<br><br>If they're still asking questions despite saying it's not a priority:<br><br>"That's interesting — if it's not something you're looking at right now, what made you want to find out more?"<br><br>Their curiosity is a buying signal. Use it as your anchor back in.</div>
-          <div class="adv-tip">Willing to open up about hesitation = a buying signal. If they had zero interest, they'd just leave.</div>
-        </div>
-
-        <div class="adv-card">
-          <div class="adv-ref">Re: Sharing Your Offer</div>
-          <div class="adv-script">Share the what — not the how.<br><br>The what = the outcome, the direction, the result they'll get.<br>The how = your teaching process, methodology, and step-by-step approach.<br><br>Sharing the what still adds value and creates desire. But if you give away the how for free in the conversation, the parent feels like they can figure it out themselves — and you lose the reason to sign up.<br><br>Don't coach on a sales call. Give the destination, not the map.</div>
-          <div class="adv-tip">"Don't coach too much on a sales call — give the what, not the how."</div>
-        </div>
-
-        <div class="adv-card">
-          <div class="adv-ref">Re: "Let Me Think About It"</div>
-          <div class="adv-script">If you sense it's a yes but they can't get themselves to decide — be honest with them:<br><br>"I want to be upfront with you — based on everything you've shared, I do think this would genuinely help [child's name]. But ultimately it's your call. What would help you feel more certain?"<br><br>Directness here feels like care, not pressure. It often moves people faster than any technique.</div>
-          <div class="adv-tip">"No to the offer is not no to you. Separate the two — and don't attach to the outcome."</div>
-        </div>
-
-        <div class="adv-card">
-          <div class="adv-ref">Re: "It's a Bit Expensive"</div>
-          <div class="adv-script">There are two very different types of money objections. Know which one you're dealing with before you respond.<br><br>Type 1 — They don't see the value yet.<br>Anchor back to their stated goals in their own words. Rebuild the value before you touch the price.<br><br>Type 2 — They genuinely can't afford it.<br>Explore payment arrangements honestly. Your integrity here matters more than the close. Don't push someone into a commitment they can't sustain.</div>
-          <div class="adv-tip">"Don't attach to the outcome — focus on the person. Money follows."</div>
-        </div>
-
-        <div class="adv-card">
-          <div class="adv-ref">Re: "Let Me Compare First"</div>
-          <div class="adv-script">If the parent is dominant, skeptical, or comes in with "convince me" energy — switch your approach.<br><br>Don't use the warm, curious style. Match their directness instead. Be factual. Be confident. Don't over-explain.<br><br>Some parents respond to warmth. This type responds to certainty.<br><br>Read the room and adjust. And if the energy is draining and there's genuinely no alignment — it's okay to let this one go. Not every family is the right fit.</div>
-          <div class="adv-tip">"Warmth + directness together — not one or the other. That combination builds trust fast."</div>
-        </div>
-
-        <div class="adv-card">
-          <div class="adv-ref">Re: Upselling Existing Students</div>
-          <div class="adv-script">Don't pitch an upsell directly. Use a progress review as the anchor instead.<br><br>"I'd love to set up a quick call to go through [child's name]'s progress this term."<br><br>Get them on Zoom. Build the conversation naturally from what you've both observed. Let the upsell come from the review — not from you.<br><br>The relationship is already there. The trust is already there. You're not selling — you're extending what's already working.</div>
-          <div class="adv-tip">"Your empathy is a superpower — it's not a weakness. It's what gets people to open up."</div>
-        </div>
-
-      </div>
-    </div>
-
-  </div><!-- /.page-body -->
+  </div>
 </main>
 
 <script>
-  function toggleStep(id) {
-    var card = document.getElementById(id);
-    card.classList.toggle('open');
-  }
-  function toggleAdv(id) {
-    var sec = document.getElementById(id);
-    sec.classList.toggle('open');
-  }
+  function toggle(id) { document.getElementById(id).classList.toggle('open'); }
+  function toggleAdv() { document.getElementById('adv').classList.toggle('open'); }
 </script>
 
-
-  <script>
+<script>
   (function() {
     try {
       var sess = JSON.parse(localStorage.getItem('pac-swift-session') || 'null');
       if (!sess || !sess.u) return;
-      var u = sess.u;
-      var key = 'pac-swift-analytics-' + u;
+      var key = 'pac-swift-analytics-' + sess.u;
       var a = JSON.parse(localStorage.getItem(key) || '{}');
       if (!a.pageVisits) a.pageVisits = [];
       a.pageVisits.unshift({ p: 'parent-conversation.html', t: 'Parent Conversation', ts: Date.now() });
@@ -845,7 +665,8 @@
       localStorage.setItem(key, JSON.stringify(a));
     } catch(e) {}
   })();
-  </script>
+</script>
+
 <script src="progress-tracker.js"></script>
 
   <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
