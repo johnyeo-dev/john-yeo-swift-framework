@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dream 100 Partnerships | SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy:#002D6A; --navy-light:#0A0F1C; --gold:#0ABFBC; --gold-light:#4A8FE7; --cream:#F4F7FB; --text:#0A0F1C; --text-muted:#6B7A96; --white:#FFFFFF; --border:#B8C4D4; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+    /* ── HEADER ── */
+    .header { background:var(--navy); padding:12px 32px; display:flex; align-items:center; gap:16px; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .header-label { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+    .header h1 { font-family:'DM Serif Display',serif; font-size:clamp(22px,3.5vw,32px); color:#fff; line-height:1.1; }
+    .header h1 em { font-style:italic; color:var(--gold-light); }
+
+    /* ── SWIFT NAV ── */
+    .swift-nav { background:var(--navy-light); position:sticky; top:0; z-index:100; padding:0 16px; display:flex; gap:0; overflow:visible; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding:11px 12px; border:none; background:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:rgba(255,255,255,0.65); border-bottom:3px solid transparent; margin-bottom:-1px; white-space:nowrap; transition:all 0.2s; display:flex; align-items:center; gap:8px; text-decoration:none; }
+    .swift-tab:hover { color:rgba(255,255,255,0.85); }
+    .swift-tab.active { color:#fff; border-bottom-color:var(--gold); }
+    .swift-letter { font-family:'DM Serif Display',serif; font-size:18px; color:rgba(255,255,255,0.3); line-height:1; }
+    .swift-tab.active .swift-letter { color:var(--gold); }
+    .swift-word { font-size:12px; }
+    .swift-tab-group { position:relative; display:flex; align-items:stretch; }
+    .swift-sub-menu { position:absolute; top:100%; left:0; background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:0 0 10px 10px; z-index:200; overflow:hidden; display:none; box-shadow:0 8px 24px rgba(0,0,0,0.5); min-width:220px; white-space:nowrap; max-height:80vh; overflow-y:auto; }
+    .swift-tab-group.open .swift-sub-menu { display:block; }
+    .swift-sub-item { display:flex; align-items:center; gap:10px; padding:13px 16px; color:rgba(255,255,255,0.65); font-size:13px; font-weight:500; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); font-family:'DM Sans',sans-serif; transition:background 0.15s; }
+    .swift-sub-item:hover { background:rgba(255,255,255,0.06); color:white; }
+    .swift-sub-item.active { color:white; background:rgba(10,191,188,0.12); }
+    .sub-group-header { padding:8px 16px 5px; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.45); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-top:4px; user-select:none; }
+    .sub-group-header:hover { color:rgba(255,255,255,0.8); background:rgba(255,255,255,0.04); }
+    .sub-chev { font-size:10px; transition:transform 0.2s; line-height:1; opacity:0.55; }
+    .sub-group-header.open .sub-chev { transform:rotate(180deg); }
+    .sub-group-items { overflow:hidden; max-height:0; transition:max-height 0.28s ease; }
+    .sub-group-items.open { max-height:900px; }
+    .nav-search { position:relative; display:flex; align-items:center; padding:6px 10px; margin-left:8px; }
+    .nav-search-icon { font-size:13px; opacity:0.4; margin-right:6px; }
+    .nav-search-input { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:5px 12px; color:white; font-family:'DM Sans',sans-serif; font-size:12px; width:140px; outline:none; transition:width 0.2s,background 0.2s; }
+    .nav-search-input:focus { width:200px; background:rgba(255,255,255,0.13); }
+    .nav-search-input::placeholder { color:rgba(255,255,255,0.35); }
+    .nav-search-results { display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:300; overflow:hidden; min-width:280px; }
+    .nav-search-results.open { display:block; }
+    .nav-search-result { display:flex; align-items:center; gap:10px; padding:11px 14px; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); transition:background 0.15s; }
+    .nav-search-result:hover { background:rgba(255,255,255,0.06); }
+    .nav-search-result-icon { font-size:16px; width:24px; text-align:center; flex-shrink:0; }
+    .nav-search-result-title { font-size:13px; font-weight:600; color:white; }
+    .nav-search-result-sub { font-size:11px; color:rgba(255,255,255,0.45); margin-top:1px; }
+    .nav-search-no-results { padding:14px 16px; font-size:13px; color:rgba(255,255,255,0.4); }
+
+    /* ── MOBILE NAV ── */
+    .mobile-menu-bar { display:none; background:var(--navy-light); padding:8px 16px; border-bottom:1px solid rgba(255,255,255,0.08); position:relative; z-index:200; }
+    .mobile-menu-btn { width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px 16px; color:white; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+    .mobile-menu-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; }
+    .mobile-menu-panel { position:fixed; top:0; left:0; width:280px; height:100%; background:#111827; z-index:501; overflow-y:auto; padding:0 0 40px; transform:translateX(-100%); transition:transform 0.25s ease; pointer-events:none; }
+    .mobile-menu-panel.open { transform:translateX(0); pointer-events:auto; }
+    .mobile-menu-overlay.open { display:block; }
+    .mobile-menu-header { padding:20px 16px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; }
+    .mobile-menu-close { background:none; border:none; color:rgba(255,255,255,0.6); font-size:22px; cursor:pointer; }
+    .mobile-menu-section { padding:16px 16px 6px; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); }
+    .mobile-menu-item { display:flex; align-items:center; gap:12px; padding:13px 16px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.05); font-family:'DM Sans',sans-serif; }
+    .mobile-menu-item:hover, .mobile-menu-item.active { color:white; background:rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family:'DM Serif Display',serif; font-size:18px; width:24px; text-align:center; flex-shrink:0; }
+    .mobile-search-wrap { padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .mobile-search-input { width:100%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:9px 14px; color:white; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; }
+    .mobile-search-input::placeholder { color:rgba(255,255,255,0.35); }
+    .mobile-search-results { margin-top:8px; }
+    .mobile-search-result { display:flex; align-items:center; gap:10px; padding:10px 12px; text-decoration:none; border-radius:8px; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .mobile-search-result:hover { background:rgba(255,255,255,0.06); }
+    .mobile-search-result-icon { font-size:16px; width:24px; text-align:center; flex-shrink:0; }
+    .mobile-search-result-title { font-size:13px; font-weight:600; color:white; }
+    .mobile-search-result-sub { font-size:11px; color:rgba(255,255,255,0.45); margin-top:1px; }
+    .ms-chevron { float:right; font-size:14px; color:rgba(255,255,255,0.4); margin-left:auto; transition:transform 0.2s; }
+    .mobile-section-items { overflow:hidden; transition:max-height 0.28s ease; max-height:2000px; }
+    .mobile-section-items.ms-collapsed { max-height:0; }
+    @media (max-width:768px) { .swift-nav { display:none !important; } .mobile-menu-bar { display:block; } }
+    @media (min-width:769px) { .mobile-menu-bar { display:none !important; } }
+
+    /* ── PAGE HERO ── */
+    .page-hero { background:linear-gradient(135deg,#002D6A 0%,#0A1628 60%,#001A3D 100%); padding:44px 40px 36px; border-bottom:1px solid rgba(10,191,188,0.15); }
+    .page-hero-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#0ABFBC; margin-bottom:10px; }
+    .page-hero h1 { font-family:'DM Serif Display',serif; font-size:clamp(28px,5vw,44px); color:#fff; line-height:1.15; margin-bottom:10px; }
+    .page-hero h1 em { font-style:italic; color:#4A8FE7; }
+    .page-hero p { font-size:15px; color:rgba(255,255,255,0.6); max-width:560px; line-height:1.6; }
+    .page-body { max-width:820px; margin:0 auto; padding:40px 24px 80px; }
+
+    /* INTRO BOX */
+    .intro-box { background:#111827; border:1px solid rgba(10,191,188,0.2); border-radius:14px; padding:28px; margin-bottom:40px; }
+    .intro-box .label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:8px; }
+    .intro-box h2 { font-family:'DM Serif Display',serif; font-size:22px; color:#0ABFBC; margin-bottom:12px; }
+    .intro-box p { font-size:14px; color:rgba(255,255,255,0.65); line-height:1.7; }
+    .intro-box p + p { margin-top:8px; }
+
+    /* SECTION LABEL */
+    .section-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(0,0,0,0.35); margin:0 0 16px; padding-bottom:10px; border-bottom:2px solid rgba(0,45,106,0.12); }
+    .section-gap { margin-top:40px; }
+
+    /* HIGHLIGHT QUOTE */
+    .highlight-quote { background:rgba(10,191,188,0.08); border:1.5px solid rgba(10,191,188,0.3); border-radius:12px; padding:16px 20px; margin-bottom:28px; display:flex; align-items:center; gap:12px; }
+    .highlight-quote .hq-icon { font-size:20px; flex-shrink:0; }
+    .highlight-quote .hq-text { font-size:14px; font-weight:600; color:#002D6A; line-height:1.5; }
+
+    /* 6-CARD GRID */
+    .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; margin-bottom:12px; }
+    .card-item { background:#fff; border:1.5px solid #dde5f0; border-radius:12px; padding:18px 18px 16px; box-shadow:0 2px 8px rgba(0,45,106,0.05); }
+    .card-item-top { width:3px; height:22px; border-radius:2px; background:#0ABFBC; margin-bottom:12px; }
+    .card-item-top.blue { background:#4A8FE7; }
+    .card-item-top.purple { background:#8B5CF6; }
+    .card-item-top.amber { background:#F59E0B; }
+    .card-item-top.green { background:#10B981; }
+    .card-item-top.rose { background:#F43F5E; }
+    .card-title { font-size:14px; font-weight:700; color:#002D6A; margin-bottom:8px; line-height:1.3; }
+    .card-body { font-size:13px; color:#6B7A96; line-height:1.6; }
+
+    /* DISCOVERY QUESTIONS */
+    .disc-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+    .disc-item { background:#fff; border-left:3px solid #0ABFBC; border-radius:0 10px 10px 0; padding:14px 18px; font-size:13.5px; color:#374151; line-height:1.55; box-shadow:0 1px 4px rgba(0,45,106,0.06); }
+
+    /* TWO-COL LAYOUT */
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:12px; }
+    .col-box { background:#fff; border:1.5px solid #dde5f0; border-radius:12px; padding:20px 20px 16px; box-shadow:0 2px 8px rgba(0,45,106,0.05); }
+    .col-box-title { font-size:14px; font-weight:700; color:#002D6A; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid #f0f4fa; }
+    .col-list { list-style:none; }
+    .col-list li { font-size:13px; color:#374151; line-height:1.6; padding:6px 0; border-bottom:1px solid rgba(0,45,106,0.05); }
+    .col-list li:last-child { border-bottom:none; }
+    .col-list li strong { color:#002D6A; }
+
+    /* SCRIPT BOX */
+    .script-box { background:#002D6A; border-radius:12px; padding:22px 24px; margin-bottom:16px; }
+    .script-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:12px; }
+    .script-text { font-style:italic; font-size:14px; color:#fff; line-height:1.8; }
+    .script-text .teal { color:#0ABFBC; font-style:italic; }
+    .script-tips { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .script-tip { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:5px 12px; font-size:11px; color:rgba(255,255,255,0.7); white-space:nowrap; }
+    .script-note { font-size:12px; color:rgba(255,255,255,0.45); font-style:italic; margin-bottom:14px; line-height:1.5; }
+
+    /* CURRENCY CARDS */
+    .currency-list { display:flex; flex-direction:column; gap:12px; margin-bottom:12px; }
+    .currency-item { display:flex; gap:16px; align-items:flex-start; background:#fff; border:1.5px solid #dde5f0; border-radius:12px; padding:18px 20px; box-shadow:0 2px 8px rgba(0,45,106,0.05); }
+    .currency-num { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; color:#fff; flex-shrink:0; font-family:'DM Serif Display',serif; }
+    .currency-num.n1 { background:#0ABFBC; }
+    .currency-num.n2 { background:#4A8FE7; }
+    .currency-num.n3 { background:#002D6A; }
+    .currency-title { font-size:14px; font-weight:700; color:#002D6A; margin-bottom:4px; }
+    .currency-body { font-size:13px; color:#6B7A96; line-height:1.6; }
+
+    /* PRINCIPLES GRID */
+    .principle-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; margin-bottom:12px; }
+    .principle-item { background:#fff; border:1.5px solid #dde5f0; border-radius:12px; padding:18px 18px 16px; box-shadow:0 2px 8px rgba(0,45,106,0.05); }
+    .principle-num { font-size:11px; font-weight:700; letter-spacing:2px; color:#0ABFBC; margin-bottom:8px; }
+    .principle-title { font-size:14px; font-weight:700; color:#002D6A; margin-bottom:8px; line-height:1.3; }
+    .principle-body { font-size:13px; color:#6B7A96; line-height:1.6; }
+
+    /* ACTION STEPS */
+    .action-list { display:flex; flex-direction:column; gap:10px; margin-bottom:12px; }
+    .action-item { display:flex; gap:16px; align-items:flex-start; background:#fff; border:1.5px solid #dde5f0; border-radius:12px; padding:16px 20px; box-shadow:0 2px 8px rgba(0,45,106,0.05); }
+    .action-num { width:34px; height:34px; border-radius:50%; background:#002D6A; color:#0ABFBC; font-weight:700; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'DM Serif Display',serif; }
+    .action-title { font-size:14px; font-weight:700; color:#002D6A; margin-bottom:3px; }
+    .action-body { font-size:13px; color:#6B7A96; line-height:1.6; }
+
+    /* CLOSING BLOCK */
+    .closing-block { background:linear-gradient(135deg,#001A3D,#002D6A); border:1px solid rgba(10,191,188,0.25); border-radius:16px; padding:40px 32px; margin-top:40px; text-align:center; }
+    .closing-block h2 { font-family:'DM Serif Display',serif; font-size:clamp(22px,4vw,32px); color:#fff; line-height:1.3; margin-bottom:16px; }
+    .closing-block p { font-size:14px; color:rgba(255,255,255,0.6); line-height:1.7; max-width:520px; margin:0 auto 16px; }
+    .closing-block .teal-italic { color:#0ABFBC; font-family:'DM Serif Display',serif; font-size:17px; font-style:italic; display:block; margin-top:8px; }
+
+    /* SCRIPTS TWO-COL */
+    .scripts-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:12px; }
+    .scripts-box { background:#002D6A; border-radius:12px; padding:20px 22px; }
+    .scripts-box-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#0ABFBC; margin-bottom:12px; }
+    .scripts-box-text { font-style:italic; font-size:13px; color:rgba(255,255,255,0.85); line-height:1.8; }
+
+    @media (max-width:640px) {
+      .page-hero { padding:28px 20px 24px; }
+      .page-body { padding:24px 16px 60px; }
+      .disc-grid { grid-template-columns:1fr; }
+      .two-col { grid-template-columns:1fr; }
+      .scripts-grid { grid-template-columns:1fr; }
+      .card-grid { grid-template-columns:1fr; }
+      .principle-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">Get Students · Partnerships</div>
+      <h1>🤝 Your <em>Dream 100</em></h1>
+    </div>
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+      <div style="background:rgba(10,191,188,0.15);border:1px solid var(--gold);border-radius:6px;padding:8px 16px;text-align:center;">
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold);line-height:1;">🤝</div>
+        <div style="font-size:11px;letter-spacing:2px;color:white;text-transform:uppercase;margin-top:2px;font-weight:600;">Resources</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter">⌂</span><span class="swift-word">Home ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="index.html">⌂ Home</a>
+        <a class="swift-sub-item" href="directory.html">📂 Directory</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Mindset &amp; Systems</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
+        <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
+        <a class="swift-sub-item" href="be-do-have.html">✨ Be. Do. Have.</a>
+        <a class="swift-sub-item" href="deliberate-practice.html">🎯 Deliberate Practice</a>
+        <a class="swift-sub-item" href="mind-body.html">🧘 Mind &amp; Body</a>
+        <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
+        <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="parent-conversation.html">💬 Parent Conversation</a>
+        <a class="swift-sub-item" href="abc.html">🔤 ABC — Always Be Closing</a>
+        <a class="swift-sub-item active" href="dream100.html">🤝 Dream 100 Partnerships</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Business</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Tools</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a></div>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="6-prompts.html">✦ All Prompts</a>
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
+        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
+        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter" style="font-size:14px;">🚀</span><span class="swift-word">Build ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="vercel-app.html">🚀 Build on Vercel</a>
+      </div>
+    </div>
+    <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+    <a class="swift-tab" href="personal-tracker.html"><span class="swift-letter">📋</span><span class="swift-word">Tracker</span></a>
+    <div class="nav-search" id="navSearch">
+      <span class="nav-search-icon">🔍</span>
+      <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
+      <div class="nav-search-results" id="navSearchResults"></div>
+    </div>
+    <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
+    <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <button onclick="localStorage.removeItem('pac-swift-session');localStorage.removeItem('pac-swift-user');window.location.href='login.html';" style="width:100%;text-align:left;background:rgba(248,113,113,0.08);border:none;border-bottom:1px solid rgba(248,113,113,0.18);padding:11px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#f87171;display:flex;align-items:center;gap:10px;"><span style="font-size:15px;">⏻</span>Sign Out</button>
+    <div class="mobile-search-wrap">
+      <div class="mobile-search-icon-wrap">
+        <input class="mobile-search-input" id="mobileSearchInput" type="text" placeholder="Search pages…" autocomplete="off" />
+      </div>
+      <div class="mobile-search-results" id="mobileSearchResults"></div>
+    </div>
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <a class="mobile-menu-item" href="directory.html"><span class="mobile-menu-letter" style="color:var(--gold);">📂</span>Directory</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Mindset &amp; Systems</div>
+    <a class="mobile-menu-item" href="mindset-jit.html"><span class="mobile-menu-letter">🧠</span>Just in Time Mindset</a>
+    <a class="mobile-menu-item" href="be-do-have.html"><span class="mobile-menu-letter">✨</span>Be. Do. Have.</a>
+    <a class="mobile-menu-item" href="deliberate-practice.html"><span class="mobile-menu-letter">🎯</span>Deliberate Practice</a>
+    <a class="mobile-menu-item" href="mind-body.html"><span class="mobile-menu-letter">🧘</span>Mind &amp; Body</a>
+    <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">5️⃣</span>The Daily 5</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>Calendar Plan</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Get Students</div>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="parent-conversation.html"><span class="mobile-menu-letter">💬</span>Parent Conversation</a>
+    <a class="mobile-menu-item" href="abc.html"><span class="mobile-menu-letter">🔤</span>ABC — Always Be Closing</a>
+    <a class="mobile-menu-item active" href="dream100.html"><span class="mobile-menu-letter">🤝</span>Dream 100 Partnerships</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Business</div>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Tools</div>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item" href="prompt-3-teach-to-pitch.html" style="padding-left:36px;font-size:13px;">✦ Teach to Pitch</a>
+    <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Lead Collection Form</a>
+    <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
+    <div class="mobile-menu-section">Build</div>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="vercel-app.html"><span class="mobile-menu-letter">🚀</span>Build on Vercel</a>
+    <div class="mobile-menu-section">Community</div>
+    <a class="mobile-menu-item" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
+    <a class="mobile-menu-item" href="personal-tracker.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">📋</span>Personal Tracker</a>
+    <div class="mobile-menu-section">Account</div>
+    <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="page-hero-tag">Get Students · Partnerships</div>
+    <h1>Partnerships &amp; Your <em>Dream 100</em></h1>
+    <p>How heart-centred tutors build win-win collaborations that grow their reach without running ads.</p>
+  </div>
+
+  <div class="page-body">
+
+    <!-- INTRO: WHAT IS DREAM 100 -->
+    <div class="intro-box">
+      <div class="label">The Concept</div>
+      <h2>What is Your Dream 100?</h2>
+      <p>Your Dream 100 is a curated list of people and communities who already have the trust of your ideal clients — Singapore parents and students.</p>
+      <p style="margin-top:10px;">Instead of building an audience from scratch, you partner with them to reach families who are actively looking for educational support. Every parent in your Dream 100's community has already raised their hand and said: <span style="color:#0ABFBC;font-style:italic;">"I care deeply about my child's education."</span> That's your people. You just need a bridge.</p>
+    </div>
+
+    <div class="highlight-quote">
+      <div class="hq-icon">💛</div>
+      <div class="hq-text">It's not WHAT you know — it's WHO you know. And your network is your net worth.</div>
+    </div>
+
+    <!-- WHO IS IN YOUR DREAM 100 -->
+    <div class="section-label section-gap">Your Target List — Who Is In Your Dream 100?</div>
+    <div class="card-grid">
+      <div class="card-item">
+        <div class="card-item-top"></div>
+        <div class="card-title">Parent community leaders</div>
+        <div class="card-body">Facebook group admins, school PSG leaders, parent bloggers &amp; Telegram channel owners</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top blue"></div>
+        <div class="card-title">Complementary educators</div>
+        <div class="card-body">Piano, art, coding, reading teachers — same families, different subjects</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top purple"></div>
+        <div class="card-title">Education content creators</div>
+        <div class="card-body">PSLE TikTokers, parenting YouTubers, Instagram study-tips pages</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top amber"></div>
+        <div class="card-title">Schools &amp; enrichment centres</div>
+        <div class="card-body">MOE teachers, counsellors, enrichment brands in non-competing subjects</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top green"></div>
+        <div class="card-title">Local parent networks</div>
+        <div class="card-body">Neighbourhood groups, grassroots communities, baby playgroups (future PSLE parents!)</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top rose"></div>
+        <div class="card-title">Fellow tutors &amp; coaches</div>
+        <div class="card-body">More established tutors, education entrepreneurs with overlapping audiences</div>
+      </div>
+    </div>
+
+    <!-- WHERE TO FIND -->
+    <div class="section-label section-gap">Discovery — Where to Find Your Dream 100</div>
+    <div class="disc-grid">
+      <div class="disc-item">Which Facebook groups do Singapore parents hang out in?</div>
+      <div class="disc-item">Who are the school counsellors or form teachers parents trust?</div>
+      <div class="disc-item">Who are the PSLE or parenting content creators on Instagram &amp; TikTok?</div>
+      <div class="disc-item">Which parenting blogs or Telegram newsletters do families in SG read?</div>
+      <div class="disc-item">Which YouTube channels do parents watch for study tips?</div>
+      <div class="disc-item">Which education events (school fairs, parent talks) gather your ideal families?</div>
+      <div class="disc-item">Which local enrichment brands are visible but serve different subjects?</div>
+      <div class="disc-item">Which tutors do you already know who serve the same families?</div>
+    </div>
+
+    <!-- INSTAGRAM STRATEGY -->
+    <div class="section-label section-gap">Instagram — Build Your Dream 100 on IG</div>
+    <div class="two-col">
+      <div class="col-box">
+        <div class="col-box-title">Finding them on Instagram</div>
+        <ul class="col-list">
+          <li><strong>Search hashtags:</strong> #PSLEtips #SGparents #SingaporeMom #tutor #primaryschool #mathtutor</li>
+          <li><strong>Explore tab:</strong> Instagram shows accounts similar to those you follow — notice who has an engaged parent audience</li>
+          <li><strong>Look at your followers:</strong> which parent community leaders or educators are already following you?</li>
+          <li><strong>Check who comments:</strong> on education accounts in Singapore — active commenters are warm prospects</li>
+        </ul>
+      </div>
+      <div class="col-box">
+        <div class="col-box-title">How to engage &amp; warm them up</div>
+        <ul class="col-list">
+          <li><strong>Follow + leave genuine comments:</strong> go beyond 'great post!' — reference something specific they shared</li>
+          <li><strong>Reply to their Stories:</strong> one of the fastest ways to start a real conversation in the DMs</li>
+          <li><strong>Share their content to your Stories:</strong> with a genuine caption — they'll notice and often reshare back</li>
+          <li><strong>Send a warm DM after engaging:</strong> once you've commented a few times, a short personal message feels natural, not cold</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- IG DM SCRIPT -->
+    <div class="section-label section-gap">Instagram DM Script — Sample Message to a Dream 100 Partner</div>
+    <div class="script-box">
+      <div class="script-label">Instagram DM Script</div>
+      <div class="script-note">Use after you've engaged with their content at least 2–3 times. Keep it warm, specific, and low-pressure.</div>
+      <div class="script-text">
+        "Hey [Name]! I've been following your content for a little while now and I genuinely love the way you <span class="teal">[specific thing they do well — e.g. make PSLE prep feel less overwhelming for parents]</span>. Your post on <span class="teal">[specific topic]</span> really resonated with me.<br><br>
+        I'm John — I help P5 and P6 students with Maths and I run a community of parents working through the PSLE journey.<br><br>
+        I'd love to feature you in a short conversation for my community — I think your perspective on <span class="teal">[topic]</span> would be so valuable for the parents I work with. Would you be open to a quick 20-minute chat? No prep needed — just a real conversation. 😊"
+      </div>
+      <div class="script-tips">
+        <span class="script-tip">Be specific — generic DMs get ignored</span>
+        <span class="script-tip">Reference their actual content</span>
+        <span class="script-tip">One clear ask only</span>
+        <span class="script-tip">No pressure close</span>
+      </div>
+    </div>
+
+    <!-- ADD VALUE FIRST -->
+    <div class="section-label section-gap">The Golden Rule — Add Value Before You Ask for Anything</div>
+    <div style="background:#F4F7FB;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#6B7A96;font-style:italic;line-height:1.6;">
+      Dig the well before you're thirsty. Reach out to give — not to get. The ask comes much later.
+    </div>
+    <div class="currency-list">
+      <div class="currency-item">
+        <div class="currency-num n1">1</div>
+        <div>
+          <div class="currency-title">Universal Currency — easiest to give</div>
+          <div class="currency-body">Genuine compliments, celebrating their wins publicly, leaving thoughtful comments, sharing their posts on your Stories. Costs nothing.</div>
+        </div>
+      </div>
+      <div class="currency-item">
+        <div class="currency-num n2">2</div>
+        <div>
+          <div class="currency-title">Professional Currency — your expertise</div>
+          <div class="currency-body">Referring students their way, sharing useful resources, offering to collaborate on a free session, writing a genuine testimonial.</div>
+        </div>
+      </div>
+      <div class="currency-item">
+        <div class="currency-num n3">3</div>
+        <div>
+          <div class="currency-title">Personal Currency — deepest connection</div>
+          <div class="currency-body">Showing up for them as a human — not just a business contact. This level creates relationships that last years.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT YOU CAN OFFER -->
+    <div class="section-label section-gap">Value You Can Give — What Tutors Can Realistically Offer</div>
+    <div class="card-grid">
+      <div class="card-item">
+        <div class="card-item-top"></div>
+        <div class="card-title">Free session for their community</div>
+        <div class="card-body">Study skills, exam strategy, or a PSLE parent talk — done for free, zero sales pitch</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top blue"></div>
+        <div class="card-title">Feature them in your content</div>
+        <div class="card-body">Interview them, share their story on your feed or Stories — everyone loves genuine recognition</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top green"></div>
+        <div class="card-title">Refer students to them</div>
+        <div class="card-body">If a family needs a subject you don't teach, send them to your Dream 100. Generosity is remembered.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top purple"></div>
+        <div class="card-title">Share your frameworks &amp; resources</div>
+        <div class="card-body">A useful worksheet, a tips post, a visual guide — valuable content that helps their audience too</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top amber"></div>
+        <div class="card-title">Public testimonial</div>
+        <div class="card-body">A heartfelt post or Story tagging them. Specific and genuine beats generic every time.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-top rose"></div>
+        <div class="card-title">A personal message of appreciation</div>
+        <div class="card-body">Simply tell them what their work meant to you. No agenda. This costs nothing and lands deeply.</div>
+      </div>
+    </div>
+
+    <!-- PRINCIPLES -->
+    <div class="section-label section-gap">Principles — How to Build These Relationships the Right Way</div>
+    <div class="principle-grid">
+      <div class="principle-item">
+        <div class="principle-num">01</div>
+        <div class="principle-title">Don't do it only when you need something</div>
+        <div class="principle-body">Build connections before you ever need a favour. People sense when outreach is self-serving.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">02</div>
+        <div class="principle-title">Make it easy for them to say yes</div>
+        <div class="principle-body">Clear ask, short time commitment, minimal effort on their end. Respect their bandwidth.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">03</div>
+        <div class="principle-title">Take the initiative first</div>
+        <div class="principle-body">Send the DM. Leave the comment. The tutors who grow fastest are willing to go first.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">04</div>
+        <div class="principle-title">Be consistent, not occasional</div>
+        <div class="principle-body">A quick comment weekly does more than one long message every six months.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">05</div>
+        <div class="principle-title">Lead with genuine care</div>
+        <div class="principle-body">Your empathy as an educator is your greatest asset. Let it show — it builds trust fast.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">06</div>
+        <div class="principle-title">Treat it like a long game</div>
+        <div class="principle-body">Some great partners take 6–12 months of relationship-building first. That's sustainable, not slow.</div>
+      </div>
+    </div>
+
+    <!-- TYPES OF COLLABORATION -->
+    <div class="section-label section-gap">The Ask — Types of Collaboration That Work for Tutors</div>
+    <div style="background:#F4F7FB;border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#6B7A96;font-style:italic;line-height:1.6;">
+      Wait for these signs before making the ask: they've engaged with your content, responded to your DMs, or mentioned your work to others.
+    </div>
+    <div class="disc-grid">
+      <div class="disc-item"><strong style="color:#002D6A;display:block;margin-bottom:4px;">Free sharing session</strong>Run a free talk for their parent or student community — study skills, PSLE tips, mindset.</div>
+      <div class="disc-item"><strong style="color:#002D6A;display:block;margin-bottom:4px;">Interview swap</strong>You feature each other's expertise. Both audiences grow; trust transfers naturally.</div>
+      <div class="disc-item"><strong style="color:#002D6A;display:block;margin-bottom:4px;">Audience / list swap</strong>You promote their free event to your list; they promote yours. Simple and effective.</div>
+      <div class="disc-item"><strong style="color:#002D6A;display:block;margin-bottom:4px;">Co-host a parent workshop</strong>Partner on a topic you both care about. Shared effort, shared audience, shared credibility.</div>
+      <div class="disc-item"><strong style="color:#002D6A;display:block;margin-bottom:4px;">Guest in their community</strong>Appear in their WhatsApp group, Telegram channel, or Facebook group as a helpful guest.</div>
+      <div class="disc-item"><strong style="color:#002D6A;display:block;margin-bottom:4px;">IG Story feature swap</strong>Share each other to your respective Instagram Stories — instant warm introduction to a new audience.</div>
+    </div>
+
+    <!-- COLLABORATION SCRIPTS -->
+    <div class="section-label section-gap">Sample Scripts — How to Craft Your Collaboration Ask</div>
+    <div class="scripts-grid">
+      <div class="scripts-box">
+        <div class="scripts-box-label">Warm — someone you already know</div>
+        <div class="scripts-box-text">
+          "Hey [Name], hope things have been good on your end! 😊<br><br>
+          I've been seeing your posts lately and the work you're doing with [their audience] is so aligned with what I care about too.<br><br>
+          Would you be open to a quick collab? I could do a free session for your community on [topic], and I'd love to feature you in mine too.<br><br>
+          No pressure — just thought it might be fun and useful for our parents! 😊"
+        </div>
+      </div>
+      <div class="scripts-box">
+        <div class="scripts-box-label">Cold-warm — someone you follow online</div>
+        <div class="scripts-box-text">
+          "Hi [Name], I've been following your content for a while and just want to say — the way you [specific thing they do well] genuinely inspired me.<br><br>
+          I'm John, a Maths tutor working with P5 and P6 families in Singapore. We're in a pretty similar world — different subjects, same mission.<br><br>
+          I'd love to feature you in a short interview for my community. It'll be on [topic relevant to them], should only take 20–30 mins, and I'll handle everything and share it back with you too.<br><br>
+          Would that be something you'd be open to?"
+        </div>
+      </div>
+    </div>
+
+    <!-- START THIS WEEK -->
+    <div class="section-label section-gap">Your Next Steps — Start This Week</div>
+    <div class="action-list">
+      <div class="action-item">
+        <div class="action-num">1</div>
+        <div>
+          <div class="action-title">Write down 10–20 names</div>
+          <div class="action-body">People you already know whose audiences overlap yours — fellow tutors, parent leaders, education creators.</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">2</div>
+        <div>
+          <div class="action-title">Engage before you ask</div>
+          <div class="action-body">Follow them on Instagram, Facebook, or Telegram. Leave 2–3 genuine, specific comments on their content.</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">3</div>
+        <div>
+          <div class="action-title">Send 3 appreciation messages this week</div>
+          <div class="action-body">No agenda. A genuine note of thanks or a useful resource. Do this before making any ask.</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">4</div>
+        <div>
+          <div class="action-title">Make one warm ask</div>
+          <div class="action-body">Once the relationship feels warm (they're engaging with you too), make a simple, single, low-pressure ask.</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">5</div>
+        <div>
+          <div class="action-title">Keep it going monthly</div>
+          <div class="action-body">One new collaboration a month compounds into a very different business 12 months from now.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="closing-block">
+      <h2>Your network is your net worth.</h2>
+      <p>The tutors who grow fastest aren't always the best teachers. They're the ones willing to build bridges, show up for others, and ask for help when the time is right.</p>
+      <span class="teal-italic">Start today. One relationship at a time.</span>
+    </div>
+
+  </div><!-- /page-body -->
+
+  <script src="progress-tracker.js"></script>
+
+  <script>
+  function toggleSubGroup(e, el) {
+    e.stopPropagation();
+    var items = el.nextElementSibling;
+    var open = el.classList.toggle('open');
+    items.classList.toggle('open', open);
+  }
+  function openMobileMenu() {
+    document.getElementById('mobilePanel').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobilePanel').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('open');
+  }
+  </script>
+
+  <script>
+  (function(){
+    var STORE_KEY = 'pac-swift-mobile-nav-state';
+    function initCollapse() {
+      var state; try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) { state = {}; }
+      document.querySelectorAll('.mobile-menu-section').forEach(function(section) {
+        var label = section.textContent.trim();
+        var key = label.toLowerCase().replace(/\s+/g, '-');
+        var chev = document.createElement('span'); chev.className = 'ms-chevron'; section.appendChild(chev);
+        var items = []; var el = section.nextElementSibling;
+        while (el && !el.classList.contains('mobile-menu-section')) { items.push(el); el = el.nextElementSibling; }
+        if (!items.length) return;
+        var wrap = document.createElement('div'); wrap.className = 'mobile-section-items';
+        section.parentNode.insertBefore(wrap, items[0]);
+        items.forEach(function(item) { wrap.appendChild(item); });
+        var hasActive = !!wrap.querySelector('.active');
+        var savedState = state[key];
+        var startCollapsed = savedState !== undefined ? savedState : !hasActive;
+        if (startCollapsed) { wrap.classList.add('ms-collapsed'); chev.textContent = '›'; } else { chev.textContent = '⌄'; }
+        section.addEventListener('click', function() {
+          var nowCollapsed = wrap.classList.toggle('ms-collapsed');
+          chev.textContent = nowCollapsed ? '›' : '⌄';
+          state[key] = nowCollapsed;
+          try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+        });
+      });
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCollapse); }
+    else { initCollapse(); }
+  })();
+  </script>
+
+  <script>
+    function toggleSwiftDropdown() {
+      var dd = document.getElementById('swiftDropdownMenu');
+      if (dd) dd.classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      var mob = document.getElementById('swiftMobileNav');
+      if (mob && !mob.contains(e.target)) {
+        var dd = document.getElementById('swiftDropdownMenu');
+        if (dd) dd.classList.remove('open');
+      }
+    });
+    function getSession() { try { return JSON.parse(localStorage.getItem('pac-swift-session')); } catch(e) { return null; } }
+    (function initUser() {
+      var s = getSession(); if (!s) return;
+      var nd = document.getElementById('userNameDisplay'); if (nd) nd.textContent = s.u;
+      var av = document.getElementById('userAvatar'); if (av) av.textContent = s.u.charAt(0).toUpperCase();
+    })();
+  </script>
+
+  <script>
+    // Nav dropdowns — hover on desktop, tap on mobile
+    (function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(group){
+        var closeTimer;
+        group.addEventListener('mouseenter', function(){
+          clearTimeout(closeTimer);
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          group.classList.add('open');
+        });
+        group.addEventListener('mouseleave', function(){
+          closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+        });
+        var btn = group.querySelector('button');
+        if (btn) btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isOpen = group.classList.contains('open');
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          if (!isOpen) group.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(){
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      });
+    })();
+  </script>
+
+  <script>
+  var PAGES = [
+    { title:'Home',                    sub:'SWIFT Framework overview',              url:'index.html',                  icon:'⌂',  tags:'home swift framework' },
+    { title:'Directory',               sub:'All portal pages in one place',         url:'directory.html',              icon:'📂', tags:'directory all pages links portal' },
+    { title:'Signature Programme',     sub:'S · Create your signature offer',       url:'signature-programme.html',    icon:'S',  tags:'signature programme offer s swift' },
+    { title:'Webinar Programme',       sub:'W · Run your online webinar',           url:'webinar-programme.html',      icon:'W',  tags:'webinar online programme w swift' },
+    { title:'Invite Programme',        sub:'I · Referral & invite system',          url:'invite-programme.html',       icon:'I',  tags:'invite referral system i swift' },
+    { title:'Fill Class',              sub:'F · Revenue calculator & scheduling',   url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator f swift' },
+    { title:'Track Programme',         sub:'T · Track your progress',               url:'track-programme.html',        icon:'T',  tags:'track progress t swift' },
+    { title:'Case Studies',            sub:'Success stories from members',          url:'casestudies.html',            icon:'★',  tags:'case studies success stories' },
+    { title:'Calendar Plan',           sub:'Calendar & daily tasks planner',        url:'planner.html',                icon:'📅', tags:'planner calendar plan daily' },
+    { title:'Parties for Kids',        sub:'Birthday & holiday party resources',    url:'other-resources.html',        icon:'🎉', tags:'parties kids birthday holiday' },
+    { title:'Holiday Workshops',       sub:'Holiday workshop resources',            url:'holiday-workshops.html',      icon:'🗓️', tags:'holiday workshop' },
+    { title:'Monthly → Annual',        sub:'Upgrade payment plan',                  url:'payment-upgrade.html',        icon:'💳', tags:'payment upgrade monthly annual' },
+    { title:'IG & FB Ads',             sub:'Instagram & Facebook advertising',      url:'ig-ads.html',                 icon:'📸', tags:'instagram facebook ads' },
+    { title:'Sales Call',              sub:'Sales call scripts & tips',             url:'sales-call.html',             icon:'📞', tags:'sales call script closing' },
+    { title:'Parent Conversation',     sub:'Parent clarity conversation',           url:'parent-conversation.html',    icon:'💬', tags:'parent conversation preframing' },
+    { title:'ABC — Always Be Closing', sub:'Closing frameworks & DM openers',       url:'abc.html',                    icon:'🔤', tags:'abc always be closing dm' },
+    { title:'Dream 100 Partnerships',  sub:'Win-win collaborations without ads',    url:'dream100.html',               icon:'🤝', tags:'dream 100 partnerships collaborations network' },
+    { title:'AI & Automation',         sub:'AI tools & automation workflows',       url:'ai-automation.html',          icon:'🤖', tags:'ai automation chatgpt tools' },
+    { title:'Product Creation',        sub:'Create & package your product',         url:'product-creation.html',       icon:'⚡', tags:'product creation package' },
+    { title:'Video Content',           sub:'Video content strategy',                url:'video-content.html',          icon:'🎬', tags:'video content strategy' },
+    { title:'6 AI Prompts',            sub:'All 6 prompts overview',                url:'6-prompts.html',              icon:'✦',  tags:'6 prompts ai overview' },
+    { title:'Prompt 1 · Signature',    sub:'AI prompt for signature programme',     url:'prompt-1-signature.html',     icon:'✦',  tags:'prompt 1 signature ai' },
+    { title:'Prompt 2 · Lead Magnet',  sub:'AI prompt for lead magnet',             url:'prompt-2-lead-magnet.html',   icon:'✦',  tags:'prompt 2 lead magnet' },
+    { title:'Prompt 3 · Teach to Pitch',sub:'AI webinar pitch script',             url:'prompt-3-teach-to-pitch.html',icon:'✦',  tags:'prompt 3 teach pitch webinar' },
+    { title:'Prompt 4 · Content Style',sub:'AI prompt for content style',           url:'prompt-3-content.html',       icon:'✦',  tags:'prompt 4 content style' },
+    { title:'Prompt 5 · Lead Form',    sub:'AI prompt for lead collection form',    url:'prompt-4-5-forms.html',       icon:'✦',  tags:'prompt 5 lead form' },
+    { title:'Prompt 6 · Feedback',     sub:'AI prompt for feedback form',           url:'prompt-6-feedback.html',      icon:'✦',  tags:'prompt 6 feedback form' },
+    { title:'Settings',                sub:'Account, password & user management',   url:'settings.html',               icon:'⚙️', tags:'settings account password' },
+  ];
+  function searchPages(q) {
+    if (!q || q.length < 1) return [];
+    q = q.toLowerCase();
+    return PAGES.filter(function(p){return p.title.toLowerCase().includes(q)||p.tags.toLowerCase().includes(q)||p.sub.toLowerCase().includes(q);}).slice(0,7);
+  }
+  function buildResultHTML(results, mobile) {
+    if (!results.length) return '<div class="nav-search-no-results">No results found</div>';
+    return results.map(function(p){
+      var cls=mobile?'mobile-search-result':'nav-search-result';
+      var iconCls=mobile?'mobile-search-result-icon':'nav-search-result-icon';
+      var titleCls=mobile?'mobile-search-result-title':'nav-search-result-title';
+      var subCls=mobile?'mobile-search-result-sub':'nav-search-result-sub';
+      return '<a class="'+cls+'" href="'+p.url+'"><div class="'+iconCls+'">'+p.icon+'</div><div class="nav-search-result-text"><div class="'+titleCls+'">'+p.title+'</div><div class="'+subCls+'">'+p.sub+'</div></div></a>';
+    }).join('');
+  }
+  (function(){
+    var inp=document.getElementById('navSearchInput'); var res=document.getElementById('navSearchResults'); if(!inp)return;
+    inp.addEventListener('input',function(){var q=inp.value.trim();if(!q){res.classList.remove('open');res.innerHTML='';return;}res.innerHTML=buildResultHTML(searchPages(q),false);res.classList.add('open');});
+    inp.addEventListener('keydown',function(e){if(e.key==='Escape'){res.classList.remove('open');inp.value='';}});
+    document.addEventListener('click',function(e){if(!inp.contains(e.target)&&!res.contains(e.target))res.classList.remove('open');});
+  })();
+  (function(){
+    var inp=document.getElementById('mobileSearchInput'); var res=document.getElementById('mobileSearchResults'); if(!inp)return;
+    inp.addEventListener('input',function(){var q=inp.value.trim();if(!q){res.innerHTML='';return;}res.innerHTML=buildResultHTML(searchPages(q),true);});
+  })();
+  </script>
+
+</body>
+</html>
