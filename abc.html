@@ -623,6 +623,201 @@
   })();
   </script>
 
+  
+
+  <script>
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      var mob = document.getElementById('swiftMobileNav');
+      if (mob && !mob.contains(e.target)) document.getElementById('swiftDropdownMenu').classList.remove('open');
+    });
+
+    /* AUTH / USER PILL JS */
+    function getSession() { try { return JSON.parse(localStorage.getItem('pac-swift-session')); } catch(e) { return null; } }
+    function doLogout() { localStorage.removeItem('pac-swift-session'); window.location.href = 'login.html'; }
+    function openUserManager() {
+      document.getElementById('userManagerModal').style.display = 'flex';
+      renderPending(); renderUserList();
+      }
+    (function initUser() {
+      var s = getSession();
+      if (!s) return;
+      document.getElementById('userNameDisplay').textContent = s.u;
+      document.getElementById('userAvatar').textContent = s.u.charAt(0).toUpperCase();
+      // Show Manage Users only for admin
+      if (s.role === 'admin' || s.u === 'johnyeo') {
+        var nb = document.getElementById('navManageUsersBtn');
+        if (nb) { nb.style.setProperty('display','block','important'); }
+        var hb = document.getElementById('headerManageBtn');
+        if (hb) hb.style.display = 'inline-block';
+      }
+    })();
+
+    /* USER MANAGER JS */
+    function getUsers()     { try { return JSON.parse(localStorage.getItem('pac-swift-users')   || '{}'); } catch(e) { return {}; } }
+    function saveUsers(u)   { localStorage.setItem('pac-swift-users', JSON.stringify(u)); }
+    function getPending()   { try { return JSON.parse(localStorage.getItem('pac-swift-pending') || '{}'); } catch(e) { return {}; } }
+    function savePending(p) { localStorage.setItem('pac-swift-pending', JSON.stringify(p)); }
+    function renderPending() {
+      var pending = getPending(); var keys = Object.keys(pending);
+      var el = document.getElementById('pendingList'); if (!el) return;
+      if (!keys.length) { el.innerHTML = ''; return; }
+      el.innerHTML = '<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F59E0B;margin-bottom:10px;">⏳ Pending Requests (' + keys.length + ')</p>' +
+        keys.map(function(k) {
+          var d = pending[k].requestedAt ? new Date(pending[k].requestedAt).toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}) : '';
+          return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;margin-bottom:8px;gap:8px;">' +
+            '<div><div style="font-size:13px;font-weight:700;color:#92400E;">' + k + '</div>' + (d ? '<div style="font-size:11px;color:#B45309;margin-top:2px;">Requested ' + d + '</div>' : '') + '</div>' +
+            '<div style="display:flex;gap:6px;flex-shrink:0;"><button onclick="approvePending(\'' + k + '\')" style="background:#16a34a;color:white;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Approve</button>' +
+            '<button onclick="rejectPending(\'' + k + '\')" style="background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Reject</button></div></div>';
+        }).join('');
+    }
+    function approvePending(u) { var p=getPending(),users=getUsers(); if(!p[u])return; users[u]={password:p[u].password,role:'user'}; saveUsers(users); delete p[u]; savePending(p); renderPending(); renderUserList(); }
+    function rejectPending(u)  { if(!confirm('Reject "'+u+'"?'))return; var p=getPending(); delete p[u]; savePending(p); renderPending(); }
+    function renderUserList() {
+      var users=getUsers(); var keys=Object.keys(users); var el=document.getElementById('userList'); if(!el)return;
+      if(!keys.length){el.innerHTML='<p style="font-size:13px;color:#6B7A96;">No approved users yet.</p>';return;}
+      el.innerHTML='<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:10px;">✅ Approved Users</p>'+
+        keys.map(function(k){return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#F4F7FB;border-radius:8px;margin-bottom:6px;"><span style="font-size:13px;font-weight:600;color:#0A0F1C;">'+k+'</span><button onclick="removeUser(\''+k+'\')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button></div>';}).join('');
+    }
+    function addUser() {
+      var u=document.getElementById('newUsername').value.trim(),p=document.getElementById('newPassword').value.trim(),msg=document.getElementById('addUserMsg');
+      if(!u||!p){msg.textContent='Please fill in both fields.';msg.style.color='#ef4444';msg.style.display='block';return;}
+      if(u==='johnyeo'){msg.textContent='Cannot overwrite master account.';msg.style.color='#ef4444';msg.style.display='block';return;}
+      var users=getUsers();users[u]={password:p,role:'user'};saveUsers(users);
+      document.getElementById('newUsername').value='';document.getElementById('newPassword').value='';
+      msg.textContent='User "'+u+'" added!';msg.style.color='#0ABFBC';msg.style.display='block';
+      setTimeout(function(){msg.style.display='none';},3000);renderUserList();
+    }
+    function removeUser(u){if(!confirm('Remove "'+u+'"?'))return;var users=getUsers();delete users[u];saveUsers(users);renderUserList();}
+  </script>
+
+  <script>
+    // Nav dropdowns — hover on desktop, tap on mobile
+    (function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(group){
+        var closeTimer;
+        // Desktop hover
+        group.addEventListener('mouseenter', function(){
+          clearTimeout(closeTimer);
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          group.classList.add('open');
+        });
+        group.addEventListener('mouseleave', function(){
+          closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+        });
+        // Mobile tap
+        var btn = group.querySelector('button');
+        if (btn) btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isOpen = group.classList.contains('open');
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          if (!isOpen) group.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(){
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      });
+    })();
+  </script>
+
+  <script>
+  // ── SITE SEARCH ──────────────────────────────────────────────────────────
+  var PAGES = [
+    { title:'Home',                    sub:'SWIFT Framework overview',              url:'index.html',                  icon:'⌂',  tags:'home swift framework pace love' },
+    { title:'Signature Programme',     sub:'S · Create your signature offer',       url:'signature-programme.html',    icon:'S',  tags:'signature programme offer create s swift' },
+    { title:'Webinar Programme',       sub:'W · Run your online webinar',           url:'webinar-programme.html',      icon:'W',  tags:'webinar online programme w swift' },
+    { title:'Invite Programme',        sub:'I · Referral & invite system',          url:'invite-programme.html',       icon:'I',  tags:'invite referral system i swift' },
+    { title:'Fill Class',              sub:'F · Revenue calculator & scheduling',   url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator schedule students f swift' },
+    { title:'Track Programme',         sub:'T · Track your progress',               url:'track-programme.html',        icon:'T',  tags:'track progress t swift' },
+    { title:'Case Studies',            sub:'Success stories from members',          url:'casestudies.html',            icon:'★',  tags:'case studies success stories members results' },
+    { title:'Calendar Plan',          sub:'Calendar & daily tasks planner',                url:'planner.html',                icon:'📅', tags:'planner calendar plan daily tasks' },
+    { title:'Parties for Kids',        sub:'Birthday & holiday party resources',    url:'other-resources.html',        icon:'🎉', tags:'parties kids birthday holiday resources' },
+    { title:'Holiday Workshops',       sub:'Holiday workshop resources',            url:'holiday-workshops.html',      icon:'🗓️', tags:'holiday workshop resources' },
+    { title:'Monthly → Annual',        sub:'Upgrade payment plan',                  url:'payment-upgrade.html',        icon:'💳', tags:'payment upgrade monthly annual billing' },
+    { title:'IG & FB Ads',             sub:'Instagram & Facebook advertising',      url:'ig-ads.html',                 icon:'📸', tags:'instagram facebook ads advertising social media' },
+    { title:'Sales Call',              sub:'Sales call scripts & tips',             url:'sales-call.html',             icon:'📞', tags:'sales call script closing enrol' },
+    { title:'AI & Automation',         sub:'AI tools & automation workflows',       url:'ai-automation.html',          icon:'🤖', tags:'ai automation chatgpt tools workflow' },
+    { title:'Product Creation',        sub:'Create & package your product',         url:'product-creation.html',       icon:'⚡', tags:'product creation package offer digital' },
+    { title:'Video Content',           sub:'Video content strategy',                url:'video-content.html',          icon:'🎬', tags:'video content strategy reels youtube tiktok' },
+    { title:'6 AI Prompts',            sub:'All 6 prompts overview',                url:'6-prompts.html',              icon:'✦',  tags:'6 prompts ai claude chatgpt overview' },
+    { title:'Prompt 1 · Signature',    sub:'AI prompt for signature programme',     url:'prompt-1-signature.html',     icon:'✦',  tags:'prompt 1 signature ai claude' },
+    { title:'Prompt 2 · Lead Magnet',  sub:'AI prompt for lead magnet',             url:'prompt-2-lead-magnet.html',   icon:'✦',  tags:'prompt 2 lead magnet ai freebie' },
+    { title:'Prompt 3 · Teach to Pitch',sub:'AI webinar pitch script',             url:'prompt-3-teach-to-pitch.html',icon:'✦',  tags:'prompt 3 teach pitch webinar script ai' },
+    { title:'Prompt 4 · Content Style',sub:'AI prompt for content style',           url:'prompt-3-content.html',       icon:'✦',  tags:'prompt 4 content style ai caption post' },
+    { title:'Prompt 5 · Lead Form',    sub:'AI prompt for lead collection form',    url:'prompt-4-5-forms.html',       icon:'✦',  tags:'prompt 5 lead form google forms collection' },
+    { title:'Prompt 6 · Feedback',     sub:'AI prompt for feedback form',           url:'prompt-6-feedback.html',      icon:'✦',  tags:'prompt 6 feedback form survey ai' },
+    { title:'Settings',                sub:'Account, password & user management',   url:'settings.html',               icon:'⚙️', tags:'settings account password email users admin' },
+    { title:'Case Study · Feon',       sub:'Member success story',                  url:'casestudy-feon.html',         icon:'★',  tags:'case study feon success story' },
+    { title:'Case Study · Fion',       sub:'Member success story',                  url:'casestudy-fion.html',         icon:'★',  tags:'case study fion success story' },
+  ];
+
+  function searchPages(q) {
+    if (!q || q.length < 1) return [];
+    q = q.toLowerCase();
+    return PAGES.filter(function(p) {
+      return p.title.toLowerCase().includes(q) || p.tags.toLowerCase().includes(q) || p.sub.toLowerCase().includes(q);
+    }).slice(0, 7);
+  }
+
+  function buildResultHTML(results, mobile) {
+    if (!results.length) return '<div class="nav-search-no-results">No results found</div>';
+    return results.map(function(p, i) {
+      var cls = mobile ? 'mobile-search-result' : 'nav-search-result';
+      var iconCls = mobile ? 'mobile-search-result-icon' : 'nav-search-result-icon';
+      var titleCls = mobile ? 'mobile-search-result-title' : 'nav-search-result-title';
+      var subCls = mobile ? 'mobile-search-result-sub' : 'nav-search-result-sub';
+      return '<a class="' + cls + '" href="' + p.url + '">'
+           + '<div class="' + iconCls + '">' + p.icon + '</div>'
+           + '<div class="nav-search-result-text">'
+           + '<div class="' + titleCls + '">' + p.title + '</div>'
+           + '<div class="' + subCls + '">' + p.sub + '</div>'
+           + '</div></a>';
+    }).join('');
+  }
+
+  // Desktop search
+  (function() {
+    var inp = document.getElementById('navSearchInput');
+    var res = document.getElementById('navSearchResults');
+    if (!inp) return;
+    var focusIdx = -1;
+
+    inp.addEventListener('input', function() {
+      focusIdx = -1;
+      var results = searchPages(this.value.trim());
+      if (!this.value.trim()) { res.classList.remove('open'); return; }
+      res.innerHTML = buildResultHTML(results, false);
+      res.classList.add('open');
+    });
+
+    inp.addEventListener('keydown', function(e) {
+      var items = res.querySelectorAll('.nav-search-result');
+      if (e.key === 'ArrowDown') { focusIdx = Math.min(focusIdx+1, items.length-1); items.forEach(function(el,i){ el.classList.toggle('focused', i===focusIdx); }); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { focusIdx = Math.max(focusIdx-1, 0); items.forEach(function(el,i){ el.classList.toggle('focused', i===focusIdx); }); e.preventDefault(); }
+      else if (e.key === 'Enter') { if (focusIdx >= 0 && items[focusIdx]) { window.location.href = items[focusIdx].href; } else if (items[0]) { window.location.href = items[0].href; } }
+      else if (e.key === 'Escape') { res.classList.remove('open'); inp.blur(); }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('navSearch').contains(e.target)) res.classList.remove('open');
+    });
+  })();
+
+  // Mobile search
+  (function() {
+    var inp = document.getElementById('mobileSearchInput');
+    var res = document.getElementById('mobileSearchResults');
+    if (!inp) return;
+    inp.addEventListener('input', function() {
+      var results = searchPages(this.value.trim());
+      if (!this.value.trim()) { res.innerHTML = ''; return; }
+      res.innerHTML = buildResultHTML(results, true);
+    });
+  })();
+  </script>
+
   <script src="progress-tracker.js"></script>
 
   <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
