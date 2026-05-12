@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directory | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --navy:#002D6A; --navy-light:#0A0F1C; --gold:#0ABFBC; --gold-light:#4A8FE7; --cream:#F4F7FB; --text:#0A0F1C; --text-muted:#6B7A96; --white:#FFFFFF; --border:#B8C4D4; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+    /* ── HEADER ── */
+    .header { background:var(--navy); padding:12px 32px; display:flex; align-items:center; gap:16px; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .header-label { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+    .header h1 { font-family:'DM Serif Display',serif; font-size:clamp(22px,3.5vw,32px); color:#fff; line-height:1.1; }
+    .header h1 em { font-style:italic; color:var(--gold-light); }
+    .user-pill { position:relative; display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:99px; padding:6px 12px 6px 6px; cursor:pointer; flex-shrink:0; margin-left:auto; }
+    .user-avatar { width:28px; height:28px; border-radius:50%; background:var(--gold); color:var(--navy); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .user-name { font-size:13px; color:white; font-weight:500; }
+    .user-menu { display:none; position:absolute; top:calc(100% + 8px); right:0; background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:10px; min-width:160px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:300; }
+    .user-menu.open { display:block; }
+    .user-menu-name { padding:12px 16px; font-size:12px; color:rgba(255,255,255,0.4); border-bottom:1px solid rgba(255,255,255,0.08); font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+    .user-menu-item { display:block; width:100%; padding:11px 16px; background:none; border:none; color:rgba(255,255,255,0.75); font-size:13px; font-weight:500; cursor:pointer; text-align:left; font-family:'DM Sans',sans-serif; transition:background 0.15s; }
+    .user-menu-item:hover { background:rgba(255,255,255,0.06); color:white; }
+    .user-menu-item.logout { color:#f87171; }
+
+    /* ── SWIFT NAV ── */
+    .swift-nav { background:var(--navy-light); position:sticky; top:0; z-index:100; padding:0 16px; display:flex; gap:0; overflow:visible; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding:11px 12px; border:none; background:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:rgba(255,255,255,0.65); border-bottom:3px solid transparent; margin-bottom:-1px; white-space:nowrap; transition:all 0.2s; display:flex; align-items:center; gap:8px; text-decoration:none; }
+    .swift-tab:hover { color:rgba(255,255,255,0.85); }
+    .swift-tab.active { color:#fff; border-bottom-color:var(--gold); }
+    .swift-letter { font-family:'DM Serif Display',serif; font-size:18px; color:rgba(255,255,255,0.3); line-height:1; }
+    .swift-tab.active .swift-letter { color:var(--gold); }
+    .swift-word { font-size:12px; }
+    .swift-tab-group { position:relative; display:flex; align-items:stretch; }
+    .swift-sub-menu { position:absolute; top:100%; left:0; background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:0 0 10px 10px; z-index:200; overflow:hidden; display:none; box-shadow:0 8px 24px rgba(0,0,0,0.5); min-width:220px; white-space:nowrap; max-height:80vh; overflow-y:auto; }
+    .swift-tab-group.open .swift-sub-menu { display:block; }
+    .swift-sub-item { display:flex; align-items:center; gap:10px; padding:13px 16px; color:rgba(255,255,255,0.65); font-size:13px; font-weight:500; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); font-family:'DM Sans',sans-serif; transition:background 0.15s; }
+    .swift-sub-item:hover { background:rgba(255,255,255,0.06); color:white; }
+    .swift-sub-item.active { color:white; background:rgba(10,191,188,0.12); }
+    .sub-group-header { padding:8px 16px 5px; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.45); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-top:4px; user-select:none; }
+    .sub-group-header:hover { color:rgba(255,255,255,0.8); background:rgba(255,255,255,0.04); }
+    .sub-chev { font-size:10px; transition:transform 0.2s; line-height:1; opacity:0.55; }
+    .sub-group-header.open .sub-chev { transform:rotate(180deg); }
+    .sub-group-items { overflow:hidden; max-height:0; transition:max-height 0.28s ease; }
+    .sub-group-items.open { max-height:900px; }
+    .nav-search { position:relative; display:flex; align-items:center; padding:6px 10px; margin-left:8px; }
+    .nav-search-icon { font-size:13px; opacity:0.4; margin-right:6px; }
+    .nav-search-input { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:5px 12px; color:white; font-family:'DM Sans',sans-serif; font-size:12px; width:140px; outline:none; transition:width 0.2s,background 0.2s; }
+    .nav-search-input:focus { width:200px; background:rgba(255,255,255,0.13); }
+    .nav-search-input::placeholder { color:rgba(255,255,255,0.35); }
+    .nav-search-results { display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; background:#111827; border:1px solid rgba(255,255,255,0.15); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:300; overflow:hidden; min-width:280px; }
+    .nav-search-results.open { display:block; }
+    .nav-search-result { display:flex; align-items:center; gap:10px; padding:11px 14px; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); transition:background 0.15s; }
+    .nav-search-result:hover { background:rgba(255,255,255,0.06); }
+    .nav-search-result-icon { font-size:16px; width:24px; text-align:center; flex-shrink:0; }
+    .nav-search-result-title { font-size:13px; font-weight:600; color:white; }
+    .nav-search-result-sub { font-size:11px; color:rgba(255,255,255,0.45); margin-top:1px; }
+    .nav-search-no-results { padding:14px 16px; font-size:13px; color:rgba(255,255,255,0.4); }
+
+    /* ── MOBILE NAV ── */
+    .mobile-menu-bar { display:none; background:var(--navy-light); padding:8px 16px; border-bottom:1px solid rgba(255,255,255,0.08); position:relative; z-index:200; }
+    .mobile-menu-btn { width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:10px 16px; color:white; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+    .mobile-menu-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; }
+    .mobile-menu-panel { position:fixed; top:0; left:0; width:280px; height:100%; background:#111827; z-index:501; overflow-y:auto; padding:0 0 40px; transform:translateX(-100%); transition:transform 0.25s ease; pointer-events:none; }
+    .mobile-menu-panel.open { transform:translateX(0); pointer-events:auto; }
+    .mobile-menu-overlay.open { display:block; }
+    .mobile-menu-header { padding:20px 16px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; }
+    .mobile-menu-close { background:none; border:none; color:rgba(255,255,255,0.6); font-size:22px; cursor:pointer; }
+    .mobile-menu-section { padding:16px 16px 6px; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); }
+    .mobile-menu-item { display:flex; align-items:center; gap:12px; padding:13px 16px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.05); font-family:'DM Sans',sans-serif; }
+    .mobile-menu-item:hover, .mobile-menu-item.active { color:white; background:rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family:'DM Serif Display',serif; font-size:18px; width:24px; text-align:center; flex-shrink:0; }
+    .mobile-search-wrap { padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .mobile-search-input { width:100%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:9px 14px; color:white; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; }
+    .mobile-search-input::placeholder { color:rgba(255,255,255,0.35); }
+    .mobile-search-results { margin-top:8px; }
+    .mobile-search-result { display:flex; align-items:center; gap:10px; padding:10px 12px; text-decoration:none; border-radius:8px; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .mobile-search-result:hover { background:rgba(255,255,255,0.06); }
+    .mobile-search-result-icon { font-size:16px; width:24px; text-align:center; flex-shrink:0; }
+    .mobile-search-result-title { font-size:13px; font-weight:600; color:white; }
+    .mobile-search-result-sub { font-size:11px; color:rgba(255,255,255,0.45); margin-top:1px; }
+    .ms-chevron { float:right; font-size:14px; color:rgba(255,255,255,0.4); margin-left:auto; transition:transform 0.2s; }
+    .mobile-section-items { overflow:hidden; transition:max-height 0.28s ease; max-height:2000px; }
+    .mobile-section-items.ms-collapsed { max-height:0; }
+    @media (max-width:768px) { .swift-nav { display:none !important; } .mobile-menu-bar { display:block; } }
+    @media (min-width:769px) { .mobile-menu-bar { display:none !important; } }
+
+    /* ── PAGE HERO ── */
+    .page-hero { background:linear-gradient(135deg,#002D6A 0%,#0A1628 60%,#001A3D 100%); padding:44px 40px 36px; border-bottom:1px solid rgba(10,191,188,0.15); }
+    .page-hero-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#0ABFBC; margin-bottom:10px; }
+    .page-hero h1 { font-family:'DM Serif Display',serif; font-size:clamp(28px,5vw,44px); color:#fff; line-height:1.15; margin-bottom:10px; }
+    .page-hero h1 em { font-style:italic; color:#4A8FE7; }
+    .page-hero p { font-size:15px; color:rgba(255,255,255,0.6); max-width:560px; line-height:1.6; }
+
+    /* ── DIRECTORY GRID ── */
+    .dir-body { max-width:1060px; margin:0 auto; padding:40px 24px 80px; }
+    .dir-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; }
+
+    .dir-section { background:#fff; border:1.5px solid #dde5f0; border-radius:16px; overflow:hidden; box-shadow:0 2px 10px rgba(0,45,106,0.06); }
+    .dir-section-header { padding:16px 20px 14px; display:flex; align-items:center; gap:12px; border-bottom:1.5px solid #f0f4fa; }
+    .dir-section-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+    .dir-section-title { font-family:'DM Serif Display',serif; font-size:17px; color:#002D6A; font-weight:400; }
+    .dir-section-count { margin-left:auto; font-size:11px; font-weight:700; letter-spacing:1px; color:rgba(0,45,106,0.3); background:#F4F7FB; border-radius:20px; padding:3px 9px; }
+
+    .dir-links { padding:8px 0; }
+    .dir-link { display:flex; align-items:center; gap:12px; padding:11px 20px; text-decoration:none; color:#374151; font-size:13.5px; font-weight:500; transition:background 0.15s,color 0.15s; border-bottom:1px solid rgba(0,45,106,0.05); }
+    .dir-link:last-child { border-bottom:none; }
+    .dir-link:hover { background:#F4F7FB; color:#002D6A; }
+    .dir-link-icon { font-size:16px; width:22px; text-align:center; flex-shrink:0; }
+    .dir-link-text { flex:1; }
+    .dir-link-sub { font-size:11px; color:#9CA3AF; margin-top:1px; font-weight:400; }
+    .dir-link-arrow { font-size:11px; color:rgba(0,45,106,0.2); opacity:0; transition:opacity 0.15s; }
+    .dir-link:hover .dir-link-arrow { opacity:1; }
+
+    /* colour bands */
+    .band-teal  .dir-section-icon { background:rgba(10,191,188,0.12); color:#0ABFBC; }
+    .band-blue  .dir-section-icon { background:rgba(74,143,231,0.12); color:#4A8FE7; }
+    .band-purple .dir-section-icon { background:rgba(139,92,246,0.12); color:#8B5CF6; }
+    .band-amber .dir-section-icon { background:rgba(245,158,11,0.12); color:#F59E0B; }
+    .band-green .dir-section-icon { background:rgba(16,185,129,0.12); color:#10B981; }
+    .band-rose  .dir-section-icon { background:rgba(244,63,94,0.12); color:#F43F5E; }
+    .band-navy  .dir-section-icon { background:rgba(0,45,106,0.1); color:#002D6A; }
+    .band-orange .dir-section-icon { background:rgba(234,88,12,0.12); color:#EA580C; }
+    .band-indigo .dir-section-icon { background:rgba(99,102,241,0.12); color:#6366F1; }
+    .band-cyan  .dir-section-icon { background:rgba(6,182,212,0.12); color:#06B6D4; }
+
+    @media (max-width:600px) { .page-hero { padding:28px 20px 24px; } .dir-body { padding:24px 16px 60px; } .dir-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div>
+      <div class="header-label">PAC SWIFT Framework</div>
+      <h1>📂 Portal <em>Directory</em></h1>
+    </div>
+    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+      <div style="background:rgba(10,191,188,0.15);border:1px solid var(--gold);border-radius:6px;padding:8px 16px;text-align:center;">
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold);line-height:1;">📂</div>
+        <div style="font-size:11px;letter-spacing:2px;color:white;text-transform:uppercase;margin-top:2px;font-weight:600;">Directory</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="swift-nav">
+    <div class="swift-tab-group">
+      <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter" style="color:var(--gold);">⌂</span><span class="swift-word">Home ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="index.html">⌂ Home</a>
+        <a class="swift-sub-item active" href="directory.html">📂 Directory</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+        <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+        <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+        <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+        <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Mindset &amp; Systems</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
+        <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
+        <a class="swift-sub-item" href="be-do-have.html">✨ Be. Do. Have.</a>
+        <a class="swift-sub-item" href="deliberate-practice.html">🎯 Deliberate Practice</a>
+        <a class="swift-sub-item" href="mind-body.html">🧘 Mind &amp; Body</a>
+        <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
+        <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="parent-conversation.html">💬 Parent Conversation</a>
+        <a class="swift-sub-item" href="abc.html">🔤 ABC — Always Be Closing</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Business</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a></div>
+<div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Tools</span><span class="sub-chev">▾</span></div>
+<div class="sub-group-items">
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a></div>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">6 Prompts ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="6-prompts.html">✦ All Prompts</a>
+        <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+        <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+        <a class="swift-sub-item" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
+        <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+        <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
+        <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+      </div>
+    </div>
+    <div class="swift-tab-group">
+      <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter" style="font-size:14px;">🚀</span><span class="swift-word">Build ▾</span></button>
+      <div class="swift-sub-menu">
+        <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+        <a class="swift-sub-item" href="vercel-app.html">🚀 Build on Vercel</a>
+      </div>
+    </div>
+    <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+    <a class="swift-tab" href="personal-tracker.html"><span class="swift-letter">📋</span><span class="swift-word">Tracker</span></a>
+    <div class="nav-search" id="navSearch">
+      <span class="nav-search-icon">🔍</span>
+      <input class="nav-search-input" id="navSearchInput" type="text" placeholder="Search…" autocomplete="off" />
+      <div class="nav-search-results" id="navSearchResults"></div>
+    </div>
+    <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
+    <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu-panel" id="mobilePanel">
+    <div class="mobile-menu-header">
+      <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <button onclick="localStorage.removeItem('pac-swift-session');localStorage.removeItem('pac-swift-user');window.location.href='login.html';" style="width:100%;text-align:left;background:rgba(248,113,113,0.08);border:none;border-bottom:1px solid rgba(248,113,113,0.18);padding:11px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#f87171;display:flex;align-items:center;gap:10px;"><span style="font-size:15px;">⏻</span>Sign Out</button>
+    <div class="mobile-search-wrap">
+      <div class="mobile-search-icon-wrap">
+        <input class="mobile-search-input" id="mobileSearchInput" type="text" placeholder="Search pages…" autocomplete="off" />
+      </div>
+      <div class="mobile-search-results" id="mobileSearchResults"></div>
+    </div>
+
+    <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+    <a class="mobile-menu-item active" href="directory.html"><span class="mobile-menu-letter" style="color:var(--gold);">📂</span>Directory</a>
+    <div class="mobile-menu-section">SWIFT Programme</div>
+    <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+    <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+    <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+    <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+    <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+    <div class="mobile-menu-section">Resources</div>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Mindset &amp; Systems</div>
+    <a class="mobile-menu-item" href="mindset-jit.html"><span class="mobile-menu-letter">🧠</span>Just in Time Mindset</a>
+    <a class="mobile-menu-item" href="be-do-have.html"><span class="mobile-menu-letter">✨</span>Be. Do. Have.</a>
+    <a class="mobile-menu-item" href="deliberate-practice.html"><span class="mobile-menu-letter">🎯</span>Deliberate Practice</a>
+    <a class="mobile-menu-item" href="mind-body.html"><span class="mobile-menu-letter">🧘</span>Mind &amp; Body</a>
+    <a class="mobile-menu-item" href="daily-5.html"><span class="mobile-menu-letter">5️⃣</span>The Daily 5</a>
+    <a class="mobile-menu-item" href="planner.html"><span class="mobile-menu-letter">📅</span>Calendar Plan</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Get Students</div>
+    <a class="mobile-menu-item" href="ig-ads.html"><span class="mobile-menu-letter">📸</span>IG &amp; FB Ads</a>
+    <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call</a>
+    <a class="mobile-menu-item" href="parent-conversation.html"><span class="mobile-menu-letter">💬</span>Parent Conversation</a>
+    <a class="mobile-menu-item" href="abc.html"><span class="mobile-menu-letter">🔤</span>ABC — Always Be Closing</a>
+    <a class="mobile-menu-item" href="other-resources.html"><span class="mobile-menu-letter">🎉</span>Parties for Kids</a>
+    <a class="mobile-menu-item" href="holiday-workshops.html"><span class="mobile-menu-letter">🗓️</span>Holiday Workshops</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Business</div>
+    <a class="mobile-menu-item" href="payment-upgrade.html"><span class="mobile-menu-letter">💳</span>Monthly → Annual</a>
+    <div style="padding:6px 16px 2px 16px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:4px;">Tools</div>
+    <a class="mobile-menu-item" href="ai-automation.html"><span class="mobile-menu-letter">🤖</span>AI &amp; Automation</a>
+    <a class="mobile-menu-item" href="video-content.html"><span class="mobile-menu-letter">🎬</span>Video Content</a>
+    <div class="mobile-menu-section">6 Prompts</div>
+    <a class="mobile-menu-item" href="6-prompts.html"><span class="mobile-menu-letter" style="color:var(--gold);">6</span>All Prompts</a>
+    <a class="mobile-menu-item" href="prompt-1-signature.html" style="padding-left:36px;font-size:13px;">✦ Signature Programme</a>
+    <a class="mobile-menu-item" href="prompt-2-lead-magnet.html" style="padding-left:36px;font-size:13px;">✦ Lead Magnet</a>
+    <a class="mobile-menu-item" href="prompt-3-teach-to-pitch.html" style="padding-left:36px;font-size:13px;">✦ Teach to Pitch</a>
+    <a class="mobile-menu-item" href="prompt-3-content.html" style="padding-left:36px;font-size:13px;">✦ Content Style</a>
+    <a class="mobile-menu-item" href="prompt-4-5-forms.html" style="padding-left:36px;font-size:13px;">✦ Lead Collection Form</a>
+    <a class="mobile-menu-item" href="prompt-6-feedback.html" style="padding-left:36px;font-size:13px;">✦ Feedback Form</a>
+    <div class="mobile-menu-section">Build</div>
+    <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
+    <a class="mobile-menu-item" href="vercel-app.html"><span class="mobile-menu-letter">🚀</span>Build on Vercel</a>
+    <div class="mobile-menu-section">Community</div>
+    <a class="mobile-menu-item" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
+    <a class="mobile-menu-item" href="personal-tracker.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">📋</span>Personal Tracker</a>
+    <div class="mobile-menu-section">Account</div>
+    <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
+  </div>
+  <div class="mobile-menu-bar">
+    <button class="mobile-menu-btn" onclick="openMobileMenu()">
+      <span>☰ &nbsp;Menu</span>
+      <span style="font-size:11px;opacity:0.5;">▾</span>
+    </button>
+  </div>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="page-hero-tag">PAC SWIFT Framework</div>
+    <h1>Portal <em>Directory</em></h1>
+    <p>Every page, one place. Click any link below to jump straight to that resource.</p>
+  </div>
+
+  <div class="dir-body">
+    <div class="dir-grid">
+
+      <!-- HOME -->
+      <div class="dir-section band-teal">
+        <div class="dir-section-header">
+          <div class="dir-section-icon">⌂</div>
+          <div class="dir-section-title">Home</div>
+          <div class="dir-section-count">2</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="index.html">
+            <span class="dir-link-icon">⌂</span>
+            <div class="dir-link-text"><div>Home</div><div class="dir-link-sub">SWIFT Framework overview &amp; dashboard</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="directory.html">
+            <span class="dir-link-icon">📂</span>
+            <div class="dir-link-text"><div>Directory</div><div class="dir-link-sub">All portal pages in one place</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- SWIFT PROGRAMMES -->
+      <div class="dir-section band-blue">
+        <div class="dir-section-header">
+          <div class="dir-section-icon" style="font-family:'DM Serif Display',serif;font-size:18px;">S</div>
+          <div class="dir-section-title">SWIFT Programmes</div>
+          <div class="dir-section-count">5</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="signature-programme.html">
+            <span class="dir-link-icon" style="font-family:'DM Serif Display',serif;color:#0ABFBC;">S</span>
+            <div class="dir-link-text"><div>Signature Programme</div><div class="dir-link-sub">Create your signature offer</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="webinar-programme.html">
+            <span class="dir-link-icon" style="font-family:'DM Serif Display',serif;color:#4A8FE7;">W</span>
+            <div class="dir-link-text"><div>Webinar Programme</div><div class="dir-link-sub">Run your online webinar</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="invite-programme.html">
+            <span class="dir-link-icon" style="font-family:'DM Serif Display',serif;color:#8B5CF6;">I</span>
+            <div class="dir-link-text"><div>Invite Programme</div><div class="dir-link-sub">Referral &amp; invite system</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="fill-programme.html">
+            <span class="dir-link-icon" style="font-family:'DM Serif Display',serif;color:#F59E0B;">F</span>
+            <div class="dir-link-text"><div>Fill Class</div><div class="dir-link-sub">Revenue calculator &amp; scheduling</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="track-programme.html">
+            <span class="dir-link-icon" style="font-family:'DM Serif Display',serif;color:#10B981;">T</span>
+            <div class="dir-link-text"><div>Track Programme</div><div class="dir-link-sub">Track your progress</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- MINDSET & SYSTEMS -->
+      <div class="dir-section band-purple">
+        <div class="dir-section-header">
+          <div class="dir-section-icon">🧠</div>
+          <div class="dir-section-title">Mindset &amp; Systems</div>
+          <div class="dir-section-count">6</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="mindset-jit.html">
+            <span class="dir-link-icon">🧠</span>
+            <div class="dir-link-text"><div>Just in Time Mindset</div><div class="dir-link-sub">Mental frameworks for now</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="be-do-have.html">
+            <span class="dir-link-icon">✨</span>
+            <div class="dir-link-text"><div>Be. Do. Have.</div><div class="dir-link-sub">Identity-first growth model</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="deliberate-practice.html">
+            <span class="dir-link-icon">🎯</span>
+            <div class="dir-link-text"><div>Deliberate Practice</div><div class="dir-link-sub">Skill-building with intention</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="mind-body.html">
+            <span class="dir-link-icon">🧘</span>
+            <div class="dir-link-text"><div>Mind &amp; Body</div><div class="dir-link-sub">Energy, health &amp; clarity</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="daily-5.html">
+            <span class="dir-link-icon">5️⃣</span>
+            <div class="dir-link-text"><div>The Daily 5</div><div class="dir-link-sub">Five daily non-negotiables</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="planner.html">
+            <span class="dir-link-icon">📅</span>
+            <div class="dir-link-text"><div>Calendar Plan</div><div class="dir-link-sub">Calendar &amp; daily tasks planner</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- GET STUDENTS -->
+      <div class="dir-section band-amber">
+        <div class="dir-section-header">
+          <div class="dir-section-icon">🎓</div>
+          <div class="dir-section-title">Get Students</div>
+          <div class="dir-section-count">6</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="ig-ads.html">
+            <span class="dir-link-icon">📸</span>
+            <div class="dir-link-text"><div>IG &amp; FB Ads</div><div class="dir-link-sub">Instagram &amp; Facebook advertising</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="sales-call.html">
+            <span class="dir-link-icon">📞</span>
+            <div class="dir-link-text"><div>Sales Call</div><div class="dir-link-sub">Sales call scripts &amp; tips</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="parent-conversation.html">
+            <span class="dir-link-icon">💬</span>
+            <div class="dir-link-text"><div>Parent Conversation</div><div class="dir-link-sub">Parent clarity conversation preframing</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="abc.html">
+            <span class="dir-link-icon">🔤</span>
+            <div class="dir-link-text"><div>ABC — Always Be Closing</div><div class="dir-link-sub">Closing frameworks &amp; DM openers</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="other-resources.html">
+            <span class="dir-link-icon">🎉</span>
+            <div class="dir-link-text"><div>Parties for Kids</div><div class="dir-link-sub">Birthday &amp; holiday party resources</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="holiday-workshops.html">
+            <span class="dir-link-icon">🗓️</span>
+            <div class="dir-link-text"><div>Holiday Workshops</div><div class="dir-link-sub">Holiday workshop resources</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 6 AI PROMPTS -->
+      <div class="dir-section band-indigo">
+        <div class="dir-section-header">
+          <div class="dir-section-icon" style="font-size:20px;font-family:'DM Serif Display',serif;">6</div>
+          <div class="dir-section-title">6 AI Prompts</div>
+          <div class="dir-section-count">7</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="6-prompts.html">
+            <span class="dir-link-icon">✦</span>
+            <div class="dir-link-text"><div>All Prompts</div><div class="dir-link-sub">Overview of all 6 AI prompts</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="prompt-1-signature.html">
+            <span class="dir-link-icon">✦</span>
+            <div class="dir-link-text"><div>Prompt 1 · Signature Programme</div><div class="dir-link-sub">AI prompt for signature offer</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="prompt-2-lead-magnet.html">
+            <span class="dir-link-icon">✦</span>
+            <div class="dir-link-text"><div>Prompt 2 · Lead Magnet</div><div class="dir-link-sub">AI prompt for lead magnet</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="prompt-3-teach-to-pitch.html">
+            <span class="dir-link-icon">✦</span>
+            <div class="dir-link-text"><div>Prompt 3 · Teach to Pitch</div><div class="dir-link-sub">AI webinar pitch script</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="prompt-3-content.html">
+            <span class="dir-link-icon">✦</span>
+            <div class="dir-link-text"><div>Prompt 4 · Content Style</div><div class="dir-link-sub">AI prompt for content style</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="prompt-4-5-forms.html">
+            <span class="dir-link-icon">✦</span>
+            <div class="dir-link-text"><div>Prompt 5 · Lead Collection Form</div><div class="dir-link-sub">AI prompt for lead forms</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="prompt-6-feedback.html">
+            <span class="dir-link-icon">✦</span>
+            <div class="dir-link-text"><div>Prompt 6 · Feedback Form</div><div class="dir-link-sub">AI prompt for feedback survey</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- BUILD -->
+      <div class="dir-section band-rose">
+        <div class="dir-section-header">
+          <div class="dir-section-icon">🚀</div>
+          <div class="dir-section-title">Build</div>
+          <div class="dir-section-count">2</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="product-creation.html">
+            <span class="dir-link-icon">⚡</span>
+            <div class="dir-link-text"><div>Product Creation</div><div class="dir-link-sub">Create &amp; package your product</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="vercel-app.html">
+            <span class="dir-link-icon">🚀</span>
+            <div class="dir-link-text"><div>Build on Vercel</div><div class="dir-link-sub">Deploy apps &amp; websites</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div class="dir-section band-cyan">
+        <div class="dir-section-header">
+          <div class="dir-section-icon">🛠️</div>
+          <div class="dir-section-title">Tools</div>
+          <div class="dir-section-count">2</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="ai-automation.html">
+            <span class="dir-link-icon">🤖</span>
+            <div class="dir-link-text"><div>AI &amp; Automation</div><div class="dir-link-sub">AI tools &amp; automation workflows</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="video-content.html">
+            <span class="dir-link-icon">🎬</span>
+            <div class="dir-link-text"><div>Video Content</div><div class="dir-link-sub">Video content strategy</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- BUSINESS -->
+      <div class="dir-section band-orange">
+        <div class="dir-section-header">
+          <div class="dir-section-icon">💼</div>
+          <div class="dir-section-title">Business</div>
+          <div class="dir-section-count">1</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="payment-upgrade.html">
+            <span class="dir-link-icon">💳</span>
+            <div class="dir-link-text"><div>Monthly → Annual</div><div class="dir-link-sub">Upgrade your payment plan</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- COMMUNITY -->
+      <div class="dir-section band-green">
+        <div class="dir-section-header">
+          <div class="dir-section-icon">🏆</div>
+          <div class="dir-section-title">Community</div>
+          <div class="dir-section-count">4</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="casestudies.html">
+            <span class="dir-link-icon">★</span>
+            <div class="dir-link-text"><div>Case Studies</div><div class="dir-link-sub">Success stories from members</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="casestudy-feon.html">
+            <span class="dir-link-icon">★</span>
+            <div class="dir-link-text"><div>Case Study · Feon</div><div class="dir-link-sub">Member success story</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="casestudy-fion.html">
+            <span class="dir-link-icon">★</span>
+            <div class="dir-link-text"><div>Case Study · Fion</div><div class="dir-link-sub">Member success story</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="leaderboard.html">
+            <span class="dir-link-icon">🏆</span>
+            <div class="dir-link-text"><div>Leaderboard</div><div class="dir-link-sub">Member progress rankings</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ACCOUNT -->
+      <div class="dir-section band-navy">
+        <div class="dir-section-header">
+          <div class="dir-section-icon">⚙</div>
+          <div class="dir-section-title">Account</div>
+          <div class="dir-section-count">2</div>
+        </div>
+        <div class="dir-links">
+          <a class="dir-link" href="personal-tracker.html">
+            <span class="dir-link-icon">📋</span>
+            <div class="dir-link-text"><div>Personal Tracker</div><div class="dir-link-sub">Track your actions &amp; results</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+          <a class="dir-link" href="settings.html">
+            <span class="dir-link-icon">⚙</span>
+            <div class="dir-link-text"><div>Settings</div><div class="dir-link-sub">Account, password &amp; user management</div></div>
+            <span class="dir-link-arrow">›</span>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /dir-grid -->
+  </div><!-- /dir-body -->
+
+  <script src="progress-tracker.js"></script>
+
+  <script>
+  function toggleSubGroup(e, el) {
+    e.stopPropagation();
+    var items = el.nextElementSibling;
+    var open = el.classList.toggle('open');
+    items.classList.toggle('open', open);
+  }
+  function openMobileMenu() {
+    document.getElementById('mobilePanel').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobilePanel').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('open');
+  }
+  </script>
+
+  <script>
+  (function(){
+    var STORE_KEY = 'pac-swift-mobile-nav-state';
+    function initCollapse() {
+      var state; try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) { state = {}; }
+      document.querySelectorAll('.mobile-menu-section').forEach(function(section) {
+        var label = section.textContent.trim();
+        var key = label.toLowerCase().replace(/\s+/g, '-');
+        var chev = document.createElement('span');
+        chev.className = 'ms-chevron';
+        section.appendChild(chev);
+        var items = [];
+        var el = section.nextElementSibling;
+        while (el && !el.classList.contains('mobile-menu-section')) { items.push(el); el = el.nextElementSibling; }
+        if (!items.length) return;
+        var wrap = document.createElement('div');
+        wrap.className = 'mobile-section-items';
+        section.parentNode.insertBefore(wrap, items[0]);
+        items.forEach(function(item) { wrap.appendChild(item); });
+        var hasActive = !!wrap.querySelector('.active');
+        var savedState = state[key];
+        var startCollapsed = savedState !== undefined ? savedState : !hasActive;
+        if (startCollapsed) { wrap.classList.add('ms-collapsed'); chev.textContent = '›'; }
+        else { chev.textContent = '⌄'; }
+        section.addEventListener('click', function() {
+          var nowCollapsed = wrap.classList.toggle('ms-collapsed');
+          chev.textContent = nowCollapsed ? '›' : '⌄';
+          state[key] = nowCollapsed;
+          try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+        });
+      });
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCollapse); }
+    else { initCollapse(); }
+  })();
+  </script>
+
+  <script>
+    function toggleSwiftDropdown() {
+      document.getElementById('swiftDropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      var mob = document.getElementById('swiftMobileNav');
+      if (mob && !mob.contains(e.target)) {
+        var dd = document.getElementById('swiftDropdownMenu');
+        if (dd) dd.classList.remove('open');
+      }
+    });
+
+    function getSession() { try { return JSON.parse(localStorage.getItem('pac-swift-session')); } catch(e) { return null; } }
+    function doLogout() { localStorage.removeItem('pac-swift-session'); window.location.href = 'login.html'; }
+    (function initUser() {
+      var s = getSession();
+      if (!s) return;
+      var nd = document.getElementById('userNameDisplay');
+      if (nd) nd.textContent = s.u;
+      var av = document.getElementById('userAvatar');
+      if (av) av.textContent = s.u.charAt(0).toUpperCase();
+    })();
+  </script>
+
+  <script>
+    // Nav dropdowns — hover on desktop, tap on mobile
+    (function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(group){
+        var closeTimer;
+        group.addEventListener('mouseenter', function(){
+          clearTimeout(closeTimer);
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          group.classList.add('open');
+        });
+        group.addEventListener('mouseleave', function(){
+          closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+        });
+        var btn = group.querySelector('button');
+        if (btn) btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isOpen = group.classList.contains('open');
+          document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+          if (!isOpen) group.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(){
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+      });
+    })();
+  </script>
+
+  <script>
+  var PAGES = [
+    { title:'Home',                    sub:'SWIFT Framework overview',              url:'index.html',                  icon:'⌂',  tags:'home swift framework pace love' },
+    { title:'Directory',               sub:'All portal pages in one place',         url:'directory.html',              icon:'📂', tags:'directory all pages links portal map' },
+    { title:'Signature Programme',     sub:'S · Create your signature offer',       url:'signature-programme.html',    icon:'S',  tags:'signature programme offer create s swift' },
+    { title:'Webinar Programme',       sub:'W · Run your online webinar',           url:'webinar-programme.html',      icon:'W',  tags:'webinar online programme w swift' },
+    { title:'Invite Programme',        sub:'I · Referral & invite system',          url:'invite-programme.html',       icon:'I',  tags:'invite referral system i swift' },
+    { title:'Fill Class',              sub:'F · Revenue calculator & scheduling',   url:'fill-programme.html',         icon:'F',  tags:'fill class revenue calculator schedule students f swift' },
+    { title:'Track Programme',         sub:'T · Track your progress',               url:'track-programme.html',        icon:'T',  tags:'track progress t swift' },
+    { title:'Case Studies',            sub:'Success stories from members',          url:'casestudies.html',            icon:'★',  tags:'case studies success stories members results' },
+    { title:'Calendar Plan',           sub:'Calendar & daily tasks planner',        url:'planner.html',                icon:'📅', tags:'planner calendar plan daily tasks' },
+    { title:'Parties for Kids',        sub:'Birthday & holiday party resources',    url:'other-resources.html',        icon:'🎉', tags:'parties kids birthday holiday resources' },
+    { title:'Holiday Workshops',       sub:'Holiday workshop resources',            url:'holiday-workshops.html',      icon:'🗓️', tags:'holiday workshop resources' },
+    { title:'Monthly → Annual',        sub:'Upgrade payment plan',                  url:'payment-upgrade.html',        icon:'💳', tags:'payment upgrade monthly annual billing' },
+    { title:'IG & FB Ads',             sub:'Instagram & Facebook advertising',      url:'ig-ads.html',                 icon:'📸', tags:'instagram facebook ads advertising social media' },
+    { title:'Sales Call',              sub:'Sales call scripts & tips',             url:'sales-call.html',             icon:'📞', tags:'sales call script closing enrol' },
+    { title:'Parent Conversation',     sub:'Parent clarity conversation',           url:'parent-conversation.html',    icon:'💬', tags:'parent conversation preframing clarity enrol' },
+    { title:'ABC — Always Be Closing', sub:'Closing frameworks & DM openers',       url:'abc.html',                    icon:'🔤', tags:'abc always be closing dm openers scripts' },
+    { title:'AI & Automation',         sub:'AI tools & automation workflows',       url:'ai-automation.html',          icon:'🤖', tags:'ai automation chatgpt tools workflow' },
+    { title:'Product Creation',        sub:'Create & package your product',         url:'product-creation.html',       icon:'⚡', tags:'product creation package offer digital' },
+    { title:'Video Content',           sub:'Video content strategy',                url:'video-content.html',          icon:'🎬', tags:'video content strategy reels youtube tiktok' },
+    { title:'6 AI Prompts',            sub:'All 6 prompts overview',                url:'6-prompts.html',              icon:'✦',  tags:'6 prompts ai claude chatgpt overview' },
+    { title:'Prompt 1 · Signature',    sub:'AI prompt for signature programme',     url:'prompt-1-signature.html',     icon:'✦',  tags:'prompt 1 signature ai claude' },
+    { title:'Prompt 2 · Lead Magnet',  sub:'AI prompt for lead magnet',             url:'prompt-2-lead-magnet.html',   icon:'✦',  tags:'prompt 2 lead magnet ai freebie' },
+    { title:'Prompt 3 · Teach to Pitch',sub:'AI webinar pitch script',             url:'prompt-3-teach-to-pitch.html',icon:'✦',  tags:'prompt 3 teach pitch webinar script ai' },
+    { title:'Prompt 4 · Content Style',sub:'AI prompt for content style',           url:'prompt-3-content.html',       icon:'✦',  tags:'prompt 4 content style ai caption post' },
+    { title:'Prompt 5 · Lead Form',    sub:'AI prompt for lead collection form',    url:'prompt-4-5-forms.html',       icon:'✦',  tags:'prompt 5 lead form google forms collection' },
+    { title:'Prompt 6 · Feedback',     sub:'AI prompt for feedback form',           url:'prompt-6-feedback.html',      icon:'✦',  tags:'prompt 6 feedback form survey ai' },
+    { title:'Settings',                sub:'Account, password & user management',   url:'settings.html',               icon:'⚙️', tags:'settings account password email users admin' },
+    { title:'Case Study · Feon',       sub:'Member success story',                  url:'casestudy-feon.html',         icon:'★',  tags:'case study feon success story' },
+    { title:'Case Study · Fion',       sub:'Member success story',                  url:'casestudy-fion.html',         icon:'★',  tags:'case study fion success story' },
+  ];
+  function searchPages(q) {
+    if (!q || q.length < 1) return [];
+    q = q.toLowerCase();
+    return PAGES.filter(function(p) {
+      return p.title.toLowerCase().includes(q) || p.tags.toLowerCase().includes(q) || p.sub.toLowerCase().includes(q);
+    }).slice(0, 7);
+  }
+  function buildResultHTML(results, mobile) {
+    if (!results.length) return '<div class="nav-search-no-results">No results found</div>';
+    return results.map(function(p) {
+      var cls = mobile ? 'mobile-search-result' : 'nav-search-result';
+      var iconCls = mobile ? 'mobile-search-result-icon' : 'nav-search-result-icon';
+      var titleCls = mobile ? 'mobile-search-result-title' : 'nav-search-result-title';
+      var subCls = mobile ? 'mobile-search-result-sub' : 'nav-search-result-sub';
+      return '<a class="' + cls + '" href="' + p.url + '">'
+           + '<div class="' + iconCls + '">' + p.icon + '</div>'
+           + '<div class="nav-search-result-text">'
+           + '<div class="' + titleCls + '">' + p.title + '</div>'
+           + '<div class="' + subCls + '">' + p.sub + '</div>'
+           + '</div></a>';
+    }).join('');
+  }
+  (function() {
+    var inp = document.getElementById('navSearchInput');
+    var res = document.getElementById('navSearchResults');
+    if (!inp) return;
+    inp.addEventListener('input', function() {
+      var q = inp.value.trim();
+      var results = searchPages(q);
+      if (!q) { res.classList.remove('open'); res.innerHTML = ''; return; }
+      res.innerHTML = buildResultHTML(results, false);
+      res.classList.add('open');
+    });
+    inp.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { res.classList.remove('open'); inp.value = ''; }
+    });
+    document.addEventListener('click', function(e) {
+      if (!inp.contains(e.target) && !res.contains(e.target)) { res.classList.remove('open'); }
+    });
+  })();
+  (function() {
+    var inp = document.getElementById('mobileSearchInput');
+    var res = document.getElementById('mobileSearchResults');
+    if (!inp) return;
+    inp.addEventListener('input', function() {
+      var q = inp.value.trim();
+      if (!q) { res.innerHTML = ''; return; }
+      res.innerHTML = buildResultHTML(searchPages(q), true);
+    });
+  })();
+  </script>
+
+</body>
+</html>
