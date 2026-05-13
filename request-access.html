@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Access | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --text: #0A0F1C;
+      --text-muted: #6B7A96; --white: #FFFFFF; --border: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy-light);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px 60px;
+    }
+    .wrap { width: 100%; max-width: 480px; }
+
+    /* LOGO */
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo-badge {
+      display: inline-flex; flex-direction: column; align-items: center;
+      background: rgba(10,191,188,0.12); border: 1px solid var(--gold);
+      border-radius: 12px; padding: 14px 24px; margin-bottom: 16px;
+    }
+    .logo-badge .s { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; }
+    .logo-badge .lbl { font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,0.55); text-transform: uppercase; margin-top: 4px; font-weight: 600; }
+    .logo h1 { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--white); line-height: 1.2; }
+    .logo p { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 6px; }
+
+    /* CARD */
+    .card {
+      background: #111827;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 36px 32px;
+    }
+    .card-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--white); margin-bottom: 6px; }
+    .card-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px; line-height: 1.5; }
+
+    /* NOTICE BOX */
+    .notice {
+      background: rgba(10,191,188,0.08);
+      border: 1px solid rgba(10,191,188,0.3);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.65;
+    }
+    .notice strong { color: #0ABFBC; }
+    .notice .notice-icon { font-size: 18px; display: block; margin-bottom: 6px; }
+
+    /* STEPS */
+    .steps { display: flex; gap: 8px; margin-bottom: 28px; }
+    .step { flex: 1; text-align: center; }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(10,191,188,0.15); border: 1.5px solid rgba(10,191,188,0.4);
+      color: var(--gold); font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 6px;
+    }
+    .step-num.done { background: rgba(10,191,188,0.2); border-color: var(--gold); }
+    .step-label { font-size: 10px; color: rgba(255,255,255,0.35); font-weight: 600; letter-spacing: 0.5px; }
+    .step-divider { flex: 0 0 20px; display: flex; align-items: center; padding-bottom: 20px; }
+    .step-divider::after { content: '›'; color: rgba(255,255,255,0.2); font-size: 16px; }
+
+    /* FORM */
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block; font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.5); margin-bottom: 8px;
+    }
+    .form-group label .req { color: #ef4444; margin-left: 2px; }
+    .form-group input {
+      width: 100%; background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12); border-radius: 10px;
+      padding: 12px 16px; font-family: 'DM Sans', sans-serif;
+      font-size: 15px; color: var(--white); outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input::placeholder { color: rgba(255,255,255,0.2); }
+    .form-group input:focus { border-color: var(--gold); background: rgba(10,191,188,0.05); }
+    .hint { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 5px; line-height: 1.4; }
+    .hint.gold { color: rgba(10,191,188,0.6); }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 22px 0; }
+
+    /* ALERTS */
+    .alert-error {
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px; padding: 10px 14px; font-size: 13px;
+      color: #fca5a5; margin-bottom: 16px; display: none;
+    }
+
+    /* BUTTON */
+    .btn-submit {
+      width: 100%; background: var(--gold); color: var(--navy);
+      border: none; border-radius: 10px; padding: 15px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      font-weight: 700; cursor: pointer; transition: all 0.2s;
+      letter-spacing: 0.3px; margin-top: 6px;
+    }
+    .btn-submit:hover { background: #08a8a5; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(10,191,188,0.35); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.5; cursor: default; transform: none; box-shadow: none; }
+
+    /* SUCCESS STATE */
+    .success-state { display: none; text-align: center; padding: 8px 0; }
+    .success-icon { font-size: 52px; margin-bottom: 16px; }
+    .success-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--white); margin-bottom: 10px; }
+    .success-body { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 24px; }
+    .success-body strong { color: rgba(255,255,255,0.85); }
+    .success-note {
+      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25);
+      border-radius: 10px; padding: 14px 16px; font-size: 13px;
+      color: #6ee7b7; line-height: 1.65; text-align: left;
+    }
+
+    /* FOOTER */
+    .footer { text-align: center; margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.25); line-height: 1.6; }
+    .footer a { color: rgba(255,255,255,0.35); text-decoration: none; }
+    .footer a:hover { color: var(--gold); }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px; }
+      body { padding: 24px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <div class="logo-badge">
+      <div class="s">SWIFT</div>
+      <div class="lbl">PAC Framework</div>
+    </div>
+    <h1>SWIFT Framework</h1>
+    <p>Product Architect Coaching · By John Yeo</p>
+  </div>
+
+  <!-- CARD -->
+  <div class="card">
+
+    <!-- STEPS -->
+    <div class="steps">
+      <div class="step">
+        <div class="step-num done">✓</div>
+        <div class="step-label">Purchase</div>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step">
+        <div class="step-num done">2</div>
+        <div class="step-label">Register</div>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-label">Get Access</div>
+      </div>
+    </div>
+
+    <div class="card-title">Set Up Your Account</div>
+    <div class="card-sub">You're one step away from accessing the SWIFT Framework portal.</div>
+
+    <!-- THRIVECART NOTICE -->
+    <div class="notice">
+      <span class="notice-icon">⚠️</span>
+      <strong>Important:</strong> Use the <strong>same email address</strong> you entered when purchasing on <strong>ThriveCart</strong>. This is how your purchase is verified before your account is approved.
+    </div>
+
+    <!-- ERROR -->
+    <div class="alert-error" id="regError"></div>
+
+    <!-- FORM -->
+    <div id="regForm">
+      <div class="form-group">
+        <label>ThriveCart Email <span class="req">*</span></label>
+        <input type="email" id="regEmail" placeholder="Same email used on ThriveCart" autocomplete="email" />
+        <p class="hint gold">⚑ Must match your ThriveCart purchase email for verification</p>
+      </div>
+
+      <hr class="divider">
+
+      <div class="form-group">
+        <label>Your Full Name <span class="req">*</span></label>
+        <input type="text" id="regName" placeholder="e.g. Sarah Lim" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label>Choose a Username <span class="req">*</span></label>
+        <input type="text" id="regUsername" placeholder="e.g. sarah123" autocomplete="off" />
+        <p class="hint">Lowercase letters, numbers, underscores only — no spaces</p>
+      </div>
+      <div class="form-group">
+        <label>Choose a Password <span class="req">*</span></label>
+        <div style="position:relative;">
+          <input type="password" id="regPassword" placeholder="At least 6 characters" autocomplete="new-password" style="padding-right:46px;" />
+          <button type="button" onclick="togglePw()" style="position:absolute;right:0;top:0;bottom:0;width:44px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.35);font-size:16px;display:flex;align-items:center;justify-content:center;" title="Show password">👁</button>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="regBtn" onclick="doRegister()">Request Access →</button>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-state" id="successState">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Request Submitted!</div>
+      <div class="success-body">
+        Thank you, <strong id="successName"></strong>!<br>
+        Your coach will review and approve your account shortly.
+      </div>
+      <div class="success-note">
+        ✅ <strong>What happens next:</strong><br>
+        Your coach will verify your ThriveCart email and approve your account — usually within 24 hours.<br><br>
+        Once approved, you can sign in at the link below using your chosen username and password.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Already have an account? <a href="login.html">Sign in here →</a><br><br>
+    &copy; PAC SWIFT Framework · By John Yeo
+  </div>
+
+</div>
+
+<script>
+  var FB_DB_URL = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
+  var FB_SECRET = 'pNYSribFCUSYRLRdJHOPsyOU5DdEVamtyzDEThc9';
+
+  var BUILTIN_USERS = ['feliciayap','shuling','joannelim','sarahthomas','daize','yongching','elaine','feontang','adam','carlyn','vanessa','pushpa','johnyeo','test'];
+
+  function doRegister() {
+    var email = document.getElementById('regEmail').value.trim();
+    var name  = document.getElementById('regName').value.trim();
+    var u     = (document.getElementById('regUsername').value || '').trim().toLowerCase();
+    var pw    = document.getElementById('regPassword').value;
+    var errEl = document.getElementById('regError');
+    errEl.style.display = 'none';
+
+    // Validate
+    if (!email || !email.includes('@')) {
+      errEl.textContent = '✗ Please enter your ThriveCart email address.';
+      errEl.style.display = 'block'; return;
+    }
+    if (!name) {
+      errEl.textContent = '✗ Your full name is required.';
+      errEl.style.display = 'block'; return;
+    }
+    if (!u) {
+      errEl.textContent = '✗ Please choose a username.';
+      errEl.style.display = 'block'; return;
+    }
+    if (!/^[a-z0-9_]+$/.test(u)) {
+      errEl.textContent = '✗ Username: lowercase letters, numbers and underscores only.';
+      errEl.style.display = 'block'; return;
+    }
+    if (BUILTIN_USERS.indexOf(u) !== -1) {
+      errEl.textContent = '✗ That username is not available. Please choose another.';
+      errEl.style.display = 'block'; return;
+    }
+    if (!pw || pw.length < 6) {
+      errEl.textContent = '✗ Password must be at least 6 characters.';
+      errEl.style.display = 'block'; return;
+    }
+
+    var btn = document.getElementById('regBtn');
+    btn.disabled = true; btn.textContent = 'Submitting…';
+
+    // Check for duplicate pending request
+    fetch(FB_DB_URL + '/pending/' + u + '.json?auth=' + FB_SECRET)
+      .then(function(r) { return r.json(); })
+      .then(function(existing) {
+        if (existing) {
+          errEl.textContent = '✗ A request for "' + u + '" is already pending. Contact your coach if this is an error.';
+          errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Request Access →';
+          return Promise.reject('duplicate');
+        }
+        // Check if username already active
+        return fetch(FB_DB_URL + '/accounts/' + u + '.json?auth=' + FB_SECRET)
+          .then(function(r) { return r.json(); });
+      })
+      .then(function(acc) {
+        if (acc) {
+          errEl.textContent = '✗ Username "' + u + '" is already taken. Please choose another.';
+          errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Request Access →';
+          return Promise.reject('taken');
+        }
+        // Save to Firebase /pending
+        var data = {
+          username: u,
+          name: name,
+          email: email,
+          password: pw,
+          requestedAt: new Date().toISOString(),
+          status: 'pending',
+          source: 'thrivecart'
+        };
+        return fetch(FB_DB_URL + '/pending/' + u + '.json?auth=' + FB_SECRET, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+      })
+      .then(function(res) {
+        if (res && res.ok) {
+          // Show success
+          document.getElementById('regForm').style.display = 'none';
+          document.getElementById('successName').textContent = name.split(' ')[0];
+          document.getElementById('successState').style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Request Access →';
+        }
+      })
+      .catch(function(err) {
+        if (err === 'duplicate' || err === 'taken') return; // already handled
+        errEl.textContent = '✗ Could not submit. Check your connection and try again.';
+        errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Request Access →';
+      });
+  }
+
+  function togglePw() {
+    var inp = document.getElementById('regPassword');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  // Enter key submits
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.getElementById('regForm').style.display !== 'none') {
+      doRegister();
+    }
+  });
+</script>
+</body>
+</html>
