@@ -142,6 +142,7 @@
   function getSession() { try{return JSON.parse(localStorage.getItem('pac-swift-session')||'null');}catch(e){return null;} }
 
   var FB_DB_URL = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
+  var FB_SECRET = 'pNYSribFCUSYRLRdJHOPsyOU5DdEVamtyzDEThc9';
   function tasksFromObj(obj) { if(!obj)return[]; if(Array.isArray(obj))return obj; return Object.keys(obj).map(function(k){return obj[k];}).filter(Boolean); }
 
   (function init() {
@@ -161,8 +162,8 @@
 
     // Load both user data and analytics from Firebase, then render
     Promise.all([
-      fetch(FB_DB_URL + '/users/' + u + '.json').then(function(r){return r.json();}).catch(function(){return null;}),
-      fetch(FB_DB_URL + '/analytics/' + u + '.json').then(function(r){return r.json();}).catch(function(){return null;})
+      fetch(FB_DB_URL + '/users/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch(FB_DB_URL + '/analytics/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;})
     ]).then(function(results) {
       var fbUser = results[0]; var fbAnalytics = results[1];
       if (fbUser) {

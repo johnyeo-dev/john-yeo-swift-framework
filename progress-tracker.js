@@ -4,6 +4,7 @@
 
   // ── FIREBASE CONFIG ───────────────────────────────────────────────────────
   var FB_DB_URL = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
+  var FB_SECRET = 'pNYSribFCUSYRLRdJHOPsyOU5DdEVamtyzDEThc9';
 
   function tasksToObj(tasks) {
     var obj = {};
@@ -26,7 +27,7 @@
       tasks:     tasksToObj(getTasks(u)),
       lastUpdated: Date.now()
     };
-    fetch(FB_DB_URL + '/users/' + u + '.json', {
+    fetch(FB_DB_URL + '/users/' + u + '.json?auth=' + FB_SECRET, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -38,7 +39,7 @@
     try {
       var a = JSON.parse(localStorage.getItem('pac-swift-analytics-' + u) || '{}');
       if (!Object.keys(a).length) return;
-      fetch(FB_DB_URL + '/analytics/' + u + '.json', {
+      fetch(FB_DB_URL + '/analytics/' + u + '.json?auth=' + FB_SECRET, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(a)
@@ -48,7 +49,7 @@
 
   function loadUserFromFirebase(u, callback) {
     if (!u) { if (callback) callback(); return; }
-    fetch(FB_DB_URL + '/users/' + u + '.json')
+    fetch(FB_DB_URL + '/users/' + u + '.json?auth=' + FB_SECRET)
       .then(function(r) { return r.json(); })
       .then(function(data) {
         if (data) {
