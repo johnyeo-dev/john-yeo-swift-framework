@@ -233,16 +233,21 @@
       try { return JSON.parse(localStorage.getItem('pac-swift-users') || '{}'); } catch(e) { return {}; }
     }
 
-    // ── FIREBASE PASSWORD OVERRIDES ──────────────────────────────────────────
-    // Users can change their password from Settings; changes are stored in Firebase
-    // so they work across all devices. Falls back to BUILTIN_USERS if no override.
+    // ── FIREBASE CONFIG ───────────────────────────────────────────────────────
+    // Password overrides and dynamic accounts are stored in Firebase so changes
+    // work instantly across all devices.
     var FB_DB_URL = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
     var FB_SECRET = 'pNYSribFCUSYRLRdJHOPsyOU5DdEVamtyzDEThc9';
-    var PW_OVERRIDES = {};
+    var PW_OVERRIDES = {};   // /passwords/{u}  — user-changed passwords
+    var FB_ACCOUNTS  = {};   // /accounts/{u}   — users added via Settings
     (function() {
       fetch(FB_DB_URL + '/passwords.json?auth=' + FB_SECRET)
         .then(function(r) { return r.json(); })
         .then(function(data) { if (data && typeof data === 'object') PW_OVERRIDES = data; })
+        .catch(function() {});
+      fetch(FB_DB_URL + '/accounts.json?auth=' + FB_SECRET)
+        .then(function(r) { return r.json(); })
+        .then(function(data) { if (data && typeof data === 'object') FB_ACCOUNTS = data; })
         .catch(function() {});
     })();
 
@@ -311,19 +316,28 @@
         return;
       }
 
-      // For users NOT in BUILTIN_USERS, check localStorage
+      // For users NOT in BUILTIN_USERS, check Firebase accounts first, then localStorage
+      var fbAccount  = FB_ACCOUNTS[username];
       var storedUser = users[username];
-      if (storedUser && storedUser.password === password) {
-        if (storedUser.trialStart && storedUser.trialDays) {
-          var trialStart = new Date(storedUser.trialStart + 'T00:00:00');
+      // Merge: Firebase account is source of truth; localStorage is fallback
+      var account = fbAccount || storedUser;
+      var effectivePw2 = PW_OVERRIDES[username] || (account ? account.password : null);
+      if (account && effectivePw2 && password === effectivePw2) {
+        // Cache Firebase account locally for offline fallback
+        if (fbAccount) {
+          users[username] = Object.assign({}, storedUser || {}, fbAccount);
+          localStorage.setItem('pac-swift-users', JSON.stringify(users));
+        }
+        if (account.trialStart && account.trialDays) {
+          var trialStart = new Date(account.trialStart + 'T00:00:00');
           var elapsed = Math.floor((Date.now() - trialStart) / 86400000);
-          if (elapsed >= storedUser.trialDays) {
-            errorEl.textContent = 'Your ' + storedUser.trialDays + '-day trial has ended. Please contact your coach.';
+          if (elapsed >= account.trialDays) {
+            errorEl.textContent = 'Your ' + account.trialDays + '-day trial has ended. Please contact your coach.';
             errorEl.style.display = 'block';
             return;
           }
         }
-        localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: storedUser.role || 'user' }));
+        localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: account.role || 'user' }));
         localStorage.setItem('pac-swift-user', username);
         trackLogin(username);
         window.location.href = 'index.html';

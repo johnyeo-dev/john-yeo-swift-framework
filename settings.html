@@ -1070,27 +1070,48 @@
     if (!pw || pw.length < 4) { showAlert('addUserError','alert-error','✗ Password must be at least 4 characters.'); return; }
 
     var users = getUsers();
-    if (users[u]) { showAlert('addUserError','alert-error','✗ Username "' + u + '" already exists.'); return; }
+    if (users[u] || BUILTIN_USERS[u]) { showAlert('addUserError','alert-error','✗ Username "' + u + '" already exists.'); return; }
 
-    users[u] = { password: pw, role: role, email: email, approvedAt: new Date().toISOString() };
-    saveUsers(users);
+    var addBtn = document.querySelector('[onclick="addUserDirectly()"]');
+    if (addBtn) { addBtn.disabled = true; addBtn.textContent = 'Saving…'; }
 
-    // Seed analytics
-    try {
-      var aKey = 'pac-swift-analytics-' + u;
-      var aData = JSON.parse(localStorage.getItem(aKey) || '{}');
-      aData.signupDate = new Date().toISOString();
-      localStorage.setItem(aKey, JSON.stringify(aData));
-    } catch(e) {}
+    var accountData = { password: pw, role: role, email: email, approvedAt: new Date().toISOString() };
+    var analyticsData = { signupDate: new Date().toISOString() };
 
-    // Clear form
-    document.getElementById('newUserName').value  = '';
-    document.getElementById('newUserEmail').value = '';
-    document.getElementById('newUserPw').value    = '';
-    document.getElementById('newUserRole').value  = 'user';
+    // Save to Firebase — source of truth so any device can log in
+    Promise.all([
+      fetch(FB_DB_URL_S + '/accounts/' + u + '.json?auth=' + FB_SECRET_S, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(accountData)
+      }),
+      fetch(FB_DB_URL_S + '/analytics/' + u + '.json?auth=' + FB_SECRET_S, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(analyticsData)
+      })
+    ]).then(function() {
+      // Cache locally so table updates immediately
+      users[u] = accountData;
+      saveUsers(users);
+      try {
+        var aKey = 'pac-swift-analytics-' + u;
+        var aData = JSON.parse(localStorage.getItem(aKey) || '{}');
+        aData.signupDate = analyticsData.signupDate;
+        localStorage.setItem(aKey, JSON.stringify(aData));
+      } catch(e) {}
 
-    showAlert('addUserSuccess','alert-success','✓ User "' + u + '" added successfully.');
-    renderUserTable();
+      document.getElementById('newUserName').value  = '';
+      document.getElementById('newUserEmail').value = '';
+      document.getElementById('newUserPw').value    = '';
+      document.getElementById('newUserRole').value  = 'user';
+      if (addBtn) { addBtn.disabled = false; addBtn.textContent = '➕ Add User'; }
+      showAlert('addUserSuccess','alert-success','✓ User "' + u + '" added — they can log in from any device now.');
+      renderUserTable();
+    }).catch(function() {
+      if (addBtn) { addBtn.disabled = false; addBtn.textContent = '➕ Add User'; }
+      showAlert('addUserError','alert-error','✗ Could not save to Firebase. Check your connection.');
+    });
   }
 
   // ── ADMIN: APPROVE / REJECT ───────────────────────────────────────────────
