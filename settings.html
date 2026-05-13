@@ -645,6 +645,9 @@
             <button onclick="setTierFilter('swift')" id="tierBtn-swift" style="padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid rgba(10,191,188,0.4);background:white;color:#0ABFBC;font-family:'DM Sans',sans-serif;">◆ Swift <span id="tierCount-swift"></span></button>
           </div>
         </div>
+        <div class="scard-body" style="padding:0 18px;">
+          <div class="alert alert-success" id="manageAlert"></div>
+        </div>
         <div class="scard-body" style="padding:0;">
           <div id="userTableWrap" style="overflow-x:auto;">
             <table class="users-table">
@@ -1472,9 +1475,29 @@
   }
   function doDeleteUser() {
     if (!_deleteTarget) return;
+    var u = _deleteTarget;
+
+    // 1. Remove from localStorage immediately
     var users = getUsers();
-    delete users[_deleteTarget];
+    delete users[u];
     saveUsers(users);
+
+    // 2. Delete from ALL Firebase paths so it doesn't come back on reload
+    var paths = [
+      '/accounts/' + u + '.json',
+      '/passwords/' + u + '.json',
+      '/users/'     + u + '.json',
+      '/analytics/' + u + '.json',
+      '/presence/'  + u + '.json',
+      '/sessions/'  + u + '.json',
+      '/pending/'   + u + '.json'
+    ];
+    Promise.all(paths.map(function(p) {
+      return fetch(FB_DB_URL_S + p + '?auth=' + FB_SECRET_S, { method: 'DELETE' }).catch(function() {});
+    })).then(function() {
+      showAlert('manageAlert', 'alert-success', '✓ User "' + u + '" deleted.');
+    });
+
     closeDeleteModal();
     renderUserTable();
   }
