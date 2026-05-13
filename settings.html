@@ -496,7 +496,7 @@
         </div>
       </div>
 
-      <!-- CHANGE PASSWORD (admin only — password changes don't sync cross-device for regular users) -->
+      <!-- CHANGE PASSWORD — available to all users, synced via Firebase -->
       <div id="changePwSection" style="display:none;"><div class="scard">
         <div class="scard-header">
           <div class="scard-icon purple">🔒</div>
@@ -808,14 +808,19 @@
       document.getElementById('stab-2').style.display = 'flex';
     }
 
-    // Only show Change Password section for admin (regular users' changes don't sync cross-device)
-    if (isAdmin) {
-      document.getElementById('changePwSection').style.display = 'block';
-    }
-    // johnyeo: hide current password field (no stored hash to verify against)
+    // Show Change Password for everyone — saves to Firebase so works across all devices
+    document.getElementById('changePwSection').style.display = 'block';
+    // johnyeo: hide current password field (uses Firebase override or hardcoded fallback)
     if (isJohnYeo) {
       document.getElementById('currentPwGroup').style.display = 'none';
     }
+
+    // Load Firebase password overrides for current-password verification
+    window._pwOverrides = {};
+    fetch(FB_DB_URL_S + '/passwords.json?auth=' + FB_SECRET_S)
+      .then(function(r) { return r.json(); })
+      .then(function(data) { if (data && typeof data === 'object') window._pwOverrides = data; })
+      .catch(function() {});
 
     // Password strength listener
     document.getElementById('newPw').addEventListener('input', updatePwStrength);
@@ -881,27 +886,46 @@
 
     // Verify current password
     if (!isJohnYeo) {
-      var users = getUsers();
-      var user = users[session.u];
-      if (!user || user.password !== current) {
+      // Firebase override takes priority; fall back to BUILTIN_USERS hardcoded, then localStorage
+      var overrides = window._pwOverrides || {};
+      var effectivePw = overrides[session.u]
+        || (BUILTIN_USERS[session.u] ? BUILTIN_USERS[session.u].password : null)
+        || (function() { var u2 = getUsers(); return u2[session.u] ? u2[session.u].password : null; })();
+      if (!effectivePw || current !== effectivePw) {
         showAlert('pwErrorAlert', 'alert-error', '✗ Current password is incorrect.');
         return;
       }
-      users[session.u].password = newPw;
-      saveUsers(users);
-    } else {
-      // Admin johnyeo: no stored hash, just save to a secure localStorage key
-      // (In production you'd use a backend; this is MVP localStorage auth)
-      localStorage.setItem('pac-swift-admin-pw', newPw);
-      // Note: login.html hardcodes '2706' — we update that check at runtime via a flag
     }
 
-    document.getElementById('currentPw').value = '';
-    document.getElementById('newPw').value = '';
-    document.getElementById('confirmPw').value = '';
-    document.getElementById('pwStrengthBar').style.width = '0';
-    document.getElementById('pwStrengthLabel').textContent = '';
-    showAlert('pwSaveAlert', 'alert-success', '✓ Password changed successfully.');
+    // Save new password to Firebase (syncs across all devices)
+    var saveBtn = document.querySelector('#changePwSection .btn-primary');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+
+    fetch(FB_DB_URL_S + '/passwords/' + session.u + '.json?auth=' + FB_SECRET_S, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newPw)
+    }).then(function() {
+      // Update local caches so current session reflects new password immediately
+      if (window._pwOverrides) window._pwOverrides[session.u] = newPw;
+      if (isJohnYeo) localStorage.setItem('pac-swift-admin-pw', newPw);
+      if (!isJohnYeo && !BUILTIN_USERS[session.u]) {
+        var users3 = getUsers();
+        if (!users3[session.u]) users3[session.u] = {};
+        users3[session.u].password = newPw;
+        saveUsers(users3);
+      }
+      document.getElementById('currentPw').value = '';
+      document.getElementById('newPw').value = '';
+      document.getElementById('confirmPw').value = '';
+      document.getElementById('pwStrengthBar').style.width = '0';
+      document.getElementById('pwStrengthLabel').textContent = '';
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Update Password'; }
+      showAlert('pwSaveAlert', 'alert-success', '✓ Password changed — works on all devices immediately.');
+    }).catch(function() {
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Update Password'; }
+      showAlert('pwErrorAlert', 'alert-error', '✗ Could not save. Check your connection and try again.');
+    });
   }
 
   // ── PASSWORD STRENGTH ─────────────────────────────────────────────────────

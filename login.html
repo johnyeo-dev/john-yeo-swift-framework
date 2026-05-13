@@ -233,9 +233,22 @@
       try { return JSON.parse(localStorage.getItem('pac-swift-users') || '{}'); } catch(e) { return {}; }
     }
 
+    // ── FIREBASE PASSWORD OVERRIDES ──────────────────────────────────────────
+    // Users can change their password from Settings; changes are stored in Firebase
+    // so they work across all devices. Falls back to BUILTIN_USERS if no override.
+    var FB_DB_URL = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
+    var FB_SECRET = 'pNYSribFCUSYRLRdJHOPsyOU5DdEVamtyzDEThc9';
+    var PW_OVERRIDES = {};
+    (function() {
+      fetch(FB_DB_URL + '/passwords.json?auth=' + FB_SECRET)
+        .then(function(r) { return r.json(); })
+        .then(function(data) { if (data && typeof data === 'object') PW_OVERRIDES = data; })
+        .catch(function() {});
+    })();
+
     // ── BUILT-IN USERS ────────────────────────────────────────────────────────
     // These work on every domain (Vercel, localhost, any device).
-    // Admin can override passwords via Settings or admin-seed.html.
+    // Users can override their password via Settings → Change Password (stored in Firebase).
     var BUILTIN_USERS = {
       'feliciayap':  { password: 'fy1234',    name: 'Felicia Yap',   role: 'user' },
       'shuling':     { password: 's2345',     name: 'Shu Ling',      role: 'user' },
@@ -264,9 +277,9 @@
         return;
       }
 
-      // Check master account (password can be overridden via settings; '2706' always works as fallback)
+      // Check master account — Firebase override takes priority, then localStorage, then hardcoded fallback
       if (username === 'johnyeo') {
-        var adminPw = localStorage.getItem('pac-swift-admin-pw') || '2706';
+        var adminPw = PW_OVERRIDES['johnyeo'] || localStorage.getItem('pac-swift-admin-pw') || '2706';
         if (password === adminPw || password === '2706') {
           localStorage.setItem('pac-swift-session', JSON.stringify({ u: 'johnyeo', role: 'admin' }));
           localStorage.setItem('pac-swift-user', username);
@@ -278,11 +291,12 @@
 
       var users = getUsers();
 
-      // Built-in users: BUILTIN_USERS password is always the source of truth.
-      // To change their password, update BUILTIN_USERS in source code.
+      // Built-in users: Firebase override takes priority over hardcoded password.
+      // Users can change their password via Settings → Change Password.
       if (BUILTIN_USERS[username]) {
-        if (BUILTIN_USERS[username].password === password) {
-          // Sync metadata to localStorage (but always use BUILTIN_USERS password)
+        var effectivePw = PW_OVERRIDES[username] || BUILTIN_USERS[username].password;
+        if (password === effectivePw) {
+          // Sync metadata to localStorage
           var base = users[username] || {};
           users[username] = Object.assign({}, base, BUILTIN_USERS[username], { created: base.created || new Date().toISOString() });
           localStorage.setItem('pac-swift-users', JSON.stringify(users));
