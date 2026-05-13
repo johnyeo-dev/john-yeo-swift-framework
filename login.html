@@ -167,7 +167,40 @@
     .login-footer a {
       color: rgba(255,255,255,0.5);
     }
-  
+    .toggle-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+    .toggle-link a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .reg-success {
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 10px;
+      padding: 16px 18px;
+      font-size: 14px;
+      color: #6ee7b7;
+      display: none;
+      line-height: 1.6;
+    }
+    .reg-error {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #fca5a5;
+      margin-bottom: 16px;
+      display: none;
+    }
+
     /* COLLAPSIBLE DESKTOP SUB-GROUPS */
     .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
     .sub-group-header:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
@@ -212,12 +245,43 @@
       <p class="login-footer" style="margin-top:14px;">
         <a href="forgot-password.html" style="color:rgba(255,255,255,0.45);text-decoration:none;font-size:13px;">Forgot password?</a>
       </p>
-      <div class="login-footer" style="margin-top:14px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;line-height:1.8;">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;">No account?</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.55);">🤝 <strong style="color:rgba(255,255,255,0.75);">Existing coaching client:</strong> WhatsApp John to have your account set up.</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-top:4px;">🌐 <strong style="color:rgba(255,255,255,0.75);">Public:</strong> Email <a href="mailto:lobcoach@gmail.com?subject=Apply%20%E2%80%94%20PAC%20SWIFT&body=Name%3A%20%0AMobile%3A%20" style="color:var(--gold);text-decoration:none;font-weight:600;">lobcoach@gmail.com</a> with your name &amp; mobile number to apply.</div>
+    </div>
+
+    <p class="toggle-link">No account? <a onclick="showRegister()">Request Access →</a></p>
+
+    <!-- REGISTER CARD (hidden until toggled) -->
+    <div class="login-card" id="registerCard" style="display:none;margin-top:16px;">
+      <h2>Request Access</h2>
+      <p class="subtitle">Submit your details — your coach will approve your account.</p>
+
+      <div class="reg-error" id="regError"></div>
+      <div class="reg-success" id="regSuccess">
+        ✅ <strong>Request sent!</strong><br>Your coach will review and approve your account shortly. You'll be able to sign in once approved.
+      </div>
+
+      <div id="regForm">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="regUsername" placeholder="e.g. sarah123" autocomplete="off" />
+          <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px;">Lowercase letters and numbers only, no spaces</p>
+        </div>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="regName" placeholder="e.g. Sarah Lim" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label>Email (optional)</label>
+          <input type="email" id="regEmail" placeholder="your@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Choose a Password</label>
+          <input type="password" id="regPassword" placeholder="At least 6 characters" autocomplete="new-password" />
+        </div>
+        <button class="btn-login" onclick="doRegister()" style="background:rgba(10,191,188,0.2);color:#0ABFBC;border:1.5px solid rgba(10,191,188,0.4);" id="regBtn">Send Request</button>
       </div>
     </div>
+
+    <p class="toggle-link" id="backToLogin" style="display:none;"><a onclick="showLogin()">← Back to Sign In</a></p>
   </div>
 
   <script>
@@ -356,6 +420,80 @@
         if (!a.firstLogin) a.firstLogin = a.lastLogin;
         localStorage.setItem(key, JSON.stringify(a));
       } catch(e) {}
+    }
+
+    // ── REGISTER / TOGGLE ────────────────────────────────────────────────────
+    function showRegister() {
+      document.querySelector('.login-card').style.display = 'none';
+      document.querySelector('.toggle-link:not(#backToLogin)').style.display = 'none';
+      document.getElementById('registerCard').style.display = 'block';
+      document.getElementById('backToLogin').style.display = 'block';
+    }
+    function showLogin() {
+      document.querySelector('.login-card').style.display = 'block';
+      document.querySelector('.toggle-link:not(#backToLogin)').style.display = 'block';
+      document.getElementById('registerCard').style.display = 'none';
+      document.getElementById('backToLogin').style.display = 'none';
+    }
+
+    function doRegister() {
+      var u    = (document.getElementById('regUsername').value || '').trim().toLowerCase();
+      var name = document.getElementById('regName').value.trim();
+      var email= document.getElementById('regEmail').value.trim();
+      var pw   = document.getElementById('regPassword').value;
+      var errEl = document.getElementById('regError');
+      errEl.style.display = 'none';
+
+      if (!u)  { errEl.textContent = '✗ Username is required.'; errEl.style.display='block'; return; }
+      if (!/^[a-z0-9_]+$/.test(u)) { errEl.textContent = '✗ Username: lowercase letters, numbers, underscores only.'; errEl.style.display='block'; return; }
+      if (!name) { errEl.textContent = '✗ Your name is required.'; errEl.style.display='block'; return; }
+      if (!pw || pw.length < 6) { errEl.textContent = '✗ Password must be at least 6 characters.'; errEl.style.display='block'; return; }
+
+      // Block reserved names
+      if (u === 'johnyeo' || BUILTIN_USERS[u]) { errEl.textContent = '✗ That username is not available.'; errEl.style.display='block'; return; }
+
+      var btn = document.getElementById('regBtn');
+      btn.disabled = true; btn.textContent = 'Sending…';
+
+      fetch(FB_DB_URL + '/pending/' + u + '.json?auth=' + FB_SECRET)
+        .then(function(r) { return r.json(); })
+        .then(function(existing) {
+          if (existing) {
+            errEl.textContent = '✗ A request for "' + u + '" already exists. Please contact your coach.';
+            errEl.style.display = 'block';
+            btn.disabled = false; btn.textContent = 'Send Request';
+            return;
+          }
+          // Also check if already an active account
+          return fetch(FB_DB_URL + '/accounts/' + u + '.json?auth=' + FB_SECRET)
+            .then(function(r) { return r.json(); })
+            .then(function(acc) {
+              if (acc) {
+                errEl.textContent = '✗ Username "' + u + '" is already taken.';
+                errEl.style.display = 'block';
+                btn.disabled = false; btn.textContent = 'Send Request';
+                return;
+              }
+              var data = { username: u, name: name, email: email, password: pw, requestedAt: new Date().toISOString(), status: 'pending' };
+              return fetch(FB_DB_URL + '/pending/' + u + '.json?auth=' + FB_SECRET, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+              });
+            });
+        })
+        .then(function(res) {
+          if (res && res.ok) {
+            document.getElementById('regForm').style.display = 'none';
+            document.getElementById('regSuccess').style.display = 'block';
+            btn.disabled = false; btn.textContent = 'Send Request';
+          }
+        })
+        .catch(function() {
+          errEl.textContent = '✗ Could not send request. Check your connection and try again.';
+          errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Send Request';
+        });
     }
 
     function toggleShowPw() {

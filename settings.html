@@ -443,7 +443,7 @@
     <!-- SETTINGS TABS -->
     <div class="settings-tabs">
       <button class="stab active" onclick="switchStab(0)" id="stab-0">👤 My Account</button>
-      <button class="stab" onclick="switchStab(1)" id="stab-1" style="display:none;">🛡️ Manage Users</button>
+      <button class="stab" onclick="switchStab(1)" id="stab-1" style="display:none;">🛡️ Manage Users <span id="adminTabBadge" style="display:none;background:#ef4444;color:white;border-radius:99px;font-size:10px;font-weight:700;padding:1px 6px;margin-left:4px;"></span></button>
       <button class="stab" onclick="switchStab(2)" id="stab-2" style="display:none;">📊 Analytics</button>
     </div>
 
@@ -556,6 +556,21 @@
 
     <!-- TAB 1: MANAGE USERS (ADMIN ONLY) -->
     <div class="stab-panel" id="panel-1">
+
+      <!-- PENDING REQUESTS -->
+      <div class="scard" id="pendingCard">
+        <div class="scard-header">
+          <div class="scard-icon" style="background:rgba(245,158,11,0.15);color:#d97706;">🕐</div>
+          <div style="flex:1;">
+            <div class="scard-title">Pending Requests <span id="pendingBadge" style="display:none;background:#ef4444;color:white;border-radius:99px;font-size:11px;font-weight:700;padding:2px 8px;margin-left:6px;"></span></div>
+            <div class="scard-sub">Members who requested access — approve or reject</div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="alert alert-success" id="approveAlert"></div>
+          <div id="pendingList"><div style="padding:8px 0;color:var(--text-muted);font-size:13px;">Loading…</div></div>
+        </div>
+      </div>
 
       <!-- ADD USER -->
       <div class="scard">
@@ -974,6 +989,7 @@
 
   // ── ADMIN: RENDER PANEL ───────────────────────────────────────────────────
   function renderAdminPanel() {
+    renderPendingList();
     // Fetch Firebase accounts first so users added on any device appear in the table
     fetch(FB_DB_URL_S + '/accounts.json?auth=' + FB_SECRET_S)
       .then(function(r) { return r.json(); })
@@ -982,7 +998,7 @@
           var stored = getUsers();
           Object.keys(data).forEach(function(u) {
             if (!stored[u]) stored[u] = data[u];
-            else stored[u] = Object.assign({}, data[u], stored[u]); // local overrides meta only
+            else stored[u] = Object.assign({}, data[u], stored[u]);
           });
           saveUsers(stored);
         }
@@ -1166,47 +1182,110 @@
     });
   }
 
+  // ── ADMIN: PENDING REQUESTS ──────────────────────────────────────────────
+  function renderPendingList() {
+    var list = document.getElementById('pendingList');
+    if (!list) return;
+    list.innerHTML = '<div style="padding:8px 0;color:var(--text-muted);font-size:13px;">Loading…</div>';
+
+    fetch(FB_DB_URL_S + '/pending.json?auth=' + FB_SECRET_S)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !Object.keys(data).length) {
+          list.innerHTML = '<div style="padding:16px 0;color:var(--text-muted);font-size:13px;text-align:center;">No pending requests 🎉</div>';
+          refreshPendingBadge(0);
+          return;
+        }
+        var keys = Object.keys(data);
+        refreshPendingBadge(keys.length);
+        var html = '<div class="pending-list">';
+        keys.forEach(function(u) {
+          var req = data[u];
+          var date = req.requestedAt ? new Date(req.requestedAt).toLocaleDateString('en-SG', { day:'numeric', month:'short', year:'numeric' }) : '–';
+          html += '<div class="pending-item" id="pending-row-' + u + '">'
+            + '<div class="pending-avatar">' + u.charAt(0).toUpperCase() + '</div>'
+            + '<div class="pending-info">'
+            + '<div class="pending-name">' + escHtml(u) + (req.name ? ' <span style="font-weight:400;color:var(--text-muted);font-size:13px;">· ' + escHtml(req.name) + '</span>' : '') + '</div>'
+            + (req.email ? '<div class="pending-date">' + escHtml(req.email) + ' · ' + date + '</div>' : '<div class="pending-date">Requested ' + date + '</div>')
+            + '</div>'
+            + '<div class="pending-actions">'
+            + '<button onclick="approveUser(\'' + u + '\')" style="background:rgba(16,185,129,0.15);border:1.5px solid rgba(16,185,129,0.4);color:#059669;border-radius:8px;padding:7px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">✓ Approve</button>'
+            + '<button onclick="rejectUser(\'' + u + '\')" style="background:rgba(239,68,68,0.1);border:1.5px solid rgba(239,68,68,0.3);color:#ef4444;border-radius:8px;padding:7px 14px;font-family:\'DM Sans\',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">✕ Reject</button>'
+            + '</div></div>';
+        });
+        html += '</div>';
+        list.innerHTML = html;
+      })
+      .catch(function() {
+        list.innerHTML = '<div style="padding:8px 0;color:var(--text-muted);font-size:13px;">Could not load pending requests.</div>';
+      });
+  }
+
+  function refreshPendingBadge(count) {
+    if (count === undefined) {
+      // Fetch count from Firebase
+      fetch(FB_DB_URL_S + '/pending.json?auth=' + FB_SECRET_S + '&shallow=true')
+        .then(function(r) { return r.json(); })
+        .then(function(data) { refreshPendingBadge(data ? Object.keys(data).length : 0); })
+        .catch(function() {});
+      return;
+    }
+    var badge  = document.getElementById('pendingBadge');
+    var tabBadge = document.getElementById('adminTabBadge');
+    if (count > 0) {
+      if (badge)    { badge.textContent = count; badge.style.display = 'inline'; }
+      if (tabBadge) { tabBadge.textContent = count; tabBadge.style.display = 'inline'; }
+    } else {
+      if (badge)    badge.style.display = 'none';
+      if (tabBadge) tabBadge.style.display = 'none';
+    }
+  }
+
   // ── ADMIN: APPROVE / REJECT ───────────────────────────────────────────────
   function approveUser(u) {
-    var pending = getPending();
-    var req = pending[u];
-    if (!req) return;
-
-    var users = getUsers();
-    var signupDate = req.requestedAt || new Date().toISOString();
-    users[u] = { password: req.password, role: 'user', email: '', approvedAt: new Date().toISOString() };
-    saveUsers(users);
-    // Seed analytics with signup date
-    try {
-      var aKey = 'pac-swift-analytics-' + u;
-      var aData = JSON.parse(localStorage.getItem(aKey) || '{}');
-      aData.signupDate = signupDate;
-      aData.approvedDate = new Date().toISOString();
-      localStorage.setItem(aKey, JSON.stringify(aData));
-    } catch(e) {}
-
-    delete pending[u];
-    savePending(pending);
-
     var row = document.getElementById('pending-row-' + u);
-    if (row) {
-      row.style.background = 'rgba(16,185,129,0.1)';
-      row.style.borderColor = 'rgba(16,185,129,0.4)';
-      row.querySelector('.pending-actions').innerHTML = '<span style="color:var(--success);font-weight:700;font-size:13px;">✓ Approved</span>';
-      setTimeout(function() { renderPendingList(); }, 1000);
-    }
-    showAlert('approveAlert', 'alert-success', '✓ ' + u + ' has been approved and can now log in.');
-    refreshPendingBadge();
-    renderUserTable();
+    if (row) row.querySelector('.pending-actions').innerHTML = '<span style="color:var(--text-muted);font-size:12px;">Approving…</span>';
+
+    // Fetch the pending request first
+    fetch(FB_DB_URL_S + '/pending/' + u + '.json?auth=' + FB_SECRET_S)
+      .then(function(r) { return r.json(); })
+      .then(function(req) {
+        if (!req) { showAlert('approveAlert','alert-error','Could not find request for ' + u); return; }
+
+        var accountData = { password: req.password, role: 'user', email: req.email || '', displayName: req.name || '', approvedAt: new Date().toISOString() };
+        var analyticsData = { signupDate: req.requestedAt || new Date().toISOString(), approvedDate: new Date().toISOString() };
+
+        return Promise.all([
+          fetch(FB_DB_URL_S + '/accounts/' + u + '.json?auth=' + FB_SECRET_S, {
+            method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(accountData)
+          }),
+          fetch(FB_DB_URL_S + '/analytics/' + u + '.json?auth=' + FB_SECRET_S, {
+            method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(analyticsData)
+          }),
+          fetch(FB_DB_URL_S + '/pending/' + u + '.json?auth=' + FB_SECRET_S, { method: 'DELETE' })
+        ]).then(function() {
+          // Cache locally
+          var users = getUsers();
+          users[u] = accountData;
+          saveUsers(users);
+          showAlert('approveAlert', 'alert-success', '✓ ' + u + ' approved — they can log in now.');
+          renderPendingList();
+          renderUserTable();
+        });
+      })
+      .catch(function() { showAlert('approveAlert','alert-error','✗ Could not approve. Check connection.'); });
   }
 
   function rejectUser(u) {
-    var pending = getPending();
-    delete pending[u];
-    savePending(pending);
-    renderPendingList();
-    refreshPendingBadge();
-    showAlert('approveAlert', 'alert-success', 'Request from ' + u + ' has been removed.');
+    var row = document.getElementById('pending-row-' + u);
+    if (row) row.querySelector('.pending-actions').innerHTML = '<span style="color:var(--text-muted);font-size:12px;">Removing…</span>';
+
+    fetch(FB_DB_URL_S + '/pending/' + u + '.json?auth=' + FB_SECRET_S, { method: 'DELETE' })
+      .then(function() {
+        showAlert('approveAlert', 'alert-success', 'Request from ' + u + ' has been removed.');
+        renderPendingList();
+      })
+      .catch(function() { showAlert('approveAlert','alert-error','✗ Could not remove. Check connection.'); });
   }
 
   // ── ADMIN: TOGGLE ROLE ────────────────────────────────────────────────────
@@ -1560,6 +1639,8 @@ document.getElementById('deleteModal').addEventListener('click', function(e) { i
 
   // ── BOOT ──────────────────────────────────────────────────────────────────
   initPage();
+  // Show pending badge on tab immediately if admin
+  if (isAdmin) refreshPendingBadge();
 
   // Load EJS config when admin tab is shown
 </script>
