@@ -557,6 +557,21 @@
     <!-- TAB 1: MANAGE USERS (ADMIN ONLY) -->
     <div class="stab-panel" id="panel-1">
 
+      <!-- ONLINE NOW -->
+      <div class="scard" id="onlineCard">
+        <div class="scard-header">
+          <div class="scard-icon" style="background:rgba(16,185,129,0.15);color:#059669;">🟢</div>
+          <div style="flex:1;">
+            <div class="scard-title">Online Now <span id="onlineBadge" style="background:rgba(16,185,129,0.2);color:#059669;border:1px solid rgba(16,185,129,0.4);border-radius:99px;font-size:11px;font-weight:700;padding:2px 8px;margin-left:6px;">0</span></div>
+            <div class="scard-sub">Members active in the last 3 minutes · refreshes every 30s</div>
+          </div>
+          <button onclick="loadOnlineUsers()" style="background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;padding:4px;" title="Refresh">↻</button>
+        </div>
+        <div class="scard-body" id="onlineList" style="padding:12px 18px;">
+          <div style="color:var(--text-muted);font-size:13px;">Loading…</div>
+        </div>
+      </div>
+
       <!-- PENDING REQUESTS -->
       <div class="scard" id="pendingCard">
         <div class="scard-header">
@@ -987,24 +1002,79 @@
     window.location.href = 'login.html';
   }
 
-  // ── ADMIN: RENDER PANEL ───────────────────────────────────────────────────
-  function renderAdminPanel() {
-    renderPendingList();
-    // Fetch Firebase accounts first so users added on any device appear in the table
-    fetch(FB_DB_URL_S + '/accounts.json?auth=' + FB_SECRET_S)
+  // ── ONLINE USERS ─────────────────────────────────────────────────────────
+  var _onlineTimer = null;
+  function loadOnlineUsers() {
+    fetch(FB_DB_URL_S + '/presence.json?auth=' + FB_SECRET_S)
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        if (data && typeof data === 'object') {
-          var stored = getUsers();
-          Object.keys(data).forEach(function(u) {
-            if (!stored[u]) stored[u] = data[u];
-            else stored[u] = Object.assign({}, data[u], stored[u]);
-          });
-          saveUsers(stored);
+        var list  = document.getElementById('onlineList');
+        var badge = document.getElementById('onlineBadge');
+        if (!data || !Object.keys(data).length) {
+          if (list)  list.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:4px 0;">No one online right now.</div>';
+          if (badge) badge.textContent = '0';
+          return;
         }
-        renderUserTable();
+        var cutoff = Date.now() - 3 * 60 * 1000; // 3 minutes
+        var online = Object.keys(data).filter(function(u) {
+          var p = data[u];
+          return p && p.lastSeen && new Date(p.lastSeen).getTime() > cutoff;
+        });
+        if (badge) badge.textContent = online.length;
+        if (!online.length) {
+          if (list) list.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:4px 0;">No one online right now.</div>';
+          return;
+        }
+        var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+        online.forEach(function(u) {
+          var p = data[u];
+          var color = getAvatarColor(u);
+          var minsAgo = Math.floor((Date.now() - new Date(p.lastSeen).getTime()) / 60000);
+          var timeStr = minsAgo < 1 ? 'just now' : minsAgo + 'm ago';
+          var pageLabel = (p.title || p.page || '').replace(' | PAC SWIFT', '').replace(' | PAC SWIFT Framework', '');
+          html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:10px;">'
+            + '<div style="position:relative;">'
+            + '<div style="width:34px;height:34px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:white;">' + u.charAt(0).toUpperCase() + '</div>'
+            + '<div style="position:absolute;bottom:0;right:0;width:10px;height:10px;background:#10b981;border-radius:50%;border:2px solid white;"></div>'
+            + '</div>'
+            + '<div style="flex:1;">'
+            + '<div style="font-size:14px;font-weight:700;color:var(--navy);">' + escHtml(u) + '</div>'
+            + '<div style="font-size:11px;color:var(--text-muted);">📄 ' + escHtml(pageLabel) + ' · ' + timeStr + '</div>'
+            + '</div>'
+            + '<a href="member-view.html?u=' + encodeURIComponent(u) + '" style="background:rgba(74,143,231,0.15);border:1px solid rgba(74,143,231,0.3);color:#4A8FE7;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;text-decoration:none;">👁 View</a>'
+            + '</div>';
+        });
+        html += '</div>';
+        if (list) list.innerHTML = html;
       })
-      .catch(function() { renderUserTable(); });
+      .catch(function() {
+        var list = document.getElementById('onlineList');
+        if (list) list.innerHTML = '<div style="color:var(--text-muted);font-size:13px;">Could not load presence data.</div>';
+      });
+  }
+
+  // ── ADMIN: RENDER PANEL ───────────────────────────────────────────────────
+  function renderAdminPanel() {
+    loadOnlineUsers();
+    if (_onlineTimer) clearInterval(_onlineTimer);
+    _onlineTimer = setInterval(loadOnlineUsers, 30000);
+    renderPendingList();
+    // Fetch Firebase accounts + presence in parallel
+    Promise.all([
+      fetch(FB_DB_URL_S + '/accounts.json?auth=' + FB_SECRET_S).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch(FB_DB_URL_S + '/presence.json?auth=' + FB_SECRET_S).then(function(r){return r.json();}).catch(function(){return null;})
+    ]).then(function(res) {
+      var accounts = res[0]; var presence = res[1];
+      if (accounts && typeof accounts === 'object') {
+        var stored = getUsers();
+        Object.keys(accounts).forEach(function(u) {
+          if (!stored[u]) stored[u] = accounts[u];
+          else stored[u] = Object.assign({}, accounts[u], stored[u]);
+        });
+        saveUsers(stored);
+      }
+      renderUserTable(presence);
+    }).catch(function() { renderUserTable(null); });
   }
 
   var _tierFilter = 'all';
@@ -1022,7 +1092,12 @@
     renderUserTable();
   }
 
-  function renderUserTable() {
+  function renderUserTable(presence) {
+    var cutoff = Date.now() - 3 * 60 * 1000;
+    function isOnline(u) {
+      if (!presence || !presence[u]) return false;
+      return new Date(presence[u].lastSeen).getTime() > cutoff;
+    }
     var users = getAllUsers();
     var keys = Object.keys(users);
     var tbody = document.getElementById('userTableBody');
@@ -1076,11 +1151,13 @@
         ? '<span class="role-badge role-admin">✦ Admin</span>'
         : '<span class="role-badge role-user">● Member</span>';
 
+      var onlineDot = isOnline(u) ? '<div style="position:absolute;bottom:0;right:0;width:9px;height:9px;background:#10b981;border-radius:50%;border:2px solid white;"></div>' : '';
+
       // ── Desktop table row ──
       html += '<tr>'
             + '<td style="padding-left:18px;">'
             + '<div style="display:flex;align-items:center;gap:10px;">'
-            + '<div class="urow-avatar" style="background:' + avatarColor + ';">' + u.charAt(0).toUpperCase() + '</div>'
+            + '<div style="position:relative;"><div class="urow-avatar" style="background:' + avatarColor + ';">' + u.charAt(0).toUpperCase() + '</div>' + onlineDot + '</div>'
             + '<div><div class="urow-name">' + escHtml(u) + '</div>' + (usr.displayName ? '<div class="urow-email">' + escHtml(usr.displayName) + '</div>' : '') + (usr.notes ? '<div style="font-size:11px;color:var(--text-muted);margin-top:1px;font-style:italic;">' + escHtml(usr.notes) + '</div>' : '') + '</div>'
             + '</div></td>'
             + '<td style="font-size:13px;color:var(--text-muted);">' + (usr.email ? escHtml(usr.email) : '<em style="opacity:0.5;">–</em>') + '</td>'
@@ -1096,7 +1173,7 @@
 
       // ── Mobile card ──
       cardHtml += '<div class="ucard">'
-        + '<div class="ucard-av" style="background:' + avatarColor + ';">' + u.charAt(0).toUpperCase() + '</div>'
+        + '<div style="position:relative;flex-shrink:0;"><div class="ucard-av" style="background:' + avatarColor + ';">' + u.charAt(0).toUpperCase() + '</div>' + onlineDot + '</div>'
         + '<div class="ucard-info">'
         + '<div class="ucard-name">' + escHtml(u) + (usr.displayName ? ' <span style="font-weight:400;color:var(--text-muted);font-size:12px;">· ' + escHtml(usr.displayName) + '</span>' : '') + '</div>'
         + '<div class="ucard-meta">' + roleBadge + tierBadge + (trialBadge || '') + '</div>'

@@ -801,6 +801,18 @@
     }
   };
 
+  // ── PRESENCE ─────────────────────────────────────────────────────────────
+  function updatePresence(u) {
+    if (!u) return;
+    var page = currentPage();
+    var pageTitle = document.title || page;
+    fetch(FB_DB_URL + '/presence/' + u + '.json?auth=' + FB_SECRET, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lastSeen: new Date().toISOString(), page: page, title: pageTitle })
+    }).catch(function() {});
+  }
+
   // ── INIT ─────────────────────────────────────────────────────────────────
   function init() {
     var session=getSession();
@@ -818,6 +830,9 @@
       renderTaskModal();
       renderSuggestion(session);
       syncAnalyticsToFirebase(session.u);
+      // Presence: update now, then every 60s while page is open
+      updatePresence(session.u);
+      setInterval(function() { updatePresence(session.u); }, 60000);
     });
   }
 

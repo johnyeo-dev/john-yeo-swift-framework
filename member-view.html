@@ -95,6 +95,7 @@
       <div class="mv-stat"><span class="mv-stat-label">Login count</span><span class="mv-stat-val" id="mvLogins">—</span></div>
       <div class="mv-stat"><span class="mv-stat-label">Last login</span><span class="mv-stat-val" id="mvLastLogin">—</span></div>
       <div class="mv-stat"><span class="mv-stat-label">Active devices</span><span class="mv-stat-val" id="mvDevices">—</span></div>
+      <div class="mv-stat"><span class="mv-stat-label">Online now</span><span class="mv-stat-val" id="mvOnline">—</span></div>
     </div>
   </div>
 
@@ -161,13 +162,14 @@
     document.getElementById('mvSubtitle').textContent = 'Viewing ' + u + ' · Admin only';
     document.getElementById('mvAdminNote').textContent = u;
 
-    // Load user data, analytics, and sessions from Firebase, then render
+    // Load user data, analytics, sessions and presence from Firebase, then render
     Promise.all([
       fetch(FB_DB_URL + '/users/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;}),
       fetch(FB_DB_URL + '/analytics/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;}),
-      fetch(FB_DB_URL + '/sessions/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;})
+      fetch(FB_DB_URL + '/sessions/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch(FB_DB_URL + '/presence/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;})
     ]).then(function(results) {
-      var fbUser = results[0]; var fbAnalytics = results[1]; var fbSessions = results[2];
+      var fbUser = results[0]; var fbAnalytics = results[1]; var fbSessions = results[2]; var fbPresence = results[3];
       if (fbUser) {
         if (fbUser.progress) localStorage.setItem('pac-swift-progress-'+u, JSON.stringify(fbUser.progress));
         if (fbUser.actions)  localStorage.setItem('pac-swift-actions-'+u,  JSON.stringify(fbUser.actions));
@@ -175,11 +177,11 @@
         if (fbUser.tasks)    localStorage.setItem('pac-swift-tasks-'+u,    JSON.stringify(tasksFromObj(fbUser.tasks)));
       }
       if (fbAnalytics) localStorage.setItem('pac-swift-analytics-'+u, JSON.stringify(fbAnalytics));
-      renderMemberView(u, fbSessions);
-    }).catch(function() { renderMemberView(u, null); });
+      renderMemberView(u, fbSessions, fbPresence);
+    }).catch(function() { renderMemberView(u, null, null); });
   })();
 
-  function renderMemberView(u, fbSessions) {
+  function renderMemberView(u, fbSessions, fbPresence) {
     var prog  = JSON.parse(localStorage.getItem('pac-swift-progress-'+u)||'{}');
     var acts  = JSON.parse(localStorage.getItem('pac-swift-actions-'+u)||'{}');
     var ress  = JSON.parse(localStorage.getItem('pac-swift-results-'+u)||'{}');
@@ -222,6 +224,21 @@
     if (deviceCount >= 3) devEl.style.color = '#ef4444';
     else if (deviceCount === 2) devEl.style.color = '#f59e0b';
     else devEl.style.color = '#10b981';
+    // Online now
+    var onlineEl = document.getElementById('mvOnline');
+    var isOnline = fbPresence && fbPresence.lastSeen && (Date.now() - new Date(fbPresence.lastSeen).getTime()) < 3 * 60 * 1000;
+    if (isOnline) {
+      var minsAgo = Math.floor((Date.now() - new Date(fbPresence.lastSeen).getTime()) / 60000);
+      var pageLabel = (fbPresence.title || fbPresence.page || '').replace(' | PAC SWIFT', '').replace(' | PAC SWIFT Framework', '');
+      onlineEl.innerHTML = '<span style="color:#10b981;font-weight:700;">🟢 Online</span><div style="font-size:11px;color:var(--muted);font-weight:400;margin-top:2px;">📄 ' + pageLabel + (minsAgo < 1 ? ' · just now' : ' · ' + minsAgo + 'm ago') + '</div>';
+    } else if (fbPresence && fbPresence.lastSeen) {
+      var diff = Date.now() - new Date(fbPresence.lastSeen).getTime();
+      var hAgo = Math.floor(diff / 3600000);
+      var lastStr = hAgo < 24 ? hAgo + 'h ago' : Math.floor(hAgo/24) + 'd ago';
+      onlineEl.innerHTML = '<span style="color:var(--muted);">⚫ Offline</span><div style="font-size:11px;color:var(--muted);font-weight:400;margin-top:2px;">Last seen ' + lastStr + '</div>';
+    } else {
+      onlineEl.textContent = '—';
+    }
 
     // Tasks grouped by date
     var tasksEl = document.getElementById('mvTasks');
