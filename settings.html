@@ -956,7 +956,21 @@
 
   // ── ADMIN: RENDER PANEL ───────────────────────────────────────────────────
   function renderAdminPanel() {
-    renderUserTable();
+    // Fetch Firebase accounts first so users added on any device appear in the table
+    fetch(FB_DB_URL_S + '/accounts.json?auth=' + FB_SECRET_S)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data && typeof data === 'object') {
+          var stored = getUsers();
+          Object.keys(data).forEach(function(u) {
+            if (!stored[u]) stored[u] = data[u];
+            else stored[u] = Object.assign({}, data[u], stored[u]); // local overrides meta only
+          });
+          saveUsers(stored);
+        }
+        renderUserTable();
+      })
+      .catch(function() { renderUserTable(); });
   }
 
   var _tierFilter = 'all';
