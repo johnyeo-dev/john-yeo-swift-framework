@@ -94,6 +94,7 @@
       <div class="mv-stat"><span class="mv-stat-label">Tasks done</span><span class="mv-stat-val" id="mvTaskDone">—</span></div>
       <div class="mv-stat"><span class="mv-stat-label">Login count</span><span class="mv-stat-val" id="mvLogins">—</span></div>
       <div class="mv-stat"><span class="mv-stat-label">Last login</span><span class="mv-stat-val" id="mvLastLogin">—</span></div>
+      <div class="mv-stat"><span class="mv-stat-label">Active devices</span><span class="mv-stat-val" id="mvDevices">—</span></div>
     </div>
   </div>
 
@@ -160,12 +161,13 @@
     document.getElementById('mvSubtitle').textContent = 'Viewing ' + u + ' · Admin only';
     document.getElementById('mvAdminNote').textContent = u;
 
-    // Load both user data and analytics from Firebase, then render
+    // Load user data, analytics, and sessions from Firebase, then render
     Promise.all([
       fetch(FB_DB_URL + '/users/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;}),
-      fetch(FB_DB_URL + '/analytics/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;})
+      fetch(FB_DB_URL + '/analytics/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch(FB_DB_URL + '/sessions/' + u + '.json?auth=' + FB_SECRET).then(function(r){return r.json();}).catch(function(){return null;})
     ]).then(function(results) {
-      var fbUser = results[0]; var fbAnalytics = results[1];
+      var fbUser = results[0]; var fbAnalytics = results[1]; var fbSessions = results[2];
       if (fbUser) {
         if (fbUser.progress) localStorage.setItem('pac-swift-progress-'+u, JSON.stringify(fbUser.progress));
         if (fbUser.actions)  localStorage.setItem('pac-swift-actions-'+u,  JSON.stringify(fbUser.actions));
@@ -173,11 +175,11 @@
         if (fbUser.tasks)    localStorage.setItem('pac-swift-tasks-'+u,    JSON.stringify(tasksFromObj(fbUser.tasks)));
       }
       if (fbAnalytics) localStorage.setItem('pac-swift-analytics-'+u, JSON.stringify(fbAnalytics));
-      renderMemberView(u);
-    }).catch(function() { renderMemberView(u); });
+      renderMemberView(u, fbSessions);
+    }).catch(function() { renderMemberView(u, null); });
   })();
 
-  function renderMemberView(u) {
+  function renderMemberView(u, fbSessions) {
     var prog  = JSON.parse(localStorage.getItem('pac-swift-progress-'+u)||'{}');
     var acts  = JSON.parse(localStorage.getItem('pac-swift-actions-'+u)||'{}');
     var ress  = JSON.parse(localStorage.getItem('pac-swift-results-'+u)||'{}');
@@ -210,6 +212,16 @@
     document.getElementById('mvTaskDone').textContent = taskDone;
     document.getElementById('mvLogins').textContent = analytics.loginCount || 0;
     document.getElementById('mvLastLogin').textContent = analytics.lastLogin ? new Date(analytics.lastLogin).toLocaleDateString('en-SG') : 'Never';
+    // Device count
+    var cutoff = Date.now() - 60 * 24 * 60 * 60 * 1000;
+    var deviceCount = fbSessions ? Object.keys(fbSessions).filter(function(id) {
+      var s = fbSessions[id]; return s && s.lastLogin && new Date(s.lastLogin).getTime() > cutoff;
+    }).length : 0;
+    var devEl = document.getElementById('mvDevices');
+    devEl.textContent = deviceCount;
+    if (deviceCount >= 3) devEl.style.color = '#ef4444';
+    else if (deviceCount === 2) devEl.style.color = '#f59e0b';
+    else devEl.style.color = '#10b981';
 
     // Tasks grouped by date
     var tasksEl = document.getElementById('mvTasks');

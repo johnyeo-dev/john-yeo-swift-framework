@@ -180,6 +180,16 @@
       font-weight: 600;
       cursor: pointer;
     }
+    /* device warning modal */
+    .dw-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px; }
+    .dw-box { background:#111827;border:1px solid rgba(239,68,68,0.4);border-radius:18px;padding:32px 28px;max-width:400px;width:100%;text-align:center; }
+    .dw-icon { font-size:40px;margin-bottom:14px; }
+    .dw-title { font-family:'DM Serif Display',serif;font-size:20px;color:#fff;margin-bottom:8px; }
+    .dw-body { font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:24px; }
+    .dw-body strong { color:rgba(255,255,255,0.8); }
+    .dw-continue { width:100%;background:rgba(239,68,68,0.15);border:1.5px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px; }
+    .dw-continue:hover { background:rgba(239,68,68,0.25); }
+    .dw-back { width:100%;background:var(--gold);border:none;color:#002D6A;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer; }
     .reg-success {
       background: rgba(16,185,129,0.12);
       border: 1px solid rgba(16,185,129,0.35);
@@ -284,6 +294,20 @@
     <p class="toggle-link" id="backToLogin" style="display:none;"><a onclick="showLogin()">← Back to Sign In</a></p>
   </div>
 
+  <!-- DEVICE WARNING MODAL -->
+  <div class="dw-overlay" id="deviceWarning" style="display:none;">
+    <div class="dw-box">
+      <div class="dw-icon">⚠️</div>
+      <div class="dw-title">Account Shared?</div>
+      <div class="dw-body" id="deviceWarningBody">
+        This account has been accessed from <strong id="deviceCount">?</strong> other devices recently.<br><br>
+        Accounts are <strong>personal</strong> — please don't share your login with anyone. Shared accounts may be suspended.
+      </div>
+      <button class="dw-continue" onclick="proceedAnyway()">I understand, this is my device → Continue</button>
+      <button class="dw-back" onclick="document.getElementById('deviceWarning').style.display='none'">← Go Back</button>
+    </div>
+  </div>
+
   <script>
     // Redirect if already logged in
     (function() {
@@ -350,10 +374,7 @@
       if (username === 'johnyeo') {
         var adminPw = PW_OVERRIDES['johnyeo'] || localStorage.getItem('pac-swift-admin-pw') || '2706';
         if (password === adminPw || password === '2706') {
-          localStorage.setItem('pac-swift-session', JSON.stringify({ u: 'johnyeo', role: 'admin' }));
-          localStorage.setItem('pac-swift-user', username);
-          trackLogin('johnyeo');
-          window.location.href = 'index.html';
+          completeLogin('johnyeo', 'admin');
           return;
         }
       }
@@ -361,33 +382,25 @@
       var users = getUsers();
 
       // Built-in users: Firebase override takes priority over hardcoded password.
-      // Users can change their password via Settings → Change Password.
       if (BUILTIN_USERS[username]) {
         var effectivePw = PW_OVERRIDES[username] || BUILTIN_USERS[username].password;
         if (password === effectivePw) {
-          // Sync metadata to localStorage
           var base = users[username] || {};
           users[username] = Object.assign({}, base, BUILTIN_USERS[username], { created: base.created || new Date().toISOString() });
           localStorage.setItem('pac-swift-users', JSON.stringify(users));
-          localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: BUILTIN_USERS[username].role || 'user' }));
-          localStorage.setItem('pac-swift-user', username);
-          trackLogin(username);
-          window.location.href = 'index.html';
+          completeLogin(username, BUILTIN_USERS[username].role || 'user');
           return;
         }
-        // Wrong password for a known built-in user
         errorEl.style.display = 'block';
         return;
       }
 
-      // For users NOT in BUILTIN_USERS, check Firebase accounts first, then localStorage
+      // Firebase accounts / localStorage fallback
       var fbAccount  = FB_ACCOUNTS[username];
       var storedUser = users[username];
-      // Merge: Firebase account is source of truth; localStorage is fallback
       var account = fbAccount || storedUser;
       var effectivePw2 = PW_OVERRIDES[username] || (account ? account.password : null);
       if (account && effectivePw2 && password === effectivePw2) {
-        // Cache Firebase account locally for offline fallback
         if (fbAccount) {
           users[username] = Object.assign({}, storedUser || {}, fbAccount);
           localStorage.setItem('pac-swift-users', JSON.stringify(users));
@@ -401,14 +414,71 @@
             return;
           }
         }
-        localStorage.setItem('pac-swift-session', JSON.stringify({ u: username, role: account.role || 'user' }));
-        localStorage.setItem('pac-swift-user', username);
-        trackLogin(username);
-        window.location.href = 'index.html';
+        completeLogin(username, account.role || 'user');
         return;
       }
 
       errorEl.style.display = 'block';
+    }
+
+    // ── DEVICE TRACKING ───────────────────────────────────────────────────────
+    var _pendingRedirectUser = null;
+    var _pendingRedirectRole = null;
+
+    function getOrCreateDeviceId() {
+      var id = localStorage.getItem('pac-device-id');
+      if (!id) {
+        id = 'dev-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem('pac-device-id', id);
+      }
+      return id;
+    }
+
+    function completeLogin(u, role) {
+      localStorage.setItem('pac-swift-session', JSON.stringify({ u: u, role: role }));
+      localStorage.setItem('pac-swift-user', u);
+      trackLogin(u);
+
+      // Admin skips device check
+      if (u === 'johnyeo') { window.location.href = 'index.html'; return; }
+
+      var deviceId = getOrCreateDeviceId();
+      var ua = (navigator.userAgent || '').slice(0, 80);
+      var deviceData = { lastLogin: new Date().toISOString(), ua: ua };
+
+      // Record this device, then check for others
+      fetch(FB_DB_URL + '/sessions/' + u + '/' + deviceId + '.json?auth=' + FB_SECRET, {
+        method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(deviceData)
+      })
+      .then(function() {
+        return fetch(FB_DB_URL + '/sessions/' + u + '.json?auth=' + FB_SECRET);
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(sessions) {
+        if (!sessions) { window.location.href = 'index.html'; return; }
+        // Count OTHER distinct devices active in the last 60 days
+        var cutoff = Date.now() - 60 * 24 * 60 * 60 * 1000;
+        var otherDevices = Object.keys(sessions).filter(function(id) {
+          if (id === deviceId) return false;
+          var s = sessions[id];
+          return s && s.lastLogin && new Date(s.lastLogin).getTime() > cutoff;
+        });
+        if (otherDevices.length >= 2) {
+          // Show warning
+          _pendingRedirectUser = u;
+          _pendingRedirectRole = role;
+          document.getElementById('deviceCount').textContent = otherDevices.length;
+          document.getElementById('deviceWarning').style.display = 'flex';
+        } else {
+          window.location.href = 'index.html';
+        }
+      })
+      .catch(function() { window.location.href = 'index.html'; });
+    }
+
+    function proceedAnyway() {
+      document.getElementById('deviceWarning').style.display = 'none';
+      window.location.href = 'index.html';
     }
 
     function trackLogin(u) {
