@@ -157,6 +157,23 @@
     .users-table .urow-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
     .urow-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 
+    /* ── MOBILE USER CARDS ── */
+    @media (max-width: 600px) {
+      #userTableWrap { display: none; }
+      #userCardList  { display: block; }
+    }
+    @media (min-width: 601px) {
+      #userTableWrap { display: block; }
+      #userCardList  { display: none; }
+    }
+    .ucard { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .ucard:last-child { border-bottom: none; }
+    .ucard-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: white; flex-shrink: 0; }
+    .ucard-info { flex: 1; min-width: 0; }
+    .ucard-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .ucard-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; align-items: center; }
+    .ucard-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
     /* ── RESET PASSWORD MODAL ── */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 800; display: none; align-items: center; justify-content: center; padding: 20px; }
     .modal-overlay.open { display: flex; }
@@ -614,6 +631,7 @@
               <tbody id="userTableBody"></tbody>
             </table>
           </div>
+          <div id="userCardList"></div>
         </div>
       </div>
 
@@ -992,8 +1010,10 @@
     var users = getAllUsers();
     var keys = Object.keys(users);
     var tbody = document.getElementById('userTableBody');
+    var cardList = document.getElementById('userCardList');
     if (!keys.length) {
       tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No active users yet.</td></tr>';
+      if (cardList) cardList.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">No active users yet.</div>';
       return;
     }
     var html = '';
@@ -1012,30 +1032,35 @@
     }
     if (!keys.length) {
       tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No ' + _tierFilter + ' members yet.</td></tr>';
+      if (cardList) cardList.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">No ' + _tierFilter + ' members yet.</div>';
       return;
     }
+    var cardHtml = '';
     keys.forEach(function(u) {
       var usr = users[u];
       var role = usr.role || 'user';
       var avatarColor = getAvatarColor(u);
-      // Trial status cell
-      var trialCell = '';
+      // Trial status
+      var trialBadge = '';
       if (usr.trialStart && usr.trialDays) {
         var start = new Date(usr.trialStart + 'T00:00:00');
         var elapsed = Math.floor((Date.now() - start) / 86400000);
         var remaining = usr.trialDays - elapsed;
         if (remaining <= 0) {
-          trialCell = '<span style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;">EXPIRED</span>';
+          trialBadge = '<span style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;">EXPIRED</span>';
         } else {
-          trialCell = '<span style="background:rgba(16,185,129,0.12);color:#059669;border:1px solid rgba(16,185,129,0.3);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;">' + remaining + 'd left</span>';
+          trialBadge = '<span style="background:rgba(16,185,129,0.12);color:#059669;border:1px solid rgba(16,185,129,0.3);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;">' + remaining + 'd left</span>';
         }
-      } else {
-        trialCell = '<span style="font-size:11px;color:var(--text-muted);">–</span>';
       }
       var tier = usr.tier || 'swift';
       var tierBadge = tier === 'elite'
         ? '<span style="background:rgba(245,158,11,0.15);color:#b45309;border:1px solid rgba(245,158,11,0.35);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;" onclick="toggleTier(\'' + u + '\')" title="Click to change">⭐ Elite</span>'
         : '<span style="background:rgba(10,191,188,0.12);color:#0ABFBC;border:1px solid rgba(10,191,188,0.3);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;" onclick="toggleTier(\'' + u + '\')" title="Click to change">◆ Swift</span>';
+      var roleBadge = role === 'admin'
+        ? '<span class="role-badge role-admin">✦ Admin</span>'
+        : '<span class="role-badge role-user">● Member</span>';
+
+      // ── Desktop table row ──
       html += '<tr>'
             + '<td style="padding-left:18px;">'
             + '<div style="display:flex;align-items:center;gap:10px;">'
@@ -1043,21 +1068,34 @@
             + '<div><div class="urow-name">' + escHtml(u) + '</div>' + (usr.displayName ? '<div class="urow-email">' + escHtml(usr.displayName) + '</div>' : '') + (usr.notes ? '<div style="font-size:11px;color:var(--text-muted);margin-top:1px;font-style:italic;">' + escHtml(usr.notes) + '</div>' : '') + '</div>'
             + '</div></td>'
             + '<td style="font-size:13px;color:var(--text-muted);">' + (usr.email ? escHtml(usr.email) : '<em style="opacity:0.5;">–</em>') + '</td>'
-            + '<td>'
-            + (role === 'admin'
-              ? '<span class="role-badge role-admin">✦ Admin</span>'
-              : '<span class="role-badge role-user">● Member</span>')
-            + '</td>'
+            + '<td>' + roleBadge + '</td>'
             + '<td>' + tierBadge + '</td>'
-            + '<td>' + trialCell + '</td>'
+            + '<td>' + (trialBadge || '<span style="font-size:11px;color:var(--text-muted);">–</span>') + '</td>'
             + '<td><div class="urow-actions">'
             + '<button onclick="viewMember(\'' + u + '\')" style="background:rgba(74,143,231,0.15);border:1px solid rgba(74,143,231,0.3);color:#4A8FE7;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif;">👁 View</button>'
             + '<button class="btn btn-primary btn-sm" onclick="openEditModal(\''  + u + '\')")>✏️ Edit</button>'
             + '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(\'' + u + '\')">✕</button>'
             + '</div></td>'
             + '</tr>';
+
+      // ── Mobile card ──
+      cardHtml += '<div class="ucard">'
+        + '<div class="ucard-av" style="background:' + avatarColor + ';">' + u.charAt(0).toUpperCase() + '</div>'
+        + '<div class="ucard-info">'
+        + '<div class="ucard-name">' + escHtml(u) + (usr.displayName ? ' <span style="font-weight:400;color:var(--text-muted);font-size:12px;">· ' + escHtml(usr.displayName) + '</span>' : '') + '</div>'
+        + '<div class="ucard-meta">' + roleBadge + tierBadge + (trialBadge || '') + '</div>'
+        + (usr.email ? '<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">' + escHtml(usr.email) + '</div>' : '')
+        + '</div>'
+        + '<div class="ucard-actions">'
+        + '<button onclick="viewMember(\'' + u + '\')" style="background:rgba(74,143,231,0.15);border:1px solid rgba(74,143,231,0.3);color:#4A8FE7;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif;">👁</button>'
+        + '<button class="btn btn-primary btn-sm" onclick="openEditModal(\'' + u + '\')">✏️</button>'
+        + '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(\'' + u + '\')">✕</button>'
+        + '</div>'
+        + '</div>';
     });
     tbody.innerHTML = html;
+    var cardList = document.getElementById('userCardList');
+    if (cardList) cardList.innerHTML = cardHtml;
   }
 
   // ── TIER TOGGLE ──────────────────────────────────────────────────────────
