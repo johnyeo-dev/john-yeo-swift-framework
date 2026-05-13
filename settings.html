@@ -1313,6 +1313,9 @@ document.getElementById('deleteModal').addEventListener('click', function(e) { i
   })();
 
   // ── ANALYTICS ─────────────────────────────────────────────────────────────
+  var FB_DB_URL_S = 'https://pac-swift-default-rtdb.asia-southeast1.firebasedatabase.app';
+  var FB_SECRET_S = 'pNYSribFCUSYRLRdJHOPsyOU5DdEVamtyzDEThc9';
+
   function getAnalytics(u) {
     try { return JSON.parse(localStorage.getItem('pac-swift-analytics-' + u) || '{}'); } catch(e) { return {}; }
   }
@@ -1344,11 +1347,29 @@ document.getElementById('deleteModal').addEventListener('click', function(e) { i
   function renderAnalytics() {
     var users = getAllUsers();
     var allUsers = Object.keys(users);
-    // Always include johnyeo
     if (allUsers.indexOf('johnyeo') === -1) allUsers.unshift('johnyeo');
 
     var grid = document.getElementById('analyticsGrid');
+    grid.innerHTML = '<div style="padding:48px;text-align:center;color:#6B7A96;font-size:14px;">⏳ Loading analytics from Firebase…</div>';
 
+    // Fetch every user's analytics from Firebase in parallel, cache in localStorage
+    Promise.all(allUsers.map(function(u) {
+      return fetch(FB_DB_URL_S + '/analytics/' + u + '.json?auth=' + FB_SECRET_S)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && typeof data === 'object' && Object.keys(data).length) {
+            localStorage.setItem('pac-swift-analytics-' + u, JSON.stringify(data));
+          }
+        })
+        .catch(function() {});
+    })).then(function() {
+      _drawAnalyticsGrid(allUsers, grid);
+    }).catch(function() {
+      _drawAnalyticsGrid(allUsers, grid);
+    });
+  }
+
+  function _drawAnalyticsGrid(allUsers, grid) {
     // Summary row
     var totalLogins = 0, totalVisits = 0, calcUsers = 0, activeUsers = 0;
     allUsers.forEach(function(u) {
@@ -1397,7 +1418,7 @@ document.getElementById('deleteModal').addEventListener('click', function(e) { i
         + '<div class="ac-body">';
 
       if (!hasData) {
-        cardsHtml += '<div class="ac-no-data"><div class="nd-icon">💤</div>No activity yet on this device</div>';
+        cardsHtml += '<div class="ac-no-data"><div class="nd-icon">💤</div>No activity yet</div>';
       } else {
         cardsHtml += '<div class="ac-stat"><span class="ac-stat-label">🔑 Total logins</span><span class="ac-stat-val highlight">' + (a.loginCount || 0) + '</span></div>'
           + '<div class="ac-stat"><span class="ac-stat-label">🕐 Last login</span><span class="ac-stat-val">' + timeAgo(a.lastLogin) + '</span></div>'
