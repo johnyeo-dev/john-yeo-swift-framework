@@ -599,7 +599,7 @@
           <div class="calc-goal-label">Your Monthly Revenue Goal</div>
           <div class="calc-goal-input-row">
             <span class="calc-currency">$</span>
-            <input type="number" id="goalInput" class="calc-goal-input" placeholder="5000" min="0" oninput="recalcAll()" />
+            <input type="number" id="goalInput" class="calc-goal-input" placeholder="5000" min="0" oninput="recalcAll()" onchange="recalcAll()" />
             <span class="calc-goal-suffix">/month</span>
           </div>
         </div>
@@ -647,17 +647,17 @@
         <div class="calc-inputs">
           <div class="calc-input-group">
             <label>Students</label>
-            <input type="number" id="oneStudents" min="0" placeholder="3" oninput="recalcAll()" />
+            <input type="number" id="oneStudents" min="0" placeholder="3" oninput="recalcAll()" onchange="recalcAll()" />
           </div>
           <div class="calc-input-sep">×</div>
           <div class="calc-input-group">
             <label>Hrs/week</label>
-            <input type="number" id="oneHrs" min="0" step="0.5" placeholder="2" oninput="recalcAll()" />
+            <input type="number" id="oneHrs" min="0" step="0.5" placeholder="2" oninput="recalcAll()" onchange="recalcAll()" />
           </div>
           <div class="calc-input-sep">× 4 ×</div>
           <div class="calc-input-group">
             <label>Rate ($/hr)</label>
-            <input type="number" id="oneRate" min="0" placeholder="80" oninput="recalcAll()" />
+            <input type="number" id="oneRate" min="0" placeholder="80" oninput="recalcAll()" onchange="recalcAll()" />
           </div>
         </div>
         <div class="calc-formula-bar" id="oneFormula">Enter values above to see the breakdown</div>
@@ -672,22 +672,22 @@
         <div class="calc-inputs">
           <div class="calc-input-group">
             <label>Groups</label>
-            <input type="number" id="groupCount" min="0" placeholder="2" oninput="recalcAll()" />
+            <input type="number" id="groupCount" min="0" placeholder="2" oninput="recalcAll()" onchange="recalcAll()" />
           </div>
           <div class="calc-input-sep">×</div>
           <div class="calc-input-group">
             <label>Students/group</label>
-            <input type="number" id="groupStudents" min="0" placeholder="4" oninput="recalcAll()" />
+            <input type="number" id="groupStudents" min="0" placeholder="4" oninput="recalcAll()" onchange="recalcAll()" />
           </div>
           <div class="calc-input-sep">×</div>
           <div class="calc-input-group">
             <label>Hrs/week</label>
-            <input type="number" id="groupHrs" min="0" step="0.5" placeholder="1.5" oninput="recalcAll()" />
+            <input type="number" id="groupHrs" min="0" step="0.5" placeholder="1.5" oninput="recalcAll()" onchange="recalcAll()" />
           </div>
           <div class="calc-input-sep">× 4 ×</div>
           <div class="calc-input-group">
             <label>$/hr per student</label>
-            <input type="number" id="groupRate" min="0" placeholder="30" oninput="recalcAll()" />
+            <input type="number" id="groupRate" min="0" placeholder="30" oninput="recalcAll()" onchange="recalcAll()" />
           </div>
         </div>
         <div class="calc-formula-bar" id="groupFormula">Enter values above to see the breakdown</div>
