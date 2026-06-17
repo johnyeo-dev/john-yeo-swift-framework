@@ -45,7 +45,7 @@
     @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
 
     /* ── MOBILE NAV ── */
-    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
+    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 200; }
     .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
     .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
     .mobile-menu-panel { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #111827; z-index: 501; overflow-y: auto; padding: 0 0 40px; transform: translateX(-100%); transition: transform 0.25s ease; pointer-events: none; }
@@ -172,6 +172,55 @@
     .callout-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
 
     /* ── MOBILE ── */
+    /* ── MOBILE PHASE STRIP ── */
+    .mobile-phase-strip { display: none; }
+    @media (max-width: 768px) {
+      .mobile-phase-strip {
+        display: flex; gap: 8px; overflow-x: auto; padding: 10px 14px;
+        background: var(--navy-light); border-bottom: 1px solid rgba(255,255,255,0.08);
+        position: sticky; top: 54px; z-index: 90;
+        scrollbar-width: none; -ms-overflow-style: none;
+      }
+      .mobile-phase-strip::-webkit-scrollbar { display: none; }
+      .phase-pill {
+        flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+        padding: 6px 12px; border-radius: 99px; border: 1.5px solid rgba(255,255,255,0.12);
+        font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55);
+        text-decoration: none; white-space: nowrap; transition: all 0.2s;
+        background: rgba(255,255,255,0.05);
+      }
+      .phase-pill.active { color: white; border-color: currentColor; background: rgba(255,255,255,0.08); }
+      .phase-pill-dot { width: 7px; height: 7px; border-radius: 50%; }
+    }
+
+    /* ── COLLAPSIBLE PHASES (mobile) ── */
+    .phase-collapse-btn { display: none; }
+    .phase-steps-wrap { transition: none; }
+    @media (max-width: 768px) {
+      .phase-collapse-btn {
+        display: flex; align-items: center; justify-content: center;
+        width: 32px; height: 32px; border-radius: 8px; border: none;
+        cursor: pointer; font-size: 16px; line-height: 1; flex-shrink: 0;
+        background: rgba(255,255,255,0.12); color: white; transition: transform 0.25s;
+        margin-top: 2px;
+      }
+      .phase-section.collapsed .phase-collapse-btn { transform: rotate(-90deg); }
+      .phase-section.collapsed .phase-steps-wrap { display: none; }
+
+      /* Stronger phase header on mobile */
+      .phase-header {
+        padding: 16px 14px 14px; gap: 10px; cursor: pointer;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+      }
+      .phase-num-badge { width: 36px; height: 36px; font-size: 17px; border-radius: 9px; }
+      .phase-header-text h2 { font-size: 17px; }
+      .phase-header-text p { display: none; } /* hide desc on mobile — show on expand */
+      .phase-section:not(.collapsed) .phase-header-text p { display: block; font-size: 13px; margin-top: 4px; }
+
+      /* Phase section stronger separator */
+      .phase-section { border-bottom: 3px solid var(--border); }
+    }
+
     @media (max-width: 768px) {
       /* Layout */
       .phases-layout { grid-template-columns: 1fr; }
@@ -182,12 +231,6 @@
       .phases-hero h1 { font-size: 26px; }
       .hero-stats { gap: 12px; }
       .hero-stat-num { font-size: 22px; }
-
-      /* Phase header */
-      .phase-header { padding: 18px 16px 14px; gap: 12px; }
-      .phase-num-badge { width: 38px; height: 38px; font-size: 18px; border-radius: 10px; }
-      .phase-header-text h2 { font-size: 18px; }
-      .phase-header-text p { font-size: 13px; }
 
       /* Steps */
       .phase-steps-wrap { padding: 0 12px 20px; gap: 10px; }
@@ -347,6 +390,17 @@
   <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
 </div>
 
+<!-- MOBILE PHASE STRIP -->
+<div class="mobile-phase-strip" id="mobilePhaseStrip">
+  <a href="#phase-1" class="phase-pill active" data-phase="phase-1" style="color:var(--p1);"><span class="phase-pill-dot" style="background:var(--p1);"></span>1 · Brand</a>
+  <a href="#phase-2" class="phase-pill" data-phase="phase-2" style="color:var(--p2);"><span class="phase-pill-dot" style="background:var(--p2);"></span>2 · Instagram</a>
+  <a href="#phase-3" class="phase-pill" data-phase="phase-3" style="color:var(--p3);"><span class="phase-pill-dot" style="background:var(--p3);"></span>3 · Lead Magnets</a>
+  <a href="#phase-4" class="phase-pill" data-phase="phase-4" style="color:var(--p4);"><span class="phase-pill-dot" style="background:var(--p4);"></span>4 · ManyChat</a>
+  <a href="#phase-5" class="phase-pill" data-phase="phase-5" style="color:var(--p5);"><span class="phase-pill-dot" style="background:var(--p5);"></span>5 · Close</a>
+  <a href="#phase-6" class="phase-pill" data-phase="phase-6" style="color:var(--p6);"><span class="phase-pill-dot" style="background:var(--p6);"></span>6 · Programme</a>
+  <a href="#phase-7" class="phase-pill" data-phase="phase-7" style="color:var(--p7);"><span class="phase-pill-dot" style="background:var(--p7);"></span>7 · Growth</a>
+</div>
+
 <!-- PAGE LAYOUT -->
 <div class="phases-layout">
 
@@ -373,6 +427,7 @@
 
     <!-- HERO -->
     <div class="phases-hero">
+      <div style="display:inline-block;background:rgba(10,191,188,0.15);border:1px solid rgba(10,191,188,0.3);border-radius:99px;padding:4px 14px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">⭐ For New Students — Start Here</div>
       <div class="phases-hero-tag">✶ Complete Action Roadmap</div>
       <h1>My First <em>7 Phases</em></h1>
       <p>27 steps. Every one supported by a Claude prompt or skill. Follow in order, tick off as you go — and you'll always know exactly where you are and what to do next.</p>
@@ -398,6 +453,7 @@
           <h2>Brand Foundation</h2>
           <p>Do this once. Get it right. Everything else builds on it — your colours, voice, and niche define every piece of content you create.</p>
         </div>
+        <button class="phase-collapse-btn" onclick="togglePhase(this.closest('section').id)">&#9660;</button>
       </div>
       <div class="phase-steps-wrap">
 
@@ -488,6 +544,7 @@ Please:
           <h2>Instagram Setup</h2>
           <p>Your storefront. First impressions happen here. A parent visits your profile in 3 seconds — your bio, pinned post, and highlights decide if they stay.</p>
         </div>
+        <button class="phase-collapse-btn" onclick="togglePhase(this.closest('section').id)">&#9660;</button>
       </div>
       <div class="phase-steps-wrap">
 
@@ -621,6 +678,7 @@ Font: DM Sans. Clean, modern design. Deploy on Vercel.</div>
           <h2>Lead Magnets</h2>
           <p>Give first. Trust follows. A single web page — not a PDF — that solves one problem so well that parents immediately think: "This person really knows what they're doing."</p>
         </div>
+        <button class="phase-collapse-btn" onclick="togglePhase(this.closest('section').id)">&#9660;</button>
       </div>
       <div class="phase-steps-wrap">
 
@@ -755,6 +813,7 @@ Style the iframe to match the page: no border, full width, height 400px. Wrap it
           <h2>ManyChat Automation</h2>
           <p>Set it up once. It runs 24/7. When someone comments on your post, they instantly get your lead magnet — no manual sending, no missed leads.</p>
         </div>
+        <button class="phase-collapse-btn" onclick="togglePhase(this.closest('section').id)">&#9660;</button>
       </div>
       <div class="phase-steps-wrap">
 
@@ -856,6 +915,7 @@ Would that be okay? What's your number? I'll drop it there for you 📲</div>
           <h2>Conversation &amp; Closing</h2>
           <p>This is where students are won or lost. Not because of your programme — because of how you make parents feel heard. Listen first. Invite only when it's genuinely right.</p>
         </div>
+        <button class="phase-collapse-btn" onclick="togglePhase(this.closest('section').id)">&#9660;</button>
       </div>
       <div class="phase-steps-wrap">
 
@@ -977,6 +1037,7 @@ Each response should: acknowledge the concern, not argue, and keep the door open
           <h2>Programme Page</h2>
           <p>Your flagship offer. This is where warm leads become paying students. Build it once — it works for you every time someone asks "what do you offer?"</p>
         </div>
+        <button class="phase-collapse-btn" onclick="togglePhase(this.closest('section').id)">&#9660;</button>
       </div>
       <div class="phase-steps-wrap">
 
@@ -1128,6 +1189,7 @@ Design: Clean, warm, friendly — use colours [HEX1] and [HEX2]. Mobile-friendly
           <h2>Social Proof &amp; Growth</h2>
           <p>Make your results visible. Let your students' wins do the selling. This phase turns happy parents into your most powerful marketing channel.</p>
         </div>
+        <button class="phase-collapse-btn" onclick="togglePhase(this.closest('section').id)">&#9660;</button>
       </div>
       <div class="phase-steps-wrap">
 
@@ -1326,6 +1388,57 @@ Design: emotional, clean — colours [HEX1] and [HEX2]. Deploy on Vercel.</div>
     links.forEach(function(l, i) { l.classList.toggle('active', i === current); });
   }
 
+  // Phase collapse (mobile)
+  function togglePhase(id) {
+    const section = document.getElementById(id);
+    if (!section) return;
+    section.classList.toggle('collapsed');
+    const btn = section.querySelector('.phase-collapse-btn');
+    if (btn) btn.innerHTML = section.classList.contains('collapsed') ? '&#9658;' : '&#9660;';
+  }
+
+  function initMobileCollapse() {
+    if (window.innerWidth > 768) return;
+    document.querySelectorAll('.phase-section').forEach(function(section, i) {
+      if (i > 0) { // keep phase 1 open by default, collapse the rest
+        section.classList.add('collapsed');
+        var btn = section.querySelector('.phase-collapse-btn');
+        if (btn) btn.innerHTML = '&#9658;';
+      }
+    });
+  }
+
+  // Phase pill active state on scroll (mobile)
+  function updatePhasePills() {
+    if (window.innerWidth > 768) return;
+    var phases = ['phase-1','phase-2','phase-3','phase-4','phase-5','phase-6','phase-7'];
+    var pills = document.querySelectorAll('.phase-pill');
+    var current = 0;
+    phases.forEach(function(id, i) {
+      var el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 130) current = i;
+    });
+    pills.forEach(function(p, i) { p.classList.toggle('active', i === current); });
+    var activePill = document.querySelector('.phase-pill.active');
+    if (activePill) activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  // Tap phase header on mobile to toggle collapse
+  document.querySelectorAll('.phase-header').forEach(function(header) {
+    header.addEventListener('click', function(e) {
+      if (window.innerWidth > 768) return;
+      if (e.target.closest('.phase-collapse-btn')) return;
+      var section = header.closest('.phase-section');
+      if (section) {
+        section.classList.toggle('collapsed');
+        var btn = section.querySelector('.phase-collapse-btn');
+        if (btn) btn.innerHTML = section.classList.contains('collapsed') ? '&#9658;' : '&#9660;';
+      }
+    });
+  });
+
+  window.addEventListener('scroll', updatePhasePills, { passive: true });
+
   // Desktop nav dropdowns
   document.querySelectorAll('.swift-tab-group').forEach(function(group) {
     const btn = group.querySelector('.swift-tab');
@@ -1345,6 +1458,7 @@ Design: emotional, clean — colours [HEX1] and [HEX2]. Deploy on Vercel.</div>
   document.addEventListener('DOMContentLoaded', function() {
     restoreProgress();
     updateSidebarActive();
+    initMobileCollapse();
   });
 </script>
 
