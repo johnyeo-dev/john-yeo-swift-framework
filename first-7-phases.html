@@ -15,6 +15,7 @@
       --cream: #F4F7FB; --cream-dark: #E8EDF5;
       --text: #0A0F1C; --muted: #6B7A96;
       --white: #FFFFFF; --border: #D1DAE8;
+      --p0: #F97316; --p0-light: #FFF7ED;
       --p1: #0ABFBC; --p2: #4A8FE7; --p3: #8B5CF6;
       --p4: #F59E0B; --p5: #10B981; --p6: #F43F5E; --p7: #06B6D4;
     }
@@ -268,6 +269,7 @@
     }
 
     /* ── PHASE COLOR THEMES ── */
+    .theme-p0 { background: rgba(249,115,22,0.1); }
     .theme-p1 { background: rgba(10,191,188,0.1); }
     .theme-p2 { background: rgba(74,143,231,0.1); }
     .theme-p3 { background: rgba(139,92,246,0.1); }
@@ -275,8 +277,9 @@
     .theme-p5 { background: rgba(16,185,129,0.1); }
     .theme-p6 { background: rgba(244,63,94,0.1); }
     .theme-p7 { background: rgba(6,182,212,0.1); }
-    .badge-p1 { background: var(--p1); } .badge-p2 { background: var(--p2); } .badge-p3 { background: var(--p3); }
+    .badge-p0 { background: var(--p0); } .badge-p1 { background: var(--p1); } .badge-p2 { background: var(--p2); } .badge-p3 { background: var(--p3); }
     .badge-p4 { background: var(--p4); } .badge-p5 { background: var(--p5); } .badge-p6 { background: var(--p6); } .badge-p7 { background: var(--p7); }
+    .num-p0 { background: rgba(249,115,22,0.15); color: var(--p0); }
     .num-p1 { background: rgba(10,191,188,0.15); color: var(--p1); }
     .num-p2 { background: rgba(74,143,231,0.15); color: var(--p2); }
     .num-p3 { background: rgba(139,92,246,0.15); color: var(--p3); }
@@ -284,7 +287,7 @@
     .num-p5 { background: rgba(16,185,129,0.15); color: var(--p5); }
     .num-p6 { background: rgba(244,63,94,0.15); color: var(--p6); }
     .num-p7 { background: rgba(6,182,212,0.15); color: var(--p7); }
-    .label-p1 { color: var(--p1); } .label-p2 { color: var(--p2); } .label-p3 { color: var(--p3); }
+    .label-p0 { color: var(--p0); } .label-p1 { color: var(--p1); } .label-p2 { color: var(--p2); } .label-p3 { color: var(--p3); }
     .label-p4 { color: var(--p4); } .label-p5 { color: var(--p5); } .label-p6 { color: var(--p6); } .label-p7 { color: var(--p7); }
     .tag-p1 { background: rgba(10,191,188,0.12); color: var(--p1); border: 1px solid rgba(10,191,188,0.3); }
     .tag-p2 { background: rgba(74,143,231,0.12); color: var(--p2); border: 1px solid rgba(74,143,231,0.3); }
@@ -292,6 +295,7 @@
     .tag-p4 { background: rgba(245,158,11,0.12); color: var(--p4); border: 1px solid rgba(245,158,11,0.3); }
     .tag-p5 { background: rgba(16,185,129,0.12); color: var(--p5); border: 1px solid rgba(16,185,129,0.3); }
     .tag-p6 { background: rgba(244,63,94,0.12); color: var(--p6); border: 1px solid rgba(244,63,94,0.3); }
+    .tag-p0 { background: rgba(249,115,22,0.12); color: var(--p0); border: 1px solid rgba(249,115,22,0.3); }
     .tag-p7 { background: rgba(6,182,212,0.12); color: var(--p7); border: 1px solid rgba(6,182,212,0.3); }
   </style>
 </head>
@@ -318,6 +322,7 @@
   <div class="swift-tab-group">
     <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">7 Phases ▾</span></button>
     <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="#phase-0" style="color:var(--p0);">Phase 0 · Tools Setup ⭐</a>
       <a class="swift-sub-item" href="#phase-1">Phase 1 · Brand Foundation</a>
       <a class="swift-sub-item" href="#phase-2">Phase 2 · Instagram Setup</a>
       <a class="swift-sub-item" href="#phase-3">Phase 3 · Lead Magnets</a>
@@ -372,6 +377,7 @@
   <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
   <div class="mobile-menu-section">FIRST 7 PHASES</div>
   <a class="mobile-menu-item active" href="first-7-phases.html"><span class="mobile-menu-letter" style="color:var(--gold);">📍</span>All 7 Phases</a>
+  <a class="mobile-menu-item" href="#phase-0"><span class="mobile-menu-letter" style="color:var(--p0);">0</span>Tools Setup ⭐</a>
   <a class="mobile-menu-item" href="#phase-1"><span class="mobile-menu-letter" style="color:var(--p1);">1</span>Brand Foundation</a>
   <a class="mobile-menu-item" href="#phase-2"><span class="mobile-menu-letter" style="color:var(--p2);">2</span>Instagram Setup</a>
   <a class="mobile-menu-item" href="#phase-3"><span class="mobile-menu-letter" style="color:var(--p3);">3</span>Lead Magnets</a>
@@ -392,6 +398,7 @@
 
 <!-- MOBILE PHASE STRIP -->
 <div class="mobile-phase-strip" id="mobilePhaseStrip">
+  <a href="#phase-0" class="phase-pill" data-phase="phase-0" style="color:var(--p0);"><span class="phase-pill-dot" style="background:var(--p0);"></span>0 · Setup ⭐</a>
   <a href="#phase-1" class="phase-pill active" data-phase="phase-1" style="color:var(--p1);"><span class="phase-pill-dot" style="background:var(--p1);"></span>1 · Brand</a>
   <a href="#phase-2" class="phase-pill" data-phase="phase-2" style="color:var(--p2);"><span class="phase-pill-dot" style="background:var(--p2);"></span>2 · Instagram</a>
   <a href="#phase-3" class="phase-pill" data-phase="phase-3" style="color:var(--p3);"><span class="phase-pill-dot" style="background:var(--p3);"></span>3 · Lead Magnets</a>
@@ -409,9 +416,10 @@
     <div class="sidebar-title">Your Roadmap</div>
     <div class="sidebar-progress-wrap">
       <div class="sidebar-progress-bar"><div class="sidebar-progress-fill" id="sidebarFill"></div></div>
-      <div class="sidebar-progress-label"><span id="doneCount">0</span> / 27 steps completed</div>
+      <div class="sidebar-progress-label"><span id="doneCount">0</span> / 34 steps completed</div>
     </div>
     <nav style="margin-top:8px;">
+      <a href="#phase-0" class="sn-phase"><div class="sn-dot" style="background:var(--p0);"></div><div class="sn-info"><div class="sn-num">PHASE 0</div><div class="sn-name">Tools Setup</div></div><span class="sn-count">7 steps</span></a>
       <a href="#phase-1" class="sn-phase"><div class="sn-dot" style="background:var(--p1);"></div><div class="sn-info"><div class="sn-num">PHASE 1</div><div class="sn-name">Brand Foundation</div></div><span class="sn-count">3 steps</span></a>
       <a href="#phase-2" class="sn-phase"><div class="sn-dot" style="background:var(--p2);"></div><div class="sn-info"><div class="sn-num">PHASE 2</div><div class="sn-name">Instagram Setup</div></div><span class="sn-count">5 steps</span></a>
       <a href="#phase-3" class="sn-phase"><div class="sn-dot" style="background:var(--p3);"></div><div class="sn-info"><div class="sn-num">PHASE 3</div><div class="sn-name">Lead Magnets</div></div><span class="sn-count">4 steps</span></a>
@@ -430,17 +438,148 @@
       <div style="display:inline-block;background:rgba(10,191,188,0.15);border:1px solid rgba(10,191,188,0.3);border-radius:99px;padding:4px 14px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">⭐ For New Students — Start Here</div>
       <div class="phases-hero-tag">✶ Complete Action Roadmap</div>
       <h1>My First <em>7 Phases</em></h1>
-      <p>27 steps. Every one supported by a Claude prompt or skill. Follow in order, tick off as you go — and you'll always know exactly where you are and what to do next.</p>
+      <p>34 steps. Every one supported by a Claude prompt or skill. Follow in order, tick off as you go — and you'll always know exactly where you are and what to do next.</p>
       <div class="hero-stats">
-        <div class="hero-stat"><div class="hero-stat-num">7</div><div class="hero-stat-label">Phases</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">27</div><div class="hero-stat-label">Action Steps</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label">Video Guides</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">8</div><div class="hero-stat-label">Phases</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">34</div><div class="hero-stat-label">Action Steps</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">Video Guides</div></div>
         <div class="hero-stat"><div class="hero-stat-num">15+</div><div class="hero-stat-label">Claude Prompts</div></div>
       </div>
       <div style="margin-top:20px;">
         <a href="https://claude.com/download" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(10,191,188,0.15);border:1px solid rgba(10,191,188,0.35);border-radius:8px;padding:9px 18px;color:var(--gold);font-size:13px;font-weight:600;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='rgba(10,191,188,0.25)'" onmouseout="this.style.background='rgba(10,191,188,0.15)'">⬇ Download Claude &nbsp;·&nbsp; <span style="opacity:0.7;font-weight:400;">claude.com/download</span></a>
       </div>
     </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PHASE 0 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="phase-0" class="phase-section">
+      <div class="phase-header theme-p0">
+        <div class="phase-num-badge num-p0">0</div>
+        <div class="phase-header-text">
+          <div class="phase-label label-p0">Phase 0 · Start Here First</div>
+          <h2>Set Up Your Tools</h2>
+          <p>Before anything else, get these 7 tools in place. Most are free. Each takes 5–10 minutes to set up. If you get stuck at any point, open Claude Code and ask it to guide you step by step.</p>
+        </div>
+        <button class="phase-collapse-btn" onclick="togglePhase(this.closest('section').id)">&#9660;</button>
+      </div>
+      <div class="phase-steps-wrap">
+
+        <!-- 0a -->
+        <div class="step-block" id="step-0a">
+          <div class="step-top">
+            <div class="step-badge badge-p0">0a</div>
+            <div class="step-body">
+              <h3>Download Claude</h3>
+              <p>Your AI co-pilot for every step in this roadmap. Download the desktop app so you can drag files, paste screenshots, and work hands-free.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('0a', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>Use the free tier to start. The prompts in this roadmap are designed to work with Claude's free plan — upgrade when you're ready to go faster.</span></div>
+            <a href="https://claude.com/download" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:9px 18px;color:var(--p0);font-size:13px;font-weight:600;text-decoration:none;margin-top:12px;">⬇ Download Claude &nbsp;·&nbsp; <span style="opacity:0.6;font-weight:400;">claude.com/download</span></a>
+          </div>
+        </div>
+
+        <!-- 0b -->
+        <div class="step-block" id="step-0b">
+          <div class="step-top">
+            <div class="step-badge badge-p0">0b</div>
+            <div class="step-body">
+              <h3>Get ChatGPT Plus</h3>
+              <p>ChatGPT's image generation (DALL·E) is useful for creating quick visuals. Sign up at chatgpt.com — the free plan is fine to start.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('0b', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <a href="https://chatgpt.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:9px 18px;color:var(--p0);font-size:13px;font-weight:600;text-decoration:none;">🌐 Go to chatgpt.com</a>
+          </div>
+        </div>
+
+        <!-- 0c -->
+        <div class="step-block" id="step-0c">
+          <div class="step-top">
+            <div class="step-badge badge-p0">0c</div>
+            <div class="step-body">
+              <h3>Create a GitHub Account</h3>
+              <p>GitHub is where your website code lives. Create a free account at github.com — you'll need it to connect Vercel in the next step.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('0c', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span><strong>Steps:</strong> Go to github.com → click "Sign up" → enter your email and create a password → verify your email. That's it. If you get stuck, open Claude Code and ask: <em>"Guide me step by step to create a GitHub account."</em></span></div>
+            <a href="https://github.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:9px 18px;color:var(--p0);font-size:13px;font-weight:600;text-decoration:none;margin-top:12px;">🌐 Go to github.com</a>
+          </div>
+        </div>
+
+        <!-- 0d -->
+        <div class="step-block" id="step-0d">
+          <div class="step-top">
+            <div class="step-badge badge-p0">0d</div>
+            <div class="step-body">
+              <h3>Create a Vercel Account</h3>
+              <p>Vercel hosts your website pages for free. Sign in with GitHub — one click, no card needed. This is how your lead magnet pages and programme page go live.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('0d', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span><strong>Steps:</strong> Go to vercel.com → click "Sign Up" → choose "Continue with GitHub" → authorise Vercel. Done. If you get stuck, open Claude Code and ask: <em>"Guide me step by step to create a Vercel account and connect it to GitHub."</em></span></div>
+            <a href="https://vercel.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:9px 18px;color:var(--p0);font-size:13px;font-weight:600;text-decoration:none;margin-top:12px;">🌐 Go to vercel.com</a>
+          </div>
+        </div>
+
+        <!-- 0e -->
+        <div class="step-block" id="step-0e">
+          <div class="step-top">
+            <div class="step-badge badge-p0">0e</div>
+            <div class="step-body">
+              <h3>Switch to an Instagram Business Account</h3>
+              <p>You need a Business or Creator account to access insights, run ads, and connect ManyChat. Takes 30 seconds to switch — no content is lost.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('0e', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span><strong>How to switch:</strong> Instagram → Profile → ☰ Menu → Settings → Account → Switch to Professional Account → choose Business. If you get stuck, open Claude Code and ask: <em>"Guide me step by step to switch my Instagram to a Business Account."</em></span></div>
+          </div>
+        </div>
+
+        <!-- 0f -->
+        <div class="step-block" id="step-0f">
+          <div class="step-top">
+            <div class="step-badge badge-p0">0f</div>
+            <div class="step-body">
+              <h3>Set Up ManyChat</h3>
+              <p>ManyChat automates your Instagram DM replies — so when someone comments or DMs a keyword, they get the lead magnet link instantly, even while you sleep.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('0f', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span><strong>Steps:</strong> Go to manychat.com → Sign up with your email → Connect to Instagram → authorise the permissions. If you get stuck at any point, open Claude Code and ask: <em>"Guide me step by step to create a ManyChat account and connect it to my Instagram."</em></span></div>
+            <a href="https://manychat.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:9px 18px;color:var(--p0);font-size:13px;font-weight:600;text-decoration:none;margin-top:12px;">🌐 Go to manychat.com</a>
+          </div>
+        </div>
+
+        <!-- 0g -->
+        <div class="step-block" id="step-0g">
+          <div class="step-top">
+            <div class="step-badge badge-p0">0g</div>
+            <div class="step-body">
+              <h3>Download WhatsApp Business</h3>
+              <p>WhatsApp Business lets you set quick replies, an away message, and a business profile — so parents always get a response, even if it's automated.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('0g', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>Use a separate number for business, or port your existing number. Set up: profile photo, business description, opening hours, quick reply for "Hi, I'm interested in your class" — you'll use this in Phase 5.</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+              <a href="https://apps.apple.com/app/whatsapp-business/id1386412985" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:9px 18px;color:var(--p0);font-size:13px;font-weight:600;text-decoration:none;">🍎 App Store</a>
+              <a href="https://play.google.com/store/apps/details?id=com.whatsapp.w4b" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:9px 18px;color:var(--p0);font-size:13px;font-weight:600;text-decoration:none;">🤖 Google Play</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end phase-steps-wrap -->
+    </section>
 
     <!-- ══════════════════════════════════════════ -->
     <!-- PHASE 1 -->
@@ -781,6 +920,12 @@ Style the iframe to match the page: no border, full width, height 400px. Wrap it
               <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
             </div>
             <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span><strong>How to get your Google Form embed URL:</strong> Open Google Forms → click Send → click the <strong>&lt;&gt;</strong> Embed tab → copy the URL inside the <code>src=""</code> attribute of the iframe code.</span></div>
+            <div style="margin-top:16px;">
+              <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">📺 Video Tutorial — How to Create a Google Form</div>
+              <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border);">
+                <iframe src="https://www.youtube.com/embed/YKGa8ZpYpdQ" title="How to Create a Google Form" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:10px;"></iframe>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1225,6 +1370,7 @@ Design: trustworthy, clean — colours [HEX1] and [HEX2]. Mobile-friendly. Deplo
             <div class="step-body">
               <h3>Create a content calendar</h3>
               <p>3 posts/week: 1 carousel (pain point) + 1 short tip reel + 1 personal/story post. Consistency compounds — each post seeds the next lead magnet request.</p>
+              <p style="margin-top:8px;font-size:13px;color:var(--muted);">🎬 For reels, use <strong>CapCut</strong> or the built-in <strong>Edit</strong> app inside Instagram — both are free and beginner-friendly.</p>
             </div>
             <button class="step-done-btn" onclick="toggleStep('7b', this)">✓ Done</button>
           </div>
@@ -1312,7 +1458,7 @@ Design: emotional, clean — colours [HEX1] and [HEX2]. Deploy on Vercel.</div>
 
 <script>
   const PROGRESS_KEY = 'pac-7phases-progress';
-  const TOTAL_STEPS = 27;
+  const TOTAL_STEPS = 34;
 
   function getProgress() {
     try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch(e) { return {}; }
@@ -1378,7 +1524,7 @@ Design: emotional, clean — colours [HEX1] and [HEX2]. Deploy on Vercel.</div>
 
   // Sidebar active state on scroll
   function updateSidebarActive() {
-    const phases = ['phase-1','phase-2','phase-3','phase-4','phase-5','phase-6','phase-7'];
+    const phases = ['phase-0','phase-1','phase-2','phase-3','phase-4','phase-5','phase-6','phase-7'];
     const links = document.querySelectorAll('.sn-phase');
     let current = 0;
     phases.forEach(function(id, i) {
@@ -1411,7 +1557,7 @@ Design: emotional, clean — colours [HEX1] and [HEX2]. Deploy on Vercel.</div>
   // Phase pill active state on scroll (mobile)
   function updatePhasePills() {
     if (window.innerWidth > 768) return;
-    var phases = ['phase-1','phase-2','phase-3','phase-4','phase-5','phase-6','phase-7'];
+    var phases = ['phase-0','phase-1','phase-2','phase-3','phase-4','phase-5','phase-6','phase-7'];
     var pills = document.querySelectorAll('.phase-pill');
     var current = 0;
     phases.forEach(function(id, i) {
