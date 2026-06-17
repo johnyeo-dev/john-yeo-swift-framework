@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(s&&s.u&&!localStorage.getItem('pac-swift-user'))localStorage.setItem('pac-swift-user',s.u);}catch(e){}})();</script>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>First 7 Phases | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --cream: #F4F7FB; --cream-dark: #E8EDF5;
+      --text: #0A0F1C; --muted: #6B7A96;
+      --white: #FFFFFF; --border: #D1DAE8;
+      --p1: #0ABFBC; --p2: #4A8FE7; --p3: #8B5CF6;
+      --p4: #F59E0B; --p5: #10B981; --p6: #F43F5E; --p7: #06B6D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+    /* ── HEADER ── */
+    .header { background: var(--navy); padding: 12px 24px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .header-logo { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--gold); text-decoration: none; }
+    .header-sub { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 500; letter-spacing: 1px; }
+
+    /* ── NAV ── */
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 20px; line-height: 1; }
+    .swift-word { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 220px; white-space: nowrap; max-height: 80vh; overflow-y: auto; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
+    @media (max-width: 768px) { .swift-nav { display: none !important; } .mobile-menu-bar { display: block; } }
+    @media (min-width: 769px) { .mobile-menu-bar { display: none !important; } }
+
+    /* ── MOBILE NAV ── */
+    .mobile-menu-bar { display: none; background: var(--navy-light); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 200; }
+    .mobile-menu-btn { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; }
+    .mobile-menu-panel { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background: #111827; z-index: 501; overflow-y: auto; padding: 0 0 40px; transform: translateX(-100%); transition: transform 0.25s ease; pointer-events: none; }
+    .mobile-menu-panel.open { transform: translateX(0); pointer-events: auto; }
+    .mobile-menu-overlay.open { display: block; }
+    .mobile-menu-header { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
+    .mobile-menu-close { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 22px; cursor: pointer; }
+    .mobile-menu-section { padding: 16px 16px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'DM Sans', sans-serif; }
+    .mobile-menu-item:hover, .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+
+    /* ── PAGE LAYOUT ── */
+    .phases-layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 100px); }
+
+    /* ── SIDEBAR ── */
+    .phases-sidebar { background: var(--navy-light); position: sticky; top: 45px; height: calc(100vh - 45px); overflow-y: auto; padding: 24px 0 40px; border-right: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-title { padding: 0 20px 6px; font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); }
+    .sidebar-progress-wrap { padding: 10px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-progress-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; margin-bottom: 6px; }
+    .sidebar-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #4A8FE7); border-radius: 99px; transition: width 0.4s ease; width: 0%; }
+    .sidebar-progress-label { font-size: 11px; color: rgba(255,255,255,0.4); }
+    .sidebar-progress-label span { color: var(--gold); font-weight: 700; }
+    .sn-phase { display: flex; align-items: center; gap: 10px; padding: 11px 20px; color: rgba(255,255,255,0.55); font-size: 13px; text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; }
+    .sn-phase:hover { color: white; background: rgba(255,255,255,0.04); }
+    .sn-phase.active { color: white; background: rgba(10,191,188,0.08); border-left-color: var(--gold); }
+    .sn-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .sn-info { flex: 1; }
+    .sn-num { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,0.35); margin-bottom: 1px; }
+    .sn-name { font-size: 12px; font-weight: 600; line-height: 1.3; }
+    .sn-count { font-size: 10px; color: rgba(255,255,255,0.3); white-space: nowrap; }
+
+    /* ── MAIN ── */
+    .phases-main { padding: 0 0 80px; }
+
+    /* ── HERO ── */
+    .phases-hero { background: linear-gradient(135deg, var(--navy), #0f1e3d); padding: 40px 40px 36px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .phases-hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .phases-hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(26px,4vw,38px); color: white; line-height: 1.2; margin-bottom: 12px; }
+    .phases-hero h1 em { font-style: italic; color: var(--gold); }
+    .phases-hero p { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.75; max-width: 580px; }
+    .hero-stats { display: flex; gap: 28px; margin-top: 24px; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); line-height: 1; }
+    .hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+
+    /* ── PHASE SECTION ── */
+    .phase-section { padding: 0; border-bottom: 2px solid var(--border); }
+    .phase-header { padding: 28px 40px 24px; display: flex; align-items: flex-start; gap: 18px; position: relative; }
+    .phase-num-badge { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 22px; color: white; flex-shrink: 0; margin-top: 2px; }
+    .phase-header-text { flex: 1; }
+    .phase-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; opacity: 0.8; }
+    .phase-header-text h2 { font-family: 'DM Serif Display', serif; font-size: clamp(20px,2.5vw,26px); color: var(--navy); line-height: 1.2; margin-bottom: 6px; }
+    .phase-header-text p { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 520px; }
+    .phase-steps-wrap { padding: 0 40px 28px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* ── STEP BLOCK ── */
+    .step-block { background: white; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; transition: box-shadow 0.2s; }
+    .step-block:hover { box-shadow: 0 3px 16px rgba(0,45,106,0.07); }
+    .step-block.done { border-color: #10B981; background: #f0fdf9; }
+    .step-top { display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px 16px; }
+    .step-badge { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: white; flex-shrink: 0; letter-spacing: 0.5px; font-family: 'DM Sans', sans-serif; }
+    .step-body { flex: 1; }
+    .step-body h3 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 6px; line-height: 1.3; }
+    .step-block.done .step-body h3 { color: #059669; }
+    .step-body p { font-size: 13.5px; color: var(--muted); line-height: 1.7; }
+    .step-done-btn { background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+    .step-done-btn:hover { border-color: #10B981; color: #059669; }
+    .step-block.done .step-done-btn { background: #10B981; border-color: #10B981; color: white; }
+    .step-extras { padding: 0 20px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* ── PROMPT BOX ── */
+    .prompt-box { background: var(--navy); border-radius: 10px; padding: 16px 18px; position: relative; }
+    .prompt-box-label { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .prompt-text { font-size: 12.5px; line-height: 1.85; color: rgba(255,255,255,0.82); font-family: 'DM Sans', sans-serif; white-space: pre-wrap; }
+    .copy-btn { position: absolute; top: 12px; right: 12px; background: rgba(10,191,188,0.2); border: 1px solid var(--gold); color: var(--gold); font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; letter-spacing: 0.5px; }
+    .copy-btn:hover { background: var(--gold); color: var(--navy); }
+    .copy-btn.copied { background: #10B981; border-color: #10B981; color: white; }
+
+    /* ── VIDEO EMBED ── */
+    .video-wrap { border-radius: 10px; overflow: hidden; }
+    .video-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .video-ratio { position: relative; padding-bottom: 56.25%; height: 0; }
+    .video-ratio iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+    /* ── PAGE THUMBNAILS ── */
+    .page-thumbs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .page-thumb-card { background: white; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; text-decoration: none; transition: all 0.2s; display: block; }
+    .page-thumb-card:hover { border-color: var(--gold); box-shadow: 0 4px 16px rgba(10,191,188,0.15); transform: translateY(-2px); }
+    .page-thumb-img { width: 100%; height: 140px; object-fit: cover; object-position: top; display: block; background: var(--cream-dark); }
+    .page-thumb-info { padding: 10px 12px; }
+    .page-thumb-name { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .page-thumb-url { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .page-thumb-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 4px; padding: 2px 7px; margin-bottom: 6px; }
+
+    /* ── LINK BUTTON ── */
+    .link-btn { display: inline-flex; align-items: center; gap: 7px; background: var(--cream); border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600; color: var(--navy); text-decoration: none; transition: all 0.2s; }
+    .link-btn:hover { border-color: var(--gold); color: var(--navy); background: white; }
+    .link-btn.primary { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+    .link-btn.primary:hover { background: #08a8a5; }
+    .link-btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    /* ── DOWNLOAD CARD ── */
+    .download-card { background: linear-gradient(135deg, rgba(10,191,188,0.08), rgba(74,143,231,0.06)); border: 1.5px solid rgba(10,191,188,0.3); border-radius: 12px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
+    .download-icon { font-size: 28px; flex-shrink: 0; }
+    .download-info { flex: 1; }
+    .download-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .download-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .download-btn { background: var(--gold); color: var(--navy); border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .download-btn:hover { background: #08a8a5; }
+
+    /* ── IG EXAMPLE ── */
+    .ig-example { background: var(--cream); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-decoration: none; transition: all 0.2s; }
+    .ig-example:hover { border-color: #E1306C; }
+    .ig-example-icon { font-size: 22px; flex-shrink: 0; }
+    .ig-example-text { flex: 1; }
+    .ig-example-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #E1306C; margin-bottom: 2px; }
+    .ig-example-title { font-size: 13px; font-weight: 600; color: var(--navy); }
+
+    /* ── INFO CALLOUT ── */
+    .callout { border-radius: 8px; padding: 13px 16px; display: flex; gap: 10px; font-size: 13px; line-height: 1.65; }
+    .callout-tip { background: #FFF8EE; border-left: 3px solid var(--gold); }
+    .callout-info { background: #EEF4FF; border-left: 3px solid #4A8FE7; }
+    .callout-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .phases-layout { grid-template-columns: 1fr; }
+      .phases-sidebar { display: none; }
+      .phases-hero { padding: 28px 20px 24px; }
+      .phase-header { padding: 22px 20px 18px; }
+      .phase-steps-wrap { padding: 0 16px 22px; }
+      .step-top { padding: 14px 16px 12px; }
+      .step-extras { padding: 0 16px 16px; }
+      .hero-stats { gap: 16px; }
+    }
+
+    /* ── PHASE COLOR THEMES ── */
+    .theme-p1 { background: rgba(10,191,188,0.1); }
+    .theme-p2 { background: rgba(74,143,231,0.1); }
+    .theme-p3 { background: rgba(139,92,246,0.1); }
+    .theme-p4 { background: rgba(245,158,11,0.1); }
+    .theme-p5 { background: rgba(16,185,129,0.1); }
+    .theme-p6 { background: rgba(244,63,94,0.1); }
+    .theme-p7 { background: rgba(6,182,212,0.1); }
+    .badge-p1 { background: var(--p1); } .badge-p2 { background: var(--p2); } .badge-p3 { background: var(--p3); }
+    .badge-p4 { background: var(--p4); } .badge-p5 { background: var(--p5); } .badge-p6 { background: var(--p6); } .badge-p7 { background: var(--p7); }
+    .num-p1 { background: rgba(10,191,188,0.15); color: var(--p1); }
+    .num-p2 { background: rgba(74,143,231,0.15); color: var(--p2); }
+    .num-p3 { background: rgba(139,92,246,0.15); color: var(--p3); }
+    .num-p4 { background: rgba(245,158,11,0.15); color: var(--p4); }
+    .num-p5 { background: rgba(16,185,129,0.15); color: var(--p5); }
+    .num-p6 { background: rgba(244,63,94,0.15); color: var(--p6); }
+    .num-p7 { background: rgba(6,182,212,0.15); color: var(--p7); }
+    .label-p1 { color: var(--p1); } .label-p2 { color: var(--p2); } .label-p3 { color: var(--p3); }
+    .label-p4 { color: var(--p4); } .label-p5 { color: var(--p5); } .label-p6 { color: var(--p6); } .label-p7 { color: var(--p7); }
+    .tag-p1 { background: rgba(10,191,188,0.12); color: var(--p1); border: 1px solid rgba(10,191,188,0.3); }
+    .tag-p2 { background: rgba(74,143,231,0.12); color: var(--p2); border: 1px solid rgba(74,143,231,0.3); }
+    .tag-p3 { background: rgba(139,92,246,0.12); color: var(--p3); border: 1px solid rgba(139,92,246,0.3); }
+    .tag-p4 { background: rgba(245,158,11,0.12); color: var(--p4); border: 1px solid rgba(245,158,11,0.3); }
+    .tag-p5 { background: rgba(16,185,129,0.12); color: var(--p5); border: 1px solid rgba(16,185,129,0.3); }
+    .tag-p6 { background: rgba(244,63,94,0.12); color: var(--p6); border: 1px solid rgba(244,63,94,0.3); }
+    .tag-p7 { background: rgba(6,182,212,0.12); color: var(--p7); border: 1px solid rgba(6,182,212,0.3); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <a href="index.html" class="header-logo">SWIFT</a>
+  <span class="header-sub">PAC Framework</span>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+    <button onclick="localStorage.removeItem('pac-swift-session');localStorage.removeItem('pac-swift-user');window.location.href='login.html';" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Sign Out</button>
+  </div>
+</div>
+
+<!-- DESKTOP NAV -->
+<nav class="swift-nav">
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter" style="color:var(--gold);">⌂</span><span class="swift-word">Home ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="index.html">⌂ Home</a>
+      <a class="swift-sub-item" href="directory.html">📂 Directory</a>
+    </div>
+  </div>
+  <div class="swift-tab-group">
+    <button class="swift-tab active" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">7 Phases ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="#phase-1">Phase 1 · Brand Foundation</a>
+      <a class="swift-sub-item" href="#phase-2">Phase 2 · Instagram Setup</a>
+      <a class="swift-sub-item" href="#phase-3">Phase 3 · Lead Magnets</a>
+      <a class="swift-sub-item" href="#phase-4">Phase 4 · ManyChat Automation</a>
+      <a class="swift-sub-item" href="#phase-5">Phase 5 · Conversation &amp; Close</a>
+      <a class="swift-sub-item" href="#phase-6">Phase 6 · Programme Page</a>
+      <a class="swift-sub-item" href="#phase-7">Phase 7 · Social Proof &amp; Growth</a>
+    </div>
+  </div>
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+      <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+      <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+      <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+      <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+    </div>
+  </div>
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="sales-call.html">📞 Sales Call Mastery</a>
+      <a class="swift-sub-item" href="parent-clarity.html">💬 Parent Clarity Conversation</a>
+      <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+      <a class="swift-sub-item" href="dream100.html">🤝 Dream 100</a>
+      <a class="swift-sub-item" href="holiday-workshops.html">🎉 Holiday Workshops</a>
+      <a class="swift-sub-item" href="parties-for-kids.html">🎈 Parties for Kids</a>
+      <a class="swift-sub-item" href="monthly-annual.html">📆 Monthly → Annual</a>
+      <a class="swift-sub-item" href="product-creation.html">🏗️ Product Creation</a>
+      <a class="swift-sub-item" href="affiliate-programme.html">💰 Affiliate Programme</a>
+    </div>
+  </div>
+  <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
+  <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span></button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-menu-bar">
+  <button class="mobile-menu-btn" onclick="openMobileMenu()">
+    <span>☰ &nbsp;Navigate</span>
+    <span style="font-size:12px;opacity:0.5;">First 7 Phases</span>
+  </button>
+</div>
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu-panel" id="mobileMenuPanel">
+  <div class="mobile-menu-header">
+    <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+    <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+  </div>
+  <button onclick="localStorage.removeItem('pac-swift-session');window.location.href='login.html';" style="width:100%;text-align:left;background:rgba(248,113,113,0.08);border:none;border-bottom:1px solid rgba(248,113,113,0.18);padding:11px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#f87171;display:flex;align-items:center;gap:10px;"><span style="font-size:15px;">⏻</span>Sign Out</button>
+  <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+  <div class="mobile-menu-section">FIRST 7 PHASES</div>
+  <a class="mobile-menu-item active" href="first-7-phases.html"><span class="mobile-menu-letter" style="color:var(--gold);">📍</span>All 7 Phases</a>
+  <a class="mobile-menu-item" href="#phase-1"><span class="mobile-menu-letter" style="color:var(--p1);">1</span>Brand Foundation</a>
+  <a class="mobile-menu-item" href="#phase-2"><span class="mobile-menu-letter" style="color:var(--p2);">2</span>Instagram Setup</a>
+  <a class="mobile-menu-item" href="#phase-3"><span class="mobile-menu-letter" style="color:var(--p3);">3</span>Lead Magnets</a>
+  <a class="mobile-menu-item" href="#phase-4"><span class="mobile-menu-letter" style="color:var(--p4);">4</span>ManyChat Automation</a>
+  <a class="mobile-menu-item" href="#phase-5"><span class="mobile-menu-letter" style="color:var(--p5);">5</span>Conversation &amp; Close</a>
+  <a class="mobile-menu-item" href="#phase-6"><span class="mobile-menu-letter" style="color:var(--p6);">6</span>Programme Page</a>
+  <a class="mobile-menu-item" href="#phase-7"><span class="mobile-menu-letter" style="color:var(--p7);">7</span>Social Proof &amp; Growth</a>
+  <div class="mobile-menu-section">SWIFT PROGRAMME</div>
+  <a class="mobile-menu-item" href="signature-programme.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">S</span>Signature</a>
+  <a class="mobile-menu-item" href="webinar-programme.html"><span class="mobile-menu-letter" style="color:#4A8FE7;">W</span>Webinar</a>
+  <a class="mobile-menu-item" href="invite-programme.html"><span class="mobile-menu-letter" style="color:#8B5CF6;">I</span>Invite</a>
+  <a class="mobile-menu-item" href="fill-programme.html"><span class="mobile-menu-letter" style="color:#F59E0B;">F</span>Fill Class</a>
+  <a class="mobile-menu-item" href="track-programme.html"><span class="mobile-menu-letter" style="color:#10B981;">T</span>Track</a>
+  <div class="mobile-menu-section">Resources</div>
+  <a class="mobile-menu-item" href="sales-call.html"><span class="mobile-menu-letter">📞</span>Sales Call Mastery</a>
+  <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
+</div>
+
+<!-- PAGE LAYOUT -->
+<div class="phases-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="phases-sidebar">
+    <div class="sidebar-title">Your Roadmap</div>
+    <div class="sidebar-progress-wrap">
+      <div class="sidebar-progress-bar"><div class="sidebar-progress-fill" id="sidebarFill"></div></div>
+      <div class="sidebar-progress-label"><span id="doneCount">0</span> / 27 steps completed</div>
+    </div>
+    <nav style="margin-top:8px;">
+      <a href="#phase-1" class="sn-phase"><div class="sn-dot" style="background:var(--p1);"></div><div class="sn-info"><div class="sn-num">PHASE 1</div><div class="sn-name">Brand Foundation</div></div><span class="sn-count">3 steps</span></a>
+      <a href="#phase-2" class="sn-phase"><div class="sn-dot" style="background:var(--p2);"></div><div class="sn-info"><div class="sn-num">PHASE 2</div><div class="sn-name">Instagram Setup</div></div><span class="sn-count">5 steps</span></a>
+      <a href="#phase-3" class="sn-phase"><div class="sn-dot" style="background:var(--p3);"></div><div class="sn-info"><div class="sn-num">PHASE 3</div><div class="sn-name">Lead Magnets</div></div><span class="sn-count">4 steps</span></a>
+      <a href="#phase-4" class="sn-phase"><div class="sn-dot" style="background:var(--p4);"></div><div class="sn-info"><div class="sn-num">PHASE 4</div><div class="sn-name">ManyChat Automation</div></div><span class="sn-count">4 steps</span></a>
+      <a href="#phase-5" class="sn-phase"><div class="sn-dot" style="background:var(--p5);"></div><div class="sn-info"><div class="sn-num">PHASE 5</div><div class="sn-name">Conversation &amp; Close</div></div><span class="sn-count">4 steps</span></a>
+      <a href="#phase-6" class="sn-phase"><div class="sn-dot" style="background:var(--p6);"></div><div class="sn-info"><div class="sn-num">PHASE 6</div><div class="sn-name">Programme Page</div></div><span class="sn-count">5 steps</span></a>
+      <a href="#phase-7" class="sn-phase"><div class="sn-dot" style="background:var(--p7);"></div><div class="sn-info"><div class="sn-num">PHASE 7</div><div class="sn-name">Social Proof &amp; Growth</div></div><span class="sn-count">4 steps</span></a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="phases-main">
+
+    <!-- HERO -->
+    <div class="phases-hero">
+      <div class="phases-hero-tag">✶ Complete Action Roadmap</div>
+      <h1>My First <em>7 Phases</em></h1>
+      <p>27 steps. Every one supported by a Claude prompt or skill. Follow in order, tick off as you go — and you'll always know exactly where you are and what to do next.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num">7</div><div class="hero-stat-label">Phases</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">27</div><div class="hero-stat-label">Action Steps</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label">Video Guides</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">15+</div><div class="hero-stat-label">Claude Prompts</div></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PHASE 1 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="phase-1" class="phase-section">
+      <div class="phase-header theme-p1">
+        <div class="phase-num-badge num-p1">1</div>
+        <div class="phase-header-text">
+          <div class="phase-label label-p1">Phase 1</div>
+          <h2>Brand Foundation</h2>
+          <p>Do this once. Get it right. Everything else builds on it — your colours, voice, and niche define every piece of content you create.</p>
+        </div>
+      </div>
+      <div class="phase-steps-wrap">
+
+        <!-- 1a -->
+        <div class="step-block" id="step-1a">
+          <div class="step-top">
+            <div class="step-badge badge-p1">1a</div>
+            <div class="step-body">
+              <h3>Define your niche</h3>
+              <p>Who exactly do you help? Subject, level, and most importantly — the specific struggle. The more precise you are, the more parents feel like you're talking directly to them.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('1a', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>Bad: "I teach Maths." Good: "I help P5–P6 students stop second-guessing themselves in Paper 2."</span></div>
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Help me define my teaching niche. I teach [subject] to [age group / level]. My students most commonly struggle with [list 2-3 specific problems]. Help me write a one-sentence niche statement in this format: "I help [who] [achieve what] by [how]." Give me 3 versions to choose from.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1b -->
+        <div class="step-block" id="step-1b">
+          <div class="step-top">
+            <div class="step-badge badge-p1">1b</div>
+            <div class="step-body">
+              <h3>Build your brand colour palette</h3>
+              <p>Consistent colours = instant recognition. Think Tiffany's turquoise, Uniqlo's red. Upload a screenshot of your IG or logo to Claude and extract your palette.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('1b', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="video-wrap">
+              <div class="video-label">📹 Watch First</div>
+              <div class="video-ratio">
+                <iframe src="https://player.vimeo.com/video/1192763535?color=0ABFBC&title=0&byline=0&portrait=0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+              </div>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt — paste your screenshot after this</div>
+              <div class="prompt-text">I'm going to paste a screenshot of my brand / social media profile / marketing materials.
+
+Please:
+1. Read the colours you see from the image
+2. Identify my primary colours (background, headings, key accent)
+3. Identify my secondary colours (supporting tones)
+4. Give me the HEX code for each colour
+5. Advise me on which secondary colours to remove so the palette stays cohesive
+6. Show me a visual swatch card of the final colour palette</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>Stick to 2–3 main colours. Save your HEX codes — you'll use them in every step that follows.</span></div>
+          </div>
+        </div>
+
+        <!-- 1c -->
+        <div class="step-block" id="step-1c">
+          <div class="step-top">
+            <div class="step-badge badge-p1">1c</div>
+            <div class="step-body">
+              <h3>Define your brand voice</h3>
+              <p>How do you sound? Warm? Direct? Encouraging? Playful? Your voice should feel like you — so parents feel they know you before they ever meet you.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('1c', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Based on these 3 captions I've written [paste 3 examples], describe my brand voice in 5 words. Then write a one-paragraph tone guide I can give Claude every time I ask it to write content for me — so it always sounds like me.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PHASE 2 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="phase-2" class="phase-section">
+      <div class="phase-header theme-p2">
+        <div class="phase-num-badge num-p2">2</div>
+        <div class="phase-header-text">
+          <div class="phase-label label-p2">Phase 2</div>
+          <h2>Instagram Setup</h2>
+          <p>Your storefront. First impressions happen here. A parent visits your profile in 3 seconds — your bio, pinned post, and highlights decide if they stay.</p>
+        </div>
+      </div>
+      <div class="phase-steps-wrap">
+
+        <!-- 2a -->
+        <div class="step-block" id="step-2a">
+          <div class="step-top">
+            <div class="step-badge badge-p2">2a</div>
+            <div class="step-body">
+              <h3>Optimise your IG bio</h3>
+              <p>Clear niche + who you help + one CTA + your link. Under 150 characters. A parent should know within 3 seconds if you're right for their child.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('2a', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Write 3 versions of my Instagram bio. I'm a [subject] tutor helping [who — e.g. P5–P6 students struggling with Paper 2]. My link is [URL]. Keep each under 150 characters. Include one emoji. End with a soft CTA like "Free guide ↓" or "DM STUDY for tips".</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2b -->
+        <div class="step-block" id="step-2b">
+          <div class="step-top">
+            <div class="step-badge badge-p2">2b</div>
+            <div class="step-body">
+              <h3>Build your link-in-bio page</h3>
+              <p>One Vercel page that houses all your lead magnets — so one bio link goes everywhere. No Linktree needed. Claude builds it in minutes.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('2b', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Build a mobile-first link-in-bio page for a [subject] tutor. My name is [name]. Include buttons linking to:
+1. [Lead Magnet 1 title] → [URL]
+2. [Lead Magnet 2 title] → [URL]
+3. WhatsApp → https://wa.me/[number]
+4. Instagram → https://instagram.com/[handle]
+
+Use my brand colours: primary [HEX], accent [HEX].
+Font: DM Sans. Clean, modern design. Deploy on Vercel.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2c -->
+        <div class="step-block" id="step-2c">
+          <div class="step-top">
+            <div class="step-badge badge-p2">2c</div>
+            <div class="step-body">
+              <h3>Create branded IG highlight covers</h3>
+              <p>5 covers: Free Resources · Testimonials · About Me · Tips · Enrol Now. Consistent style = professional profile at a glance.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('2c', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ ChatGPT Image Prompt</div>
+              <div class="prompt-text">Create 5 Instagram highlight cover icons in flat design style. Background colour: [your HEX]. Icon colour: white. Simple, minimal icons for these 5 labels: Free Resources, Testimonials, About Me, Tips, Enrol Now. Square format, 1:1 ratio. No text — icon only. Consistent visual style across all 5.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2d -->
+        <div class="step-block" id="step-2d">
+          <div class="step-top">
+            <div class="step-badge badge-p2">2d</div>
+            <div class="step-body">
+              <h3>Create your pinned carousel post</h3>
+              <p>A 3–7 slide carousel addressing ONE specific pain point — ending with a CTA to comment a keyword for the free lead magnet. This is the engine of your funnel.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('2d', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="video-wrap">
+              <div class="video-label">📹 Watch: How to Create Carousel Images with ChatGPT</div>
+              <div class="video-ratio">
+                <iframe src="https://player.vimeo.com/video/1193276822?color=0ABFBC&title=0&byline=0&portrait=0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+              </div>
+            </div>
+            <a class="ig-example" href="https://www.instagram.com/p/DYzVKDBkvIB/?img_index=1" target="_blank" rel="noopener">
+              <span class="ig-example-icon">📸</span>
+              <div class="ig-example-text">
+                <div class="ig-example-label">Real Example on Instagram</div>
+                <div class="ig-example-title">See how a carousel addresses a specific maths pain point → taps lead magnet</div>
+              </div>
+              <span style="font-size:13px;color:var(--muted);">View ↗</span>
+            </a>
+            <div class="download-card">
+              <span class="download-icon">📥</span>
+              <div class="download-info">
+                <div class="download-name">John's Carousel Skill</div>
+                <div class="download-desc">Pre-built Claude skill that generates ChatGPT image prompts for your carousel. Edit the HEX codes (from Step 1b) and swap the topic for your pain point.</div>
+              </div>
+              <a class="download-btn" href="lotb-ig-carousel.skill" download="lotb-ig-carousel.skill">⬇ Download</a>
+            </div>
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>Carousel structure: Slide 1 = hook (name the pain) · Slides 2–3 = why it happens · Slides 4–5 = one small win · Last slide = "Comment [KEYWORD] for the full guide"</span></div>
+          </div>
+        </div>
+
+        <!-- 2e -->
+        <div class="step-block" id="step-2e">
+          <div class="step-top">
+            <div class="step-badge badge-p2">2e</div>
+            <div class="step-body">
+              <h3>Post and pin to your IG profile</h3>
+              <p>Go live. Then tap the three dots on the post → Pin to your profile. This stays at the top permanently until you replace it.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('2e', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>You can pin up to 3 posts. Start with one. Done is better than perfect — you can replace it with a better version next month.</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PHASE 3 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="phase-3" class="phase-section">
+      <div class="phase-header theme-p3">
+        <div class="phase-num-badge num-p3">3</div>
+        <div class="phase-header-text">
+          <div class="phase-label label-p3">Phase 3</div>
+          <h2>Lead Magnets</h2>
+          <p>Give first. Trust follows. A single web page — not a PDF — that solves one problem so well that parents immediately think: "This person really knows what they're doing."</p>
+        </div>
+      </div>
+      <div class="phase-steps-wrap">
+
+        <!-- 3a -->
+        <div class="step-block" id="step-3a">
+          <div class="step-top">
+            <div class="step-badge badge-p3">3a</div>
+            <div class="step-body">
+              <h3>Build Lead Magnet 1 — General guide</h3>
+              <p>Broad topic, wide appeal. 5–7 actionable steps on a single Vercel page. This is what you send in the ManyChat auto-DM.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('3a', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="page-thumbs">
+              <a class="page-thumb-card" href="https://7-proven-steps.vercel.app" target="_blank" rel="noopener">
+                <img class="page-thumb-img" src="https://image.thum.io/get/width/600/crop/400/https://7-proven-steps.vercel.app" alt="7 Proven Steps" loading="lazy" onerror="this.style.background='#E8EDF5';this.alt='Preview not available';this.style.display='flex';this.style.alignItems='center';this.style.justifyContent='center';this.style.fontSize='12px';this.style.color='#6B7A96';" />
+                <div class="page-thumb-info">
+                  <span class="page-thumb-tag tag-p3">General Lead Magnet</span>
+                  <div class="page-thumb-name">7 Proven Steps</div>
+                  <div class="page-thumb-url">7-proven-steps.vercel.app</div>
+                </div>
+              </a>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Build a single-page lead magnet website for a [subject] tutor.
+
+Title: "7 Proven Steps to Help Your Child [Specific Outcome]"
+Audience: Parents of [level] students in Singapore
+
+For each of the 7 steps:
+- Bold headline (the step name)
+- 2–3 sentences of practical advice
+- One thing the parent can try today
+
+End with a soft CTA: "Want personalised help? Message me on Instagram @[handle]"
+
+Design: Clean white background, [primary HEX] accent, DM Sans font, mobile-friendly. Deploy on Vercel. No login required.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3b -->
+        <div class="step-block" id="step-3b">
+          <div class="step-top">
+            <div class="step-badge badge-p3">3b</div>
+            <div class="step-body">
+              <h3>Build Lead Magnet 2 — Specific tool</h3>
+              <p>Solves ONE exact concept interactively. A worked example, a visual, or a mini calculator. This is what you promise in the WhatsApp follow-up DM.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('3b', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="page-thumbs">
+              <a class="page-thumb-card" href="https://triangle-half-of-rectangle.vercel.app" target="_blank" rel="noopener">
+                <img class="page-thumb-img" src="https://image.thum.io/get/width/600/crop/400/https://triangle-half-of-rectangle.vercel.app" alt="Triangle Half of Rectangle" loading="lazy" onerror="this.style.background='#E8EDF5';" />
+                <div class="page-thumb-info">
+                  <span class="page-thumb-tag tag-p3">Specific Concept Tool</span>
+                  <div class="page-thumb-name">Triangle = Half a Rectangle</div>
+                  <div class="page-thumb-url">triangle-half-of-rectangle.vercel.app</div>
+                </div>
+              </a>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Build a single interactive page that teaches students why [specific concept — e.g. "a triangle is always half the area of a rectangle"].
+
+Include:
+1. A clear visual diagram showing the relationship
+2. Step-by-step explanation in simple language (no jargon)
+3. One interactive example where the student inputs numbers and sees the calculation live
+4. A short "Try It Yourself" practice question at the bottom
+
+Design: Bright, student-friendly — use colours [HEX1] and [HEX2]. Large font, big buttons, works perfectly on mobile. No login. Deploy on Vercel.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3c -->
+        <div class="step-block" id="step-3c">
+          <div class="step-top">
+            <div class="step-badge badge-p3">3c</div>
+            <div class="step-body">
+              <h3>Add email capture to both pages</h3>
+              <p>Don't lose leads who browse but don't WhatsApp. A simple name + email field at the bottom catches them. Use Formspree — free, no backend needed.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('3c', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Add a simple email capture section at the bottom of my lead magnet page. Text: "Want more free resources like this? Drop your email below."
+
+Use Formspree for form submission (endpoint: https://formspree.io/f/[your-form-id]).
+Fields: Name, Email. Submit button text: "Send me more tips →"
+Style to match the page. Show a thank-you message after submission.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span>Get your free Formspree endpoint at <strong>formspree.io</strong> — no account needed for the first 50 submissions/month.</span></div>
+          </div>
+        </div>
+
+        <!-- 3d -->
+        <div class="step-block" id="step-3d">
+          <div class="step-top">
+            <div class="step-badge badge-p3">3d</div>
+            <div class="step-body">
+              <h3>Test both pages on your phone</h3>
+              <p>Open each page on mobile. Read every word. Tap every button. If anything looks broken, describe what you see to Claude and ask it to fix it.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('3d', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>80%+ of parents will view your lead magnet on mobile. If it doesn't feel great on a phone, rebuild it mobile-first.</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PHASE 4 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="phase-4" class="phase-section">
+      <div class="phase-header theme-p4">
+        <div class="phase-num-badge num-p4">4</div>
+        <div class="phase-header-text">
+          <div class="phase-label label-p4">Phase 4</div>
+          <h2>ManyChat Automation</h2>
+          <p>Set it up once. It runs 24/7. When someone comments on your post, they instantly get your lead magnet — no manual sending, no missed leads.</p>
+        </div>
+      </div>
+      <div class="phase-steps-wrap">
+
+        <!-- 4a -->
+        <div class="step-block" id="step-4a">
+          <div class="step-top">
+            <div class="step-badge badge-p4">4a</div>
+            <div class="step-body">
+              <h3>Set up your ManyChat free account</h3>
+              <p>Go to ManyChat, create a free account, and connect your Instagram. The free plan is enough to run your entire funnel at the start.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('4a', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="link-btn-row">
+              <a class="link-btn primary" href="https://manychat.com" target="_blank" rel="noopener">🤖 Go to ManyChat (Free) ↗</a>
+            </div>
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>Free plan allows: Comment-to-DM automations, keyword triggers, basic flows. Upgrade only when you're sending 1,000+ DMs/month.</span></div>
+          </div>
+        </div>
+
+        <!-- 4b -->
+        <div class="step-block" id="step-4b">
+          <div class="step-top">
+            <div class="step-badge badge-p4">4b</div>
+            <div class="step-body">
+              <h3>Create your Comment-to-DM flow</h3>
+              <p>In ManyChat: New Flow → Comment trigger → choose your pinned post → set keyword (e.g. GUIDE) → auto-DM sends your lead magnet link instantly.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('4b', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Auto-DM Template (copy into ManyChat)</div>
+              <div class="prompt-text">Hey [First Name]! 👋
+
+Here's your free guide: [paste your lead magnet URL]
+
+Hope it helps! Quick question — is [specific struggle, e.g. "Paper 2 problem sums"] something your child is dealing with right now?</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4c -->
+        <div class="step-block" id="step-4c">
+          <div class="step-top">
+            <div class="step-badge badge-p4">4c</div>
+            <div class="step-body">
+              <h3>Write your follow-up DM (30–60 min later)</h3>
+              <p>After they receive the lead magnet, send a warm check-in. Promise Lead Magnet 2 via WhatsApp — and ask for their number. This is how you bridge IG DM → WhatsApp.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('4c', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Follow-up DM Template</div>
+              <div class="prompt-text">Hey [First Name]! Checking in — hope the guide was helpful 😊
+
+I actually have another free resource on [related topic] that goes a bit deeper on [specific concept]. It's easier to send it over WhatsApp.
+
+Would that be okay? What's your number? I'll drop it there for you 📲</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt — customise this for your subject</div>
+              <div class="prompt-text">Write a follow-up DM for a [subject] tutor to send 1 hour after delivering a free guide on [topic]. The goal is to start a genuine conversation and offer a second free resource via WhatsApp to get their phone number. Warm tone, not salesy. Under 80 words.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4d -->
+        <div class="step-block" id="step-4d">
+          <div class="step-top">
+            <div class="step-badge badge-p4">4d</div>
+            <div class="step-body">
+              <h3>Create a second keyword flow for Lead Magnet 2</h3>
+              <p>A different post, different keyword, same funnel logic. Now you have two entry points — more chances to capture different parents at different stages.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('4d', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-tip"><span class="callout-icon">💡</span><span>Use different keywords per lead magnet (e.g. GUIDE, TIPS, FREE, VISUAL) so ManyChat can track which one is working best.</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PHASE 5 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="phase-5" class="phase-section">
+      <div class="phase-header theme-p5">
+        <div class="phase-num-badge num-p5">5</div>
+        <div class="phase-header-text">
+          <div class="phase-label label-p5">Phase 5</div>
+          <h2>Conversation &amp; Closing</h2>
+          <p>This is where students are won or lost. Not because of your programme — because of how you make parents feel heard. Listen first. Invite only when it's genuinely right.</p>
+        </div>
+      </div>
+      <div class="phase-steps-wrap">
+
+        <!-- 5a -->
+        <div class="step-block" id="step-5a">
+          <div class="step-top">
+            <div class="step-badge badge-p5">5a</div>
+            <div class="step-body">
+              <h3>Set up WhatsApp Business</h3>
+              <p>Separate from personal. Add your business name, description, and hours. Set up quick replies for common questions. This is where your real conversations happen.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('5a', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt — Quick Reply Templates</div>
+              <div class="prompt-text">Write 5 WhatsApp Business quick reply templates for a [subject] tutor. Include replies for:
+1. New enquiry greeting
+2. "What are your rates?"
+3. "Is there a trial class?"
+4. "Can you send more info?"
+5. Away message (outside business hours)
+
+Warm, professional, under 50 words each.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5b -->
+        <div class="step-block" id="step-5b">
+          <div class="step-top">
+            <div class="step-badge badge-p5">5b</div>
+            <div class="step-body">
+              <h3>Write your WhatsApp conversation script</h3>
+              <p>3 questions to ask. How to listen. When to offer. The goal is understanding — not selling. Parents who feel heard trust you.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('5b', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Write a WhatsApp conversation script for a [subject] tutor speaking to a parent who just received a free lead magnet. Goal: understand their child's challenge, build trust, and invite them to a trial class only if it's a genuine fit.
+
+Include:
+- Opening message after sending Lead Magnet 2
+- 3 discovery questions to ask (one at a time)
+- How to respond if the child's problem matches what you teach
+- How to respond if it's not a good fit (refer gracefully)
+
+Tone: warm, conversational, never pushy.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5c -->
+        <div class="step-block" id="step-5c">
+          <div class="step-top">
+            <div class="step-badge badge-p5">5c</div>
+            <div class="step-body">
+              <h3>Write your closing invitation</h3>
+              <p>Not a pitch. An honest offer for the right fit. After listening, you share what you do simply — and invite them only if you genuinely believe you can help.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('5c', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Write 3 versions of a soft closing message a [subject] tutor can send on WhatsApp after a genuine conversation, inviting the parent to a trial class. Each version should:
+- Acknowledge what the parent shared
+- Connect it to what the tutor offers
+- Make a low-pressure invitation
+- Be under 60 words
+
+Tone: honest, warm, never salesy.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5d -->
+        <div class="step-block" id="step-5d">
+          <div class="step-top">
+            <div class="step-badge badge-p5">5d</div>
+            <div class="step-body">
+              <h3>Handle the common objections</h3>
+              <p>"Let me think about it." "It's too expensive." "We're already with another tutor." Prepare kind, honest responses — not rebuttals.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('5d', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Write kind, honest WhatsApp responses to these 5 common objections a tutor hears from parents:
+1. "Let me think about it."
+2. "It's a bit expensive."
+3. "We're already with another tutor."
+4. "Can you lower the price?"
+5. "I need to check with my spouse."
+
+Each response should: acknowledge the concern, not argue, and keep the door open. Under 50 words each.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PHASE 6 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="phase-6" class="phase-section">
+      <div class="phase-header theme-p6">
+        <div class="phase-num-badge num-p6">6</div>
+        <div class="phase-header-text">
+          <div class="phase-label label-p6">Phase 6</div>
+          <h2>Programme Page</h2>
+          <p>Your flagship offer. This is where warm leads become paying students. Build it once — it works for you every time someone asks "what do you offer?"</p>
+        </div>
+      </div>
+      <div class="phase-steps-wrap">
+
+        <!-- 6a -->
+        <div class="step-block" id="step-6a">
+          <div class="step-top">
+            <div class="step-badge badge-p6">6a</div>
+            <div class="step-body">
+              <h3>Define your signature programme</h3>
+              <p>Name, duration, outcomes, price, who it's for. Get this clear before building the page — the page is only as strong as the offer behind it.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('6a', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Help me name and structure a signature [subject] programme for [target student — e.g. P6 students preparing for PSLE].
+
+Duration: [X weeks / X sessions]
+Price: $[X]
+
+Help me:
+1. Write a compelling programme name (give me 5 options)
+2. Define the 3 key outcomes parents can expect
+3. Write a one-paragraph programme description
+4. Suggest what to include in each session/week</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6b -->
+        <div class="step-block" id="step-6b">
+          <div class="step-top">
+            <div class="step-badge badge-p6">6b</div>
+            <div class="step-body">
+              <h3>Collect 3 testimonials</h3>
+              <p>Ask your current or past students/parents. One WhatsApp message is all it takes. Real words from real people outperform any copy you write.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('6b', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt — testimonial request message</div>
+              <div class="prompt-text">Write a short WhatsApp message I can send to a past student or parent asking for a testimonial. Make it easy — give them exactly 2 questions to answer:
+1. What was the challenge before?
+2. What changed after?
+
+Keep the message casual, genuine, and under 60 words. I'll send this to 3 people.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6c -->
+        <div class="step-block" id="step-6c">
+          <div class="step-top">
+            <div class="step-badge badge-p6">6c</div>
+            <div class="step-body">
+              <h3>Build your programme sales page</h3>
+              <p>Hero · Problem · What's included · Testimonials · Pricing · FAQ · CTA. One page that answers every question a parent has before they message you.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('6c', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="page-thumbs">
+              <a class="page-thumb-card" href="https://lob-mathboost.vercel.app" target="_blank" rel="noopener">
+                <img class="page-thumb-img" src="https://image.thum.io/get/width/600/crop/400/https://lob-mathboost.vercel.app" alt="LOB MathBoost" loading="lazy" onerror="this.style.background='#E8EDF5';" />
+                <div class="page-thumb-info">
+                  <span class="page-thumb-tag tag-p6">Programme Sales Page</span>
+                  <div class="page-thumb-name">LOB MathBoost</div>
+                  <div class="page-thumb-url">lob-mathboost.vercel.app</div>
+                </div>
+              </a>
+            </div>
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Build a sales page for my [programme name] — a [X-week / X-session] [subject] programme for [target student, e.g. P5–P6 students preparing for PSLE].
+
+Sections to include:
+1. Hero: "[Programme Name] — [Outcome promise]" + CTA button → [WhatsApp or registration URL]
+2. The problem: what parents and students feel right now (3 pain points)
+3. What's included: [list sessions, materials, bonuses]
+4. Outcomes: 3 things students will be able to do by the end
+5. Testimonials: [I will provide 3 quotes]
+6. Price: $[X] — [what it includes]
+7. FAQ: [list 4 questions]
+8. Final CTA button
+
+My brand colours: [HEX1] primary, [HEX2] accent.
+Font: DM Serif Display (headings), DM Sans (body). Mobile-first. Deploy on Vercel.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6d -->
+        <div class="step-block" id="step-6d">
+          <div class="step-top">
+            <div class="step-badge badge-p6">6d</div>
+            <div class="step-body">
+              <h3>Set up payment collection</h3>
+              <p>ThriveCart is recommended for clean checkout pages. To start, PayNow or bank transfer with a simple confirmation message works fine.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('6d', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span>PAC members get access to a ThriveCart setup guide under Resources → Product Creation.</span></div>
+          </div>
+        </div>
+
+        <!-- 6e -->
+        <div class="step-block" id="step-6e">
+          <div class="step-top">
+            <div class="step-badge badge-p6">6e</div>
+            <div class="step-body">
+              <h3>Build a simple onboarding page</h3>
+              <p>What happens after they pay. First steps, what to prepare, schedule, and how to contact you. Removes anxiety. Builds confidence.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('6e', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Build a simple onboarding page for new students of my [programme name]. Sections:
+1. Welcome message (warm, personal, reassuring)
+2. What to prepare before the first session
+3. Schedule: [session days/times]
+4. What to expect in the first 2 weeks
+5. How to contact me: [WhatsApp / email]
+
+Design: Clean, warm, friendly — use colours [HEX1] and [HEX2]. Mobile-friendly. Deploy on Vercel.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PHASE 7 -->
+    <!-- ══════════════════════════════════════════ -->
+    <section id="phase-7" class="phase-section" style="border-bottom:none;">
+      <div class="phase-header theme-p7">
+        <div class="phase-num-badge num-p7">7</div>
+        <div class="phase-header-text">
+          <div class="phase-label label-p7">Phase 7</div>
+          <h2>Social Proof &amp; Growth</h2>
+          <p>Make your results visible. Let your students' wins do the selling. This phase turns happy parents into your most powerful marketing channel.</p>
+        </div>
+      </div>
+      <div class="phase-steps-wrap">
+
+        <!-- 7a -->
+        <div class="step-block" id="step-7a">
+          <div class="step-top">
+            <div class="step-badge badge-p7">7a</div>
+            <div class="step-body">
+              <h3>Build a testimonials / results page</h3>
+              <p>Screenshots, quotes, before-and-after scores. One page that consolidates all your social proof. Link to it from your programme page and IG bio.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('7a', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Build a testimonials page for a [subject] tutor. Include:
+1. A hero section: "Real Students. Real Results." with a subline about your niche
+2. A 2-column grid of quote cards (I'll provide the testimonials)
+3. A "Featured Result" section highlighting one standout student story
+4. A CTA at the bottom: "Ready to see results like these? [WhatsApp / register link]"
+
+Design: trustworthy, clean — colours [HEX1] and [HEX2]. Mobile-friendly. Deploy on Vercel.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7b -->
+        <div class="step-block" id="step-7b">
+          <div class="step-top">
+            <div class="step-badge badge-p7">7b</div>
+            <div class="step-body">
+              <h3>Create a content calendar</h3>
+              <p>3 posts/week: 1 carousel (pain point) + 1 short tip reel + 1 personal/story post. Consistency compounds — each post seeds the next lead magnet request.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('7b', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Create a 4-week Instagram content calendar for a [subject] tutor targeting [audience — e.g. parents of P5–P6 students in Singapore].
+
+Posting rhythm: 3 posts/week
+- Monday: Carousel (pain point + lead magnet CTA)
+- Wednesday: Short tip (reel or single image)
+- Friday: Personal or story post (build connection)
+
+For each post, give me:
+- Hook idea (first line)
+- Content angle
+- CTA suggestion
+
+Focus topics: [list 3–4 recurring themes relevant to your subject]</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7c -->
+        <div class="step-block" id="step-7c">
+          <div class="step-top">
+            <div class="step-badge badge-p7">7c</div>
+            <div class="step-body">
+              <h3>Build a referral system</h3>
+              <p>Your happiest parents are your best marketers. Make it easy and natural for them to refer a friend. One WhatsApp message is all it takes to start.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('7c', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Write a referral WhatsApp message I can send to current parents asking them to recommend my [subject] class to one friend whose child is struggling.
+
+Include:
+- A genuine reason to reach out (not transactional)
+- A simple ask: "If you know anyone who could benefit…"
+- Optional: a thank-you offer (e.g. one free session, discount on next month)
+
+Keep it real, under 80 words, not like a marketing email.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7d -->
+        <div class="step-block" id="step-7d">
+          <div class="step-top">
+            <div class="step-badge badge-p7">7d</div>
+            <div class="step-body">
+              <h3>Create a case study page</h3>
+              <p>One student story. Before → struggle → what you did together → transformation. The most powerful sales page you'll ever have — because it's true.</p>
+            </div>
+            <button class="step-done-btn" onclick="toggleStep('7d', this)">✓ Done</button>
+          </div>
+          <div class="step-extras">
+            <div class="prompt-box">
+              <div class="prompt-box-label">✦ Claude Prompt</div>
+              <div class="prompt-text">Build a case study page for my [subject] tutoring. Student: [first name only, or "a student" for privacy].
+
+Sections:
+1. Hero: "[Student Name]'s Story" — one-line outcome
+2. The Challenge: what they were struggling with before
+3. What We Did Together: your approach (3–4 sentences)
+4. The Result: specific improvement (score, confidence, mindset)
+5. In Their Words: one parent quote
+6. CTA: "Is this your child's story too? [WhatsApp link]"
+
+Design: emotional, clean — colours [HEX1] and [HEX2]. Deploy on Vercel.</div>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const PROGRESS_KEY = 'pac-7phases-progress';
+  const TOTAL_STEPS = 27;
+
+  function getProgress() {
+    try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function saveProgress(p) { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); }
+
+  function toggleStep(id, btn) {
+    const p = getProgress();
+    const block = document.getElementById('step-' + id);
+    if (p[id]) {
+      delete p[id];
+      block.classList.remove('done');
+      if(btn) btn.textContent = '✓ Done';
+    } else {
+      p[id] = true;
+      block.classList.add('done');
+      if(btn) btn.textContent = '✓ Done';
+    }
+    saveProgress(p);
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const p = getProgress();
+    const done = Object.keys(p).length;
+    const pct = Math.round((done / TOTAL_STEPS) * 100);
+    const fill = document.getElementById('sidebarFill');
+    const count = document.getElementById('doneCount');
+    if (fill) fill.style.width = pct + '%';
+    if (count) count.textContent = done;
+  }
+
+  function restoreProgress() {
+    const p = getProgress();
+    Object.keys(p).forEach(function(id) {
+      const block = document.getElementById('step-' + id);
+      if (block) {
+        block.classList.add('done');
+        const btn = block.querySelector('.step-done-btn');
+        if (btn) btn.textContent = '✓ Done';
+      }
+    });
+    updateProgress();
+  }
+
+  function copyPrompt(btn) {
+    const text = btn.closest('.prompt-box').querySelector('.prompt-text').textContent;
+    navigator.clipboard.writeText(text.trim()).then(function() {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function openMobileMenu() {
+    document.getElementById('mobileMenuPanel').classList.add('open');
+    document.getElementById('mobileMenuOverlay').classList.add('open');
+  }
+  function closeMobileMenu() {
+    document.getElementById('mobileMenuPanel').classList.remove('open');
+    document.getElementById('mobileMenuOverlay').classList.remove('open');
+  }
+
+  // Sidebar active state on scroll
+  function updateSidebarActive() {
+    const phases = ['phase-1','phase-2','phase-3','phase-4','phase-5','phase-6','phase-7'];
+    const links = document.querySelectorAll('.sn-phase');
+    let current = 0;
+    phases.forEach(function(id, i) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 120) current = i;
+    });
+    links.forEach(function(l, i) { l.classList.toggle('active', i === current); });
+  }
+
+  // Desktop nav dropdowns
+  document.querySelectorAll('.swift-tab-group').forEach(function(group) {
+    const btn = group.querySelector('.swift-tab');
+    if (!btn || !group.querySelector('.swift-sub-menu')) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = group.classList.contains('open');
+      document.querySelectorAll('.swift-tab-group').forEach(function(g) { g.classList.remove('open'); });
+      if (!isOpen) group.classList.add('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.swift-tab-group').forEach(function(g) { g.classList.remove('open'); });
+  });
+
+  window.addEventListener('scroll', updateSidebarActive, { passive: true });
+  document.addEventListener('DOMContentLoaded', function() {
+    restoreProgress();
+    updateSidebarActive();
+  });
+</script>
+
+</body>
+</html>
