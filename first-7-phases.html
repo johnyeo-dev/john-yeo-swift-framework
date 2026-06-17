@@ -708,7 +708,7 @@ Design: Bright, student-friendly — use colours [HEX1] and [HEX2]. Large font, 
             <div class="step-badge badge-p3">3c</div>
             <div class="step-body">
               <h3>Add email capture to both pages</h3>
-              <p>Don't lose leads who browse but don't WhatsApp. A simple name + email field at the bottom catches them. Use Formspree — free, no backend needed.</p>
+              <p>Don't lose leads who browse but don't WhatsApp. A simple Google Form embedded at the bottom catches them — free, instant, no setup needed.</p>
             </div>
             <button class="step-done-btn" onclick="toggleStep('3c', this)">✓ Done</button>
           </div>
@@ -717,12 +717,12 @@ Design: Bright, student-friendly — use colours [HEX1] and [HEX2]. Large font, 
               <div class="prompt-box-label">✦ Claude Prompt</div>
               <div class="prompt-text">Add a simple email capture section at the bottom of my lead magnet page. Text: "Want more free resources like this? Drop your email below."
 
-Use Formspree for form submission (endpoint: https://formspree.io/f/[your-form-id]).
-Fields: Name, Email. Submit button text: "Send me more tips →"
-Style to match the page. Show a thank-you message after submission.</div>
+Embed a Google Form using an iframe. My Google Form embed URL is: [paste your Google Form embed URL here — from Google Forms → Send → Embed tab → copy the src URL]
+
+Style the iframe to match the page: no border, full width, height 400px. Wrap it in a section with a heading and short subtext. Mobile-friendly.</div>
               <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
             </div>
-            <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span>Get your free Formspree endpoint at <strong>formspree.io</strong> — no account needed for the first 50 submissions/month.</span></div>
+            <div class="callout callout-info"><span class="callout-icon">ℹ️</span><span><strong>How to get your Google Form embed URL:</strong> Open Google Forms → click Send → click the <strong>&lt;&gt;</strong> Embed tab → copy the URL inside the <code>src=""</code> attribute of the iframe code.</span></div>
           </div>
         </div>
 
