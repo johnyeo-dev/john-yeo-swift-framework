@@ -108,6 +108,11 @@
     .step-block:hover { box-shadow: 0 3px 16px rgba(0,45,106,0.07); }
     .step-block.done { border-color: #10B981; background: #f0fdf9; }
     .step-top { display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px 16px; }
+
+    /* ── STEP CARD COLLAPSE (mobile only) ── */
+    .step-card-toggle { display: none; } /* hidden on desktop */
+    .step-block.s-collapsed .step-extras { display: none; }
+    .step-block.s-collapsed .step-top { padding-bottom: 14px; }
     .step-badge { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: white; flex-shrink: 0; letter-spacing: 0.5px; font-family: 'DM Sans', sans-serif; }
     .step-body { flex: 1; }
     .step-body h3 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 6px; line-height: 1.3; }
@@ -243,6 +248,20 @@
 
       /* Done button — full width on mobile */
       .step-done-btn { width: 100%; text-align: center; margin-top: 2px; order: 3; }
+
+      /* Step card collapse toggle — mobile only */
+      .step-card-toggle {
+        display: flex; align-items: center; justify-content: center;
+        width: 28px; height: 28px; border-radius: 8px;
+        background: var(--cream); border: 1.5px solid var(--border);
+        color: var(--muted); font-size: 12px; cursor: pointer;
+        flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+        transition: background 0.15s, transform 0.25s;
+        order: 2; /* sits between body and done btn */
+      }
+      .step-card-toggle:hover { background: var(--cream-dark); }
+      .step-block.done .step-card-toggle { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.3); color: #059669; }
+      .step-block.s-collapsed .step-card-toggle { transform: rotate(-90deg); }
 
       .step-extras { padding: 0 14px 14px; gap: 12px; }
 
@@ -1546,11 +1565,33 @@ Design: emotional, clean — colours [HEX1] and [HEX2]. Deploy on Vercel.</div>
   function initMobileCollapse() {
     if (window.innerWidth > 768) return;
     document.querySelectorAll('.phase-section').forEach(function(section, i) {
-      if (i > 0) { // keep phase 1 open by default, collapse the rest
+      if (i > 0) { // keep phase 0 open by default, collapse the rest
         section.classList.add('collapsed');
         var btn = section.querySelector('.phase-collapse-btn');
         if (btn) btn.innerHTML = '&#9658;';
       }
+    });
+  }
+
+  // Inject collapse toggle into every step card (mobile only)
+  function initStepCardCollapse() {
+    if (window.innerWidth > 768) return;
+    document.querySelectorAll('.step-block').forEach(function(block) {
+      // Only add if the block has extras content
+      if (!block.querySelector('.step-extras')) return;
+      // Avoid double-injecting
+      if (block.querySelector('.step-card-toggle')) return;
+      var top = block.querySelector('.step-top');
+      if (!top) return;
+      var btn = document.createElement('button');
+      btn.className = 'step-card-toggle';
+      btn.setAttribute('aria-label', 'Toggle step details');
+      btn.innerHTML = '&#9660;';
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        block.classList.toggle('s-collapsed');
+      });
+      top.appendChild(btn);
     });
   }
 
@@ -1605,6 +1646,7 @@ Design: emotional, clean — colours [HEX1] and [HEX2]. Deploy on Vercel.</div>
     restoreProgress();
     updateSidebarActive();
     initMobileCollapse();
+    initStepCardCollapse();
   });
 </script>
 
