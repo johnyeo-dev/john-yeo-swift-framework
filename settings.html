@@ -742,6 +742,14 @@
         <input type="text" id="editModalNotes" placeholder="e.g. Joined Jan batch, PSLE tutor" />
       </div>
       <div style="border-top:1px solid var(--border);margin:18px 0 16px;"></div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">🔑 Reset Password</div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label>New Password <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);">(leave blank to keep current)</span></label>
+        <input type="password" id="editModalNewPw" placeholder="Enter new password" autocomplete="new-password" />
+      </div>
+      <div id="editModalPwMsg" style="font-size:12px;margin-top:6px;min-height:18px;"></div>
+
+      <div style="border-top:1px solid var(--border);margin:18px 0 16px;"></div>
       <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">⏱ Trial Access</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div class="form-group" style="margin-bottom:0;">
@@ -1430,6 +1438,8 @@
     var statusHtml = trialStatus(usr);
     document.getElementById('editModalTrialStatus').innerHTML = statusHtml ? ('Status: ' + statusHtml) : 'No trial set — user has permanent access.';
     hideAlert('editModalSuccess');
+    document.getElementById('editModalNewPw').value = '';
+    document.getElementById('editModalPwMsg').textContent = '';
     document.getElementById('editModal').classList.add('open');
   }
   function closeEditModal() {
@@ -1479,8 +1489,39 @@
       delete users[_editTarget].trialDays;
     }
     saveUsers(users);
-    showAlert('editModalSuccess','alert-success','✓ Saved.');
-    setTimeout(function() { closeEditModal(); renderUserTable(); }, 800);
+
+    // If a new password was entered, push it to Firebase
+    var newPw = (document.getElementById('editModalNewPw').value || '').trim();
+    if (newPw) {
+      if (newPw.length < 4) {
+        showAlert('editModalSuccess','alert-error','✗ Password must be at least 4 characters.');
+        return;
+      }
+      var pwMsg = document.getElementById('editModalPwMsg');
+      pwMsg.style.color = 'var(--text-muted)';
+      pwMsg.textContent = 'Saving password…';
+      fetch(FB_DB_URL_S + '/passwords/' + _editTarget + '.json?auth=' + FB_SECRET_S, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPw)
+      }).then(function() {
+        // Also update local cache in case they're currently logged in
+        if (window._pwOverrides) window._pwOverrides[_editTarget] = newPw;
+        var localUsers = getUsers();
+        if (localUsers[_editTarget]) { localUsers[_editTarget].password = newPw; saveUsers(localUsers); }
+        pwMsg.style.color = '#059669';
+        pwMsg.textContent = '✓ Password updated.';
+        showAlert('editModalSuccess','alert-success','✓ Saved.');
+        setTimeout(function() { closeEditModal(); renderUserTable(); }, 1000);
+      }).catch(function() {
+        pwMsg.style.color = '#ef4444';
+        pwMsg.textContent = '✗ Failed to update password. Check connection.';
+        showAlert('editModalSuccess','alert-error','✗ Profile saved but password update failed.');
+      });
+    } else {
+      showAlert('editModalSuccess','alert-success','✓ Saved.');
+      setTimeout(function() { closeEditModal(); renderUserTable(); }, 800);
+    }
   }
 
 
