@@ -76,31 +76,6 @@
     }
     .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--gold); line-height: 1; }
     .swift-badge .label { font-size: 10px; letter-spacing: 1.5px; color: rgba(255,255,255,0.5); text-transform: uppercase; font-weight: 600; }
-
-    /* PROGRESS BAR */
-    .progress-wrap {
-      background: var(--navy-light);
-      padding: 14px 40px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .progress-text { font-size: 12px; color: rgba(255,255,255,0.6); white-space: nowrap; }
-    .progress-bar-bg {
-      flex: 1;
-      height: 4px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold), var(--gold-light));
-      border-radius: 99px;
-      transition: width 0.4s ease;
-    }
-    .progress-count { font-size: 12px; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
-
     /* SWIFT TOP NAV */
     .swift-nav {
       position: sticky; top: 0; z-index: 100;
@@ -467,7 +442,6 @@
 
     @media (max-width: 640px) {
       .header { padding: 20px; flex-wrap: wrap; }
-      .progress-wrap { padding: 12px 20px; }
       .tab-nav { padding: 0 16px; }
       .content { padding: 28px 20px 60px; }
       .swift-badge { display: none; }
@@ -679,12 +653,6 @@
         <div class="label">Signature</div>
       </div>
   </div>
-
-  <!-- PROGRESS -->
-  <div class="progress-wrap">
-    <span class="progress-text">Your progress</span>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
     </div>
     <span class="progress-count" id="progressCount">0 / 14 done</span>
   </div>
