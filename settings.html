@@ -366,7 +366,7 @@
         <a class="swift-sub-item " href="vercel-app.html">🚀 Build on Vercel</a>
       </div>
     </div>
-        <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+        
         <a class="swift-tab" href="personal-tracker.html"><span class="swift-letter">📋</span><span class="swift-word">Tracker</span></a>
     <div class="nav-search" id="navSearch">
       <span class="nav-search-icon">🔍</span>
@@ -438,7 +438,7 @@
     <a class="mobile-menu-item" href="product-creation.html"><span class="mobile-menu-letter">⚡</span>Product Creation</a>
     <a class="mobile-menu-item" href="vercel-app.html"><span class="mobile-menu-letter">🚀</span>Build on Vercel</a>
         <div class="mobile-menu-section">Community</div>
-    <a class="mobile-menu-item" href="leaderboard.html"><span class="mobile-menu-letter" style="color:#F59E0B;">🏆</span>Leaderboard</a>
+    
     <a class="mobile-menu-item" href="personal-tracker.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">📋</span>Personal Tracker</a>
     <div class="mobile-menu-section">Account</div>
     <a class="mobile-menu-item active" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
@@ -661,6 +661,12 @@
           </div>
         </div>
         <div class="scard-body" style="padding:12px 18px 0;">
+          <div style="position:relative;margin-bottom:12px;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:0.4;pointer-events:none;">🔍</span>
+            <input type="text" id="userSearchInput" placeholder="Search by username or email…" oninput="setUserSearch(this.value)" autocomplete="off"
+              style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px 10px 36px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;"
+              onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'" />
+          </div>
           <div id="tierFilterBar" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
             <button onclick="setTierFilter('all')" id="tierBtn-all" style="padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--navy);color:white;font-family:'DM Sans',sans-serif;">All <span id="tierCount-all"></span></button>
             <button onclick="setTierFilter('elite')" id="tierBtn-elite" style="padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid rgba(245,158,11,0.4);background:white;color:#b45309;font-family:'DM Sans',sans-serif;">⭐ Elite <span id="tierCount-elite"></span></button>
@@ -1111,6 +1117,11 @@
   }
 
   var _tierFilter = 'all';
+  var _searchQuery = '';
+  function setUserSearch(q) {
+    _searchQuery = q.trim().toLowerCase();
+    renderUserTable();
+  }
   function setTierFilter(f) {
     _tierFilter = f;
     document.querySelectorAll('[id^="tierBtn-"]').forEach(function(b) {
@@ -1150,13 +1161,22 @@
     document.getElementById('tierCount-elite').textContent = '(' + eliteCount + ')';
     document.getElementById('tierCount-swift').textContent = '(' + swiftCount + ')';
 
-    // Apply filter
+    // Apply tier filter
     if (_tierFilter !== 'all') {
       keys = keys.filter(function(u){ return (users[u].tier||'swift') === _tierFilter; });
     }
+    // Apply search filter (username or email)
+    if (_searchQuery) {
+      keys = keys.filter(function(u) {
+        var email = (users[u].email || '').toLowerCase();
+        var name  = (users[u].displayName || '').toLowerCase();
+        return u.toLowerCase().indexOf(_searchQuery) !== -1 || email.indexOf(_searchQuery) !== -1 || name.indexOf(_searchQuery) !== -1;
+      });
+    }
     if (!keys.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No ' + _tierFilter + ' members yet.</td></tr>';
-      if (cardList) cardList.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">No ' + _tierFilter + ' members yet.</div>';
+      var msg = _searchQuery ? 'No users matching "' + _searchQuery + '".' : 'No ' + _tierFilter + ' members yet.';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">' + msg + '</td></tr>';
+      if (cardList) cardList.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">' + msg + '</div>';
       return;
     }
     var cardHtml = '';
