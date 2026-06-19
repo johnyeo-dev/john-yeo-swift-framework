@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('pac-swift-session')||'null');if(!s||!s.u)window.location.replace('login.html');}catch(e){window.location.replace('login.html');}})();</script>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding | PAC SWIFT Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #002D6A; --navy-light: #0A0F1C;
+      --gold: #0ABFBC; --gold-light: #4A8FE7;
+      --white: #FFFFFF; --border: #B8C4D4;
+      --card: #0E1629;
+      --border-subtle: rgba(10,191,188,0.2);
+      --midgrey: #6B7A96; --softgrey: #B8C4D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--navy-light); color: var(--white); min-height: 100vh; }
+
+    /* ── HEADER ── */
+    .header { background: var(--navy); padding: 12px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .header-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px,4vw,36px); color: var(--white); line-height: 1.1; }
+    .header h1 em { font-style: italic; color: var(--gold-light); }
+    .swift-badge { margin-left: auto; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 16px; text-align: center; flex-shrink: 0; }
+    .swift-badge .s { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gold); line-height: 1; }
+    .swift-badge .label { font-size: 11px; letter-spacing: 2px; color: var(--white); text-transform: uppercase; margin-top: 2px; font-weight: 600; }
+
+    /* ── NAV ── */
+    .swift-nav { background: var(--navy-light); position: sticky; top: 0; z-index: 100; padding: 0 16px; display: flex; gap: 0; overflow: visible; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .swift-tab { padding: 11px 12px; border: none; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .swift-tab:hover { color: rgba(255,255,255,0.85); }
+    .swift-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+    .swift-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.3); line-height: 1; }
+    .swift-tab.active .swift-letter { color: var(--gold); }
+    .swift-word { font-size: 12px; }
+    .swift-tab-group { position: relative; display: flex; align-items: stretch; }
+    .swift-sub-menu { position: absolute; top: 100%; left: 0; background: #111827; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; z-index: 200; overflow: hidden; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 200px; white-space: nowrap; max-height: 80vh; overflow-y: auto; }
+    .swift-tab-group.open .swift-sub-menu { display: block; }
+    .swift-sub-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: 'DM Sans', sans-serif; transition: background 0.15s; }
+    .swift-sub-item:last-child { border-bottom: none; }
+    .swift-sub-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .swift-sub-item.active { color: white; background: rgba(10,191,188,0.12); }
+    .sub-group-header { display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.06); user-select: none; }
+    .sub-group-header:hover { background: rgba(255,255,255,0.04); }
+    .sub-group-header.open { color: rgba(255,255,255,0.5); }
+    .sub-group-items { display: none; }
+    .sub-group-items.open { display: block; }
+    .sub-chev { transition: transform 0.2s; }
+    .sub-group-header.open .sub-chev { transform: rotate(180deg); }
+    @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
+
+    /* ── MOBILE NAV ── */
+    .mobile-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; }
+    .mobile-menu-panel { display: none; position: fixed; top: 0; right: 0; bottom: 0; width: 280px; background: #0E1629; z-index: 400; overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.1); }
+    .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .mobile-menu-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+    .mobile-menu-section { padding: 10px 16px 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); border-top: 1px solid rgba(255,255,255,0.06); margin-top: 4px; }
+    .mobile-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .mobile-menu-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .mobile-menu-item.active { color: white; background: rgba(10,191,188,0.1); }
+    .mobile-menu-letter { font-family: 'DM Serif Display', serif; font-size: 18px; color: rgba(255,255,255,0.25); width: 22px; text-align: center; flex-shrink: 0; }
+    .mobile-menu-item.active .mobile-menu-letter { color: var(--gold); }
+    .mobile-hamburger { display: none; background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 4px 8px; margin-left: auto; }
+    @media (max-width: 768px) { .swift-nav { display: none; } .mobile-hamburger { display: block; } .mobile-menu-overlay.open, .mobile-menu-panel.open { display: block; } }
+
+    /* ── MAIN CONTENT ── */
+    .main { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    /* ── HERO ── */
+    .hero { margin-bottom: 48px; }
+    .hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; }
+    .hero h2 { font-family: 'DM Serif Display', serif; font-size: clamp(28px,4vw,42px); color: var(--white); line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 16px; }
+    .hero h2 span { color: var(--gold); }
+    .hero-sub { font-size: 16px; color: var(--softgrey); max-width: 580px; line-height: 1.75; }
+
+    /* ── PREP OVERVIEW ── */
+    .prep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 12px; margin-bottom: 48px; }
+    .prep-card { background: var(--card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px 18px; }
+    .prep-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .prep-card-title { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+    .prep-card-sub { font-size: 12px; color: var(--midgrey); line-height: 1.5; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--border-subtle); margin: 0 0 48px; }
+
+    /* ── SECTION ── */
+    .section { margin-bottom: 56px; }
+    .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+    .section-num { width: 36px; height: 36px; border-radius: 50%; background: rgba(10,191,188,0.12); border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--gold); flex-shrink: 0; }
+    .section h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); letter-spacing: -0.01em; }
+    .section-desc { font-size: 14px; color: var(--softgrey); margin-bottom: 24px; padding-left: 52px; line-height: 1.75; }
+
+    /* ── VOICE NOTE CARDS ── */
+    .vn-list { display: flex; flex-direction: column; gap: 14px; }
+    .vn-card { background: var(--card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 22px; }
+    .vn-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .vn-prompt { font-size: 15px; font-weight: 600; color: var(--white); margin-bottom: 10px; line-height: 1.55; }
+    .vn-why { font-size: 13px; color: var(--midgrey); border-left: 2px solid var(--border-subtle); padding-left: 12px; line-height: 1.65; }
+
+    /* ── TIPS BOX ── */
+    .tips-box { background: rgba(10,191,188,0.06); border: 1px solid rgba(10,191,188,0.22); border-radius: 10px; padding: 20px 22px; margin-top: 18px; }
+    .tips-box-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .tips-list { list-style: none; padding: 0; }
+    .tips-list li { font-size: 13px; color: var(--softgrey); padding: 4px 0 4px 20px; position: relative; line-height: 1.6; }
+    .tips-list li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 12px; }
+
+    /* ── TESTIMONIAL GRID ── */
+    .testi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .testi-item { background: var(--card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; }
+    .testi-emoji { font-size: 20px; margin-bottom: 8px; }
+    .testi-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .testi-desc { font-size: 12px; color: var(--midgrey); line-height: 1.55; }
+
+    /* ── POSTS BOX ── */
+    .posts-box { background: var(--card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; }
+    .posts-count { font-family: 'DM Serif Display', serif; font-size: 48px; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+    .posts-desc { font-size: 14px; color: var(--softgrey); margin-bottom: 18px; line-height: 1.7; }
+    .posts-formats { display: flex; flex-wrap: wrap; gap: 8px; }
+    .posts-tag { background: rgba(74,143,231,0.12); border: 1px solid rgba(74,143,231,0.3); color: var(--gold-light); font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px; }
+
+    /* ── FORM FIELDS ── */
+    .form-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .form-field { display: flex; align-items: flex-start; gap: 14px; background: var(--card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px 18px; }
+    .form-field-num { font-size: 12px; font-weight: 700; color: var(--gold); min-width: 20px; padding-top: 2px; }
+    .form-field-label { font-size: 14px; color: var(--white); font-weight: 500; }
+    .form-field-type { font-size: 12px; color: var(--midgrey); margin-top: 3px; }
+    .form-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: var(--navy); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 14px 32px; border-radius: 10px; text-decoration: none; letter-spacing: 0.02em; transition: all 0.2s; }
+    .form-cta:hover { background: #08a8a5; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(10,191,188,0.35); }
+
+    /* ── DONE BOX ── */
+    .done-box { background: linear-gradient(135deg, rgba(10,191,188,0.08), rgba(0,45,106,0.2)); border: 1px solid rgba(10,191,188,0.28); border-radius: 16px; padding: 40px 32px; text-align: center; margin-bottom: 80px; }
+    .done-icon { font-size: 36px; margin-bottom: 14px; }
+    .done-box h3 { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--white); margin-bottom: 10px; }
+    .done-box p { font-size: 14px; color: var(--softgrey); max-width: 480px; margin: 0 auto; line-height: 1.75; }
+
+    @media (max-width: 600px) {
+      .main { padding: 32px 16px 60px; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .section-desc { padding-left: 0; }
+      .prep-grid { grid-template-columns: 1fr 1fr; }
+      .done-box { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <div class="header-label">Product Architect Coaching</div>
+    <h1>PAC <em>SWIFT</em> Framework</h1>
+  </div>
+  <div class="swift-badge">
+    <div class="s">SWIFT</div>
+    <div class="label">Framework</div>
+  </div>
+  <button class="mobile-hamburger" onclick="openMobileMenu()">☰</button>
+</header>
+
+<!-- DESKTOP NAV -->
+<nav class="swift-nav">
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter" style="color:var(--gold);">⌂</span><span class="swift-word">Home ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="index.html">⌂ Home</a>
+      <a class="swift-sub-item" href="directory.html">📂 Directory</a>
+    </div>
+  </div>
+  <a class="swift-tab active" href="onboarding.html"><span class="swift-letter" style="color:var(--gold);">🚦</span><span class="swift-word">Onboarding</span></a>
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">7 Phases &#9660;</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="first-7-phases.html">&#128205; All 7 Phases</a>
+      <a class="swift-sub-item" href="first-7-phases.html#phase-1">Phase 1 &middot; Brand Foundation</a>
+      <a class="swift-sub-item" href="first-7-phases.html#phase-2">Phase 2 &middot; Instagram Setup</a>
+      <a class="swift-sub-item" href="first-7-phases.html#phase-3">Phase 3 &middot; Lead Magnets</a>
+      <a class="swift-sub-item" href="first-7-phases.html#phase-4">Phase 4 &middot; ManyChat Automation</a>
+      <a class="swift-sub-item" href="first-7-phases.html#phase-5">Phase 5 &middot; Conversation &amp; Close</a>
+      <a class="swift-sub-item" href="first-7-phases.html#phase-6">Phase 6 &middot; Programme Page</a>
+      <a class="swift-sub-item" href="first-7-phases.html#phase-7">Phase 7 &middot; Social Proof &amp; Growth</a>
+    </div>
+  </div>
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">SWIFT ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="signature-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#0ABFBC;width:20px;display:inline-block;text-align:center;">S</span> Signature</a>
+      <a class="swift-sub-item" href="webinar-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#4A8FE7;width:20px;display:inline-block;text-align:center;">W</span> Webinar</a>
+      <a class="swift-sub-item" href="invite-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#8B5CF6;width:20px;display:inline-block;text-align:center;">I</span> Invite</a>
+      <a class="swift-sub-item" href="fill-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#F59E0B;width:20px;display:inline-block;text-align:center;">F</span> Fill Class</a>
+      <a class="swift-sub-item" href="track-programme.html"><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#10B981;width:20px;display:inline-block;text-align:center;">T</span> Track</a>
+    </div>
+  </div>
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">Resources ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="casestudies.html">★ Case Studies</a>
+      <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Mindset &amp; Systems</span><span class="sub-chev">▾</span></div>
+      <div class="sub-group-items">
+        <a class="swift-sub-item" href="mindset-jit.html">🧠 Just in Time Mindset</a>
+        <a class="swift-sub-item" href="be-do-have.html">✨ Be. Do. Have.</a>
+        <a class="swift-sub-item" href="deliberate-practice.html">🎯 Deliberate Practice</a>
+        <a class="swift-sub-item" href="mind-body.html">🧘 Mind &amp; Body</a>
+        <a class="swift-sub-item" href="daily-5.html">5️⃣ The Daily 5</a>
+        <a class="swift-sub-item" href="planner.html">📅 Calendar Plan</a>
+      </div>
+      <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Get Students</span><span class="sub-chev">▾</span></div>
+      <div class="sub-group-items">
+        <a class="swift-sub-item" href="ig-ads.html">📸 IG &amp; FB Ads</a>
+        <a class="swift-sub-item" href="sales-call.html">📞 Sales Call</a>
+        <a class="swift-sub-item" href="parent-conversation.html">💬 Parent Conversation</a>
+        <a class="swift-sub-item" href="abc.html">🔤 ABC — Always Be Closing</a>
+        <a class="swift-sub-item" href="dream100.html">🤝 Dream 100 Partnerships</a>
+        <a class="swift-sub-item" href="other-resources.html">🎉 Parties for Kids</a>
+        <a class="swift-sub-item" href="holiday-workshops.html">🗓️ Holiday Workshops</a>
+      </div>
+      <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Business</span><span class="sub-chev">▾</span></div>
+      <div class="sub-group-items">
+        <a class="swift-sub-item" href="payment-upgrade.html">💳 Monthly → Annual</a>
+      </div>
+      <div class="sub-group-header" onclick="toggleSubGroup(event,this)"><span>Tools</span><span class="sub-chev">▾</span></div>
+      <div class="sub-group-items">
+        <a class="swift-sub-item" href="ai-automation.html">🤖 AI &amp; Automation</a>
+        <a class="swift-sub-item" href="video-content.html">🎬 Video Content</a>
+      </div>
+    </div>
+  </div>
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-word">6 Prompts ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="6-prompts.html">✦ All Prompts</a>
+      <a class="swift-sub-item" href="prompt-1-signature.html">✦ Signature Programme</a>
+      <a class="swift-sub-item" href="prompt-2-lead-magnet.html">✦ Lead Magnet</a>
+      <a class="swift-sub-item" href="prompt-3-teach-to-pitch.html">✦ Teach to Pitch</a>
+      <a class="swift-sub-item" href="prompt-3-content.html">✦ Content Style</a>
+      <a class="swift-sub-item" href="prompt-4-5-forms.html">✦ Lead Collection Form</a>
+      <a class="swift-sub-item" href="prompt-6-feedback.html">✦ Feedback Form</a>
+    </div>
+  </div>
+  <div class="swift-tab-group">
+    <button class="swift-tab" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;"><span class="swift-letter" style="font-size:14px;">🚀</span><span class="swift-word">Build ▾</span></button>
+    <div class="swift-sub-menu">
+      <a class="swift-sub-item" href="product-creation.html">⚡ Product Creation</a>
+      <a class="swift-sub-item" href="vercel-app.html">🚀 Build on Vercel</a>
+    </div>
+  </div>
+  <a class="swift-tab" href="leaderboard.html"><span class="swift-letter">🏆</span><span class="swift-word">Leaderboard</span></a>
+  <a class="swift-tab" href="personal-tracker.html"><span class="swift-letter">📋</span><span class="swift-word">Tracker</span></a>
+  <a class="swift-tab" href="settings.html" style="margin-left:auto;"><span class="swift-letter">⚙</span><span class="swift-word">Settings</span></a>
+  <button class="swift-tab" onclick="(function(){localStorage.removeItem('pac-swift-session');window.location.href='login.html'})()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);" title="Sign Out"><span class="swift-letter" style="font-size:14px;">⏻</span><span class="swift-word" style="color:rgba(255,255,255,0.5);">Sign Out</span></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu-panel" id="mobilePanel">
+  <div class="mobile-menu-header">
+    <span style="font-family:'DM Serif Display',serif;color:var(--gold);font-size:18px;">SWIFT Framework</span>
+    <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+  </div>
+  <button onclick="localStorage.removeItem('pac-swift-session');window.location.href='login.html';" style="width:100%;text-align:left;background:rgba(248,113,113,0.08);border:none;border-bottom:1px solid rgba(248,113,113,0.18);padding:11px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#f87171;display:flex;align-items:center;gap:10px;"><span style="font-size:15px;">⏻</span>Sign Out</button>
+  <a class="mobile-menu-item" href="index.html"><span class="mobile-menu-letter" style="color:var(--gold);">⌂</span>Home</a>
+  <a class="mobile-menu-item active" href="onboarding.html"><span class="mobile-menu-letter" style="color:var(--gold);">🚦</span>Onboarding</a>
+  <div class="mobile-menu-section">FIRST 7 PHASES</div>
+  <a class="mobile-menu-item" href="first-7-phases.html"><span class="mobile-menu-letter" style="color:#0ABFBC;">📍</span>All 7 Phases</a>
+  <a class="mobile-menu-item" href="first-7-phases.html#phase-1"><span class="mobile-menu-letter" style="color:#0ABFBC;">1</span>Brand Foundation</a>
+  <a class="mobile-menu-item" href="first-7-phases.html#phase-2"><span class="mobile-menu-letter" style="color:#4A8FE7;">2</span>Instagram Setup</a>
+  <a class="mobile-menu-item" href="first-7-phases.html#phase-3"><span class="mobile-menu-letter" style="color:#8B5CF6;">3</span>Lead Magnets</a>
+  <a class="mobile-menu-item" href="first-7-phases.html#phase-4"><span class="mobile-menu-letter" style="color:#F59E0B;">4</span>ManyChat Automation</a>
+  <a class="mobile-menu-item" href="first-7-phases.html#phase-5"><span class="mobile-menu-letter" style="color:#10B981;">5</span>Conversation &amp; Close</a>
+  <a class="mobile-menu-item" href="first-7-phases.html#phase-6"><span class="mobile-menu-letter" style="color:#F43F5E;">6</span>Programme Page</a>
+  <a class="mobile-menu-item" href="first-7-phases.html#phase-7"><span class="mobile-menu-letter" style="color:#06B6D4;">7</span>Social Proof &amp; Growth</a>
+  <div class="mobile-menu-section">SETTINGS</div>
+  <a class="mobile-menu-item" href="settings.html"><span class="mobile-menu-letter">⚙</span>Settings</a>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-eyebrow">Before Your Kickstart Call</p>
+    <h2>Let's get your <span>SWIFT doc</span> ready<br>before we meet.</h2>
+    <p class="hero-sub">20 minutes of prep here means your full programme is drafted — signature offer, lead magnet, webinar script, and more — before we even get on our first call together. All you need is your phone.</p>
+  </div>
+
+  <!-- WHAT YOU'RE PREPARING -->
+  <p style="font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--midgrey);margin-bottom:12px;">What you're preparing</p>
+  <div class="prep-grid">
+    <div class="prep-card">
+      <div class="prep-card-icon">🎙️</div>
+      <div class="prep-card-title">5 voice notes</div>
+      <div class="prep-card-sub">2–3 min each, from your phone</div>
+    </div>
+    <div class="prep-card">
+      <div class="prep-card-icon">📸</div>
+      <div class="prep-card-title">Testimonial images</div>
+      <div class="prep-card-sub">Screenshots or photos that show your results</div>
+    </div>
+    <div class="prep-card">
+      <div class="prep-card-icon">📝</div>
+      <div class="prep-card-title">10 past posts</div>
+      <div class="prep-card-sub">Screenshots from any platform you post on</div>
+    </div>
+    <div class="prep-card">
+      <div class="prep-card-icon">📋</div>
+      <div class="prep-card-title">Quick form</div>
+      <div class="prep-card-sub">Your offer details — 5 min to fill</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 1: VOICE NOTES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h3>5 Voice Notes</h3>
+    </div>
+    <p class="section-desc">Record each one on your phone's voice memo app and WhatsApp them to John. Speak freely — there's no wrong answer, just talk like you're telling a friend. Aim for 2–3 minutes each.</p>
+
+    <div class="vn-list">
+      <div class="vn-card">
+        <div class="vn-label">Voice Note 1 — Your Teaching Style</div>
+        <div class="vn-prompt">"What do you do differently from other tutors? What's the real change you create in your students — not just grades, but who they become?"</div>
+        <div class="vn-why">Used to build your Signature Programme — the name, the acronym, and the transformation promise that makes parents choose you.</div>
+      </div>
+      <div class="vn-card">
+        <div class="vn-label">Voice Note 2 — Your Story</div>
+        <div class="vn-prompt">"How did you start tutoring? What drove you into it, what made you decide to build something bigger, and what's the moment you knew this was the right path?"</div>
+        <div class="vn-why">Used to write your Lead Magnet backstory — the page parents read before they decide they trust you.</div>
+      </div>
+      <div class="vn-card">
+        <div class="vn-label">Voice Note 3 — Best Student Transformation</div>
+        <div class="vn-prompt">"Tell me about the student you're most proud of. Where were they when they started — mindset, marks, confidence — what happened during your time together, and where did they end up? Give me the real numbers."</div>
+        <div class="vn-why">Used to write your Lead Magnet client story — the before-and-after proof that makes parents say "that could be my child."</div>
+      </div>
+      <div class="vn-card">
+        <div class="vn-label">Voice Note 4 — A Typical Lesson</div>
+        <div class="vn-prompt">"Walk me through what a lesson with you actually looks like, start to finish. What makes it feel different from just going through a textbook? What do students or parents notice?"</div>
+        <div class="vn-why">Used to build the module breakdown inside your Signature Programme — the part that shows parents exactly what their child is getting.</div>
+      </div>
+      <div class="vn-card">
+        <div class="vn-label">Voice Note 5 — Your Offer Right Now</div>
+        <div class="vn-prompt">"Describe what you're currently offering and what you're planning to offer next. If you're running or planning a workshop, give me all the details — topic, who it's for, rough price, how many students, and how you want people to sign up."</div>
+        <div class="vn-why">Used to write your Teach to Pitch webinar script and to populate your Lead Collection Form with the right offer options.</div>
+      </div>
+    </div>
+
+    <div class="tips-box">
+      <div class="tips-box-title">Recording tips</div>
+      <ul class="tips-list">
+        <li>Find a quiet spot — no need for a professional setup, just no background noise</li>
+        <li>Don't script it. The more natural you sound, the more authentic your content will be</li>
+        <li>If you go off-track, just keep going — raw is better than polished here</li>
+        <li>WhatsApp the notes to John as you go, you don't need to do all 5 at once</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2: TESTIMONIALS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h3>Testimonial Images</h3>
+    </div>
+    <p class="section-desc">Pull as many of these as you have — screenshots work perfectly. Send them to John via WhatsApp. Don't worry if you don't have all types; whatever you have is what we start with.</p>
+
+    <div class="testi-grid">
+      <div class="testi-item">
+        <div class="testi-emoji">💬</div>
+        <div class="testi-title">Parent WhatsApp messages</div>
+        <div class="testi-desc">Thank-you messages, progress updates, anything positive a parent has sent you</div>
+      </div>
+      <div class="testi-item">
+        <div class="testi-emoji">📊</div>
+        <div class="testi-title">Exam results or mark sheets</div>
+        <div class="testi-desc">Before-and-after scores, or just the after if that's what you have. Blur the name if needed.</div>
+      </div>
+      <div class="testi-item">
+        <div class="testi-emoji">⭐</div>
+        <div class="testi-title">Google or platform reviews</div>
+        <div class="testi-desc">Screenshots from Google, Carousell, any directory you're listed on</div>
+      </div>
+      <div class="testi-item">
+        <div class="testi-emoji">📱</div>
+        <div class="testi-title">Social media comments</div>
+        <div class="testi-desc">Comments on your posts, DMs from parents, reactions to content you've shared</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3: POSTS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h3>10 Past Posts</h3>
+    </div>
+    <p class="section-desc">These are used to build your Content Style guide — the document that trains AI to write in your voice, not a generic tutor voice. Without real posts, AI defaults to sounding like everyone else.</p>
+
+    <div class="posts-box">
+      <div class="posts-count">10</div>
+      <div class="posts-desc">Send 10 screenshots of posts you've written — any platform, any format. Pick ones you felt good about when you posted them, not necessarily the ones that performed best. Your authentic voice matters more than reach here.</div>
+      <div class="posts-formats">
+        <span class="posts-tag">Facebook posts</span>
+        <span class="posts-tag">IG captions</span>
+        <span class="posts-tag">WhatsApp group messages</span>
+        <span class="posts-tag">Carousell listings</span>
+        <span class="posts-tag">Any written update to parents</span>
+      </div>
+    </div>
+
+    <div class="tips-box" style="margin-top:16px;">
+      <div class="tips-box-title">If you don't have 10 yet</div>
+      <ul class="tips-list">
+        <li>Send whatever you have — even 5 is a start</li>
+        <li>If you've been writing messages to parents in WhatsApp, screenshots of those count</li>
+        <li>If you have zero, that's okay — we'll build your Content Style from scratch on the call</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4: QUICK FORM -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h3>Quick Logistics Form</h3>
+    </div>
+    <p class="section-desc">The last piece — your offer details. This is the only section that needs typing rather than voice. Takes about 5 minutes.</p>
+
+    <div class="form-list">
+      <div class="form-field">
+        <span class="form-field-num">1</span>
+        <div><div class="form-field-label">Your full name</div></div>
+      </div>
+      <div class="form-field">
+        <span class="form-field-num">2</span>
+        <div><div class="form-field-label">WhatsApp number</div></div>
+      </div>
+      <div class="form-field">
+        <span class="form-field-num">3</span>
+        <div>
+          <div class="form-field-label">Subjects and levels you teach</div>
+          <div class="form-field-type">e.g. PSLE Maths P5–P6, Sec 2–3 E-Math, Primary Science</div>
+        </div>
+      </div>
+      <div class="form-field">
+        <span class="form-field-num">4</span>
+        <div>
+          <div class="form-field-label">Your current offer format</div>
+          <div class="form-field-type">One-to-one / small group / online / centre-based / home tuition — select all that apply</div>
+        </div>
+      </div>
+      <div class="form-field">
+        <span class="form-field-num">5</span>
+        <div>
+          <div class="form-field-label">Your monthly fee (current rate)</div>
+          <div class="form-field-type">Per student, per month — for your main offer</div>
+        </div>
+      </div>
+      <div class="form-field">
+        <span class="form-field-num">6</span>
+        <div>
+          <div class="form-field-label">Next offer or workshop you're planning</div>
+          <div class="form-field-type">What's the topic, who is it for, rough price if you have one</div>
+        </div>
+      </div>
+      <div class="form-field">
+        <span class="form-field-num">7</span>
+        <div>
+          <div class="form-field-label">Your preferred booking method</div>
+          <div class="form-field-type">How do you currently want parents to reach you — WhatsApp, form, DM?</div>
+        </div>
+      </div>
+      <div class="form-field">
+        <span class="form-field-num">8</span>
+        <div>
+          <div class="form-field-label">Your website or social links</div>
+          <div class="form-field-type">IG handle, Facebook page, website — anything you already have</div>
+        </div>
+      </div>
+      <div class="form-field">
+        <span class="form-field-num">9</span>
+        <div>
+          <div class="form-field-label">Anything else you want John to know before the call</div>
+          <div class="form-field-type">Open text — context, concerns, goals, whatever's on your mind</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="#" class="form-cta">Fill in the form →</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- DONE BOX -->
+  <div class="done-box">
+    <div class="done-icon">✅</div>
+    <h3>You're ready for your Kickstart Call.</h3>
+    <p>Once John receives your voice notes, images, posts, and form, he'll run all 6 SWIFT prompts before your call. You'll come in with a full working draft — not a blank page.</p>
+  </div>
+
+</main>
+
+<script>
+  // Mobile menu
+  function openMobileMenu()  { document.getElementById('mobilePanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); }
+  function closeMobileMenu() { document.getElementById('mobilePanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); }
+
+  // Nav dropdowns
+  (function(){
+    document.querySelectorAll('.swift-tab-group').forEach(function(group){
+      var closeTimer;
+      group.addEventListener('mouseenter', function(){
+        clearTimeout(closeTimer);
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+        group.classList.add('open');
+      });
+      group.addEventListener('mouseleave', function(){
+        closeTimer = setTimeout(function(){ group.classList.remove('open'); }, 120);
+      });
+      var btn = group.querySelector('button');
+      if (btn) btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var isOpen = group.classList.contains('open');
+        document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', function(){
+      document.querySelectorAll('.swift-tab-group').forEach(function(g){ g.classList.remove('open'); });
+    });
+  })();
+
+  // Sub-group collapsible
+  function toggleSubGroup(e, header) {
+    e.stopPropagation();
+    header.classList.toggle('open');
+    var items = header.nextElementSibling;
+    if (items) items.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
