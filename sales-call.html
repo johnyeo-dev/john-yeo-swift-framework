@@ -73,8 +73,8 @@
     .res-subnav { background: var(--white); position: sticky; top: 43px; z-index: 99; border-bottom: 2px solid var(--border); padding: 0 40px; display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .res-subnav::-webkit-scrollbar { display: none; }
     @media (max-width: 960px) { .swift-tab { padding: 10px 8px; } .swift-word { display: none; } .swift-letter { font-size: 16px; } }
-    @media (max-width: 768px) { .res-subnav { padding: 0 12px; } .res-subnav-tab { padding: 12px 14px; font-size: 12px; } }
-    .res-subnav-tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+    @media (max-width: 768px) { .res-subnav { padding: 0 12px; } .res-subnav-tab { padding: 12px 14px; font-size: 14px; } }
+    .res-subnav-tab { padding: 14px 20px; font-size: 15px; font-weight: 500; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
     .res-subnav-tab:hover { color: var(--navy); }
     .res-subnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
 
@@ -97,7 +97,7 @@
     .mindset-bullets { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
     .mindset-bullet { display: flex; align-items: flex-start; gap: 12px; background: rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 16px; }
     .mindset-bullet .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .mindset-bullet p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.55; }
+    .mindset-bullet p { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.55; }
 
     /* STAGE CARDS */
     .stages { display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; }
@@ -107,44 +107,44 @@
     .stage-header-text h3 { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); }
     .stage-header-text .time { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
     .stage-body { padding: 20px 24px; }
-    .stage-why { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; background: var(--cream); border-radius: 8px; padding: 12px 14px; }
+    .stage-why { font-size: 15px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; background: var(--cream); border-radius: 8px; padding: 12px 14px; }
     .stage-why strong { color: var(--navy); font-weight: 700; }
-    .script-block { background: #F0FDF4; border-left: 3px solid #16a34a; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; font-size: 13px; color: #166534; font-style: italic; line-height: 1.6; }
+    .script-block { background: #F0FDF4; border-left: 3px solid #16a34a; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; font-size: 15px; color: #166534; font-style: italic; line-height: 1.6; }
     .objection-block { margin-bottom: 16px; }
-    .objection-q { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
-    .objection-a { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .objection-q { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .objection-a { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
     .rules-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
-    .rule-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text); line-height: 1.55; }
+    .rule-item { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; color: var(--text); line-height: 1.55; }
     .rule-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 6px; }
     .layers { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
     .layer { background: var(--cream); border-radius: 8px; padding: 12px 14px; }
     .layer-num { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
-    .layer p { font-size: 13px; color: var(--text); line-height: 1.6; }
+    .layer p { font-size: 15px; color: var(--text); line-height: 1.6; }
     .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
     .dont-col { background: #FEF2F2; border-radius: 8px; padding: 12px 14px; }
     .do-col   { background: #F0FDF4; border-radius: 8px; padding: 12px 14px; }
     .do-dont .col-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
     .dont-col .col-label { color: #dc2626; }
     .do-col   .col-label { color: #16a34a; }
-    .do-dont p { font-size: 12px; line-height: 1.55; }
+    .do-dont p { font-size: 14px; line-height: 1.55; }
     .dont-col p { color: #b91c1c; text-decoration: line-through; }
     .do-col   p { color: #166534; }
 
     /* QUICK REFERENCE TABLE */
-    .ref-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 14px; overflow: hidden; border: 1.5px solid var(--border); margin-bottom: 32px; font-size: 13px; }
+    .ref-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 14px; overflow: hidden; border: 1.5px solid var(--border); margin-bottom: 32px; font-size: 15px; }
     .ref-table thead tr { background: var(--navy); }
     .ref-table thead th { padding: 12px 16px; color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-align: left; }
     .ref-table tbody tr { border-bottom: 1px solid var(--border); }
     .ref-table tbody tr:last-child { border-bottom: none; }
     .ref-table tbody td { padding: 12px 16px; vertical-align: top; color: var(--text); line-height: 1.5; }
     .ref-table tbody td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
-    .stage-badge { display: inline-block; width: 28px; height: 28px; border-radius: 6px; text-align: center; line-height: 28px; font-weight: 700; color: white; font-size: 12px; margin-right: 6px; }
+    .stage-badge { display: inline-block; width: 28px; height: 28px; border-radius: 6px; text-align: center; line-height: 28px; font-weight: 700; color: white; font-size: 14px; margin-right: 6px; }
 
     /* JAMIE QUOTE */
     .jamie-quote { background: linear-gradient(135deg, rgba(10,191,188,0.08), rgba(74,143,231,0.08)); border: 1.5px solid rgba(10,191,188,0.3); border-radius: 14px; padding: 24px 28px; margin-bottom: 40px; }
     .jamie-quote .label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
     .jamie-quote blockquote { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); font-style: italic; line-height: 1.6; margin-bottom: 8px; }
-    .jamie-quote .attr { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+    .jamie-quote .attr { font-size: 14px; color: var(--text-muted); font-weight: 600; }
 
     @media (max-width: 600px) {
       .header { padding: 20px 16px; }
@@ -211,7 +211,7 @@
     .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
     .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
     .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
-      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 16px; } }
 
     /* COLLAPSIBLE DESKTOP SUB-GROUPS */
     .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
@@ -442,7 +442,7 @@
         <div class="mindset-bullet"><span class="icon">🔄</span><p><strong style="color:white;">Reframing work</strong> — turning a wrong method into the right one</p></div>
         <div class="mindset-bullet"><span class="icon">🎯</span><p><strong style="color:white;">Closing work</strong> — guiding a parent to see their child's potential</p></div>
       </div>
-      <p style="margin-top:16px; font-size:13px; color:rgba(255,255,255,0.5);">The only difference in a sales call: there's a transaction at the end.</p>
+      <p style="margin-top:16px; font-size:15px; color:rgba(255,255,255,0.5);">The only difference in a sales call: there's a transaction at the end.</p>
     </div>
 
     <!-- STAGES -->
@@ -544,7 +544,7 @@
         <div class="stage-body">
           <div class="stage-why"><strong>Why it matters:</strong> Don't jump straight into your pitch — earn the right to present it. Mirror back what they said so they feel heard.</div>
           <div class="script-block">"Okay, so just to make sure I've understood — [child's name] is currently at C grade, it's affecting his confidence, and you've tried a few things but nothing has stuck. And for you, it's important that he improves before PSLE because you want him to get into [school]. Is that right?"</div>
-          <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Wait for them to say yes. Then:</p>
+          <p style="font-size:15px; color:var(--text-muted); margin-bottom:12px;">Wait for them to say yes. Then:</p>
           <div class="script-block">"Based on what you've shared, I think I can help. Let me walk you through how I work — and you can tell me if it feels like a fit."</div>
         </div>
       </div>
@@ -658,11 +658,11 @@
         <div style="border-top:1px solid #E8EDF5; padding-top:20px;">
           <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:12px;">Add User Manually</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <input id="newUsername" placeholder="Username" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
-            <input id="newPassword" placeholder="Password" type="text" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
+            <input id="newUsername" placeholder="Username" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:15px;">
+            <input id="newPassword" placeholder="Password" type="text" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:15px;">
             <button onclick="addUser()" style="background:#002D6A;color:white;border:none;border-radius:8px;padding:9px 16px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;">Add</button>
           </div>
-          <p id="addUserMsg" style="font-size:12px;margin-top:8px;color:#0ABFBC;display:none;"></p>
+          <p id="addUserMsg" style="font-size:14px;margin-top:8px;color:#0ABFBC;display:none;"></p>
         </div>
       </div>
     </div>
@@ -711,7 +711,7 @@
         keys.map(function(k) {
           var d = pending[k].requestedAt ? new Date(pending[k].requestedAt).toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}) : '';
           return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;margin-bottom:8px;gap:8px;">' +
-            '<div><div style="font-size:13px;font-weight:700;color:#92400E;">' + k + '</div>' + (d ? '<div style="font-size:11px;color:#B45309;margin-top:2px;">Requested ' + d + '</div>' : '') + '</div>' +
+            '<div><div style="font-size:15px;font-weight:700;color:#92400E;">' + k + '</div>' + (d ? '<div style="font-size:11px;color:#B45309;margin-top:2px;">Requested ' + d + '</div>' : '') + '</div>' +
             '<div style="display:flex;gap:6px;flex-shrink:0;"><button onclick="approvePending(\'' + k + '\')" style="background:#16a34a;color:white;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Approve</button>' +
             '<button onclick="rejectPending(\'' + k + '\')" style="background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Reject</button></div></div>';
         }).join('');
@@ -720,7 +720,7 @@
     function rejectPending(u)  { if(!confirm('Reject "'+u+'"?'))return; var p=getPending(); delete p[u]; savePending(p); renderPending(); }
     function renderUserList() {
       var users=getUsers(); var keys=Object.keys(users); var el=document.getElementById('userList'); if(!el)return;
-      if(!keys.length){el.innerHTML='<p style="font-size:13px;color:#6B7A96;">No approved users yet.</p>';return;}
+      if(!keys.length){el.innerHTML='<p style="font-size:15px;color:#6B7A96;">No approved users yet.</p>';return;}
       el.innerHTML='<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:10px;">✅ Approved Users</p>'+
         keys.map(function(k){return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#F4F7FB;border-radius:8px;margin-bottom:6px;"><span style="font-size:13px;font-weight:600;color:#0A0F1C;">'+k+'</span><button onclick="removeUser(\''+k+'\')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button></div>';}).join('');
     }
@@ -961,7 +961,7 @@
   <script src="progress-tracker.js"></script>
 
   <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
-    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
+    <span style="font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
   </footer>
 </body>
 </html>

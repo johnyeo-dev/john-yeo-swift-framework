@@ -79,11 +79,11 @@
     .page-title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
     .page-icon { width: 48px; height: 48px; background: rgba(10,191,188,0.15); border: 1px solid var(--gold); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
     .page-title-row h2 { font-family: 'DM Serif Display', serif; font-size: clamp(22px,3vw,28px); color: var(--navy); line-height: 1.2; }
-    .page-title-row p { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+    .page-title-row p { font-size: 15px; color: var(--text-muted); margin-top: 3px; }
 
     /* ── SECTION TABS ── */
     .settings-tabs { display: flex; gap: 4px; background: var(--cream-dark); border-radius: 10px; padding: 4px; margin-bottom: 28px; }
-    .stab { flex: 1; padding: 10px 12px; border: none; background: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .stab { flex: 1; padding: 10px 12px; border: none; background: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px; }
     .stab.active { background: var(--white); color: var(--navy); box-shadow: 0 1px 6px rgba(0,45,106,0.1); }
     .stab-panel { display: none; }
     .stab-panel.active { display: block; }
@@ -98,7 +98,7 @@
     .scard-icon.red { background: rgba(239,68,68,0.12); }
     .scard-icon.gold { background: rgba(245,158,11,0.1); }
     .scard-title { font-size: 16px; font-weight: 700; color: var(--navy); }
-    .scard-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .scard-sub { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
     .scard-body { padding: 24px; }
 
     /* ── FORM ── */
@@ -107,10 +107,10 @@
     .form-group { margin-bottom: 16px; }
     .form-group:last-child { margin-bottom: 0; }
     .form-group label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-    .form-group input { width: 100%; background: var(--cream); border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; }
+    .form-group input { width: 100%; background: var(--cream); border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 14px; font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--text); outline: none; transition: border-color 0.2s; }
     .form-group input:focus { border-color: var(--gold); background: rgba(10,191,188,0.04); }
     .form-group input:disabled { opacity: 0.5; cursor: not-allowed; background: var(--cream-dark); }
-    .form-group .field-hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+    .form-group .field-hint { font-size: 14px; color: var(--text-muted); margin-top: 5px; }
 
     /* ── BUTTONS ── */
     .btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 20px; border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
@@ -120,11 +120,11 @@
     .btn-ghost:hover { background: var(--border); color: var(--text); }
     .btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(239,68,68,0.25); }
     .btn-danger:hover { background: rgba(239,68,68,0.18); }
-    .btn-sm { padding: 7px 13px; font-size: 12px; }
+    .btn-sm { padding: 7px 13px; font-size: 14px; }
     .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; align-items: center; }
 
     /* ── ALERTS ── */
-    .alert { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .alert { border-radius: 9px; padding: 11px 14px; font-size: 15px; margin-bottom: 16px; display: none; }
     .alert.show { display: flex; align-items: flex-start; gap: 9px; }
     .alert-success { background: var(--success-light); border: 1px solid rgba(16,185,129,0.3); color: #065f46; }
     .alert-error { background: var(--danger-light); border: 1px solid rgba(239,68,68,0.3); color: #991b1b; }
@@ -144,7 +144,7 @@
     .pending-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--warn); color: white; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .pending-info { flex: 1; min-width: 0; }
     .pending-name { font-size: 15px; font-weight: 700; color: var(--navy); }
-    .pending-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .pending-date { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
     .pending-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
     /* ── ADMIN: USER LIST ── */
@@ -152,9 +152,9 @@
     .users-table th { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); padding: 10px 14px; text-align: left; border-bottom: 1.5px solid var(--border); }
     .users-table td { padding: 14px 14px; border-bottom: 1px solid var(--cream-dark); vertical-align: middle; }
     .users-table tr:last-child td { border-bottom: none; }
-    .users-table .urow-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; flex-shrink: 0; }
-    .users-table .urow-name { font-size: 14px; font-weight: 700; color: var(--navy); }
-    .users-table .urow-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .users-table .urow-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: white; flex-shrink: 0; }
+    .users-table .urow-name { font-size: 16px; font-weight: 700; color: var(--navy); }
+    .users-table .urow-email { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
     .urow-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 
     /* ── MOBILE USER CARDS ── */
@@ -170,7 +170,7 @@
     .ucard:last-child { border-bottom: none; }
     .ucard-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: white; flex-shrink: 0; }
     .ucard-info { flex: 1; min-width: 0; }
-    .ucard-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .ucard-name { font-size: 16px; font-weight: 700; color: var(--navy); }
     .ucard-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; align-items: center; }
     .ucard-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
@@ -179,18 +179,18 @@
     .modal-overlay.open { display: flex; }
     .modal { background: var(--white); border-radius: 16px; padding: 28px; width: 100%; max-width: 400px; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
     .modal h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 6px; }
-    .modal p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+    .modal p { font-size: 15px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
     .modal .btn-row { justify-content: flex-end; }
 
     /* ── EMPTY STATE ── */
     .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
     .empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
-    .empty-text { font-size: 14px; }
+    .empty-text { font-size: 16px; }
 
     /* ── DANGER ZONE ── */
     .danger-zone { border-color: rgba(239,68,68,0.3); }
     .danger-zone .scard-header { background: rgba(239,68,68,0.04); border-bottom-color: rgba(239,68,68,0.15); }
-    .danger-text { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+    .danger-text { font-size: 15px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
 
     /* DIVIDER */
     .divider { height: 1px; background: var(--cream-dark); margin: 20px 0; }
@@ -204,17 +204,17 @@
     .ac-name { font-size: 15px; font-weight: 700; color: var(--navy); }
     .ac-role { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
     .ac-body { padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; }
-    .ac-stat { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+    .ac-stat { display: flex; align-items: center; justify-content: space-between; font-size: 15px; }
     .ac-stat-label { color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
     .ac-stat-val { font-weight: 700; color: var(--navy); }
     .ac-stat-val.highlight { color: var(--gold); }
     .ac-visits { margin-top: 6px; border-top: 1px solid var(--cream-dark); padding-top: 10px; }
     .ac-visits-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-    .ac-visit-item { display: flex; align-items: center; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px solid var(--cream-dark); color: var(--text); }
+    .ac-visit-item { display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding: 4px 0; border-bottom: 1px solid var(--cream-dark); color: var(--text); }
     .ac-visit-item:last-child { border-bottom: none; }
     .ac-visit-time { color: var(--text-muted); font-size: 11px; flex-shrink: 0; margin-left: 8px; }
-    .ac-show-more { font-size: 12px; color: var(--gold); background: none; border: none; cursor: pointer; padding: 6px 0 0; font-family: 'DM Sans', sans-serif; font-weight: 600; }
-    .ac-no-data { text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px; }
+    .ac-show-more { font-size: 14px; color: var(--gold); background: none; border: none; cursor: pointer; padding: 6px 0 0; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+    .ac-no-data { text-align: center; padding: 24px; color: var(--text-muted); font-size: 15px; }
     .ac-no-data .nd-icon { font-size: 28px; margin-bottom: 8px; opacity: 0.4; }
     .analytics-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
     .as-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
@@ -260,7 +260,7 @@
     .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
     .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
     .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
-      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 16px; } }
 
     /* COLLAPSIBLE DESKTOP SUB-GROUPS */
     .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
@@ -592,7 +592,7 @@
           <button onclick="loadOnlineUsers()" style="background:none;border:none;color:var(--text-muted);font-size:18px;cursor:pointer;padding:4px;" title="Refresh">↻</button>
         </div>
         <div class="scard-body" id="onlineList" style="padding:12px 18px;">
-          <div style="color:var(--text-muted);font-size:13px;">Loading…</div>
+          <div style="color:var(--text-muted);font-size:15px;">Loading…</div>
         </div>
       </div>
 
@@ -607,7 +607,7 @@
         </div>
         <div class="scard-body">
           <div class="alert alert-success" id="approveAlert"></div>
-          <div id="pendingList"><div style="padding:8px 0;color:var(--text-muted);font-size:13px;">Loading…</div></div>
+          <div id="pendingList"><div style="padding:8px 0;color:var(--text-muted);font-size:15px;">Loading…</div></div>
         </div>
       </div>
 
@@ -639,7 +639,7 @@
             </div>
             <div class="form-group">
               <label>Role</label>
-              <select id="newUserRole" style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;">
+              <select id="newUserRole" style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--text);outline:none;">
                 <option value="user">Member</option>
                 <option value="admin">Admin</option>
               </select>
@@ -664,9 +664,9 @@
         </div>
         <div class="scard-body" style="padding:12px 18px 0;">
           <div style="position:relative;margin-bottom:12px;">
-            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:0.4;pointer-events:none;">🔍</span>
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;opacity:0.4;pointer-events:none;">🔍</span>
             <input type="text" id="userSearchInput" placeholder="Search by username or email…" oninput="setUserSearch(this.value)" autocomplete="off"
-              style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px 10px 36px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;"
+              style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px 10px 36px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;transition:border-color 0.2s;"
               onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'" />
           </div>
           <div id="tierFilterBar" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
@@ -740,7 +740,7 @@
       </div>
       <div class="form-group">
         <label>Role</label>
-        <select id="editModalRole" style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;">
+        <select id="editModalRole" style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--text);outline:none;">
           <option value="user">Member</option>
           <option value="admin">Admin</option>
         </select>
@@ -755,7 +755,7 @@
         <label>New Password <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);">(leave blank to keep current)</span></label>
         <input type="password" id="editModalNewPw" placeholder="Enter new password" autocomplete="new-password" />
       </div>
-      <div id="editModalPwMsg" style="font-size:12px;margin-top:6px;min-height:18px;"></div>
+      <div id="editModalPwMsg" style="font-size:14px;margin-top:6px;min-height:18px;"></div>
 
       <div style="border-top:1px solid var(--border);margin:18px 0 16px;"></div>
       <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">⏱ Trial Access</div>
@@ -774,7 +774,7 @@
         <button type="button" class="btn btn-ghost btn-sm" style="font-size:11px;" onclick="setQuickTrial(14)">14 days from today</button>
         <button type="button" class="btn btn-ghost btn-sm" style="font-size:11px;color:var(--danger,#ef4444);" onclick="clearTrial()">Remove trial</button>
       </div>
-      <div id="editModalTrialStatus" style="margin-top:8px;font-size:12px;color:var(--text-muted);"></div>
+      <div id="editModalTrialStatus" style="margin-top:8px;font-size:14px;color:var(--text-muted);"></div>
       <div class="alert alert-success" id="editModalSuccess"></div>
       <div class="btn-row">
         <button class="btn btn-ghost btn-sm" onclick="closeEditModal()">Cancel</button>
@@ -1052,7 +1052,7 @@
         var list  = document.getElementById('onlineList');
         var badge = document.getElementById('onlineBadge');
         if (!data || !Object.keys(data).length) {
-          if (list)  list.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:4px 0;">No one online right now.</div>';
+          if (list)  list.innerHTML = '<div style="color:var(--text-muted);font-size:15px;padding:4px 0;">No one online right now.</div>';
           if (badge) badge.textContent = '0';
           return;
         }
@@ -1063,7 +1063,7 @@
         });
         if (badge) badge.textContent = online.length;
         if (!online.length) {
-          if (list) list.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:4px 0;">No one online right now.</div>';
+          if (list) list.innerHTML = '<div style="color:var(--text-muted);font-size:15px;padding:4px 0;">No one online right now.</div>';
           return;
         }
         var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
@@ -1075,11 +1075,11 @@
           var pageLabel = (p.title || p.page || '').replace(' | PAC SWIFT', '').replace(' | PAC SWIFT Framework', '');
           html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:10px;">'
             + '<div style="position:relative;">'
-            + '<div style="width:34px;height:34px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:white;">' + u.charAt(0).toUpperCase() + '</div>'
+            + '<div style="width:34px;height:34px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:white;">' + u.charAt(0).toUpperCase() + '</div>'
             + '<div style="position:absolute;bottom:0;right:0;width:10px;height:10px;background:#10b981;border-radius:50%;border:2px solid white;"></div>'
             + '</div>'
             + '<div style="flex:1;">'
-            + '<div style="font-size:14px;font-weight:700;color:var(--navy);">' + escHtml(u) + '</div>'
+            + '<div style="font-size:16px;font-weight:700;color:var(--navy);">' + escHtml(u) + '</div>'
             + '<div style="font-size:11px;color:var(--text-muted);">📄 ' + escHtml(pageLabel) + ' · ' + timeStr + '</div>'
             + '</div>'
             + '<a href="member-view.html?u=' + encodeURIComponent(u) + '" style="background:rgba(74,143,231,0.15);border:1px solid rgba(74,143,231,0.3);color:#4A8FE7;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;text-decoration:none;">👁 View</a>'
@@ -1090,7 +1090,7 @@
       })
       .catch(function() {
         var list = document.getElementById('onlineList');
-        if (list) list.innerHTML = '<div style="color:var(--text-muted);font-size:13px;">Could not load presence data.</div>';
+        if (list) list.innerHTML = '<div style="color:var(--text-muted);font-size:15px;">Could not load presence data.</div>';
       });
   }
 
@@ -1149,8 +1149,8 @@
     var tbody = document.getElementById('userTableBody');
     var cardList = document.getElementById('userCardList');
     if (!keys.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">No active users yet.</td></tr>';
-      if (cardList) cardList.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">No active users yet.</div>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:15px;">No active users yet.</td></tr>';
+      if (cardList) cardList.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:15px;">No active users yet.</div>';
       return;
     }
     var html = '';
@@ -1177,8 +1177,8 @@
     }
     if (!keys.length) {
       var msg = _searchQuery ? 'No users matching "' + _searchQuery + '".' : 'No ' + _tierFilter + ' members yet.';
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">' + msg + '</td></tr>';
-      if (cardList) cardList.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">' + msg + '</div>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:15px;">' + msg + '</td></tr>';
+      if (cardList) cardList.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:15px;">' + msg + '</div>';
       return;
     }
     var cardHtml = '';
@@ -1215,7 +1215,7 @@
             + '<div style="position:relative;"><div class="urow-avatar" style="background:' + avatarColor + ';">' + u.charAt(0).toUpperCase() + '</div>' + onlineDot + '</div>'
             + '<div><div class="urow-name">' + escHtml(u) + '</div>' + (usr.displayName ? '<div class="urow-email">' + escHtml(usr.displayName) + '</div>' : '') + (usr.notes ? '<div style="font-size:11px;color:var(--text-muted);margin-top:1px;font-style:italic;">' + escHtml(usr.notes) + '</div>' : '') + '</div>'
             + '</div></td>'
-            + '<td style="font-size:13px;color:var(--text-muted);">' + (usr.email ? escHtml(usr.email) : '<em style="opacity:0.5;">–</em>') + '</td>'
+            + '<td style="font-size:15px;color:var(--text-muted);">' + (usr.email ? escHtml(usr.email) : '<em style="opacity:0.5;">–</em>') + '</td>'
             + '<td>' + roleBadge + '</td>'
             + '<td>' + tierBadge + '</td>'
             + '<td>' + (trialBadge || '<span style="font-size:11px;color:var(--text-muted);">–</span>') + '</td>'
@@ -1230,7 +1230,7 @@
       cardHtml += '<div class="ucard">'
         + '<div style="position:relative;flex-shrink:0;"><div class="ucard-av" style="background:' + avatarColor + ';">' + u.charAt(0).toUpperCase() + '</div>' + onlineDot + '</div>'
         + '<div class="ucard-info">'
-        + '<div class="ucard-name">' + escHtml(u) + (usr.displayName ? ' <span style="font-weight:400;color:var(--text-muted);font-size:12px;">· ' + escHtml(usr.displayName) + '</span>' : '') + '</div>'
+        + '<div class="ucard-name">' + escHtml(u) + (usr.displayName ? ' <span style="font-weight:400;color:var(--text-muted);font-size:14px;">· ' + escHtml(usr.displayName) + '</span>' : '') + '</div>'
         + '<div class="ucard-meta">' + roleBadge + tierBadge + (trialBadge || '') + '</div>'
         + (usr.email ? '<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">' + escHtml(usr.email) + '</div>' : '')
         + '</div>'
@@ -1318,13 +1318,13 @@
   function renderPendingList() {
     var list = document.getElementById('pendingList');
     if (!list) return;
-    list.innerHTML = '<div style="padding:8px 0;color:var(--text-muted);font-size:13px;">Loading…</div>';
+    list.innerHTML = '<div style="padding:8px 0;color:var(--text-muted);font-size:15px;">Loading…</div>';
 
     fetch(FB_DB_URL_S + '/pending.json?auth=' + FB_SECRET_S)
       .then(function(r) { return r.json(); })
       .then(function(data) {
         if (!data || !Object.keys(data).length) {
-          list.innerHTML = '<div style="padding:16px 0;color:var(--text-muted);font-size:13px;text-align:center;">No pending requests 🎉</div>';
+          list.innerHTML = '<div style="padding:16px 0;color:var(--text-muted);font-size:15px;text-align:center;">No pending requests 🎉</div>';
           refreshPendingBadge(0);
           return;
         }
@@ -1337,7 +1337,7 @@
           html += '<div class="pending-item" id="pending-row-' + u + '">'
             + '<div class="pending-avatar">' + u.charAt(0).toUpperCase() + '</div>'
             + '<div class="pending-info">'
-            + '<div class="pending-name">' + escHtml(u) + (req.name ? ' <span style="font-weight:400;color:var(--text-muted);font-size:13px;">· ' + escHtml(req.name) + '</span>' : '') + '</div>'
+            + '<div class="pending-name">' + escHtml(u) + (req.name ? ' <span style="font-weight:400;color:var(--text-muted);font-size:15px;">· ' + escHtml(req.name) + '</span>' : '') + '</div>'
             + (req.email ? '<div class="pending-date">' + escHtml(req.email) + ' · ' + date + '</div>' : '<div class="pending-date">Requested ' + date + '</div>')
             + '</div>'
             + '<div class="pending-actions">'
@@ -1349,7 +1349,7 @@
         list.innerHTML = html;
       })
       .catch(function() {
-        list.innerHTML = '<div style="padding:8px 0;color:var(--text-muted);font-size:13px;">Could not load pending requests.</div>';
+        list.innerHTML = '<div style="padding:8px 0;color:var(--text-muted);font-size:15px;">Could not load pending requests.</div>';
       });
   }
 
@@ -1376,7 +1376,7 @@
   // ── ADMIN: APPROVE / REJECT ───────────────────────────────────────────────
   function approveUser(u) {
     var row = document.getElementById('pending-row-' + u);
-    if (row) row.querySelector('.pending-actions').innerHTML = '<span style="color:var(--text-muted);font-size:12px;">Approving…</span>';
+    if (row) row.querySelector('.pending-actions').innerHTML = '<span style="color:var(--text-muted);font-size:14px;">Approving…</span>';
 
     // Fetch the pending request first
     fetch(FB_DB_URL_S + '/pending/' + u + '.json?auth=' + FB_SECRET_S)
@@ -1410,7 +1410,7 @@
 
   function rejectUser(u) {
     var row = document.getElementById('pending-row-' + u);
-    if (row) row.querySelector('.pending-actions').innerHTML = '<span style="color:var(--text-muted);font-size:12px;">Removing…</span>';
+    if (row) row.querySelector('.pending-actions').innerHTML = '<span style="color:var(--text-muted);font-size:14px;">Removing…</span>';
 
     fetch(FB_DB_URL_S + '/pending/' + u + '.json?auth=' + FB_SECRET_S, { method: 'DELETE' })
       .then(function() {
@@ -1711,7 +1711,7 @@ document.getElementById('deleteModal').addEventListener('click', function(e) { i
     if (allUsers.indexOf('johnyeo') === -1) allUsers.unshift('johnyeo');
 
     var grid = document.getElementById('analyticsGrid');
-    grid.innerHTML = '<div style="padding:48px;text-align:center;color:#6B7A96;font-size:14px;">⏳ Loading analytics from Firebase…</div>';
+    grid.innerHTML = '<div style="padding:48px;text-align:center;color:#6B7A96;font-size:16px;">⏳ Loading analytics from Firebase…</div>';
 
     // Fetch every user's analytics from Firebase in parallel, cache in localStorage
     Promise.all(allUsers.map(function(u) {
@@ -1949,7 +1949,7 @@ document.getElementById('deleteModal').addEventListener('click', function(e) { i
   <script src="progress-tracker.js"></script>
 
   <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
-    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
+    <span style="font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
   </footer>
 </body>
 </html>

@@ -77,17 +77,17 @@
     .cs-card-top { background: var(--navy); padding: 28px 24px 20px; }
     .cs-num { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
     .cs-card-top h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--white); line-height: 1.3; margin-bottom: 6px; }
-    .cs-card-top .cs-tag { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .cs-card-top .cs-tag { font-size: 14px; color: rgba(255,255,255,0.55); }
 
     .cs-card-body { padding: 20px 24px; flex: 1; }
     .cs-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
     .cs-metric { background: var(--cream); border-radius: 8px; padding: 10px 12px; text-align: center; }
     .cs-metric-val { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); line-height: 1.1; }
     .cs-metric-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; font-weight: 600; }
-    .cs-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .cs-desc { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
 
     .cs-card-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .cs-cta { font-size: 13px; font-weight: 600; color: var(--gold); }
+    .cs-cta { font-size: 15px; font-weight: 600; color: var(--gold); }
     .cs-arrow { font-size: 18px; color: var(--gold); transition: transform 0.2s; }
     .cs-card:hover .cs-arrow { transform: translateX(4px); }
 
@@ -166,7 +166,7 @@
     .mobile-search-result-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; background: rgba(255,255,255,0.08); }
     .mobile-search-result-title { font-weight: 600; color: white; font-size: 13px; }
     .mobile-search-result-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
-      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+      @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 16px; } }
 
     /* COLLAPSIBLE DESKTOP SUB-GROUPS */
     .sub-group-header { padding: 8px 16px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; user-select: none; transition: color 0.15s, background 0.15s; }
@@ -445,11 +445,11 @@
         <div style="border-top:1px solid #E8EDF5; padding-top:20px;">
           <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:12px;">Add User Manually</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <input id="newUsername" placeholder="Username" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
-            <input id="newPassword" placeholder="Password" type="text" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;">
+            <input id="newUsername" placeholder="Username" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:15px;">
+            <input id="newPassword" placeholder="Password" type="text" style="flex:1;min-width:100px;border:1.5px solid #B8C4D4;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:15px;">
             <button onclick="addUser()" style="background:#002D6A;color:white;border:none;border-radius:8px;padding:9px 16px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;">Add</button>
           </div>
-          <p id="addUserMsg" style="font-size:12px;margin-top:8px;color:#0ABFBC;display:none;"></p>
+          <p id="addUserMsg" style="font-size:14px;margin-top:8px;color:#0ABFBC;display:none;"></p>
         </div>
       </div>
     </div>
@@ -495,7 +495,7 @@
         keys.map(function(k) {
           var d = pending[k].requestedAt ? new Date(pending[k].requestedAt).toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}) : '';
           return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;margin-bottom:8px;gap:8px;">' +
-            '<div><div style="font-size:13px;font-weight:700;color:#92400E;">' + k + '</div>' +
+            '<div><div style="font-size:15px;font-weight:700;color:#92400E;">' + k + '</div>' +
             (d ? '<div style="font-size:11px;color:#B45309;margin-top:2px;">Requested ' + d + '</div>' : '') + '</div>' +
             '<div style="display:flex;gap:6px;flex-shrink:0;">' +
             '<button onclick="approvePending(\'' + k + '\')" style="background:#16a34a;color:white;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Approve</button>' +
@@ -529,11 +529,11 @@
       var keys = Object.keys(users);
       var el = document.getElementById('userList');
       if (!el) return;
-      if (!keys.length) { el.innerHTML = '<p style="font-size:13px;color:#6B7A96;">No approved users yet.</p>'; return; }
+      if (!keys.length) { el.innerHTML = '<p style="font-size:15px;color:#6B7A96;">No approved users yet.</p>'; return; }
       el.innerHTML = '<p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7A96;margin-bottom:10px;">✅ Approved Users</p>' +
         keys.map(function(k) {
           return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#F4F7FB;border-radius:8px;margin-bottom:6px;">' +
-            '<span style="font-size:13px;font-weight:600;color:#0A0F1C;">' + k + '</span>' +
+            '<span style="font-size:15px;font-weight:600;color:#0A0F1C;">' + k + '</span>' +
             '<button onclick="removeUser(\'' + k + '\')" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;font-weight:600;">Remove</button>' +
             '</div>';
         }).join('');
@@ -783,7 +783,7 @@
   <script src="progress-tracker.js"></script>
 
   <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
-    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
+    <span style="font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
   </footer>
 </body>
 </html>

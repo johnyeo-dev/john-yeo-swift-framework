@@ -121,7 +121,7 @@
     /* PERSONAL QUOTE */
     .personal-quote { background: var(--white); border: 1.5px solid var(--border); border-left: 4px solid var(--gold); border-radius: 0 14px 14px 0; padding: 24px 28px; margin-bottom: 40px; }
     .personal-quote p { font-size: 15px; color: var(--text-muted); line-height: 1.8; font-style: italic; }
-    .personal-quote .attr { font-style: normal; font-size: 12px; color: var(--text-muted); margin-top: 12px; display: block; font-weight: 600; letter-spacing: 0.5px; }
+    .personal-quote .attr { font-style: normal; font-size: 14px; color: var(--text-muted); margin-top: 12px; display: block; font-weight: 600; letter-spacing: 0.5px; }
 
     /* SECTION HEADING */
     .section-heading { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; margin-top: 40px; }
@@ -134,13 +134,13 @@
     .step-item:hover { box-shadow: 0 6px 20px rgba(0,45,106,0.07); }
     .step-num { min-width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); font-weight: 700; flex-shrink: 0; margin-top: 2px; }
     .step-body h4 { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); margin-bottom: 8px; }
-    .step-body p { font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+    .step-body p { font-size: 16px; color: var(--text-muted); line-height: 1.75; }
     .step-body p + p { margin-top: 10px; }
-    .step-ask { display: block; font-size: 14px; color: var(--gold); font-style: italic; margin-top: 12px; padding: 10px 14px; background: rgba(10,191,188,0.07); border-radius: 8px; line-height: 1.6; }
+    .step-ask { display: block; font-size: 16px; color: var(--gold); font-style: italic; margin-top: 12px; padding: 10px 14px; background: rgba(10,191,188,0.07); border-radius: 8px; line-height: 1.6; }
 
     /* CODE BLOCKS */
     .code-block { background: #0d1117; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 20px; margin: 12px 0; overflow-x: auto; }
-    .code-block code { font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #e6edf3; line-height: 1.7; white-space: pre; display: block; }
+    .code-block code { font-family: 'Courier New', Courier, monospace; font-size: 15px; color: #e6edf3; line-height: 1.7; white-space: pre; display: block; }
     .code-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
     .code-comment { color: #8b949e; }
     .code-string { color: #a5d6ff; }
@@ -152,7 +152,7 @@
     .idea-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 18px 20px; }
     .idea-card-icon { font-size: 22px; margin-bottom: 8px; }
     .idea-card h5 { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--navy); margin-bottom: 6px; }
-    .idea-card p { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+    .idea-card p { font-size: 15px; color: var(--text-muted); line-height: 1.65; }
 
     /* CLOSING */
     .closing-block { background: var(--navy); border-radius: 18px; padding: 36px 40px; margin-bottom: 32px; }
@@ -166,7 +166,7 @@
       .closing-block { padding: 24px 20px; }
       .step-item { flex-direction: column; gap: 12px; }
     }
-    @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 14px; } }
+    @media (max-width: 768px) { .header { padding: 10px 16px; } .header h1 { font-size: 16px; } }
   </style>
 </head>
 <body>
@@ -424,7 +424,7 @@
         <div class="step-num">2</div>
         <div class="step-body">
           <h4>Create a GitHub Repository</h4>
-          <p>Think of a repository (repo) as a folder for your project. On GitHub, click <strong>New Repository</strong>. Give it a name (e.g. <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">my-quiz-app</code>). Set it to <strong>Public</strong> (required for free Vercel deployment). Click <strong>Create Repository</strong>.</p>
+          <p>Think of a repository (repo) as a folder for your project. On GitHub, click <strong>New Repository</strong>. Give it a name (e.g. <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:15px;">my-quiz-app</code>). Set it to <strong>Public</strong> (required for free Vercel deployment). Click <strong>Create Repository</strong>.</p>
           <p>You can create as many repos as you want. One repo = one project = one live URL.</p>
         </div>
       </div>
@@ -433,7 +433,7 @@
         <div class="step-num">3</div>
         <div class="step-body">
           <h4>Add Your HTML File</h4>
-          <p>In your new repo, click <strong>Add file → Create new file</strong>. Name it exactly <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">index.html</code> — this is the file Vercel will serve as your homepage. Paste in your HTML content (built with Claude, Cursor, or by hand). Scroll down and click <strong>Commit changes</strong>.</p>
+          <p>In your new repo, click <strong>Add file → Create new file</strong>. Name it exactly <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:15px;">index.html</code> — this is the file Vercel will serve as your homepage. Paste in your HTML content (built with Claude, Cursor, or by hand). Scroll down and click <strong>Commit changes</strong>.</p>
 
           <div class="code-label">Your file structure (simplest possible)</div>
           <div class="code-block">
@@ -460,7 +460,7 @@
         <div class="step-body">
           <h4>Import Your GitHub Repo into Vercel</h4>
           <p>Go to your Vercel dashboard. Click <strong>Add New → Project</strong>. You'll see your GitHub repos listed — click <strong>Import</strong> next to your project. Vercel will auto-detect that it's a static HTML site. Click <strong>Deploy</strong>.</p>
-          <p>That's it. In about 30 seconds, Vercel gives you a live URL like <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">my-quiz-app.vercel.app</code>. Share it with anyone.</p>
+          <p>That's it. In about 30 seconds, Vercel gives you a live URL like <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:15px;">my-quiz-app.vercel.app</code>. Share it with anyone.</p>
         </div>
       </div>
 
@@ -468,7 +468,7 @@
         <div class="step-num">2</div>
         <div class="step-body">
           <h4>Every Update is Automatic</h4>
-          <p>This is the part that saves the most time. After the first deployment, you never have to touch Vercel again. Every time you edit your <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">index.html</code> on GitHub and commit, Vercel automatically re-deploys. The live URL updates within 20–30 seconds.</p>
+          <p>This is the part that saves the most time. After the first deployment, you never have to touch Vercel again. Every time you edit your <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:15px;">index.html</code> on GitHub and commit, Vercel automatically re-deploys. The live URL updates within 20–30 seconds.</p>
           <p>This means you can iterate fast — ask Claude to improve a section, paste it into GitHub, and your live app is updated before the next student refresh.</p>
         </div>
       </div>
@@ -477,7 +477,7 @@
         <div class="step-num">3</div>
         <div class="step-body">
           <h4>Custom Domain (Optional)</h4>
-          <p>By default your app lives at <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">yourproject.vercel.app</code>. If you want a proper URL like <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">myquiz.com</code>, buy a domain from Namecheap or Google Domains (~$15/year), then add it in Vercel under <strong>Project → Settings → Domains</strong>. Vercel handles the SSL certificate automatically.</p>
+          <p>By default your app lives at <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:15px;">yourproject.vercel.app</code>. If you want a proper URL like <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:15px;">myquiz.com</code>, buy a domain from Namecheap or Google Domains (~$15/year), then add it in Vercel under <strong>Project → Settings → Domains</strong>. Vercel handles the SSL certificate automatically.</p>
           <span class="step-ask">For most tutors, the free <code>.vercel.app</code> URL is enough to start — especially for tools you're sharing directly with students or parents. Get it live first. Polish the domain later.</span>
         </div>
       </div>
@@ -514,7 +514,7 @@ and navy design. Everything in one index.html file."</span></code>
         <div class="step-num">2</div>
         <div class="step-body">
           <h4>Paste → Commit → Live</h4>
-          <p>Paste Claude's output into your <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:13px;">index.html</code> on GitHub. Commit. Vercel deploys. Done. You now have a live app at a shareable URL.</p>
+          <p>Paste Claude's output into your <code style="background:rgba(0,45,106,0.07);padding:2px 6px;border-radius:4px;font-size:15px;">index.html</code> on GitHub. Commit. Vercel deploys. Done. You now have a live app at a shareable URL.</p>
           <p>If something doesn't look right, tell Claude: <em>"The score isn't showing at the end — fix that"</em> or <em>"Make the buttons bigger on mobile."</em> Paste the updated code back in. Repeat.</p>
         </div>
       </div>
@@ -540,7 +540,7 @@ and navy design. Everything in one index.html file."</span></code>
   </main>
 
   <footer style="background:var(--navy-light,#0A0F1C);border-top:1px solid rgba(255,255,255,0.07);padding:20px 40px;text-align:center;">
-    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
+    <span style="font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(255,255,255,0.3);">© PAC SWIFT Framework</span>
   </footer>
 
   <script>
@@ -624,7 +624,7 @@ and navy design. Everything in one index.html file."</span></code>
   function renderSearchResults(q, results, container, isMobile) {
     if (!q) { container.innerHTML = ''; if (!isMobile) container.classList.remove('open'); return; }
     if (!results.length) {
-      container.innerHTML = '<div style="padding:16px 14px;font-size:13px;color:rgba(255,255,255,0.35);text-align:center;font-family:\'DM Sans\',sans-serif;">No pages found</div>';
+      container.innerHTML = '<div style="padding:16px 14px;font-size:15px;color:rgba(255,255,255,0.35);text-align:center;font-family:\'DM Sans\',sans-serif;">No pages found</div>';
       if (!isMobile) container.classList.add('open');
       return;
     }
